@@ -1,0 +1,4 @@
+import Link from "next/link";
+import {createClient} from "@/lib/supabase/server";
+import JoinForm from "./JoinForm";
+export default async function JoinPage({params}:{params:Promise<{divisionId:string}>}){const{divisionId}=await params;const supabase=await createClient();const{data}=await supabase.auth.getClaims();const nextPath=`/join/${divisionId}`;return <main className="shell"><section className="content">{data?.claims?.sub?<JoinForm divisionId={divisionId}/>:<section className="card join-card"><span>🏀</span><h1>Join this KCH division</h1><p>Sign in or create your KCH profile. KCH will bring you straight back to this exact division.</p><Link className="btn primary" href={`/login?next=${encodeURIComponent(nextPath)}`}>Log In</Link><Link className="btn secondary" href={`/sign-up?next=${encodeURIComponent(nextPath)}`}>Create KCH Profile</Link></section>}</section></main>}

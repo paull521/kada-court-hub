@@ -1,0 +1,12 @@
+# Local packages and production build output
+node_modules/
+.next/
+out/
+
+# Private local settings
+.env
+.env.local
+.env.*.local
+
+# System files
+.DS_Store

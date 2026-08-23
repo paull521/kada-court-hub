@@ -1,0 +1,50 @@
+.owner-dashboard .owner-action-card{border-radius:20px;background:rgba(255,255,255,.94);box-shadow:0 8px 22px rgba(13,38,69,.08)}
+.owner-dashboard .owner-action-card.owner-featured-action{background:linear-gradient(145deg,#082b50,#0e477c);border-color:#0b3966;color:#fff}
+.owner-dashboard .owner-featured-action p{color:#d8e4ef}
+.owner-dashboard .owner-featured-action .owner-action-icon{background:rgba(255,255,255,.14);color:#ffbd36}
+.owner-dashboard .owner-action-card{position:relative}
+.owner-dashboard .owner-action-dot{position:absolute;right:13px;top:13px;width:10px;height:10px;border:2px solid #fff;border-radius:999px;background:var(--red);box-shadow:0 1px 5px rgba(89,10,16,.3)}
+.owner-dashboard .season-action .owner-action-dot,.owner-dashboard .owner-featured-action .owner-action-dot{border-color:#0d3d69}
+.owner-dashboard .owner-action-card .action-flag{display:none}
+.owner-dashboard .owner-action-card.season-action{background:linear-gradient(145deg,#082b50,#0e477c)}
+.owner-dashboard .owner-action-card>div{display:flex;flex-direction:column;align-items:flex-start;gap:5px;align-content:initial}
+.owner-dashboard .owner-action-card small{font-size:12px;line-height:1.1;font-weight:800;letter-spacing:0;color:#b76b00}
+.owner-dashboard .owner-action-card b{font-size:18px;line-height:1.18;letter-spacing:-.02em}
+.owner-dashboard .owner-action-card p{font-size:13px;line-height:1.35;margin:0;color:#637083}
+.owner-dashboard .owner-action-card.season-action small,.owner-dashboard .owner-featured-action small{color:#f6b33d}
+.owner-dashboard .owner-action-card.season-action p,.owner-dashboard .owner-featured-action p{color:#d7e1ec}
+.owner-dashboard .owner-action-card .owner-action-icon{margin-bottom:2px}
+@media(max-width:410px){.owner-dashboard .owner-action-card small{font-size:11px}.owner-dashboard .owner-action-card b{font-size:16px}.owner-dashboard .owner-action-card p{font-size:12px}}
+.conference-player-directory>summary{list-style:none;cursor:pointer}
+.conference-player-directory>summary::-webkit-details-marker{display:none}
+
+.owner-schedule-archive{margin-top:18px}
+.owner-schedule-archive>summary{cursor:pointer;list-style:none;padding:16px 0;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.owner-schedule-archive>summary::-webkit-details-marker{display:none}
+.owner-schedule-archive>summary span{display:grid;gap:3px}.owner-schedule-archive>summary small{color:var(--muted);font-size:12px}.owner-schedule-archive>summary strong{font-size:22px}
+.owner-schedule-archive[open]>summary strong{transform:rotate(90deg)}
+.owner-schedule-archive .operations-season{margin-bottom:10px}
+.owner-schedule-current{display:grid;gap:10px}
+.owner-schedule-current .operations-season{margin:0}
+.division-operation>summary{min-height:76px;padding:13px 15px!important;grid-template-columns:minmax(0,1fr) auto auto!important;align-items:center!important}
+.division-operation>summary>span{gap:3px}.division-operation>summary b{font-size:16px}.division-operation>summary small{font-size:12px}.division-operation>summary>strong{font-size:22px}
+.division-operation .schedule-finality{align-self:center!important}
+.game-change-panel{margin:12px;border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}
+.game-change-panel>header{display:grid;gap:3px;padding:12px 13px;border-bottom:1px solid var(--line);background:#fcfbf9}
+.game-change-panel>header b{font-size:15px;color:var(--navy)}
+.game-change-panel>header small{font-size:12px;color:var(--muted)}
+.game-change-panel form{display:grid;gap:11px;padding:13px}
+.game-change-panel .btn{width:100%}
+.cancel-game-panel{border-color:#edc5c7;background:#fffafa}
+.cancel-game-panel>header{background:#fff4f4;border-bottom-color:#edc5c7}
+.cancel-game-panel>header b{color:#a51d25}
+.cancel-game-panel .btn{background:#a51d25;color:#fff}
+.score-sheet-card{padding:0!important;border-radius:16px!important;overflow:hidden}
+.score-sheet-card>header{padding:15px 16px;border-bottom:1px solid var(--line);align-items:center!important}
+.score-sheet-card>header b{font-size:16px!important}.score-sheet-card>header span{font-size:13px!important}
+.score-game-meta{display:grid;gap:6px;justify-items:end}.score-needed{padding:5px 8px;border-radius:999px;background:#fff0f0;color:#ad2028;font-size:10px;font-style:normal;font-weight:850;text-transform:uppercase;letter-spacing:.04em}
+.score-entry-form{border:0!important;margin:0!important;padding:16px!important;gap:15px!important}
+.score-entry-fields{gap:10px!important}.score-entry-fields label span{min-height:0!important;margin-bottom:2px;text-align:center;font-size:11px!important;font-weight:800}.score-entry-fields input{min-height:58px;border-radius:13px!important;background:#fff!important}.score-entry-fields>strong{padding-bottom:12px!important}
+.final-score-warning{margin:0!important;padding:10px 12px;border-radius:11px;background:#fff4da;color:#805000;font-size:13px;font-weight:800;text-align:center}
+.score-entry-form .draft-review-actions{margin:0}.score-entry-form>.btn{width:100%}
+@media(max-width:410px){.score-sheet-card>header{padding:13px;grid-template-columns:1fr}.score-game-meta{justify-items:start}.score-sheet-card>header small{text-align:left!important}.score-entry-form{padding:13px!important}}
