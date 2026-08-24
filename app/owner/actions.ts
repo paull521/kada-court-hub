@@ -306,6 +306,12 @@ export async function finalizeGameScoreAction(_:OwnerActionState,formData:FormDa
   return ownerRpc("owner_finalize_game_score",{p_game_id:gameId,p_home_score:homeScore,p_away_score:awayScore},"Final score saved. This game is now locked.");
 }
 
+export async function saveGameScoreDraftAction(_:OwnerActionState,formData:FormData):Promise<OwnerActionState>{
+  const gameId=value(formData,"gameId"),homeScore=optionalScore(value(formData,"homeScore")),awayScore=optionalScore(value(formData,"awayScore"));
+  if(!uuidPattern.test(gameId)||homeScore===null||awayScore===null||!Number.isInteger(homeScore)||!Number.isInteger(awayScore)||homeScore<0||awayScore<0)return{error:"Enter both draft scores as whole numbers."};
+  return ownerRpc("owner_save_game_score_draft",{p_game_id:gameId,p_home_score:homeScore,p_away_score:awayScore},"Draft scores saved. Finalize when you are ready.");
+}
+
 export async function reviewPaymentNoticeAction(_:OwnerActionState,formData:FormData):Promise<OwnerActionState>{
   const submissionId=value(formData,"submissionId"),decision=value(formData,"decision"),reviewNote=value(formData,"reviewNote");
   if(!uuidPattern.test(submissionId)||!["confirmed","declined"].includes(decision))return{error:"Choose Confirm or Decline."};

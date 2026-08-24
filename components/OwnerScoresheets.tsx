@@ -1,8 +1,30 @@
 "use client";
+
 import {useActionState,useState} from "react";
-import {finalizeGameScoreAction,type OwnerActionState} from "@/app/owner/actions";
-import type {OwnerSeason} from "@/lib/owner-data";
+import {finalizeGameScoreAction,saveGameScoreDraftAction,type OwnerActionState} from "@/app/owner/actions";
+import type {OwnerDivision,OwnerSeason} from "@/lib/owner-data";
+
 const initialState:OwnerActionState={};
-const fmt=(v:string)=>new Intl.DateTimeFormat("en-US",{month:"short",day:"numeric"}).format(new Date(v));
-function Game({game}:{game:OwnerSeason["games"][number]}){const[state,action,pending]=useActionState(finalizeGameScoreAction,initialState),[review,setReview]=useState(false),meta=`${fmt(game.localStartsAt)} · ${game.venue} · ${game.court||"Court TBD"}`;if(game.finalized)return <article className="score-sheet-card scoreboard-card"><div className="scoreboard-final"><div><b>{game.homeTeam}</b><strong>{game.homeScore}</strong></div><i>–</i><div><b>{game.awayTeam}</b><strong>{game.awayScore}</strong></div></div><small className="scoreboard-meta">{meta}</small></article>;return <article className="score-sheet-card scoreboard-card"><form action={action} className="owner-form score-entry-form"><input type="hidden" name="gameId" value={game.id}/><div className="score-entry-fields"><label><span>{game.homeTeam}</span><input name="homeScore" type="number" min="0" required readOnly={review}/></label><strong>–</strong><label><span>{game.awayTeam}</span><input name="awayScore" type="number" min="0" required readOnly={review}/></label></div>{state.error&&<p className="form-error">{state.error}</p>}{review?<button className="btn primary" disabled={pending}>{pending?"Finalizing…":"Final Score"}</button>:<button type="button" className="btn primary" onClick={()=>setReview(true)}>Review Final Score</button>}<small className="scoreboard-meta">{meta}</small></form></article>}
-export default function OwnerScoresheets({seasons}:{seasons:OwnerSeason[]}){const available=seasons.filter(s=>!s.canceledAt&&s.setupStage>=7&&s.games.length);if(!available.length)return <section className="card"><h3>No scoresheets yet</h3></section>;return <div className="scoresheet-season-list">{available.map((season,i)=><details className="scoresheet-season card" key={season.id} open={i===0}><summary><span><b>{season.name}</b><small>{season.games.filter(g=>g.finalized).length} of {season.games.length} results posted</small></span><strong>›</strong></summary><div className="scoreboard-list">{season.games.some(g=>!g.finalized)&&<p className="score-reminder"><b>Reminder:</b> Add scores once each game is completed. Final Score publishes the result to players and standings.</p>}{season.games.map(game=><Game game={game} key={game.id}/>)}</div></details>)}</div>}
+const dateLabel=(value:string)=>new Intl.DateTimeFormat("en-US",{month:"short",day:"numeric"}).format(new Date(value));
+const gameMeta=(game:OwnerSeason["games"][number])=>`${dateLabel(game.localStartsAt)} · ${game.venue} · ${game.court||"Court TBD"}`;
+
+function Game({game}:{game:OwnerSeason["games"][number]}){
+  const [saveState,saveAction,saving]=useActionState(saveGameScoreDraftAction,initialState);
+  const [finalState,finalAction,finalizing]=useActionState(finalizeGameScoreAction,initialState);
+  const [home,setHome]=useState(game.draftHomeScore?.toString()??"");
+  const [away,setAway]=useState(game.draftAwayScore?.toString()??"");
+  if(game.finalized)return <article className="scoreboard-card"><div className="scoreboard-match"><div><b>{game.homeTeam}</b><strong>{game.homeScore}</strong></div><i>–</i><div><b>{game.awayTeam}</b><strong>{game.awayScore}</strong></div></div><small className="scoreboard-meta">{gameMeta(game)}</small></article>;
+  return <article className="scoreboard-card"><div className="scoreboard-entry"><form action={saveAction}><input type="hidden" name="gameId" value={game.id}/><div className="score-entry-fields"><label><span>{game.homeTeam}</span><input name="homeScore" type="number" min="0" value={home} onChange={event=>setHome(event.target.value)} required/></label><strong>–</strong><label><span>{game.awayTeam}</span><input name="awayScore" type="number" min="0" value={away} onChange={event=>setAway(event.target.value)} required/></label></div><button className="btn secondary" disabled={saving||finalizing}>{saving?"Saving…":"Save Draft"}</button></form><form action={finalAction}><input type="hidden" name="gameId" value={game.id}/><input type="hidden" name="homeScore" value={home}/><input type="hidden" name="awayScore" value={away}/><button className="btn primary" disabled={!home||!away||saving||finalizing}>{finalizing?"Finalizing…":"Final Score"}</button></form></div>{saveState.error&&<p className="form-error">{saveState.error}</p>}{saveState.message&&<p className="form-success">{saveState.message}</p>}{finalState.error&&<p className="form-error">{finalState.error}</p>}<small className="scoreboard-meta">{gameMeta(game)}</small></article>;
+}
+
+function DivisionScores({season,division}:{season:OwnerSeason;division:OwnerDivision}){
+  const games=season.games.filter(game=>game.divisionId===division.id&&game.status==="scheduled");
+  if(!games.length)return null;
+  return <details className="scoresheet-division" open><summary><span><b>{division.name}</b><small>{games.filter(game=>game.finalized).length} of {games.length} results posted</small></span><strong>›</strong></summary><div className="scoreboard-list">{games.some(game=>!game.finalized)&&<p className="score-reminder"><b>Reminder:</b> Add scores once each game is completed. Save Draft keeps the score until you choose Final Score.</p>}{games.map(game=><Game game={game} key={game.id}/>)}</div></details>;
+}
+
+export default function OwnerScoresheets({seasons}:{seasons:OwnerSeason[]}){
+  const available=seasons.filter(season=>!season.canceledAt&&season.setupStage>=7&&season.games.length);
+  if(!available.length)return <section className="card"><h3>No scoresheets yet</h3></section>;
+  return <div className="scoresheet-season-list">{available.map((season,index)=><details className="scoresheet-season card" key={season.id} open={index===0}><summary><span><b>{season.name}</b><small>{season.divisions.length} division{season.divisions.length===1?"":"s"}</small></span><strong>›</strong></summary><div>{season.divisions.map(division=><DivisionScores season={season} division={division} key={division.id}/>)}</div></details>)}</div>;
+}
