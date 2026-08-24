@@ -57,6 +57,10 @@ export type PlayerPortalData = {
 const fallback: PlayerPortalData = {context:currentContext,contexts:[],activeRegistrationId:"",profile:currentPlayer,roster,games,divisionSchedule:[],results:[],notifications:[],requiresAttention:false,profileNeedsAttention:false,paymentNeedsAttention:false,paymentSubmissions:[],paymentHistory:[],availability:[],myAvailability:true,teamHasUnavailable:false,paymentAccount:{totalCharges:fees.reduce((sum,fee)=>sum+fee.amount,0),paid:0,waived:0,pending:0,balance:fees.reduce((sum,fee)=>sum+fee.amount,0)},teamInfo:{homeUniform:"Dark / Navy",awayUniform:"White",nextGameUniform:"White",darkImage:"",lightImage:"",captain:{name:"Winston Keys",mobile:""},coCaptain:{name:"Fritz Rigor",mobile:""},rosterStage:"hidden",rosterReviewDeadline:"",divisionRosters:[]},notificationPreferences:{gameUpdates:true,teamUpdates:true,paymentUpdates:true,seasonUpdates:true},standings:[],seasonResults:[],fees,invitation:null,source:"fallback"};
 const roleName = (value:string): Player["role"] => value==="Captain"||value==="Co-captain"?value:"Player";
 const feeIcon = (category:string) => category==="league"?"◉":category==="uniform"?"♕":"▣";
+const rosterOrder=(left:Player,right:Player)=>{
+  const rank=(role:Player["role"])=>role==="Captain"?0:role==="Co-captain"?1:2;
+  return rank(left.role)-rank(right.role)||(left.number||Number.MAX_SAFE_INTEGER)-(right.number||Number.MAX_SAFE_INTEGER)||left.name.localeCompare(right.name);
+};
 
 export async function getPlayerPortalData(): Promise<PlayerPortalData> {
   await connection();
@@ -144,9 +148,9 @@ export async function getPlayerPortalData(): Promise<PlayerPortalData> {
     const playerIds=(registrations??[]).map(row=>row.player_id);
     const {data:playerRows}=playerIds.length?await supabase.from("player_profiles").select("id,display_name").in("id",playerIds):{data:[]};
     const names=new Map((playerRows??[]).map(row=>[row.id,row.display_name??"Unnamed Player"]));
-    const liveRoster:Player[]=(registrations??[]).map(row=>({id:row.player_id,number:row.jersey_number??0,name:names.get(row.player_id)??"Unnamed Player",position:row.position??"",jerseyName:row.jersey_name??"",role:roleName(row.role_label)}));
+    const liveRoster:Player[]=(registrations??[]).map(row=>({id:row.player_id,number:row.jersey_number??0,name:names.get(row.player_id)??"Unnamed Player",position:row.position??"",jerseyName:row.jersey_name??"",role:roleName(row.role_label)})).sort(rosterOrder);
     const {data:publishedRosterRows}=await supabase.rpc("get_published_division_roster",{p_division_id:division.id});
-    const divisionRosters:DivisionRosterTeam[]=(divisionTeamRows??[]).map(rosterTeam=>({id:rosterTeam.id,name:rosterTeam.name,isMyTeam:rosterTeam.id===team.id,players:(publishedRosterRows??[]).filter((row:{team_id:string})=>row.team_id===rosterTeam.id).map((row:{registration_id:string;jersey_number:number|null;player_name:string;player_position:string;jersey_name:string|null;role_label:string})=>({id:row.registration_id,number:row.jersey_number??0,name:row.player_name,position:row.player_position??"",jerseyName:row.jersey_name??"",role:roleName(row.role_label)}))}));
+    const divisionRosters:DivisionRosterTeam[]=(divisionTeamRows??[]).map(rosterTeam=>({id:rosterTeam.id,name:rosterTeam.name,isMyTeam:rosterTeam.id===team.id,players:(publishedRosterRows??[]).filter((row:{team_id:string})=>row.team_id===rosterTeam.id).map((row:{registration_id:string;jersey_number:number|null;player_name:string;player_position:string;jersey_name:string|null;role_label:string})=>({id:row.registration_id,number:row.jersey_number??0,name:row.player_name,position:row.player_position??"",jerseyName:row.jersey_name??"",role:roleName(row.role_label)})).sort(rosterOrder)}));
 
     const allTeamIds=[...new Set((seasonGameRows??[]).flatMap(row=>[row.home_team_id,row.away_team_id]))];
     const {data:teamRows}=allTeamIds.length?await supabase.from("teams").select("id,name").in("id",allTeamIds):{data:[]};
