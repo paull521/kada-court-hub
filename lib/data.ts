@@ -1,6 +1,6 @@
 export type UserRole = "player" | "team_staff" | "owner" | "admin";
 
-export type Player = { id:string; number:number; name:string; position:string; role:"Captain"|"Co-captain"|"Player" };
+export type Player = { id:string; number:number; name:string; position:string; jerseyName?:string; role:"Captain"|"Co-captain"|"Player" };
 export type Game = { id:string; day:string; month:string; date:string; dateLabel:string; time:string; opponent:string; venue:string; court:string; side:"Home"|"Away"; uniform:"White"|"Dark" };
 export type GameResult = Game & {teamScore:number;opponentScore:number;outcome:"W"|"L"|"T"};
 export type Fee = {id:string;label:string;amount:number;icon:string};

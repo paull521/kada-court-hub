@@ -125,7 +125,7 @@ export async function getPlayerPortalData(): Promise<PlayerPortalData> {
     const conference=conferenceMap.get(season.conference_id)!;
 
     const [{data:registrations},{data:seasonGameRows},{data:divisionTeamRows},{data:feeRows},{data:invitationRow},{data:notificationRows},{data:submissionRows},{data:uniformSettings},{data:leadershipRows},{data:preferenceRow},{data:rosterBroadcastRows},{data:scheduleWorkflowRow}] = await Promise.all([
-      supabase.from("registrations").select("player_id,jersey_number,position,role_label").eq("team_id",team.id).order("jersey_number"),
+      supabase.from("registrations").select("player_id,jersey_number,jersey_name,position,role_label").eq("team_id",team.id).order("jersey_number"),
       supabase.from("games").select("id,home_team_id,away_team_id,starts_at,venue,court,home_uniform,away_uniform,home_score,away_score,status,finalized_at").eq("season_id",season.id).order("starts_at"),
       supabase.from("teams").select("id,name").eq("division_id",division.id).eq("active",true).order("name"),
       supabase.from("fees").select("id,category,description,amount_cents,status").eq("registration_id",registration.id),
@@ -142,9 +142,9 @@ export async function getPlayerPortalData(): Promise<PlayerPortalData> {
     const playerIds=(registrations??[]).map(row=>row.player_id);
     const {data:playerRows}=playerIds.length?await supabase.from("player_profiles").select("id,display_name").in("id",playerIds):{data:[]};
     const names=new Map((playerRows??[]).map(row=>[row.id,row.display_name??"Unnamed Player"]));
-    const liveRoster:Player[]=(registrations??[]).map(row=>({id:row.player_id,number:row.jersey_number??0,name:names.get(row.player_id)??"Unnamed Player",position:row.position??"",role:roleName(row.role_label)}));
+    const liveRoster:Player[]=(registrations??[]).map(row=>({id:row.player_id,number:row.jersey_number??0,name:names.get(row.player_id)??"Unnamed Player",position:row.position??"",jerseyName:row.jersey_name??"",role:roleName(row.role_label)}));
     const {data:publishedRosterRows}=await supabase.rpc("get_published_division_roster",{p_division_id:division.id});
-    const divisionRosters:DivisionRosterTeam[]=(divisionTeamRows??[]).map(rosterTeam=>({id:rosterTeam.id,name:rosterTeam.name,isMyTeam:rosterTeam.id===team.id,players:(publishedRosterRows??[]).filter((row:{team_id:string})=>row.team_id===rosterTeam.id).map((row:{registration_id:string;jersey_number:number|null;player_name:string;player_position:string;role_label:string})=>({id:row.registration_id,number:row.jersey_number??0,name:row.player_name,position:row.player_position??"",role:roleName(row.role_label)}))}));
+    const divisionRosters:DivisionRosterTeam[]=(divisionTeamRows??[]).map(rosterTeam=>({id:rosterTeam.id,name:rosterTeam.name,isMyTeam:rosterTeam.id===team.id,players:(publishedRosterRows??[]).filter((row:{team_id:string})=>row.team_id===rosterTeam.id).map((row:{registration_id:string;jersey_number:number|null;player_name:string;player_position:string;jersey_name:string|null;role_label:string})=>({id:row.registration_id,number:row.jersey_number??0,name:row.player_name,position:row.player_position??"",jerseyName:row.jersey_name??"",role:roleName(row.role_label)}))}));
 
     const allTeamIds=[...new Set((seasonGameRows??[]).flatMap(row=>[row.home_team_id,row.away_team_id]))];
     const {data:teamRows}=allTeamIds.length?await supabase.from("teams").select("id,name").in("id",allTeamIds):{data:[]};
