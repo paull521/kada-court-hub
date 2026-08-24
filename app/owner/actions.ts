@@ -234,6 +234,12 @@ export async function inviteExistingDivisionPlayerAction(_:OwnerActionState,form
   return ownerRpc("owner_invite_existing_division_player",{p_division_id:divisionId,p_public_player_id:publicPlayerId},"Player added to this division's invitation list.");
 }
 
+export async function sendLateTeamInvitationAction(_:OwnerActionState,formData:FormData):Promise<OwnerActionState>{
+  const teamId=value(formData,"teamId"),playerId=value(formData,"playerId");
+  if(!uuidPattern.test(teamId)||!uuidPattern.test(playerId))return{error:"Choose a player and team."};
+  return ownerRpc("owner_send_late_team_invitation",{p_team_id:teamId,p_player_id:playerId},"Late invitation sent.");
+}
+
 export async function assignDraftPlayerAction(_:OwnerActionState,formData:FormData):Promise<OwnerActionState>{
   const invitationId=value(formData,"invitationId"),teamId=value(formData,"teamId"),position=value(formData,"position"),jersey=jerseyValue(value(formData,"jerseyNumber"));
   if(!uuidPattern.test(invitationId)||!uuidPattern.test(teamId)||!validJersey(jersey)||position.length>40)return{error:"Choose a team and check the roster details."};
