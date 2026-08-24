@@ -410,7 +410,7 @@ function TeamManagementEditor({team}:{team:OwnerTeam}){
 }
 
 function TeamEditor({team}:{team:OwnerTeam}){
-  const players=team.players.filter(player=>player.status==="active");
+  const players=team.players.filter(player=>player.status!=="inactive");
   return <details className="game-action-card"><summary><span className="owner-team-mark">{team.name.slice(0,2).toUpperCase()}</span><span><b>{team.name}</b><small>{players.length} player{players.length===1?"":"s"}</small></span><strong>›</strong></summary>{players.length?<div className="game-form">{players.map(player=><TeamPlayerRow key={player.registrationId} player={player}/>)}</div>:<p className="empty-note">No active players yet.</p>}</details>;
 }
 
