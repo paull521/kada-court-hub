@@ -1,48 +1,8 @@
 "use client";
-
-import {useActionState,useEffect,useState} from "react";
+import {useActionState,useState} from "react";
 import {finalizeGameScoreAction,type OwnerActionState} from "@/app/owner/actions";
 import type {OwnerSeason} from "@/lib/owner-data";
-
 const initialState:OwnerActionState={};
-
-function localDate(value:string){
-  const[year,month,day]=value.slice(0,10).split("-").map(Number);
-  return new Intl.DateTimeFormat("en-US",{weekday:"short",month:"short",day:"numeric"}).format(new Date(Date.UTC(year,month-1,day,12)));
-}
-
-function localTime(value:string){
-  const[hour,minute]=value.slice(11,16).split(":").map(Number);
-  return new Intl.DateTimeFormat("en-US",{hour:"numeric",minute:"2-digit",timeZone:"UTC"}).format(new Date(Date.UTC(2000,0,1,hour,minute)));
-}
-
-function weekStart(value:string){
-  const[year,month,day]=value.slice(0,10).split("-").map(Number);
-  const date=new Date(Date.UTC(year,month-1,day));
-  date.setUTCDate(date.getUTCDate()-date.getUTCDay());
-  return date.toISOString().slice(0,10);
-}
-
-function ScoreGame({game}:{game:OwnerSeason["games"][number]}){
-  const[state,action,pending]=useActionState(finalizeGameScoreAction,initialState);
-  const[reviewing,setReviewing]=useState(false);
-  const played=game.finalized;
-  const unavailable=game.status!=="scheduled";
-  const scoreNeeded=!played&&!unavailable&&new Date(game.startsAt).getTime()<=Date.now();
-  return <article id={`score-${game.id}`} className={`score-sheet-card scoreboard-card ${unavailable?`game-${game.status}`:""} ${played?"final-locked":""}`}><header><small>{localDate(game.localStartsAt)} · {localTime(game.localStartsAt)} · {game.court||game.venue}</small>{scoreNeeded&&<em className="score-needed">Score needed</em>}</header>{played?<section className="final-score-lock scoreboard-final"><b>{game.homeTeam}</b><strong>{game.homeScore} – {game.awayScore}</strong><b>{game.awayTeam}</b></section>:unavailable?<p className="score-unavailable">{game.status.toUpperCase()}{game.statusReason?` — ${game.statusReason}`:""}</p>:!scoreNeeded?<p className="score-unavailable">Score entry is available after scheduled tip-off.</p>:<form action={action} className="owner-form score-entry-form"><input type="hidden" name="gameId" value={game.id}/><div className="score-entry-fields"><label><span>{game.homeTeam}</span><input name="homeScore" type="number" min="0" inputMode="numeric" placeholder="0" required readOnly={reviewing}/></label><strong>–</strong><label><span>{game.awayTeam}</span><input name="awayScore" type="number" min="0" inputMode="numeric" placeholder="0" required readOnly={reviewing}/></label></div>{state.error&&<p className="form-error" role="alert">{state.error}</p>}{reviewing?<div className="draft-review-actions"><button type="button" className="btn secondary" onClick={()=>setReviewing(false)}>Go Back</button><button className="btn primary" disabled={pending}>{pending?"Finalizing…":"Final Score"}</button></div>:<button type="button" className="btn primary" onClick={()=>setReviewing(true)}>Review Final Score</button>}</form>}</article>;
-}
-
-export default function OwnerScoresheets({seasons}:{seasons:OwnerSeason[]}){
-  const available=seasons.filter(season=>!season.canceledAt&&season.setupStage>=7&&season.games.length);
-  useEffect(()=>{
-    const id=decodeURIComponent(window.location.hash.slice(1));
-    if(!id)return;
-    const target=document.getElementById(id);
-    if(!target)return;
-    let parent=target.parentElement;
-    while(parent){if(parent instanceof HTMLDetailsElement)parent.open=true;parent=parent.parentElement;}
-    window.setTimeout(()=>target.scrollIntoView({behavior:"smooth",block:"center"}),50);
-  },[]);
-  if(!available.length)return <section className="card owner-empty-operation"><span>▦</span><div><h3>No scoresheets yet</h3><p>Create and publish a season schedule first.</p></div></section>;
-  return <div className="scoresheet-season-list">{available.map((season,seasonIndex)=>{const sorted=[...season.games].sort((a,b)=>a.localStartsAt.localeCompare(b.localStartsAt));return <details className="scoresheet-season card" key={season.id} open={seasonIndex===0}><summary><span><b>{season.name}</b><small>{sorted.filter(game=>game.homeScore!==null&&game.awayScore!==null).length} of {sorted.length} results posted</small></span><strong>›</strong></summary><div className="scoreboard-list">{sorted.map(game=><ScoreGame game={game} key={game.id}/>)}</div></details>})}</div>;
-}
+const fmt=(v:string)=>new Intl.DateTimeFormat("en-US",{month:"short",day:"numeric"}).format(new Date(v));
+function Game({game}:{game:OwnerSeason["games"][number]}){const[state,action,pending]=useActionState(finalizeGameScoreAction,initialState),[review,setReview]=useState(false);const finalReady=new Date(game.startsAt).getTime()<=Date.now();if(game.finalized)return <article className="score-sheet-card scoreboard-card"><div className="scoreboard-final"><div><b>{game.homeTeam}</b><strong>{game.homeScore}</strong></div><i>–</i><div><b>{game.awayTeam}</b><strong>{game.awayScore}</strong></div></div><small className="scoreboard-meta">{fmt(game.localStartsAt)} · {game.court||game.venue}</small></article>;return <article className="score-sheet-card scoreboard-card"><form action={action} className="owner-form score-entry-form"><input type="hidden" name="gameId" value={game.id}/><div className="score-entry-fields"><label><span>{game.homeTeam}</span><input name="homeScore" type="number" min="0" required readOnly={review}/></label><strong>–</strong><label><span>{game.awayTeam}</span><input name="awayScore" type="number" min="0" required readOnly={review}/></label></div>{state.error&&<p className="form-error">{state.error}</p>}{finalReady?(review?<button className="btn primary" disabled={pending}>{pending?"Finalizing…":"Final Score"}</button>:<button type="button" className="btn primary" onClick={()=>setReview(true)}>Review Final Score</button>):<p className="score-draft-note">Draft entry only. Final Score is available after scheduled game time.</p>}</form></article>}
+export default function OwnerScoresheets({seasons}:{seasons:OwnerSeason[]}){const available=seasons.filter(s=>!s.canceledAt&&s.setupStage>=7&&s.games.length);if(!available.length)return <section className="card"><h3>No scoresheets yet</h3></section>;return <div className="scoresheet-season-list">{available.map((season,i)=><details className="scoresheet-season card" key={season.id} open={i===0}><summary><span><b>{season.name}</b><small>{season.games.filter(g=>g.finalized).length} of {season.games.length} results posted</small></span><strong>›</strong></summary><div className="scoreboard-list">{season.games.map(game=><Game game={game} key={game.id}/>)}</div></details>)}</div>}
