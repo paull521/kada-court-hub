@@ -8,12 +8,12 @@ export default async function Home(){
   const data=await getPlayerPortalData();
   const next=data.games[0];
   const firstName=data.profile.name.split(" ")[0];
-  if(!data.contexts.length)return <AppShell active="home" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} requiresAttention={data.requiresAttention} teamHasUnavailable={false}>
+  if(!data.contexts.length)return <AppShell active="home" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} profileNeedsAttention={data.profileNeedsAttention} paymentNeedsAttention={data.paymentNeedsAttention} teamHasUnavailable={false}>
     <h1 className="title welcome">Hello, {firstName}!</h1>
     <p className="subtitle">Your KCH invitations appear here.</p>
     {data.invitation?<SeasonInvitationCard invitation={data.invitation}/>:<section className="card empty-feature"><span>🏀</span><div><p className="eyebrow">KCH</p><h2>No active team yet</h2><p>When a conference invites you, the invitation will appear here.</p></div></section>}
   </AppShell>;
-  return <AppShell active="home" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} requiresAttention={data.requiresAttention} teamHasUnavailable={data.teamHasUnavailable}>
+  return <AppShell active="home" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} profileNeedsAttention={data.profileNeedsAttention} paymentNeedsAttention={data.paymentNeedsAttention} teamHasUnavailable={data.teamHasUnavailable}>
     <h1 className="title welcome">Hello, {firstName}!</h1>
     <p className="subtitle">Ready for game day?</p>
     {data.invitation&&<SeasonInvitationCard invitation={data.invitation}/>} 

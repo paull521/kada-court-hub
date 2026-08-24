@@ -5,7 +5,7 @@ import {getPlayerPortalData} from "@/lib/kch-data";
 export default async function Payments(){
   const data=await getPlayerPortalData();
   const account=data.paymentAccount;
-  return <AppShell active="payments" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} requiresAttention={data.requiresAttention} teamHasUnavailable={data.teamHasUnavailable}>
+  return <AppShell active="payments" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} profileNeedsAttention={data.profileNeedsAttention} paymentNeedsAttention={data.paymentNeedsAttention} teamHasUnavailable={data.teamHasUnavailable}>
     <h1 className="title">Payments</h1><p className="subtitle">View fees and report manual payments.</p>
     <p className="season-label">▦ &nbsp; {data.context.season}</p>
     <section className="card balance-card"><p>TOTAL BALANCE DUE</p><strong>${account.balance.toFixed(2)}</strong><span>${account.paid.toFixed(2)} paid{account.waived?` · $${account.waived.toFixed(2)} waived`:""}{account.pending?` · $${account.pending.toFixed(2)} awaiting confirmation`:""}</span></section>

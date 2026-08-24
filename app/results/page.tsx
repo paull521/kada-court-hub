@@ -4,7 +4,7 @@ import {getPlayerPortalData} from "@/lib/kch-data";
 
 export default async function ResultsPage(){
   const data=await getPlayerPortalData();
-  return <AppShell active="schedule" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} teamHasUnavailable={data.teamHasUnavailable}>
+  return <AppShell active="schedule" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} profileNeedsAttention={data.profileNeedsAttention} paymentNeedsAttention={data.paymentNeedsAttention} teamHasUnavailable={data.teamHasUnavailable}>
     <h1 className="title">Results</h1><p className="subtitle">Final scores from your division.</p>
     <p className="season-label">▦ &nbsp; {data.context.season} · {data.context.division}</p>
     <SeasonTabs active="results"/>

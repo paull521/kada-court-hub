@@ -37,6 +37,8 @@ export type PlayerPortalData = {
   results: GameResult[];
   notifications: PlayerNotification[];
   requiresAttention: boolean;
+  profileNeedsAttention: boolean;
+  paymentNeedsAttention: boolean;
   paymentSubmissions: PaymentSubmission[];
   paymentHistory: PaymentHistoryItem[];
   availability: PlayerAvailability[];
@@ -52,7 +54,7 @@ export type PlayerPortalData = {
   source: "supabase"|"fallback";
 };
 
-const fallback: PlayerPortalData = {context:currentContext,contexts:[],activeRegistrationId:"",profile:currentPlayer,roster,games,divisionSchedule:[],results:[],notifications:[],requiresAttention:false,paymentSubmissions:[],paymentHistory:[],availability:[],myAvailability:true,teamHasUnavailable:false,paymentAccount:{totalCharges:fees.reduce((sum,fee)=>sum+fee.amount,0),paid:0,waived:0,pending:0,balance:fees.reduce((sum,fee)=>sum+fee.amount,0)},teamInfo:{homeUniform:"Dark / Navy",awayUniform:"White",nextGameUniform:"White",darkImage:"",lightImage:"",captain:{name:"Winston Keys",mobile:""},coCaptain:{name:"Fritz Rigor",mobile:""},rosterStage:"hidden",rosterReviewDeadline:"",divisionRosters:[]},notificationPreferences:{gameUpdates:true,teamUpdates:true,paymentUpdates:true,seasonUpdates:true},standings:[],seasonResults:[],fees,invitation:null,source:"fallback"};
+const fallback: PlayerPortalData = {context:currentContext,contexts:[],activeRegistrationId:"",profile:currentPlayer,roster,games,divisionSchedule:[],results:[],notifications:[],requiresAttention:false,profileNeedsAttention:false,paymentNeedsAttention:false,paymentSubmissions:[],paymentHistory:[],availability:[],myAvailability:true,teamHasUnavailable:false,paymentAccount:{totalCharges:fees.reduce((sum,fee)=>sum+fee.amount,0),paid:0,waived:0,pending:0,balance:fees.reduce((sum,fee)=>sum+fee.amount,0)},teamInfo:{homeUniform:"Dark / Navy",awayUniform:"White",nextGameUniform:"White",darkImage:"",lightImage:"",captain:{name:"Winston Keys",mobile:""},coCaptain:{name:"Fritz Rigor",mobile:""},rosterStage:"hidden",rosterReviewDeadline:"",divisionRosters:[]},notificationPreferences:{gameUpdates:true,teamUpdates:true,paymentUpdates:true,seasonUpdates:true},standings:[],seasonResults:[],fees,invitation:null,source:"fallback"};
 const roleName = (value:string): Player["role"] => value==="Captain"||value==="Co-captain"?value:"Player";
 const feeIcon = (category:string) => category==="league"?"◉":category==="uniform"?"♕":"▣";
 
@@ -196,7 +198,8 @@ export async function getPlayerPortalData(): Promise<PlayerPortalData> {
     const profileNeedsCompletion=!(profile.mobile&&profile.birthdate&&profile.location&&player.email&&player.preferred_position);
     const paymentNeedsAttention=paymentAccount.balance>0&&paymentAccount.pending===0;
     const unreadActionAnnouncement=liveNotifications.some(notification=>!notification.read&&(/(^|_)(announcement|action|required)(_|$)/.test(notification.type)||notification.type==="season_invitation"));
-    const requiresAttention=profileNeedsCompletion||paymentNeedsAttention||unreadActionAnnouncement;
+    // The bell represents unread notifications only. Profile and payment tasks use their own menu dots.
+    const requiresAttention=unreadActionAnnouncement;
     const captainRow=(leadershipRows??[]).find((row:{role_label:string;display_name:string|null;mobile:string|null})=>row.role_label==="Captain");const coCaptainRow=(leadershipRows??[]).find((row:{role_label:string;display_name:string|null;mobile:string|null})=>row.role_label==="Co-captain");
     const temporaryUniformTeam=team.name==="Trinity Travel [TEST]";
     const publicUniformUrl=(path:string|null|undefined)=>path?supabase.storage.from("uniform-photos").getPublicUrl(path).data.publicUrl:"";
@@ -205,7 +208,7 @@ export async function getPlayerPortalData(): Promise<PlayerPortalData> {
     // A response is final for the invitation card. Only a pending invitation belongs on Home.
     const invitation=pendingInvitation;
     const initials=profile.display_name.split(/\s+/).map((part:string)=>part[0]).join("").slice(0,2).toUpperCase();
-    return {context:{conference:conference.name,season:season.name,division:division.name,team:team.name},contexts,activeRegistrationId:registration.id,profile:{id:player.public_player_id,name:profile.display_name,initials,status:registration.status==="active"?"Active Player":registration.status==="inactive"?"Inactive":"Pending",mobile:profile.mobile??"",email:player.email??"",birthdate:profile.birthdate?new Intl.DateTimeFormat("en-US",{dateStyle:"long",timeZone:"UTC"}).format(new Date(`${profile.birthdate}T00:00:00Z`)):"",birthdateValue:profile.birthdate??"",location:profile.location??"",jerseyNumber:registration.jersey_number??0,jerseyName:registration.jersey_name??"",position:registration.position??"",preferredPosition:player.preferred_position??"",uniformSize:player.preferred_uniform_size??"",role:roleName(registration.role_label)},roster:liveRoster.length?liveRoster:roster,games:liveGames,divisionSchedule,results:liveResults,notifications:liveNotifications,requiresAttention,paymentSubmissions:liveSubmissions,paymentHistory:livePaymentHistory,availability,myAvailability,teamHasUnavailable,paymentAccount,teamInfo,notificationPreferences,standings,seasonResults,fees:liveFees,invitation,source:"supabase"};
+    return {context:{conference:conference.name,season:season.name,division:division.name,team:team.name},contexts,activeRegistrationId:registration.id,profile:{id:player.public_player_id,name:profile.display_name,initials,status:registration.status==="active"?"Active Player":registration.status==="inactive"?"Inactive":"Pending",mobile:profile.mobile??"",email:player.email??"",birthdate:profile.birthdate?new Intl.DateTimeFormat("en-US",{dateStyle:"long",timeZone:"UTC"}).format(new Date(`${profile.birthdate}T00:00:00Z`)):"",birthdateValue:profile.birthdate??"",location:profile.location??"",jerseyNumber:registration.jersey_number??0,jerseyName:registration.jersey_name??"",position:registration.position??"",preferredPosition:player.preferred_position??"",uniformSize:player.preferred_uniform_size??"",role:roleName(registration.role_label)},roster:liveRoster.length?liveRoster:roster,games:liveGames,divisionSchedule,results:liveResults,notifications:liveNotifications,requiresAttention,profileNeedsAttention:profileNeedsCompletion,paymentNeedsAttention,paymentSubmissions:liveSubmissions,paymentHistory:livePaymentHistory,availability,myAvailability,teamHasUnavailable,paymentAccount,teamInfo,notificationPreferences,standings,seasonResults,fees:liveFees,invitation,source:"supabase"};
   } catch (error) {
     console.error("KCH live data fallback",error);
     return fallback;

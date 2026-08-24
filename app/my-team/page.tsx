@@ -3,7 +3,7 @@ import {getPlayerPortalData} from "@/lib/kch-data";
 
 export default async function Team(){
   const data=await getPlayerPortalData();
-  return <AppShell active="team" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} requiresAttention={data.requiresAttention} teamHasUnavailable={data.teamHasUnavailable}>
+  return <AppShell active="team" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} profileNeedsAttention={data.profileNeedsAttention} paymentNeedsAttention={data.paymentNeedsAttention} teamHasUnavailable={data.teamHasUnavailable}>
     <h1 className="title">My Team</h1><p className="subtitle">Team details &amp; roster</p>
     <section className="card team-banner"><span className="team-mark large">K</span><div><h2>{data.context.team}</h2><p>{data.context.division} &nbsp;•&nbsp; {data.context.season}</p><em>One Team. One Court. <b>One Family.</b></em></div></section>
     <TeamRoster roster={data.teamInfo.divisionRosters.find(team=>team.isMyTeam)?.players.length?data.teamInfo.divisionRosters.find(team=>team.isMyTeam)!.players:data.roster} availability={data.availability}/>

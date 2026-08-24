@@ -17,7 +17,7 @@ function DivisionWeeklyView({games}:{games:DivisionScheduleGame[]}){
 export default async function Schedule(){
   const data=await getPlayerPortalData();
   const [next,...upcoming]=data.games;
-  return <AppShell active="schedule" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} teamHasUnavailable={data.teamHasUnavailable}>
+  return <AppShell active="schedule" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} profileNeedsAttention={data.profileNeedsAttention} paymentNeedsAttention={data.paymentNeedsAttention} teamHasUnavailable={data.teamHasUnavailable}>
     <h1 className="title">Schedule</h1><p className="subtitle">Stay updated. Be ready. One game at a time.</p>
     <p className="season-label">▦ &nbsp; {data.context.season} · {data.context.division}</p>
     <SeasonTabs active="schedule"/>
