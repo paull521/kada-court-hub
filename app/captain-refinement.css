@@ -21,3 +21,4 @@
 .captain-request-list article:last-child{border-bottom:0!important}
 .captain-request-list article>p{font-size:12px;line-height:1.45}
 .captain-manage-details{width:100%;margin:0 0 12px;min-height:45px;display:grid;place-items:center}
+.captain-player-details-disclosure .captain-draft-entry{border:0;box-shadow:none;padding:0}.captain-player-details-disclosure .captain-draft-entry>.owner-section-title{display:none}
