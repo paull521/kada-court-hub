@@ -43,7 +43,8 @@ end;
 $$;
 grant execute on function public.respond_to_season_invitation(uuid,text) to authenticated;
 
-create or replace function public.captain_draft_candidates(p_team_id uuid)
+drop function if exists public.captain_draft_candidates(uuid);
+create function public.captain_draft_candidates(p_team_id uuid)
 returns table(invitation_id uuid,registration_id uuid,public_player_id text,display_name text,selection_status text,preferred_position text)
 language plpgsql security definer set search_path='' as $$
 declare v_division_id uuid;
