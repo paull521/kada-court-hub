@@ -48,7 +48,7 @@ export type PlayerPortalData = {
   standings: StandingRow[];
   seasonResults: SeasonResult[];
   fees: Fee[];
-  invitation: {id:string;seasonName:string;message:string;response:"pending"|"joining"|"not_joining";responseDeadline:string;teamCount:number;playersPerTeam:number;invitedCount:number}|null;
+  invitation: {id:string;conferenceName:string;ownerName:string;seasonName:string;divisionName:string;startsOn:string;endsOn:string;leagueFee:number;uniformFee:number;message:string;response:"pending"|"joining"|"not_joining";responseDeadline:string;teamCount:number;playersPerTeam:number;invitedCount:number}|null;
   source: "supabase"|"fallback";
 };
 
@@ -66,19 +66,26 @@ export async function getPlayerPortalData(): Promise<PlayerPortalData> {
 
     const [{data:profile},{data:player}] = await Promise.all([
       supabase.from("profiles").select("id,display_name,mobile,birthdate,location").eq("id",userId).maybeSingle(),
-      supabase.from("player_profiles").select("id,public_player_id,display_name,email,preferred_uniform_size").eq("profile_id",userId).maybeSingle(),
+      supabase.from("player_profiles").select("id,public_player_id,display_name,email,preferred_uniform_size,preferred_position").eq("profile_id",userId).maybeSingle(),
     ]);
     if (!profile||!player) return fallback;
 
     // Invitations are global to the player, not just the currently selected team.
     // This lets an active player respond to a new division invitation.
-    const {data:pendingInvitationRow}=await supabase.from("season_invitations").select("id,response,broadcast_id,season_id").eq("player_id",player.id).eq("response","pending").order("created_at",{ascending:false}).limit(1).maybeSingle();
-    const [{data:pendingBroadcastRow},{data:pendingSeasonRow}]=pendingInvitationRow?await Promise.all([
+    const {data:pendingInvitationRow}=await supabase.from("season_invitations").select("id,response,broadcast_id,season_id,division_id").eq("player_id",player.id).eq("response","pending").order("created_at",{ascending:false}).limit(1).maybeSingle();
+    const [{data:pendingBroadcastRow},{data:pendingSeasonRow},{data:pendingDivisionRow}]=pendingInvitationRow?await Promise.all([
       supabase.from("season_broadcasts").select("message,response_deadline,team_count,players_per_team,invited_count").eq("id",pendingInvitationRow.broadcast_id).maybeSingle(),
-      supabase.from("seasons").select("name").eq("id",pendingInvitationRow.season_id).maybeSingle(),
-    ]):[{data:null},{data:null}];
-    const pendingInvitation=pendingInvitationRow&&pendingBroadcastRow&&pendingSeasonRow?{id:pendingInvitationRow.id,seasonName:pendingSeasonRow.name,message:pendingBroadcastRow.message,response:"pending" as const,responseDeadline:pendingBroadcastRow.response_deadline??"",teamCount:pendingBroadcastRow.team_count??0,playersPerTeam:pendingBroadcastRow.players_per_team??0,invitedCount:pendingBroadcastRow.invited_count??0}:null;
-    const playerProfile={...fallback.profile,id:player.public_player_id,name:profile.display_name,initials:profile.display_name.split(/\s+/).map((part:string)=>part[0]).join("").slice(0,2).toUpperCase(),status:pendingInvitation?"Invitation pending":"KCH Player",email:player.email??"",mobile:profile.mobile??"",birthdate:profile.birthdate?new Intl.DateTimeFormat("en-US",{dateStyle:"long",timeZone:"UTC"}).format(new Date(`${profile.birthdate}T00:00:00Z`)):"",birthdateValue:profile.birthdate??"",location:profile.location??"",jerseyNumber:0,position:"",uniformSize:player.preferred_uniform_size??"",role:"Player" as const};
+      supabase.from("seasons").select("name,starts_on,ends_on,conference_id").eq("id",pendingInvitationRow.season_id).maybeSingle(),
+      supabase.from("divisions").select("name").eq("id",pendingInvitationRow.division_id).maybeSingle(),
+    ]):[{data:null},{data:null},{data:null}];
+    const [{data:pendingConferenceRow},{data:pendingFinancialRow},{data:pendingOwnerRows}]=pendingInvitationRow&&pendingSeasonRow&&pendingDivisionRow?await Promise.all([
+      supabase.from("conferences").select("name").eq("id",pendingSeasonRow.conference_id).maybeSingle(),
+      supabase.from("division_financial_settings").select("league_fee_enabled,league_fee_cents,uniform_fee_enabled,uniform_fee_cents").eq("division_id",pendingInvitationRow.division_id).maybeSingle(),
+      supabase.from("conference_memberships").select("profiles(display_name)").eq("conference_id",pendingSeasonRow.conference_id).eq("role","owner").limit(1),
+    ]):[{data:null},{data:null},{data:null}];
+    const ownerName=(pendingOwnerRows?.[0]?.profiles as unknown as {display_name?:string}|null)?.display_name??"Conference Owner";
+    const pendingInvitation=pendingInvitationRow&&pendingBroadcastRow&&pendingSeasonRow&&pendingDivisionRow?{id:pendingInvitationRow.id,conferenceName:pendingConferenceRow?.name??"Conference",ownerName,seasonName:pendingSeasonRow.name,divisionName:pendingDivisionRow.name,startsOn:pendingSeasonRow.starts_on??"",endsOn:pendingSeasonRow.ends_on??"",leagueFee:pendingFinancialRow?.league_fee_enabled===false?0:(pendingFinancialRow?.league_fee_cents??0)/100,uniformFee:pendingFinancialRow?.uniform_fee_enabled===false?0:(pendingFinancialRow?.uniform_fee_cents??0)/100,message:pendingBroadcastRow.message,response:"pending" as const,responseDeadline:pendingBroadcastRow.response_deadline??"",teamCount:pendingBroadcastRow.team_count??0,playersPerTeam:pendingBroadcastRow.players_per_team??0,invitedCount:pendingBroadcastRow.invited_count??0}:null;
+    const playerProfile={...fallback.profile,id:player.public_player_id,name:profile.display_name,initials:profile.display_name.split(/\s+/).map((part:string)=>part[0]).join("").slice(0,2).toUpperCase(),status:pendingInvitation?"Invitation pending":"KCH Player",email:player.email??"",mobile:profile.mobile??"",birthdate:profile.birthdate?new Intl.DateTimeFormat("en-US",{dateStyle:"long",timeZone:"UTC"}).format(new Date(`${profile.birthdate}T00:00:00Z`)):"",birthdateValue:profile.birthdate??"",location:profile.location??"",jerseyNumber:0,position:"",preferredPosition:player.preferred_position??"",uniformSize:player.preferred_uniform_size??"",role:"Player" as const};
 
     const [{data:registrationRows},{data:contextOwnerRows}] = await Promise.all([
       supabase.from("registrations").select("id,season_id,team_id,status,jersey_number,position,role_label,created_at").eq("player_id",player.id).not("team_id","is",null).in("status",["active","pending"]).order("created_at",{ascending:false}),
@@ -186,7 +193,7 @@ export async function getPlayerPortalData(): Promise<PlayerPortalData> {
     const notificationEnabled=(type:string)=>type.startsWith("game_")?notificationPreferences.gameUpdates:type.startsWith("payment_")?notificationPreferences.paymentUpdates:type.includes("roster")||type.startsWith("team_")?notificationPreferences.teamUpdates:notificationPreferences.seasonUpdates;
     const playerNotificationPaths=["/home","/payments","/my-team","/schedule","/results","/standings"];
     const liveNotifications:PlayerNotification[]=(notificationRows??[]).filter(row=>notificationEnabled(row.notification_type)&&playerNotificationPaths.some(path=>(row.link_path??"/home").startsWith(path))).map(row=>({id:row.id,type:row.notification_type,title:row.title,body:row.body,linkPath:row.link_path??"/home",read:Boolean(row.read_at),createdLabel:new Intl.DateTimeFormat("en-US",{timeZone:timezone,month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}).format(new Date(row.created_at))}));
-    const profileNeedsCompletion=!(profile.mobile&&profile.birthdate&&profile.location&&player.email);
+    const profileNeedsCompletion=!(profile.mobile&&profile.birthdate&&profile.location&&player.email&&player.preferred_position);
     const paymentNeedsAttention=paymentAccount.balance>0&&paymentAccount.pending===0;
     const unreadActionAnnouncement=liveNotifications.some(notification=>!notification.read&&(/(^|_)(announcement|action|required)(_|$)/.test(notification.type)||notification.type==="season_invitation"));
     const requiresAttention=profileNeedsCompletion||paymentNeedsAttention||unreadActionAnnouncement;
@@ -198,7 +205,7 @@ export async function getPlayerPortalData(): Promise<PlayerPortalData> {
     // A response is final for the invitation card. Only a pending invitation belongs on Home.
     const invitation=pendingInvitation;
     const initials=profile.display_name.split(/\s+/).map((part:string)=>part[0]).join("").slice(0,2).toUpperCase();
-    return {context:{conference:conference.name,season:season.name,division:division.name,team:team.name},contexts,activeRegistrationId:registration.id,profile:{id:player.public_player_id,name:profile.display_name,initials,status:registration.status==="active"?"Active Player":registration.status==="inactive"?"Inactive":"Pending",mobile:profile.mobile??"",email:player.email??"",birthdate:profile.birthdate?new Intl.DateTimeFormat("en-US",{dateStyle:"long",timeZone:"UTC"}).format(new Date(`${profile.birthdate}T00:00:00Z`)):"",birthdateValue:profile.birthdate??"",location:profile.location??"",jerseyNumber:registration.jersey_number??0,position:registration.position??"",uniformSize:player.preferred_uniform_size??"",role:roleName(registration.role_label)},roster:liveRoster.length?liveRoster:roster,games:liveGames,divisionSchedule,results:liveResults,notifications:liveNotifications,requiresAttention,paymentSubmissions:liveSubmissions,paymentHistory:livePaymentHistory,availability,myAvailability,teamHasUnavailable,paymentAccount,teamInfo,notificationPreferences,standings,seasonResults,fees:liveFees,invitation,source:"supabase"};
+    return {context:{conference:conference.name,season:season.name,division:division.name,team:team.name},contexts,activeRegistrationId:registration.id,profile:{id:player.public_player_id,name:profile.display_name,initials,status:registration.status==="active"?"Active Player":registration.status==="inactive"?"Inactive":"Pending",mobile:profile.mobile??"",email:player.email??"",birthdate:profile.birthdate?new Intl.DateTimeFormat("en-US",{dateStyle:"long",timeZone:"UTC"}).format(new Date(`${profile.birthdate}T00:00:00Z`)):"",birthdateValue:profile.birthdate??"",location:profile.location??"",jerseyNumber:registration.jersey_number??0,position:registration.position??"",preferredPosition:player.preferred_position??"",uniformSize:player.preferred_uniform_size??"",role:roleName(registration.role_label)},roster:liveRoster.length?liveRoster:roster,games:liveGames,divisionSchedule,results:liveResults,notifications:liveNotifications,requiresAttention,paymentSubmissions:liveSubmissions,paymentHistory:livePaymentHistory,availability,myAvailability,teamHasUnavailable,paymentAccount,teamInfo,notificationPreferences,standings,seasonResults,fees:liveFees,invitation,source:"supabase"};
   } catch (error) {
     console.error("KCH live data fallback",error);
     return fallback;

@@ -37,7 +37,7 @@ export default function PlayerContextSwitcher({contexts,activeRegistrationId}:{c
     <button className="context-switcher-trigger" type="button" onClick={()=>hasDivisionChoices&&setOpen(true)} aria-haspopup={hasDivisionChoices?"dialog":undefined} aria-expanded={hasDivisionChoices?open:undefined} disabled={!hasDivisionChoices}>
       <span><b>{conferenceLabel}</b></span>{hasDivisionChoices&&<i aria-hidden="true">⌄</i>}
     </button>
-    {open&&<div className="context-overlay" role="presentation" onMouseDown={event=>event.target===event.currentTarget&&setOpen(false)}>
+    {open&&<div className="context-overlay context-overlay-open" role="presentation" onMouseDown={event=>event.target===event.currentTarget&&setOpen(false)}>
       <section className="context-sheet" role="dialog" aria-modal="true" aria-labelledby="context-title">
         <div className="context-sheet-handle"/>
         <header><span><small>PLAYER VIEW</small><h2 id="context-title">Choose your division</h2></span><button type="button" onClick={()=>setOpen(false)} aria-label="Close">×</button></header>

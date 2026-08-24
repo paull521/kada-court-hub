@@ -15,12 +15,12 @@ export default async function Profile({searchParams}:{searchParams:Promise<{view
   const ownerMode=(await searchParams).view==="owner"&&roles.owner;
   const player=data.profile,context=data.context;
   const personal=[["☎","Mobile Number",player.mobile||"Not provided"],["✉","Email",player.email],["▦","Birthdate",player.birthdate||"Not provided"],["⌖","Location",player.location||"Not provided"]];
-  const details=[["♕","Jersey Number",String(player.jerseyNumber||"Not assigned")],["♙","Position",player.position||"Not assigned"],["◇","Team",context.team],["♕","Preferred Uniform Size",player.uniformSize||"Not provided"]];
+  const details=[["♕","Jersey Number",String(player.jerseyNumber||"Not assigned")],["♙","Position",player.position||"Not assigned"],["◇","Team",context.team],["♙","Preferred Position",player.preferredPosition||"Please complete"],["♕","Preferred Uniform Size",player.uniformSize||"Not provided"]];
   return <AppShell active="profile" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} requiresAttention={data.requiresAttention} teamHasUnavailable={data.teamHasUnavailable} homeHref={ownerMode?"/owner":"/home"}>
     <h1 className="title">Profile</h1><p className="subtitle">Manage your account and player details</p>
     <section className="card profile-card"><span className="avatar">{player.initials}</span><div><h2>{player.name}</h2><p>KCH Player ID: &nbsp;{player.id}</p><b className="status">● &nbsp;{player.status}</b></div></section>
     <RoleSwitcher roles={roles} current={ownerMode?"owner":"player"}/>
-    <ProfileEditForm mobile={player.mobile} email={player.email} birthdate={player.birthdateValue} location={player.location}/>
+    <ProfileEditForm mobile={player.mobile} email={player.email} birthdate={player.birthdateValue} location={player.location} preferredPosition={player.preferredPosition}/>
     <InfoPanel title="PERSONAL INFO" rows={personal}/><InfoPanel title="PLAYER DETAILS" rows={details}/>
     <h2 className="profile-section-title">ACCOUNT</h2>
     <div className="profile-account-list"><NotificationPreferencesForm preferences={data.notificationPreferences}/><Link href="/payments#payment-history" className="card account-link"><span>▣</span><b>Payment History</b><strong>›</strong></Link><Link href="/legal" className="card account-link"><span>▢</span><b>Privacy &amp; Terms</b><strong>›</strong></Link><form action={logoutAction}><button className="card account-link logout-account"><span>↪</span><b>Log Out</b><strong>›</strong></button></form></div>

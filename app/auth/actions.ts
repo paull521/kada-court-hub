@@ -1,7 +1,7 @@
 "use server";
 
 import {redirect} from "next/navigation";
-import {cookies} from "next/headers";
+import {cookies,headers} from "next/headers";
 import {isSupabaseConfigured} from "@/lib/supabase/config";
 import {createClient} from "@/lib/supabase/server";
 
@@ -37,10 +37,32 @@ export async function signUpAction(_: AuthActionState, formData: FormData): Prom
 
   if(nextPath)(await cookies()).set("kch_return_path",nextPath,{httpOnly:true,sameSite:"lax",path:"/",maxAge:60*60*24});
   const supabase = await createClient();
-  const {data, error} = await supabase.auth.signUp({email, password, options:{data:{display_name:displayName}}});
+  const origin=(await headers()).get("origin")??process.env.NEXT_PUBLIC_SITE_URL??"";
+  const confirmationPath=nextPath?`/auth/callback?next=${encodeURIComponent(nextPath)}`:"/auth/callback";
+  const {data, error} = await supabase.auth.signUp({email, password, options:{data:{display_name:displayName},emailRedirectTo:origin?`${origin}${confirmationPath}`:undefined}});
   if (error) return {error: error.message};
   if (!data.session) return {message: nextPath?"Check your email to confirm your new KCH profile. After confirmation, log in and KCH will return you to this division.":"Check your email to confirm your new KCH profile."};
   redirect(nextPath||"/home");
+}
+
+export async function requestPasswordResetAction(_:AuthActionState,formData:FormData):Promise<AuthActionState>{
+  if(!isSupabaseConfigured())return{error:"Password recovery is available once Supabase is connected."};
+  const email=String(formData.get("email")??"").trim().toLowerCase();
+  if(!email)return{error:"Enter the email for your KCH profile."};
+  const origin=(await headers()).get("origin")??process.env.NEXT_PUBLIC_SITE_URL??"";
+  const supabase=await createClient();
+  const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:origin?`${origin}/auth/callback?next=/reset-password`:undefined});
+  if(error)return{error:"We could not send the reset email. Please try again."};
+  return{message:"If that email has a KCH profile, a password-reset link is on its way."};
+}
+
+export async function updatePasswordAction(_:AuthActionState,formData:FormData):Promise<AuthActionState>{
+  const password=String(formData.get("password")??"");
+  if(password.length<8)return{error:"Use a password with at least 8 characters."};
+  const supabase=await createClient();
+  const {error}=await supabase.auth.updateUser({password});
+  if(error)return{error:"This reset link is no longer valid. Please request a new one."};
+  return{message:"Password updated. You can now log in."};
 }
 
 export async function logoutAction() {
