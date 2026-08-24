@@ -132,7 +132,8 @@ returns void language plpgsql security definer set search_path=''
 as $$
 declare v_request public.roster_change_requests%rowtype;v_conference_id uuid;v_division_id uuid;v_note text:=nullif(trim(p_owner_note),'');
 begin
-  select r,s.conference_id,t.division_id into v_request,v_conference_id,v_division_id from public.roster_change_requests r join public.seasons s on s.id=r.season_id join public.teams t on t.id=r.team_id where r.id=p_request_id for update;
+  select s.conference_id,t.division_id into v_conference_id,v_division_id from public.roster_change_requests r join public.seasons s on s.id=r.season_id join public.teams t on t.id=r.team_id where r.id=p_request_id for update;
+  select * into v_request from public.roster_change_requests where id=p_request_id for update;
   if v_request.id is null or not exists(select 1 from public.conference_memberships m where m.conference_id=v_conference_id and m.profile_id=(select auth.uid()) and m.role='owner') then raise exception 'Owner access is required.'; end if;
   if v_request.status<>'pending' then raise exception 'This request has already been reviewed.'; end if;
   if p_decision not in ('approved','declined') then raise exception 'Choose Approve or Decline.'; end if;
