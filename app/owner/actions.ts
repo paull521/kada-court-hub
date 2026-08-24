@@ -240,6 +240,12 @@ export async function assignDraftPlayerAction(_:OwnerActionState,formData:FormDa
   return ownerRpc("owner_assign_draft_player",{p_invitation_id:invitationId,p_team_id:teamId,p_jersey_number:jersey,p_position:position||null},"Draft assignment saved.");
 }
 
+export async function returnPlayerToDraftPoolAction(_:OwnerActionState,formData:FormData):Promise<OwnerActionState>{
+  const registrationId=value(formData,"registrationId"),reason=value(formData,"reason");
+  if(!uuidPattern.test(registrationId)||reason.length<3||reason.length>500)return{error:"Add a short reason before returning this player to the draft pool."};
+  return ownerRpc("owner_return_player_to_draft_pool",{p_registration_id:registrationId,p_reason:reason},"Player returned to the division draft pool.");
+}
+
 export async function publishRosterDraftAction(_:OwnerActionState,formData:FormData):Promise<OwnerActionState>{
   const seasonId=value(formData,"seasonId"),message=value(formData,"message");
   if(!uuidPattern.test(seasonId)||message.length<1||message.length>1000)return{error:"Enter a roster-draft message of up to 1,000 characters."};

@@ -4,7 +4,7 @@ import Link from "next/link";
 import {useActionState,useState} from "react";
 import styles from "./OwnerTeams.module.css";
 import directoryStyles from "./OwnerDirectory.module.css";
-import {addConferencePlayerAction,addExistingPlayerAction,addInSeasonPlayerAction,addRosterPlayerAction,advanceSeasonSetupAction,assignDirectoryLeaderAction,assignDraftPlayerAction,cancelSeasonAction,changeGameStatusAction,completeExistingScheduleAction,completePreseasonDetailsAction,copyPreviousUniformsAction,createDivisionAction,createDivisionsAction,createGameAction,createSeasonAction,createTeamAction,createTeamsAction,finalizeDivisionScheduleAction,generateDivisionScheduleAction,generateSeasonScheduleAction,inviteDivisionPlayersAction,inviteExistingDivisionPlayerAction,overrideInSeasonRosterAction,publishDivisionFinalRosterAction,publishDivisionRosterAction,rescheduleGameAction,reviewPaymentNoticeAction,reviewRosterChangeRequestAction,reviewTeamRosterAction,saveDivisionGameDayAction,saveDivisionPreseasonAction,setDivisionRosterReviewDeadlineAction,updateDivisionUniformImagesAction,updateLeadershipAction,updateRosterPlayerAction,updateTeamAction,type OwnerActionState} from "@/app/owner/actions";
+import {addConferencePlayerAction,addExistingPlayerAction,addInSeasonPlayerAction,addRosterPlayerAction,advanceSeasonSetupAction,assignDirectoryLeaderAction,assignDraftPlayerAction,cancelSeasonAction,changeGameStatusAction,completeExistingScheduleAction,completePreseasonDetailsAction,copyPreviousUniformsAction,createDivisionAction,createDivisionsAction,createGameAction,createSeasonAction,createTeamAction,createTeamsAction,finalizeDivisionScheduleAction,generateDivisionScheduleAction,generateSeasonScheduleAction,inviteDivisionPlayersAction,inviteExistingDivisionPlayerAction,overrideInSeasonRosterAction,publishDivisionFinalRosterAction,publishDivisionRosterAction,rescheduleGameAction,returnPlayerToDraftPoolAction,reviewPaymentNoticeAction,reviewRosterChangeRequestAction,reviewTeamRosterAction,saveDivisionGameDayAction,saveDivisionPreseasonAction,setDivisionRosterReviewDeadlineAction,updateDivisionUniformImagesAction,updateLeadershipAction,updateRosterPlayerAction,updateTeamAction,type OwnerActionState} from "@/app/owner/actions";
 import type {OwnerDirectoryPlayer,OwnerDivision,OwnerPaymentGroup,OwnerPaymentSubmission,OwnerRosterPlayer,OwnerRosterRequest,OwnerSeason,OwnerTeam} from "@/lib/owner-data";
 
 const initialState:OwnerActionState={};
@@ -411,7 +411,12 @@ function TeamManagementEditor({team}:{team:OwnerTeam}){
 
 function TeamEditor({team}:{team:OwnerTeam}){
   const players=team.players.filter(player=>player.status==="active");
-  return <details className="game-action-card"><summary><span className="owner-team-mark">{team.name.slice(0,2).toUpperCase()}</span><span><b>{team.name}</b><small>{players.length} player{players.length===1?"":"s"}</small></span><strong>›</strong></summary>{players.length?<div className="game-form">{players.map(player=><p key={player.registrationId}><b>{player.name}</b> · {player.position||"Position not set"}</p>)}</div>:<p className="empty-note">No active players yet.</p>}</details>;
+  return <details className="game-action-card"><summary><span className="owner-team-mark">{team.name.slice(0,2).toUpperCase()}</span><span><b>{team.name}</b><small>{players.length} player{players.length===1?"":"s"}</small></span><strong>›</strong></summary>{players.length?<div className="game-form">{players.map(player=><TeamPlayerRow key={player.registrationId} player={player}/>)}</div>:<p className="empty-note">No active players yet.</p>}</details>;
+}
+
+function TeamPlayerRow({player}:{player:OwnerRosterPlayer}){
+  const[state,action,pending]=useActionState(returnPlayerToDraftPoolAction,initialState);
+  return <details className="roster-player-editor"><summary><span><b>{player.name}</b><small>#{player.jerseyNumber??"—"} · {player.position||"Position not set"} · {player.role}</small></span><strong>›</strong></summary><form action={action} className="owner-form"><input type="hidden" name="registrationId" value={player.registrationId}/><label>Reason for returning to the draft pool<textarea name="reason" maxLength={500} required placeholder="Roster correction, trade, or replacement…"/></label><Feedback state={state}/><button className="btn secondary" disabled={pending||player.role!=="Player"}>{pending?"Returning…":player.role==="Player"?"Return to Draft Pool":"Captains cannot be removed here"}</button></form></details>;
 }
 
 export function SeasonDirectory({seasons}:{seasons:OwnerSeason[]}){

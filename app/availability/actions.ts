@@ -12,6 +12,6 @@ export async function setAvailabilityAction(_:AvailabilityActionState,formData:F
   const supabase=await createClient();
   const{error}=await supabase.rpc("set_game_availability",{p_game_id:gameId,p_available:response==="yes"});
   if(error)return{error:error.message.includes("function")?"Install the Captain workspace SQL first.":error.message};
-  revalidatePath("/home");revalidatePath("/my-team");revalidatePath("/schedule");revalidatePath("/captain");revalidatePath("/captain/availability");
+  revalidatePath("/home");revalidatePath("/my-team");revalidatePath("/schedule");revalidatePath("/captain");revalidatePath("/captain/team");revalidatePath("/captain/availability");
   return{message:response==="yes"?"You are marked available.":"Your team can now see that you are unavailable."};
 }

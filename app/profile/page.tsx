@@ -15,7 +15,7 @@ export default async function Profile({searchParams}:{searchParams:Promise<{view
   const ownerMode=(await searchParams).view==="owner"&&roles.owner;
   const player=data.profile,context=data.context;
   const personal=[["☎","Mobile Number",player.mobile||"Not provided"],["✉","Email",player.email],["▦","Birthdate",player.birthdate||"Not provided"],["⌖","Location",player.location||"Not provided"]];
-  const details=[["♕","Jersey Number",String(player.jerseyNumber||"Not assigned")],["♙","Position",player.position||"Not assigned"],["◇","Team",context.team],["♙","Preferred Position",player.preferredPosition||"Please complete"],["♕","Preferred Uniform Size",player.uniformSize||"Not provided"]];
+  const details=[["♕","Jersey Number",String(player.jerseyNumber||"Not assigned")],["♕","Jersey Name",player.jerseyName||"Not assigned"],["♙","Position",player.position||"Not assigned"],["◇","Team",context.team],["♙","Preferred Position",player.preferredPosition||"Please complete"],["♕","Preferred Uniform Size",player.uniformSize||"Not provided"]];
   return <AppShell active="profile" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} requiresAttention={data.requiresAttention} teamHasUnavailable={data.teamHasUnavailable} homeHref={ownerMode?"/owner":"/home"}>
     <h1 className="title">Profile</h1><p className="subtitle">Manage your account and player details</p>
     <section className="card profile-card"><span className="avatar">{player.initials}</span><div><h2>{player.name}</h2><p>KCH Player ID: &nbsp;{player.id}</p><b className="status">● &nbsp;{player.status}</b></div></section>

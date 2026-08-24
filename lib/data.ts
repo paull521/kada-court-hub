@@ -4,7 +4,7 @@ export type Player = { id:string; number:number; name:string; position:string; r
 export type Game = { id:string; day:string; month:string; date:string; dateLabel:string; time:string; opponent:string; venue:string; court:string; side:"Home"|"Away"; uniform:"White"|"Dark" };
 export type GameResult = Game & {teamScore:number;opponentScore:number;outcome:"W"|"L"|"T"};
 export type Fee = {id:string;label:string;amount:number;icon:string};
-export type PlayerView = {id:string;name:string;initials:string;status:string;mobile:string;email:string;birthdate:string;birthdateValue:string;location:string;jerseyNumber:number;position:string;preferredPosition:string;uniformSize:string;role:"Player"|"Captain"|"Co-captain"};
+export type PlayerView = {id:string;name:string;initials:string;status:string;mobile:string;email:string;birthdate:string;birthdateValue:string;location:string;jerseyNumber:number;jerseyName:string;position:string;preferredPosition:string;uniformSize:string;role:"Player"|"Captain"|"Co-captain"};
 
 export const currentContext = {conference:"Seattle Filipino Basketball League",season:"Summer 2026",division:"Division A",team:"Team Kada"};
 
@@ -29,5 +29,5 @@ export const games: Game[] = [
  {id:"g-0927",day:"SUN",month:"SEP",date:"27",dateLabel:"Sunday, Sep 27",time:"3:00 PM",opponent:"Ballers United",venue:"Kada Court Center",court:"Court 3",side:"Home",uniform:"White"},
 ];
 
-export const currentPlayer: PlayerView = {id:"KCH-028",name:"Paul Lazarte",initials:"PL",status:"Active Player",mobile:"(425) 555-0128",email:"paul.lazarte@example.com",birthdate:"May 12, 1975",birthdateValue:"1975-05-12",location:"North Bend, WA",jerseyNumber:28,position:"Forward",preferredPosition:"F",uniformSize:"XL",role:"Player"};
+export const currentPlayer: PlayerView = {id:"KCH-028",name:"Paul Lazarte",initials:"PL",status:"Active Player",mobile:"(425) 555-0128",email:"paul.lazarte@example.com",birthdate:"May 12, 1975",birthdateValue:"1975-05-12",location:"North Bend, WA",jerseyNumber:28,jerseyName:"",position:"Forward",preferredPosition:"F",uniformSize:"XL",role:"Player"};
 export const fees: Fee[] = [{id:"league",label:"League Fee",amount:110,icon:"◉"},{id:"uniform",label:"Uniform Fee",amount:60,icon:"♕"},{id:"platform",label:"Platform Fee",amount:1,icon:"▣"}];
