@@ -10,7 +10,7 @@ export default async function Home(){
   const data=await getPlayerPortalData();
   const supabase=await createClient();
   const{data:requiredRules}=data.activeRegistrationId?await supabase.rpc("get_registration_rules",{p_registration_id:data.activeRegistrationId}):{data:null};
-  if(requiredRules?.length)redirect(`/rules?registration=${data.activeRegistrationId}`);
+  if(requiredRules?.[0]&&!requiredRules[0].acknowledged_at)redirect(`/rules?registration=${data.activeRegistrationId}`);
   const next=data.games[0];
   const firstName=data.profile.name.split(" ")[0];
   if(!data.contexts.length)return <AppShell active="home" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} profileNeedsAttention={data.profileNeedsAttention} paymentNeedsAttention={data.paymentNeedsAttention} teamHasUnavailable={false}>
