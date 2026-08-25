@@ -29,6 +29,7 @@ async function ownerRpc(name:string,args:Record<string,unknown>,success:string):
   revalidatePath("/owner/scores");
   revalidatePath("/owner/uniforms");
   revalidatePath("/owner/payments");
+  revalidatePath("/owner/roster");
   revalidatePath("/owner/financials");
   revalidatePath("/owner/more");
   revalidatePath("/home");
@@ -238,6 +239,12 @@ export async function sendLateTeamInvitationAction(_:OwnerActionState,formData:F
   const teamId=value(formData,"teamId"),playerId=value(formData,"playerId");
   if(!uuidPattern.test(teamId)||!uuidPattern.test(playerId))return{error:"Choose a player and team."};
   return ownerRpc("owner_send_late_team_invitation",{p_team_id:teamId,p_player_id:playerId},"Late invitation sent.");
+}
+
+export async function moveExistingDivisionPlayerAction(_:OwnerActionState,formData:FormData):Promise<OwnerActionState>{
+  const registrationId=value(formData,"registrationId"),teamId=value(formData,"teamId");
+  if(!uuidPattern.test(registrationId)||!uuidPattern.test(teamId))return{error:"Choose a player and their new team."};
+  return ownerRpc("owner_move_player_between_teams",{p_registration_id:registrationId,p_target_team_id:teamId},"Player moved to the selected team.");
 }
 
 export async function assignDraftPlayerAction(_:OwnerActionState,formData:FormData):Promise<OwnerActionState>{
