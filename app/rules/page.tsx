@@ -17,7 +17,9 @@ export default async function RulesPage({searchParams}:{searchParams:Promise<{in
   else if(params.registration){const{data:row}=await supabase.rpc("get_registration_rules",{p_registration_id:params.registration});record=(row?.[0]??null) as RuleRecord|null;}
   else if(params.required&&data.activeRegistrationId){const{data:row}=await supabase.rpc("get_registration_rules",{p_registration_id:data.activeRegistrationId});record=(row?.[0]??null) as RuleRecord|null;}
   if(!record)return <AppShell active="profile" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} profileNeedsAttention={data.profileNeedsAttention} paymentNeedsAttention={data.paymentNeedsAttention} teamHasUnavailable={data.teamHasUnavailable}><h1 className="title">Rules &amp; Discipline</h1><section className="card rules-empty"><h2>Rules record unavailable</h2><Link href="/profile" className="btn primary">Back to Profile</Link></section></AppShell>;
-  const acknowledging=Boolean((params.invitation||params.required||params.registration)&&!record.acknowledged_at);
+  // A pending invitation still needs its join step completed even if its rules
+  // acknowledgement was saved during an earlier interrupted attempt.
+  const acknowledging=Boolean(params.invitation||((params.required||params.registration)&&!record.acknowledged_at));
   return <AppShell active="profile" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} profileNeedsAttention={data.profileNeedsAttention} paymentNeedsAttention={data.paymentNeedsAttention} teamHasUnavailable={data.teamHasUnavailable}>
     <h1 className="title">Rules &amp; Discipline</h1>
     <p className="subtitle">{record.conference_name} · {record.season_name}{record.division_name?` · ${record.division_name}`:""}</p>
