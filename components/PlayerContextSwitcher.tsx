@@ -9,8 +9,9 @@ export default function PlayerContextSwitcher({contexts,activeRegistrationId}:{c
   const [open,setOpen]=useState(false);
   const [pending,startTransition]=useTransition();
   const [error,setError]=useState("");
+  const [selectedRegistrationId,setSelectedRegistrationId]=useState(activeRegistrationId);
   const router=useRouter();
-  const active=contexts.find(context=>context.registrationId===activeRegistrationId)??contexts[0];
+  const active=contexts.find(context=>context.registrationId===selectedRegistrationId)??contexts[0];
   const hasDivisionChoices=new Set(contexts.map(context=>context.divisionId)).size>1;
   const conferenceLabel=active?.conference?.toLowerCase().includes("seattle filipino")||active?.conference?.toLowerCase().includes("kch basketball")?"KCH BBALL":active?.conference||"KCH BBALL";
 
@@ -25,10 +26,12 @@ export default function PlayerContextSwitcher({contexts,activeRegistrationId}:{c
 
   function choose(registrationId:string) {
     setError("");
+    const previous=selectedRegistrationId;
+    setSelectedRegistrationId(registrationId);
+    setOpen(false);
     startTransition(async()=>{
       const result=await switchPlayerContextAction(registrationId);
-      if (result.error) return setError(result.error);
-      setOpen(false);
+      if (result.error) {setSelectedRegistrationId(previous);setError(result.error);setOpen(true);return;}
       router.refresh();
     });
   }

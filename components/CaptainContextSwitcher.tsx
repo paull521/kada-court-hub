@@ -8,8 +8,9 @@ export default function CaptainContextSwitcher({contexts,activeRegistrationId}:{
   const [open,setOpen]=useState(false);
   const [pending,startTransition]=useTransition();
   const [error,setError]=useState("");
+  const [selectedRegistrationId,setSelectedRegistrationId]=useState(activeRegistrationId);
   const router=useRouter();
-  const active=contexts.find(context=>context.registrationId===activeRegistrationId)??contexts[0];
+  const active=contexts.find(context=>context.registrationId===selectedRegistrationId)??contexts[0];
 
   useEffect(()=>{
     if(!open)return;
@@ -22,10 +23,12 @@ export default function CaptainContextSwitcher({contexts,activeRegistrationId}:{
 
   function choose(registrationId:string){
     setError("");
+    const previous=selectedRegistrationId;
+    setSelectedRegistrationId(registrationId);
+    setOpen(false);
     startTransition(async()=>{
       const result=await switchCaptainContextAction(registrationId);
-      if(result.error)return setError(result.error);
-      setOpen(false);
+      if(result.error){setSelectedRegistrationId(previous);setError(result.error);setOpen(true);return;}
       router.refresh();
     });
   }
