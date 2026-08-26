@@ -6,7 +6,7 @@ import {isSupabaseConfigured} from "@/lib/supabase/config";
 import {createClient} from "@/lib/supabase/server";
 
 export type AuthActionState = {error?: string; message?: string};
-const safeReturnPath=(path:string)=>/^\/join\/[0-9a-f-]{36}$/i.test(path)?path:"";
+const safeReturnPath=(path:string)=>/^\/(?:join|invite)\/[0-9a-f-]{36}$/i.test(path)?path:"";
 
 function credentials(formData: FormData) {
   return {
@@ -41,7 +41,7 @@ export async function signUpAction(_: AuthActionState, formData: FormData): Prom
   const confirmationPath=nextPath?`/auth/callback?next=${encodeURIComponent(nextPath)}`:"/auth/callback";
   const {data, error} = await supabase.auth.signUp({email, password, options:{data:{display_name:displayName},emailRedirectTo:origin?`${origin}${confirmationPath}`:undefined}});
   if (error) return {error: error.message};
-  if (!data.session) return {message: nextPath?"Check your email to confirm your new KCH profile. After confirmation, log in and KCH will return you to this division.":"Check your email to confirm your new KCH profile."};
+  if (!data.session) return {message: nextPath?"Check your email to confirm your new KCH profile. After confirmation, log in and KCH will return you to your invitation.":"Check your email to confirm your new KCH profile."};
   redirect(nextPath||"/home");
 }
 
