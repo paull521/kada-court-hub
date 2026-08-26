@@ -94,17 +94,17 @@ export async function getPlayerPortalData(): Promise<PlayerPortalData> {
     const playerProfile={...fallback.profile,id:player.public_player_id,name:profile.display_name,initials:profile.display_name.split(/\s+/).map((part:string)=>part[0]).join("").slice(0,2).toUpperCase(),status:pendingInvitation?"Invitation pending":"KCH Player",email:player.email??"",mobile:profile.mobile??"",birthdate:profile.birthdate?new Intl.DateTimeFormat("en-US",{dateStyle:"long",timeZone:"UTC"}).format(new Date(`${profile.birthdate}T00:00:00Z`)):"",birthdateValue:profile.birthdate??"",location:profile.location??"",jerseyNumber:0,jerseyName:"",position:"",preferredPosition:player.preferred_position??"",uniformSize:player.preferred_uniform_size??"",role:"Player" as const};
 
     const [{data:registrationRows},{data:contextOwnerRows}] = await Promise.all([
-      supabase.from("registrations").select("id,season_id,team_id,status,jersey_number,jersey_name,position,role_label,created_at").eq("player_id",player.id).not("team_id","is",null).in("status",["active","pending"]).order("created_at",{ascending:false}),
+      supabase.from("registrations").select("id,season_id,team_id,status,jersey_number,jersey_name,position,role_label,created_at").eq("player_id",player.id).not("team_id","is",null).eq("status","active").order("created_at",{ascending:false}),
       supabase.rpc("get_player_context_owners"),
     ]);
     if (!registrationRows?.length) return {...fallback,profile:playerProfile,invitation:pendingInvitation,source:"supabase"};
 
     const registeredTeamIds=[...new Set(registrationRows.flatMap(row=>row.team_id?[row.team_id]:[]))];
-    const {data:registeredTeams}=registeredTeamIds.length?await supabase.from("teams").select("id,name,division_id").in("id",registeredTeamIds):{data:[]};
+    const {data:registeredTeams}=registeredTeamIds.length?await supabase.from("teams").select("id,name,division_id,active").in("id",registeredTeamIds):{data:[]};
     const registeredDivisionIds=[...new Set((registeredTeams??[]).map(row=>row.division_id))];
     const {data:registeredDivisions}=registeredDivisionIds.length?await supabase.from("divisions").select("id,name,season_id").in("id",registeredDivisionIds):{data:[]};
     const registeredSeasonIds=[...new Set((registeredDivisions??[]).map(row=>row.season_id))];
-    const {data:registeredSeasons}=registeredSeasonIds.length?await supabase.from("seasons").select("id,name,conference_id").in("id",registeredSeasonIds):{data:[]};
+    const {data:registeredSeasons}=registeredSeasonIds.length?await supabase.from("seasons").select("id,name,conference_id,starts_on,ends_on,canceled_at,archived_at").in("id",registeredSeasonIds):{data:[]};
     const registeredConferenceIds=[...new Set((registeredSeasons??[]).map(row=>row.conference_id))];
     const {data:registeredConferences}=registeredConferenceIds.length?await supabase.from("conferences").select("id,name,timezone").in("id",registeredConferenceIds):{data:[]};
 
@@ -113,12 +113,13 @@ export async function getPlayerPortalData(): Promise<PlayerPortalData> {
     const seasonMap=new Map((registeredSeasons??[]).map(row=>[row.id,row]));
     const conferenceMap=new Map((registeredConferences??[]).map(row=>[row.id,row]));
     const ownerNameByRegistration=new Map<string,string>((contextOwnerRows??[]).map((row:{registration_id:string;owner_name:string})=>[row.registration_id,row.owner_name]));
+    const today=new Date().toISOString().slice(0,10);
     const contexts:PlayerContextOption[]=registrationRows.flatMap(row=>{
       const contextTeam=row.team_id?teamMap.get(row.team_id):undefined;
       const contextDivision=contextTeam?divisionMap.get(contextTeam.division_id):undefined;
       const contextSeason=contextDivision?seasonMap.get(contextDivision.season_id):undefined;
       const contextConference=contextSeason?conferenceMap.get(contextSeason.conference_id):undefined;
-      return contextTeam&&contextDivision&&contextSeason&&contextConference?[{registrationId:row.id,conference:contextConference.name,season:contextSeason.name,divisionId:contextDivision.id,division:contextDivision.name,team:contextTeam.name,ownerName:ownerNameByRegistration.get(row.id)??"Conference Owner"}]:[];
+      return contextTeam?.active&&contextDivision&&contextSeason&&contextSeason.starts_on<=today&&contextSeason.ends_on>=today&&!contextSeason.canceled_at&&!contextSeason.archived_at&&contextConference?[{registrationId:row.id,conference:contextConference.name,season:contextSeason.name,divisionId:contextDivision.id,division:contextDivision.name,team:contextTeam.name,ownerName:ownerNameByRegistration.get(row.id)??"Conference Owner"}]:[];
     });
     if (!contexts.length) return {...fallback,profile:playerProfile,invitation:pendingInvitation,source:"supabase"};
 

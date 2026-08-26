@@ -6,7 +6,7 @@ import {isSupabaseConfigured} from "@/lib/supabase/config";
 import {createClient} from "@/lib/supabase/server";
 
 export type AuthActionState = {error?: string; message?: string};
-const safeReturnPath=(path:string)=>/^\/(?:join|invite)\/[0-9a-f-]{36}$/i.test(path)?path:"";
+const safeReturnPath=(path:string)=>path==="/platform"||path==="/platform/owner-invitation"||/^\/(?:join|invite)\/[0-9a-f-]{36}$/i.test(path)||/^\/platform\/invite\/[0-9a-f-]{36}$/i.test(path)?path:"";
 
 function credentials(formData: FormData) {
   return {

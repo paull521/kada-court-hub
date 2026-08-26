@@ -1,0 +1,43 @@
+"use client";
+
+import {useActionState} from "react";
+import {acceptOwnerInvitationAction,registerOwnerApplicantAction,signOwnerApplicationContractAction,signOwnerContractAction,submitSubscriptionPaymentAction,type PlatformActionState} from "@/app/platform/actions";
+import type {OwnerPaymentBilling} from "@/lib/owner-payment-ledger";
+
+const initial:PlatformActionState={};
+const money=(amount:number)=>`$${amount.toFixed(2)}`;
+const paymentTimestamp=(value:string)=>new Intl.DateTimeFormat("en-US",{month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit"}).format(new Date(value));
+
+export function SubscriptionConfirmations({pendingCount}:{pendingCount:number}){return <section className="card platform-tile platform-payments"><span className="platform-icon">▣</span><p className="eyebrow">SUBSCRIPTIONS</p><h2>Owner Payments</h2><p>Verify and approve payments.</p>{pendingCount>0&&<small className="platform-attention">{pendingCount} awaiting approval</small>}</section>}
+
+export function OwnerSubscriptionPayment({conferenceId,billing}:{conferenceId:string;billing:OwnerPaymentBilling}){
+ const[state,action,pending]=useActionState(submitSubscriptionPaymentAction,initial);
+ const activePlayers=billing.divisions.reduce((sum,division)=>sum+division.activePlayers,0);
+ const platformFee=billing.entries.filter(entry=>entry.chargeType==="platform_fee").reduce((sum,entry)=>sum+entry.amountCents,0)/100;
+ const balance=billing.entries.reduce((sum,entry)=>sum+entry.balanceCents,0)/100;
+ const received=billing.entries.reduce((sum,entry)=>sum+entry.paidCents,0)/100;
+ const pendingSubmission=billing.submissions.find(item=>item.status==="pending");
+ const status=pendingSubmission?"Awaiting confirmation":balance===0?"Paid":received>0?"Partial paid":"Not paid";
+ const statusClass=balance===0?"paid":pendingSubmission?"confirmation":"partial";
+ const currentMonth=new Date().toISOString().slice(0,7)+"-01";
+ const subscriptions=billing.entries.filter(entry=>entry.chargeType==="subscription");
+ const previousCost=subscriptions.filter(entry=>entry.dueOn&&entry.dueOn<currentMonth).reduce((sum,entry)=>sum+entry.balanceCents,0)/100;
+ const currentCost=subscriptions.filter(entry=>!entry.dueOn||entry.dueOn>=currentMonth).reduce((sum,entry)=>sum+entry.balanceCents,0)/100;
+ const pendingMessage=pendingSubmission?`${pendingSubmission.method==="zelle"?"Zelle":"Cash"} payment of ${money(pendingSubmission.amountCents/100)} is awaiting Platform Creator confirmation.`:"KCH tracks this obligation; the owner handles the transfer.";
+ return <>
+  <details className="monthly-subscription-dropdown">
+   <summary><span><b>Monthly Subscription</b><small>{activePlayers} active players · {money(platformFee)} platform fee{pendingSubmission?` · ${pendingSubmission.method==="zelle"?"Zelle":"Cash"}`:""}</small></span><em className={`owner-subscription-status ${statusClass}`}>{status}</em><strong>›</strong></summary>
+   <div className="monthly-subscription-body">
+    <div className="owner-platform-table-wrap"><table><thead><tr><th>ACTIVE DIVISION</th><th>ACTIVE PLAYERS</th><th>PLATFORM FEE TOTAL</th></tr></thead><tbody>{billing.divisions.length?billing.divisions.map(division=><tr key={division.divisionName}><td>{division.divisionName}</td><td>{division.activePlayers}</td><td>{money(division.platformFeeCents/100)}</td></tr>):<tr><td colSpan={3}>No active divisions yet.</td></tr>}</tbody></table></div>
+    <div className="owner-platform-breakdown"><span><small>PREVIOUS MONTHS COST</small><b>{money(previousCost)}</b></span><span><small>CURRENT MONTH COST</small><b>{money(currentCost)}</b></span><span><small>PLATFORM FEE</small><b>{money(platformFee)}</b></span><span><small>RECEIVED</small><b>{money(received)}</b></span></div>
+    <section className="owner-platform-balance"><header><span><small>BALANCE DUE</small><b>{money(balance)}</b></span><p>{pendingMessage}</p></header>{!pendingSubmission&&balance>0&&<form action={action} className="platform-form"><input type="hidden" name="conferenceId" value={conferenceId}/><label className="owner-payment-amount"><span>Amount sent</span><input name="amount" defaultValue={balance.toFixed(2)} type="number" min="0.01" max={balance.toFixed(2)} step="0.01" required/></label><fieldset className="method-choice owner-payment-methods"><legend>Payment method</legend><label><input type="radio" name="method" value="zelle" required/><span><b>ℤ</b> Zelle</span></label><label><input type="radio" name="method" value="cash" required/><span><b>▣</b> Cash</span></label></fieldset><button className="btn primary" disabled={pending}>{pending?"Sending…":"Send payment"}</button></form>}</section>
+    {state.error&&<p className="form-error">{state.error}</p>}{state.message&&<p className="form-success">{state.message}</p>}
+   </div>
+  </details>
+  <details className="card payment-history-panel owner-subscription-history"><summary><b>Payment History</b><strong>›</strong></summary><div className="payment-history-scroll">{billing.submissions.length?billing.submissions.map(submission=><div className="payment-history-row" key={submission.id}><span>{submission.status==="confirmed"?"✓":"!"}</span><span><b>{submission.method==="zelle"?"Zelle":"Cash"} payment</b><small>{paymentTimestamp(submission.submittedAt)} · {submission.status}</small></span><strong>{money(submission.amountCents/100)}</strong></div>):<p className="empty-note">No payments have been sent yet.</p>}</div></details>
+ </>;
+}
+
+export function AcceptOwnerInvitation({token}:{token:string}){const[state,action,pending]=useActionState(acceptOwnerInvitationAction,initial);return <form action={action} className="card loginbox"><input type="hidden" name="token" value={token}/><p className="setup-note">This creates your private owner workspace. Your conference details remain visible only to you and your members.</p>{state.error&&<p className="form-error">{state.error}</p>}<button className="btn primary" disabled={pending}>{pending?"Opening workspace…":"Accept invitation"}</button></form>}
+export function OwnerContractSignature({token}:{token:string}){const[s,a,p]=useActionState(signOwnerContractAction,initial);return <form action={a} className="card loginbox"><input type="hidden" name="token" value={token}/><p className="setup-note">KCH setup fee: $100. Monthly subscription: $50, due on the 1st. Platform Fee: $1 per player, division, and season after final-roster approval.</p><label><input type="checkbox" required/> I agree to the KCH Owner Service Agreement.</label><label>Type your full legal name<input name="signedName" required/></label><button className="btn primary" disabled={p}>{p?"Signing…":"Sign Agreement"}</button>{s.error&&<p className="form-error">{s.error}</p>}{s.message&&<p className="form-success">{s.message}</p>}</form>}
+export function OwnerApplication(){const[start,startAction,starting]=useActionState(registerOwnerApplicantAction,initial);const[sign,signAction,signing]=useActionState(signOwnerApplicationContractAction,initial);return <div className="card loginbox">{!start.token?<form action={startAction}><p className="setup-note">This invitation gives your KCH profile the option to become an Owner. Your full access begins after you complete the digital contract and Platform Creator creates your conference.</p><button className="btn primary" disabled={starting}>{starting?"Starting…":"Apply to become an Owner"}</button>{start.error&&<p className="form-error">{start.error}</p>}</form>:<form action={signAction}><input type="hidden" name="ownerId" value={start.token}/><p className="setup-note">KCH setup fee: $100. Monthly subscription: $50, due on the 1st. Platform Fee: $1 per player, division, and season after final-roster approval.</p><label><input type="checkbox" required/> I agree to the KCH Owner Service Agreement.</label><label>Type your full legal name<input name="signedName" required/></label><button className="btn primary" disabled={signing}>{signing?"Signing…":"Sign digital contract"}</button>{sign.error&&<p className="form-error">{sign.error}</p>}{sign.message&&<p className="form-success">{sign.message}</p>}</form>}</div>}

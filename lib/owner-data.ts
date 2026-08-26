@@ -28,6 +28,8 @@ export async function getOwnerPortalData():Promise<OwnerPortalData>{
   if(!userId)return empty;
 
   const {data:ownerProfile}=await supabase.from("profiles").select("display_name").eq("id",userId).maybeSingle();
+  const {data:platformOwnerRecord}=await supabase.from("platform_owner_records").select("status").eq("profile_id",userId).maybeSingle();
+  if(platformOwnerRecord?.status==="suspended")return empty;
   const {data:memberships}=await supabase.from("conference_memberships").select("conference_id,created_at").eq("profile_id",userId).eq("role","owner").order("created_at",{ascending:false});
   if(!memberships?.length)return empty;
   const ownedConferenceIds=memberships.map(membership=>membership.conference_id);

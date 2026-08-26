@@ -1,6 +1,7 @@
 import AppShell from "@/components/AppShell";
 import SeasonTabs from "@/components/SeasonTabs";
 import {getPlayerPortalData,type DivisionScheduleGame} from "@/lib/kch-data";
+import {redirect} from "next/navigation";
 import type {Game} from "@/lib/data";
 
 function GameRow({game}:{game:Game}){return <section className="card game-row"><time><b>{game.day}</b><span>{game.month}</span><strong>{game.date}</strong></time><div className="game-place"><strong>{game.time}</strong><span>⌖ &nbsp;{game.venue}<br/>&nbsp;&nbsp;&nbsp; {game.court}</span></div><div className="mini-match"><span className="team-mark tiny">K</span><b>VS</b><span>{game.opponent}</span></div><div className="game-uniform"><small>UNIFORM</small><span><i className={`uniform-dot ${game.uniform.toLowerCase()}`}/>{game.uniform.toUpperCase()}</span></div><b>›</b></section>}
@@ -16,6 +17,7 @@ function DivisionWeeklyView({games}:{games:DivisionScheduleGame[]}){
 
 export default async function Schedule(){
   const data=await getPlayerPortalData();
+  if(!data.contexts.length)redirect("/home");
   const [next,...upcoming]=data.games;
   return <AppShell active="schedule" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} profileNeedsAttention={data.profileNeedsAttention} paymentNeedsAttention={data.paymentNeedsAttention} teamHasUnavailable={data.teamHasUnavailable}>
     <h1 className="title">Schedule</h1><p className="subtitle">Stay updated. Be ready. One game at a time.</p>

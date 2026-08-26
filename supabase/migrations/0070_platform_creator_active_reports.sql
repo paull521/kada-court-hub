@@ -1,0 +1,20 @@
+-- Active reports for the Platform Creator dashboard.
+create or replace function public.platform_creator_dashboard()
+returns jsonb language plpgsql security definer set search_path='' as $$
+declare v_admin_name text;v_conferences integer;v_owners integer;v_divisions integer;v_paid integer;v_due integer;v_players integer;v_pending jsonb;v_invites jsonb;
+begin
+  if not public.is_platform_creator() then return jsonb_build_object('authorized',false); end if;
+  select display_name into v_admin_name from public.profiles where id=(select auth.uid());
+  select count(*) into v_conferences from public.conferences where coalesce(is_test,false)=false;
+  select count(distinct membership.profile_id) into v_owners from public.conference_memberships membership join public.conferences conference on conference.id=membership.conference_id where membership.role='owner' and coalesce(conference.is_test,false)=false;
+  select count(*) into v_divisions from public.divisions division join public.seasons season on season.id=division.season_id join public.conferences conference on conference.id=season.conference_id where season.canceled_at is null and season.ends_on>=current_date and coalesce(conference.is_test,false)=false;
+  select count(*) filter(where subscription.status='paid' and subscription.paid_through>=current_date),count(*) filter(where subscription.status<>'paid' or subscription.paid_through<current_date) into v_paid,v_due from public.conference_subscriptions subscription join public.conferences conference on conference.id=subscription.conference_id where coalesce(conference.is_test,false)=false;
+  select count(*) into v_players from public.registrations registration join public.teams team on team.id=registration.team_id join public.divisions division on division.id=team.division_id join public.seasons season on season.id=division.season_id join public.conferences conference on conference.id=season.conference_id where registration.status='active' and season.canceled_at is null and season.ends_on>=current_date and coalesce(conference.is_test,false)=false;
+  select coalesce(jsonb_agg(jsonb_build_object('id',submission.id,'conferenceName',conference.name,'ownerName',profile.display_name,'amount',submission.amount_cents/100.0,'method',submission.method,'submittedAt',submission.submitted_at) order by submission.submitted_at desc),'[]'::jsonb) into v_pending from public.conference_subscription_payment_submissions submission join public.conferences conference on conference.id=submission.conference_id join public.profiles profile on profile.id=submission.submitted_by where submission.status='pending';
+  select coalesce(jsonb_agg(jsonb_build_object('id',invite.id,'conferenceName',invite.conference_name,'email',invite.email,'token',invite.token,'createdAt',invite.expires_at-interval '14 days','acceptedAt',invite.accepted_at) order by invite.expires_at desc),'[]'::jsonb) into v_invites from public.platform_owner_invitations invite;
+  return jsonb_build_object('authorized',true,'admin_name',coalesce(v_admin_name,''),'conference_count',v_conferences,'owner_count',v_owners,'active_divisions',v_divisions,'active_subscriptions',v_paid,'subscriptions_due',v_due,'active_players',v_players,'platform_fee_cents',v_players*100,'pending_subscription_payments',v_pending,'recent_invitations',v_invites);
+end;
+$$;
+
+revoke all on function public.platform_creator_dashboard() from public;
+grant execute on function public.platform_creator_dashboard() to authenticated;

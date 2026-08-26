@@ -6,14 +6,14 @@ import {loginAction, requestPasswordResetAction, signUpAction, updatePasswordAct
 
 const initialState: AuthActionState = {};
 
-export function LoginForm({demoMode,nextPath=""}:{demoMode:boolean;nextPath?:string}) {
+export function LoginForm({demoMode,nextPath="",allowSignUp=true}:{demoMode:boolean;nextPath?:string;allowSignUp?:boolean}) {
   const [state, action, pending] = useActionState(loginAction, initialState);
   return <form action={action} className="card loginbox"><input type="hidden" name="nextPath" value={nextPath}/>
     {demoMode && <p className="setup-note">Demo mode is active. Log In opens the prototype until Supabase is connected.</p>}
     <label htmlFor="email">Email</label><div className="input-wrap"><span>✉</span><input id="email" name="email" type="email" autoComplete="email" placeholder="Enter your email"/></div>
     <label htmlFor="password">Password</label><div className="input-wrap"><span>♙</span><input id="password" name="password" type="password" autoComplete="current-password" placeholder="Enter your password"/><b>◉</b></div>
     {state.error && <p className="form-error" role="alert">{state.error}</p>}
-    <Link href="/login?forgot=1" className="forgot">Forgot Password?</Link><button className="btn primary" disabled={pending}>{pending?"Logging In…":"Log In"}</button><Link className="btn secondary" href={nextPath?`/sign-up?next=${encodeURIComponent(nextPath)}`:"/sign-up"}>Create Profile</Link>
+    <Link href="/login?forgot=1" className="forgot">Forgot Password?</Link><button className="btn primary" disabled={pending}>{pending?"Logging In…":"Log In"}</button>{allowSignUp&&<Link className="btn secondary" href={nextPath?`/sign-up?next=${encodeURIComponent(nextPath)}`:"/sign-up"}>Create Profile</Link>}
   </form>;
 }
 

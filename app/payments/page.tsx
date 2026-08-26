@@ -1,9 +1,11 @@
 import AppShell from "@/components/AppShell";
 import PlayerPaymentForm from "@/components/PlayerPaymentForm";
 import {getPlayerPortalData} from "@/lib/kch-data";
+import {redirect} from "next/navigation";
 
 export default async function Payments(){
   const data=await getPlayerPortalData();
+  if(!data.contexts.length)redirect("/home");
   const account=data.paymentAccount;
   return <AppShell active="payments" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} profileNeedsAttention={data.profileNeedsAttention} paymentNeedsAttention={data.paymentNeedsAttention} teamHasUnavailable={data.teamHasUnavailable}>
     <h1 className="title">Payments</h1><p className="subtitle">View fees and report manual payments.</p>

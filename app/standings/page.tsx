@@ -1,9 +1,11 @@
 import AppShell from "@/components/AppShell";
 import SeasonTabs from "@/components/SeasonTabs";
 import {getPlayerPortalData} from "@/lib/kch-data";
+import {redirect} from "next/navigation";
 
 export default async function StandingsPage(){
   const data=await getPlayerPortalData();
+  if(!data.contexts.length)redirect("/home");
   return <AppShell active="schedule" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} profileNeedsAttention={data.profileNeedsAttention} paymentNeedsAttention={data.paymentNeedsAttention} teamHasUnavailable={data.teamHasUnavailable}>
     <h1 className="title">Standings</h1><p className="subtitle">See where every team stands.</p>
     <p className="season-label">▦ &nbsp; {data.context.season} · {data.context.division}</p>

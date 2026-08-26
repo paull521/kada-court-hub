@@ -1,0 +1,5 @@
+import Image from "next/image";
+import Link from "next/link";
+import {AcceptOwnerInvitation,OwnerContractSignature} from "@/components/PlatformCreatorTools";
+
+export default async function PlatformOwnerInvitePage({params}:{params:Promise<{token:string}>}){const {token}=await params;const valid=/^[0-9a-f-]{36}$/i.test(token);return <div className="shell login-shell"><header className="login-logo"><Image src="/kch-logo.png" alt="KadaCourtHub" width={420} height={160} priority/></header><main className="login"><p className="eyebrow">OWNER INVITATION</p><h1>Run your<br/>conference.</h1><p className="subtitle">Create or sign in to your KCH account, then sign the agreement. Owner access activates after Platform Creator review.</p>{valid?<><AcceptOwnerInvitation token={token}/><OwnerContractSignature token={token}/></>:<p className="form-error">This invitation link is not valid.</p>}<Link href={`/login?next=${encodeURIComponent(`/platform/invite/${token}`)}`} className="btn secondary">I already have a KCH profile</Link></main></div>}
