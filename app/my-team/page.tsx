@@ -5,7 +5,7 @@ import {redirect} from "next/navigation";
 export default async function Team(){
   const data=await getPlayerPortalData();
   if(!data.contexts.length)redirect("/home");
-  return <AppShell active="team" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} profileNeedsAttention={data.profileNeedsAttention} paymentNeedsAttention={data.paymentNeedsAttention} teamHasUnavailable={data.teamHasUnavailable}>
+  return <AppShell active="team" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} profileNeedsAttention={data.profileNeedsAttention} paymentNeedsAttention={data.paymentNeedsAttention} teamHasUnavailable={data.teamHasUnavailable} conferenceName={data.context.conference}>
     <h1 className="title">My Team</h1><p className="subtitle">Team details &amp; roster</p>
     <section className="card team-banner"><span className="team-mark large">K</span><div><h2>{data.context.team}</h2><p>{data.context.division} &nbsp;•&nbsp; {data.context.season}</p><em>One Team. One Court. <b>One Family.</b></em></div></section>
     <TeamRoster roster={data.teamInfo.divisionRosters.find(team=>team.isMyTeam)?.players.length?data.teamInfo.divisionRosters.find(team=>team.isMyTeam)!.players:data.roster} availability={data.availability}/>
