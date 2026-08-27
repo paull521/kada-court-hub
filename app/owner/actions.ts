@@ -59,6 +59,8 @@ export async function createTestConferenceAction(_:OwnerActionState,formData:For
 
 export async function selectOwnerConferenceAction(formData:FormData):Promise<void>{
   const conferenceId=value(formData,"conferenceId");
+  const requestedPath=value(formData,"returnPath");
+  const returnPath=requestedPath.startsWith("/owner")&&!requestedPath.startsWith("//")?requestedPath:"/owner";
   if(!uuidPattern.test(conferenceId))redirect("/owner/conferences");
   const supabase=await createClient();
   const {data:claims}=await supabase.auth.getClaims();
@@ -66,7 +68,7 @@ export async function selectOwnerConferenceAction(formData:FormData):Promise<voi
   const {data}=await supabase.from("conference_memberships").select("id").eq("conference_id",conferenceId).eq("profile_id",claims.claims.sub).eq("role","owner").maybeSingle();
   if(data)(await cookies()).set("kch_owner_conference",conferenceId,ownerConferenceCookie);
   revalidatePath("/owner","layout");
-  redirect("/owner");
+  redirect(returnPath);
 }
 
 export async function createSeasonAction(_:OwnerActionState,formData:FormData):Promise<OwnerActionState>{
