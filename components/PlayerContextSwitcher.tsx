@@ -12,7 +12,7 @@ export default function PlayerContextSwitcher({contexts,activeRegistrationId}:{c
   const [selectedRegistrationId,setSelectedRegistrationId]=useState(activeRegistrationId);
   const router=useRouter();
   const active=contexts.find(context=>context.registrationId===selectedRegistrationId)??contexts[0];
-  const hasDivisionChoices=new Set(contexts.map(context=>context.divisionId)).size>1;
+  const hasContextChoices=contexts.length>1;
   const conferenceLabel=active?.conference?.toLowerCase().includes("seattle filipino")||active?.conference?.toLowerCase().includes("kch basketball")?"KCH BBALL":active?.conference||"KCH BBALL";
 
   useEffect(()=>{
@@ -37,13 +37,13 @@ export default function PlayerContextSwitcher({contexts,activeRegistrationId}:{c
   }
 
   return <>
-    <button className="context-switcher-trigger" type="button" onClick={()=>hasDivisionChoices&&setOpen(true)} aria-haspopup={hasDivisionChoices?"dialog":undefined} aria-expanded={hasDivisionChoices?open:undefined} disabled={!hasDivisionChoices}>
-      <span><b>{conferenceLabel}</b></span>{hasDivisionChoices&&<i aria-hidden="true">⌄</i>}
+    <button className="context-switcher-trigger" type="button" onClick={()=>hasContextChoices&&setOpen(true)} aria-haspopup={hasContextChoices?"dialog":undefined} aria-expanded={hasContextChoices?open:undefined} disabled={!hasContextChoices}>
+      <span><b>{conferenceLabel}</b></span>{hasContextChoices&&<i aria-hidden="true">⌄</i>}
     </button>
     {open&&<div className="context-overlay context-overlay-open" role="presentation" onMouseDown={event=>event.target===event.currentTarget&&setOpen(false)}>
       <section className="context-sheet" role="dialog" aria-modal="true" aria-labelledby="context-title">
         <div className="context-sheet-handle"/>
-        <header><span><small>PLAYER VIEW</small><h2 id="context-title">Choose your division</h2></span><button type="button" onClick={()=>setOpen(false)} aria-label="Close">×</button></header>
+        <header><span><small>PLAYER VIEW</small><h2 id="context-title">Choose your conference or division</h2></span><button type="button" onClick={()=>setOpen(false)} aria-label="Close">×</button></header>
         <p className="context-help">Your Home, Team, Schedule, Payments, and Profile will update together.</p>
         <div className="context-options">{contexts.map(context=><button className={`context-option ${context.registrationId===active.registrationId?"selected":""}`} type="button" disabled={pending} onClick={()=>choose(context.registrationId)} key={context.registrationId}>
           <span className="context-option-mark" aria-hidden="true">{context.registrationId===active.registrationId?"✓":"K"}</span>

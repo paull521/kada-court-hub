@@ -105,21 +105,26 @@ export async function getPlayerPortalData(): Promise<PlayerPortalData> {
     const {data:registeredDivisions}=registeredDivisionIds.length?await supabase.from("divisions").select("id,name,season_id").in("id",registeredDivisionIds):{data:[]};
     const registeredSeasonIds=[...new Set((registeredDivisions??[]).map(row=>row.season_id))];
     const {data:registeredSeasons}=registeredSeasonIds.length?await supabase.from("seasons").select("id,name,conference_id,starts_on,ends_on,canceled_at,archived_at").in("id",registeredSeasonIds):{data:[]};
+    const {data:registeredGames}=registeredSeasonIds.length?await supabase.from("games").select("season_id,starts_at,status").in("season_id",registeredSeasonIds).neq("status","canceled"):{data:[]};
     const registeredConferenceIds=[...new Set((registeredSeasons??[]).map(row=>row.conference_id))];
     const {data:registeredConferences}=registeredConferenceIds.length?await supabase.from("conferences").select("id,name,timezone").in("id",registeredConferenceIds):{data:[]};
 
     const teamMap=new Map((registeredTeams??[]).map(row=>[row.id,row]));
     const divisionMap=new Map((registeredDivisions??[]).map(row=>[row.id,row]));
     const seasonMap=new Map((registeredSeasons??[]).map(row=>[row.id,row]));
+    const lastGameBySeason=new Map<string,string>();
+    for(const game of registeredGames??[]){const date=game.starts_at.slice(0,10),previous=lastGameBySeason.get(game.season_id);if(!previous||date>previous)lastGameBySeason.set(game.season_id,date)}
     const conferenceMap=new Map((registeredConferences??[]).map(row=>[row.id,row]));
     const ownerNameByRegistration=new Map<string,string>((contextOwnerRows??[]).map((row:{registration_id:string;owner_name:string})=>[row.registration_id,row.owner_name]));
-    const today=new Date().toISOString().slice(0,10);
     const contexts:PlayerContextOption[]=registrationRows.flatMap(row=>{
       const contextTeam=row.team_id?teamMap.get(row.team_id):undefined;
       const contextDivision=contextTeam?divisionMap.get(contextTeam.division_id):undefined;
       const contextSeason=contextDivision?seasonMap.get(contextDivision.season_id):undefined;
       const contextConference=contextSeason?conferenceMap.get(contextSeason.conference_id):undefined;
-      return contextTeam?.active&&contextDivision&&contextSeason&&contextSeason.starts_on<=today&&contextSeason.ends_on>=today&&!contextSeason.canceled_at&&!contextSeason.archived_at&&contextConference?[{registrationId:row.id,conference:contextConference.name,season:contextSeason.name,divisionId:contextDivision.id,division:contextDivision.name,team:contextTeam.name,ownerName:ownerNameByRegistration.get(row.id)??"Conference Owner"}]:[];
+      const today=new Date().toISOString().slice(0,10),lastGame=contextSeason?lastGameBySeason.get(contextSeason.id):undefined,lastGameAccessThrough=lastGame?new Date(`${lastGame}T00:00:00Z`):null;
+      if(lastGameAccessThrough)lastGameAccessThrough.setUTCDate(lastGameAccessThrough.getUTCDate()+7);
+      const gameAccessActive=lastGameAccessThrough?lastGameAccessThrough.toISOString().slice(0,10)>=today:false;
+      return contextTeam?.active&&contextDivision&&contextSeason&&(contextSeason.ends_on>=today||gameAccessActive)&&!contextSeason.canceled_at&&!contextSeason.archived_at&&contextConference?[{registrationId:row.id,conference:contextConference.name,season:contextSeason.name,divisionId:contextDivision.id,division:contextDivision.name,team:contextTeam.name,ownerName:ownerNameByRegistration.get(row.id)??"Conference Owner"}]:[];
     });
     if (!contexts.length) return {...fallback,profile:playerProfile,invitation:pendingInvitation,source:"supabase"};
 
