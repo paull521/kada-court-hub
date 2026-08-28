@@ -1,9 +1,21 @@
-import {NextResponse} from "next/server";
-import {createClient} from "@/lib/supabase/server";
+import {createServerClient} from "@supabase/ssr";
+import {NextResponse,type NextRequest} from "next/server";
+import {getSupabaseConfig} from "@/lib/supabase/config";
 
-export async function GET(request:Request){
+export async function GET(request:NextRequest){
   const url=new URL(request.url),code=url.searchParams.get("code"),next=url.searchParams.get("next");
   const destination=next&&/^\/(?!\/)/.test(next)?next:"/home";
-  if(code){const supabase=await createClient();await supabase.auth.exchangeCodeForSession(code);}
-  return NextResponse.redirect(new URL(destination,url.origin));
+  let response=NextResponse.redirect(new URL(destination,url.origin));
+  if(code){
+    const {url:supabaseUrl,publishableKey}=getSupabaseConfig();
+    const supabase=createServerClient(supabaseUrl,publishableKey,{cookies:{getAll:()=>request.cookies.getAll(),setAll(cookiesToSet){cookiesToSet.forEach(({name,value})=>request.cookies.set(name,value));response=NextResponse.redirect(new URL(destination,url.origin));cookiesToSet.forEach(({name,value,options})=>response.cookies.set(name,value,options));}}});
+    const {error}=await supabase.auth.exchangeCodeForSession(code);
+    if(error){
+      const errorUrl=new URL("/login",url.origin);
+      errorUrl.searchParams.set("forgot","1");
+      errorUrl.searchParams.set("resetError",process.env.NODE_ENV==="development"?error.message:"This reset link is no longer valid. Please request a new one.");
+      return NextResponse.redirect(errorUrl);
+    }
+  }
+  return response;
 }

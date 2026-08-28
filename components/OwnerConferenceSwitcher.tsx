@@ -8,6 +8,7 @@ import type {OwnerConferenceOption} from "@/lib/owner-data";
 export default function OwnerConferenceSwitcher({conferences,currentId}:{conferences:OwnerConferenceOption[];currentId:string}){
   const [open,setOpen]=useState(false);
   const pathname=usePathname();
+  const returnPath=pathname==="/profile"?"/profile?view=owner":pathname;
   const current=conferences.find(conference=>conference.id===currentId)??conferences[0];
   const hasChoices=conferences.length>1;
 
@@ -29,7 +30,7 @@ export default function OwnerConferenceSwitcher({conferences,currentId}:{confere
         <div className="context-sheet-handle"/>
         <header><span><small>OWNER VIEW</small><h2 id="owner-conference-title">Choose your conference</h2></span><button type="button" onClick={()=>setOpen(false)} aria-label="Close">×</button></header>
         <p className="context-help">Your owner workspace will update to the selected conference.</p>
-        <div className="context-options">{conferences.map(conference=><form action={selectOwnerConferenceAction} key={conference.id}><input type="hidden" name="conferenceId" value={conference.id}/><input type="hidden" name="returnPath" value={pathname}/><button className={`context-option ${conference.id===current.id?"selected":""}`} type="submit" disabled={conference.id===current.id}><span className="context-option-mark" aria-hidden="true">{conference.id===current.id?"✓":"K"}</span><span><b>{conference.name}</b><small>Conference owner workspace</small></span><strong aria-hidden="true">{conference.id===current.id?"Current":"›"}</strong></button></form>)}</div>
+        <div className="context-options">{conferences.map(conference=><form action={selectOwnerConferenceAction} key={conference.id}><input type="hidden" name="conferenceId" value={conference.id}/><input type="hidden" name="returnPath" value={returnPath}/><button className={`context-option ${conference.id===current.id?"selected":""}`} type="submit" disabled={conference.id===current.id}><span className="context-option-mark" aria-hidden="true">{conference.id===current.id?"✓":"K"}</span><span><b>{conference.name}</b><small>Conference owner workspace</small></span><strong aria-hidden="true">{conference.id===current.id?"Current":"›"}</strong></button></form>)}</div>
       </section>
     </div>}
   </>;

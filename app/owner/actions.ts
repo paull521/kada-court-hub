@@ -60,7 +60,7 @@ export async function createTestConferenceAction(_:OwnerActionState,formData:For
 export async function selectOwnerConferenceAction(formData:FormData):Promise<void>{
   const conferenceId=value(formData,"conferenceId");
   const requestedPath=value(formData,"returnPath");
-  const returnPath=requestedPath.startsWith("/owner")&&!requestedPath.startsWith("//")?requestedPath:"/owner";
+  const returnPath=requestedPath==="/profile?view=owner"||requestedPath.startsWith("/owner")&&!requestedPath.startsWith("//")?requestedPath:"/owner";
   if(!uuidPattern.test(conferenceId))redirect("/owner/conferences");
   const supabase=await createClient();
   const {data:claims}=await supabase.auth.getClaims();
@@ -69,6 +69,12 @@ export async function selectOwnerConferenceAction(formData:FormData):Promise<voi
   if(data)(await cookies()).set("kch_owner_conference",conferenceId,ownerConferenceCookie);
   revalidatePath("/owner","layout");
   redirect(returnPath);
+}
+
+export async function setConferencePlayerStatusAction(_:OwnerActionState,formData:FormData):Promise<OwnerActionState>{
+  const conferenceId=value(formData,"conferenceId"),playerId=value(formData,"playerId"),status=value(formData,"status");
+  if(!uuidPattern.test(conferenceId)||!uuidPattern.test(playerId)||!["active","suspended","inactive"].includes(status))return{error:"Choose a valid player status."};
+  return ownerRpc("owner_set_conference_player_status",{p_conference_id:conferenceId,p_player_id:playerId,p_status:status},"Player status updated.");
 }
 
 export async function createSeasonAction(_:OwnerActionState,formData:FormData):Promise<OwnerActionState>{

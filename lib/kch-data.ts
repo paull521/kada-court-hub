@@ -93,9 +93,10 @@ export async function getPlayerPortalData(): Promise<PlayerPortalData> {
     const pendingInvitation=pendingInvitationRow&&pendingBroadcastRow&&pendingSeasonRow&&pendingDivisionRow?{id:pendingInvitationRow.id,conferenceName:pendingConferenceRow?.name??"Conference",ownerName,seasonName:pendingSeasonRow.name,divisionName:pendingDivisionRow.name,startsOn:pendingSeasonRow.starts_on??"",endsOn:pendingSeasonRow.ends_on??"",leagueFee:pendingFinancialRow?.league_fee_enabled===false?0:(pendingFinancialRow?.league_fee_cents??0)/100,uniformFee:pendingFinancialRow?.uniform_fee_enabled===false?0:(pendingFinancialRow?.uniform_fee_cents??0)/100,message:pendingBroadcastRow.message,response:"pending" as const,responseDeadline:pendingBroadcastRow.response_deadline??"",teamCount:pendingBroadcastRow.team_count??0,playersPerTeam:pendingBroadcastRow.players_per_team??0,invitedCount:pendingBroadcastRow.invited_count??0}:null;
     const playerProfile={...fallback.profile,id:player.public_player_id,name:profile.display_name,initials:profile.display_name.split(/\s+/).map((part:string)=>part[0]).join("").slice(0,2).toUpperCase(),status:pendingInvitation?"Invitation pending":"KCH Player",email:player.email??"",mobile:profile.mobile??"",birthdate:profile.birthdate?new Intl.DateTimeFormat("en-US",{dateStyle:"long",timeZone:"UTC"}).format(new Date(`${profile.birthdate}T00:00:00Z`)):"",birthdateValue:profile.birthdate??"",location:profile.location??"",jerseyNumber:0,jerseyName:"",position:"",preferredPosition:player.preferred_position??"",uniformSize:player.preferred_uniform_size??"",role:"Player" as const};
 
-    const [{data:registrationRows},{data:contextOwnerRows}] = await Promise.all([
+    const [{data:registrationRows},{data:contextOwnerRows},{data:conferenceStatusRows}] = await Promise.all([
       supabase.from("registrations").select("id,season_id,team_id,status,jersey_number,jersey_name,position,role_label,created_at").eq("player_id",player.id).not("team_id","is",null).eq("status","active").order("created_at",{ascending:false}),
       supabase.rpc("get_player_context_owners"),
+      supabase.rpc("get_my_conference_player_statuses"),
     ]);
     if (!registrationRows?.length) return {...fallback,profile:playerProfile,invitation:pendingInvitation,source:"supabase"};
 
@@ -115,6 +116,7 @@ export async function getPlayerPortalData(): Promise<PlayerPortalData> {
     const lastGameBySeason=new Map<string,string>();
     for(const game of registeredGames??[]){const date=game.starts_at.slice(0,10),previous=lastGameBySeason.get(game.season_id);if(!previous||date>previous)lastGameBySeason.set(game.season_id,date)}
     const conferenceMap=new Map((registeredConferences??[]).map(row=>[row.id,row]));
+    const conferenceStatus=new Map((conferenceStatusRows??[]).map((row:{conference_id:string;status:string})=>[row.conference_id,row.status]));
     const ownerNameByRegistration=new Map<string,string>((contextOwnerRows??[]).map((row:{registration_id:string;owner_name:string})=>[row.registration_id,row.owner_name]));
     const contexts:PlayerContextOption[]=registrationRows.flatMap(row=>{
       const contextTeam=row.team_id?teamMap.get(row.team_id):undefined;
@@ -124,7 +126,7 @@ export async function getPlayerPortalData(): Promise<PlayerPortalData> {
       const today=new Date().toISOString().slice(0,10),lastGame=contextSeason?lastGameBySeason.get(contextSeason.id):undefined,lastGameAccessThrough=lastGame?new Date(`${lastGame}T00:00:00Z`):null;
       if(lastGameAccessThrough)lastGameAccessThrough.setUTCDate(lastGameAccessThrough.getUTCDate()+7);
       const gameAccessActive=lastGameAccessThrough?lastGameAccessThrough.toISOString().slice(0,10)>=today:false;
-      return contextTeam?.active&&contextDivision&&contextSeason&&(contextSeason.ends_on>=today||gameAccessActive)&&!contextSeason.canceled_at&&!contextSeason.archived_at&&contextConference?[{registrationId:row.id,conference:contextConference.name,season:contextSeason.name,divisionId:contextDivision.id,division:contextDivision.name,team:contextTeam.name,ownerName:ownerNameByRegistration.get(row.id)??"Conference Owner"}]:[];
+      return contextTeam?.active&&contextDivision&&contextSeason&&(contextSeason.ends_on>=today||gameAccessActive)&&!contextSeason.canceled_at&&!contextSeason.archived_at&&contextConference&&conferenceStatus.get(contextConference.id)==="active"?[{registrationId:row.id,conference:contextConference.name,season:contextSeason.name,divisionId:contextDivision.id,division:contextDivision.name,team:contextTeam.name,ownerName:ownerNameByRegistration.get(row.id)??"Conference Owner"}]:[];
     });
     if (!contexts.length) return {...fallback,profile:playerProfile,invitation:pendingInvitation,source:"supabase"};
 
