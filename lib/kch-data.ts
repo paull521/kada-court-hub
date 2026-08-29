@@ -62,7 +62,7 @@ const rosterOrder=(left:Player,right:Player)=>{
   return rank(left.role)-rank(right.role)||(left.number||Number.MAX_SAFE_INTEGER)-(right.number||Number.MAX_SAFE_INTEGER)||left.name.localeCompare(right.name);
 };
 
-export async function getPlayerPortalData(): Promise<PlayerPortalData> {
+export async function getPlayerPortalData(scope:"full"|"home"="full"): Promise<PlayerPortalData> {
   await connection();
   try {
     const supabase = await createClient();
@@ -138,6 +138,35 @@ export async function getPlayerPortalData(): Promise<PlayerPortalData> {
     const division=divisionMap.get(team.division_id)!;
     const season=seasonMap.get(division.season_id)!;
     const conference=conferenceMap.get(season.conference_id)!;
+
+    if(scope==="home"){
+      const[{data:homeGameRows},{data:feeRows},{data:notificationRows},{data:submissionRows},{data:preferenceRow},{data:workflowRow},{data:paymentRows},{data:waiverRows}]=await Promise.all([
+        supabase.from("games").select("id,home_team_id,away_team_id,starts_at,venue,court,home_uniform,away_uniform,home_score,away_score,status").eq("season_id",season.id).or(`home_team_id.eq.${team.id},away_team_id.eq.${team.id}`).order("starts_at"),
+        supabase.from("fees").select("id,category,description,amount_cents,status").eq("registration_id",registration.id),
+        supabase.from("notifications").select("id,notification_type,title,body,link_path,read_at,created_at").eq("profile_id",userId).order("created_at",{ascending:false}).limit(20),
+        supabase.from("payment_submissions").select("id,registration_id,fee_id,amount_cents,method,status,reference,review_note,created_at").eq("profile_id",userId).order("created_at",{ascending:false}),
+        supabase.from("notification_preferences").select("game_updates,team_updates,payment_updates,season_updates").eq("profile_id",userId).maybeSingle(),
+        supabase.from("division_schedule_workflows").select("status").eq("division_id",division.id).maybeSingle(),
+        supabase.from("payments").select("id,registration_id,fee_id,amount_cents,method,paid_at").eq("registration_id",registration.id).order("paid_at",{ascending:false}),
+        supabase.from("registration_waivers").select("amount_cents").eq("registration_id",registration.id),
+      ]);
+      const homeTeamIds=[...new Set((homeGameRows??[]).flatMap(row=>[row.home_team_id,row.away_team_id]))];
+      const{data:homeTeamRows}=homeTeamIds.length?await supabase.from("teams").select("id,name").in("id",homeTeamIds):{data:[]};
+      const homeTeamNames=new Map((homeTeamRows??[]).map(row=>[row.id,row.name]));
+      const timezone=conference.timezone||"America/Los_Angeles",now=Date.now();
+      const mappedHomeGames=(workflowRow?.status==="final"?(homeGameRows??[]):[]).filter(row=>row.status!=="postponed"&&row.status!=="canceled").map(row=>{const date=new Date(row.starts_at),home=row.home_team_id===team.id,parts=new Intl.DateTimeFormat("en-US",{timeZone:timezone,weekday:"short",month:"short",day:"2-digit"}).formatToParts(date),get=(type:Intl.DateTimeFormatPartTypes)=>parts.find(part=>part.type===type)?.value??"";return{game:{id:row.id,day:get("weekday").toUpperCase(),month:get("month").toUpperCase(),date:get("day"),dateLabel:new Intl.DateTimeFormat("en-US",{timeZone:timezone,weekday:"long",month:"short",day:"numeric"}).format(date),time:new Intl.DateTimeFormat("en-US",{timeZone:timezone,hour:"numeric",minute:"2-digit"}).format(date),opponent:homeTeamNames.get(home?row.away_team_id:row.home_team_id)??"Opponent",venue:row.venue,court:row.court??"",side:home?"Home":"Away",uniform:(home?row.home_uniform:row.away_uniform)==="Dark"?"Dark":"White"} as Game,startsAt:date.getTime(),teamScore:home?row.home_score:row.away_score,opponentScore:home?row.away_score:row.home_score};});
+      const liveGames=mappedHomeGames.filter(item=>item.teamScore===null&&item.opponentScore===null&&item.startsAt>=now).map(item=>item.game);
+      const{data:availabilityRows}=liveGames[0]?await supabase.rpc("get_team_game_availability",{p_game_id:liveGames[0].id}):{data:[]};
+      const availability:PlayerAvailability[]=(availabilityRows??[]).map((row:{registration_id:string;player_name:string;jersey_number:number|null;player_position:string;role_label:string;available:boolean;responded:boolean})=>({registrationId:row.registration_id,name:row.player_name,jerseyNumber:row.jersey_number,position:row.player_position??"",role:row.role_label,available:row.available!==false,responded:Boolean(row.responded)}));
+      const liveFees:Fee[]=(feeRows??[]).map(row=>({id:row.id,label:row.description,amount:row.amount_cents/100,icon:feeIcon(row.category)}));
+      const contextFeeIds=(feeRows??[]).map(row=>row.id);
+      const liveSubmissions:PaymentSubmission[]=(submissionRows??[]).filter(row=>row.registration_id===registration.id||contextFeeIds.includes(row.fee_id)).map(row=>({id:row.id,registrationId:row.registration_id??registration.id,feeId:row.fee_id??"",amount:row.amount_cents/100,method:row.method==="cash"?"cash":row.method==="waiver"?"waiver":"zelle",status:row.status==="confirmed"?"confirmed":row.status==="declined"?"declined":"pending",reference:row.reference??"",reviewNote:row.review_note??"",createdLabel:new Intl.DateTimeFormat("en-US",{timeZone:timezone,dateStyle:"medium"}).format(new Date(row.created_at))}));
+      const notificationPreferences:NotificationPreferences={gameUpdates:preferenceRow?.game_updates??true,teamUpdates:preferenceRow?.team_updates??true,paymentUpdates:preferenceRow?.payment_updates??true,seasonUpdates:preferenceRow?.season_updates??true};
+      const notificationEnabled=(type:string)=>type.startsWith("game_")?notificationPreferences.gameUpdates:type.startsWith("payment_")?notificationPreferences.paymentUpdates:type.includes("roster")||type.startsWith("team_")?notificationPreferences.teamUpdates:notificationPreferences.seasonUpdates;
+      const liveNotifications:PlayerNotification[]=(notificationRows??[]).filter(row=>notificationEnabled(row.notification_type)&&["/home","/payments","/my-team","/schedule","/results","/standings"].some(path=>(row.link_path??"/home").startsWith(path))).map(row=>({id:row.id,type:row.notification_type,title:row.title,body:row.body,linkPath:row.link_path??"/home",read:Boolean(row.read_at),createdLabel:new Intl.DateTimeFormat("en-US",{timeZone:timezone,month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}).format(new Date(row.created_at))}));
+      const totalCharges=(feeRows??[]).reduce((sum,row)=>sum+row.amount_cents,0)/100,paid=(paymentRows??[]).reduce((sum,row)=>sum+row.amount_cents,0)/100,waived=(waiverRows??[]).reduce((sum,row)=>sum+row.amount_cents,0)/100,pending=liveSubmissions.filter(item=>item.status==="pending").reduce((sum,item)=>sum+item.amount,0),paymentAccount:PlayerPaymentAccount={totalCharges,paid,waived,pending,balance:Math.max(0,totalCharges-paid-waived)};
+      return{...fallback,context:{conference:conference.name,season:season.name,division:division.name,team:team.name},contexts,activeRegistrationId:registration.id,profile:{...playerProfile,jerseyNumber:registration.jersey_number??0,jerseyName:registration.jersey_name??"",position:registration.position??"",role:roleName(registration.role_label)},games:liveGames,notifications:liveNotifications,profileNeedsAttention:!(profile.mobile&&profile.birthdate&&profile.location&&player.email&&player.preferred_position),paymentNeedsAttention:paymentAccount.balance>0&&paymentAccount.pending===0,paymentSubmissions:liveSubmissions,availability,myAvailability:availability.find(item=>item.registrationId===registration.id)?.available??true,teamHasUnavailable:availability.some(item=>!item.available),paymentAccount,notificationPreferences,fees:liveFees,invitation:pendingInvitation,source:"supabase"};
+    }
 
     const [{data:registrations},{data:seasonGameRows},{data:divisionTeamRows},{data:feeRows},{data:invitationRow},{data:notificationRows},{data:submissionRows},{data:uniformSettings},{data:leadershipRows},{data:preferenceRow},{data:rosterBroadcastRows},{data:scheduleWorkflowRow}] = await Promise.all([
       supabase.from("registrations").select("player_id,jersey_number,jersey_name,position,role_label").eq("team_id",team.id).order("jersey_number"),

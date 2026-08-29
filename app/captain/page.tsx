@@ -6,7 +6,7 @@ import {getCaptainPortalData} from "@/lib/captain-data";
 import {createClient} from "@/lib/supabase/server";
 
 export default async function CaptainDashboard(){
-  const data=await getCaptainPortalData();if(!data.authorized)redirect("/profile");
+  const data=await getCaptainPortalData("home");if(!data.authorized)redirect("/profile");
   const next=data.games[0],notPaid=data.payments.filter(player=>player.balance>0).length,noCount=data.availability.filter(player=>!player.available).length;
   const rosterStatus=data.finalPublished?"Final":data.draftStatus==="changes_requested"?"Changes requested":data.draftStatus==="submitted"?"Pending approval":data.draftStatus==="approved"?"Approved":"Editing";
   const supabase=await createClient();

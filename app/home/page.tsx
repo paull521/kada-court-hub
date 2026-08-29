@@ -7,7 +7,7 @@ import {getPlayerPortalData} from "@/lib/kch-data";
 import {createClient} from "@/lib/supabase/server";
 
 export default async function Home(){
-  const data=await getPlayerPortalData();
+  const data=await getPlayerPortalData("home");
   const supabase=await createClient();
   const{data:requiredRules}=data.activeRegistrationId?await supabase.rpc("get_registration_rules",{p_registration_id:data.activeRegistrationId}):{data:null};
   // A pending invitation must be reviewed first. Its Join action opens Rules &
