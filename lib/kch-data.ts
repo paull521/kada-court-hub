@@ -57,6 +57,12 @@ export type PlayerPortalData = {
 const fallback: PlayerPortalData = {context:currentContext,contexts:[],activeRegistrationId:"",profile:currentPlayer,roster,games,divisionSchedule:[],results:[],notifications:[],requiresAttention:false,profileNeedsAttention:false,paymentNeedsAttention:false,paymentSubmissions:[],paymentHistory:[],availability:[],myAvailability:true,teamHasUnavailable:false,paymentAccount:{totalCharges:fees.reduce((sum,fee)=>sum+fee.amount,0),paid:0,waived:0,pending:0,balance:fees.reduce((sum,fee)=>sum+fee.amount,0)},teamInfo:{homeUniform:"Dark / Navy",awayUniform:"White",nextGameUniform:"White",darkImage:"",lightImage:"",captain:{name:"Winston Keys",mobile:""},coCaptain:{name:"Fritz Rigor",mobile:""},rosterStage:"hidden",rosterReviewDeadline:"",divisionRosters:[]},notificationPreferences:{gameUpdates:true,teamUpdates:true,paymentUpdates:true,seasonUpdates:true},standings:[],seasonResults:[],fees,invitation:null,source:"fallback"};
 const roleName = (value:string): Player["role"] => value==="Captain"||value==="Co-captain"?value:"Player";
 const feeIcon = (category:string) => category==="league"?"◉":category==="uniform"?"♕":"▣";
+const playerFacingFees=(rows:Array<{id:string;category:string;description:string;amount_cents:number}>):Fee[]=>{
+  const platformAmount=rows.filter(row=>row.category==="platform").reduce((sum,row)=>sum+row.amount_cents,0);
+  const visible=rows.filter(row=>row.category!=="platform").map(row=>({id:row.id,label:row.description,amount:row.amount_cents/100,icon:feeIcon(row.category)}));
+  if(platformAmount>0){const league=visible.find(fee=>fee.icon==="◉");if(league)league.amount+=platformAmount/100;else visible.push({id:"league-access",label:"League Fee",amount:platformAmount/100,icon:"◉"});}
+  return visible;
+};
 const rosterOrder=(left:Player,right:Player)=>{
   const rank=(role:Player["role"])=>role==="Captain"?0:role==="Co-captain"?1:2;
   return rank(left.role)-rank(right.role)||(left.number||Number.MAX_SAFE_INTEGER)-(right.number||Number.MAX_SAFE_INTEGER)||left.name.localeCompare(right.name);
@@ -158,7 +164,7 @@ export async function getPlayerPortalData(scope:"full"|"home"="full"): Promise<P
       const liveGames=mappedHomeGames.filter(item=>item.teamScore===null&&item.opponentScore===null&&item.startsAt>=now).map(item=>item.game);
       const{data:availabilityRows}=liveGames[0]?await supabase.rpc("get_team_game_availability",{p_game_id:liveGames[0].id}):{data:[]};
       const availability:PlayerAvailability[]=(availabilityRows??[]).map((row:{registration_id:string;player_name:string;jersey_number:number|null;player_position:string;role_label:string;available:boolean;responded:boolean})=>({registrationId:row.registration_id,name:row.player_name,jerseyNumber:row.jersey_number,position:row.player_position??"",role:row.role_label,available:row.available!==false,responded:Boolean(row.responded)}));
-      const liveFees:Fee[]=(feeRows??[]).map(row=>({id:row.id,label:row.description,amount:row.amount_cents/100,icon:feeIcon(row.category)}));
+      const liveFees=playerFacingFees(feeRows??[]);
       const contextFeeIds=(feeRows??[]).map(row=>row.id);
       const liveSubmissions:PaymentSubmission[]=(submissionRows??[]).filter(row=>row.registration_id===registration.id||contextFeeIds.includes(row.fee_id)).map(row=>({id:row.id,registrationId:row.registration_id??registration.id,feeId:row.fee_id??"",amount:row.amount_cents/100,method:row.method==="cash"?"cash":row.method==="waiver"?"waiver":"zelle",status:row.status==="confirmed"?"confirmed":row.status==="declined"?"declined":"pending",reference:row.reference??"",reviewNote:row.review_note??"",createdLabel:new Intl.DateTimeFormat("en-US",{timeZone:timezone,dateStyle:"medium"}).format(new Date(row.created_at))}));
       const notificationPreferences:NotificationPreferences={gameUpdates:preferenceRow?.game_updates??true,teamUpdates:preferenceRow?.team_updates??true,paymentUpdates:preferenceRow?.payment_updates??true,seasonUpdates:preferenceRow?.season_updates??true};
@@ -223,7 +229,7 @@ export async function getPlayerPortalData(scope:"full"|"home"="full"): Promise<P
     const seasonResults:SeasonResult[]=finalDivisionGames.slice().sort((a,b)=>new Date(b.starts_at).getTime()-new Date(a.starts_at).getTime()).slice(0,20).map(game=>({id:game.id,dateLabel:new Intl.DateTimeFormat("en-US",{timeZone:timezone,month:"short",day:"numeric"}).format(new Date(game.starts_at)),homeTeam:teamNames.get(game.home_team_id)??"Home Team",awayTeam:teamNames.get(game.away_team_id)??"Away Team",homeScore:game.home_score!,awayScore:game.away_score!,venue:game.venue,court:game.court??""}));
 
     const contextFeeIds=(feeRows??[]).map(row=>row.id);
-    const liveFees:Fee[]=(feeRows??[]).map(row=>({id:row.id,label:row.description,amount:row.amount_cents/100,icon:feeIcon(row.category)}));
+    const liveFees=playerFacingFees(feeRows??[]);
     const liveSubmissions:PaymentSubmission[]=(submissionRows??[]).filter(row=>row.registration_id===registration.id||contextFeeIds.includes(row.fee_id)).map(row=>({id:row.id,registrationId:row.registration_id??registration.id,feeId:row.fee_id??"",amount:row.amount_cents/100,method:row.method==="cash"?"cash":row.method==="waiver"?"waiver":"zelle",status:row.status==="confirmed"?"confirmed":row.status==="declined"?"declined":"pending",reference:row.reference??"",reviewNote:row.review_note??"",createdLabel:new Intl.DateTimeFormat("en-US",{timeZone:timezone,dateStyle:"medium"}).format(new Date(row.created_at))}));
     const [{data:paymentRows},{data:waiverRows}]=await Promise.all([supabase.from("payments").select("id,registration_id,fee_id,amount_cents,method,paid_at").eq("registration_id",registration.id).order("paid_at",{ascending:false}),supabase.from("registration_waivers").select("amount_cents").eq("registration_id",registration.id)]);
     const feeLabels=new Map((feeRows??[]).map(row=>[row.id,row.description]));

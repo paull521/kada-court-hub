@@ -10,7 +10,7 @@ import {platformLogoutAction} from "@/app/platform/actions";
 const sections={
   directory:{eyebrow:"CONFERENCES",title:"Conference Directory",subtitle:"View conference activity, owners, divisions, and players."},
   owners:{eyebrow:"OWNERS",title:"Owner Management",subtitle:"Invite owners and manage their platform access."},
-  payments:{eyebrow:"SUBSCRIPTIONS",title:"Owner Payments",subtitle:"Track owner subscription and platform payment."},
+  payments:{eyebrow:"SUBSCRIPTIONS",title:"Owner Payments",subtitle:"Track owner Season Subscription payments."},
   announcements:{eyebrow:"COMMUNICATION",title:"Announcements",subtitle:"Create KCH-wide updates for conference owners."},
   support:{eyebrow:"OWNER HELP",title:"Support",subtitle:"Review owner questions and support requests."},
   settings:{eyebrow:"PLATFORM",title:"Settings",subtitle:"Manage platform defaults and Creator account security."},

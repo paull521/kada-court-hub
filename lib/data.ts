@@ -30,4 +30,4 @@ export const games: Game[] = [
 ];
 
 export const currentPlayer: PlayerView = {id:"KCH-028",name:"Paul Lazarte",initials:"PL",status:"Active Player",mobile:"(425) 555-0128",email:"paul.lazarte@example.com",birthdate:"May 12, 1975",birthdateValue:"1975-05-12",location:"North Bend, WA",jerseyNumber:28,jerseyName:"",position:"Forward",preferredPosition:"F",uniformSize:"XL",role:"Player"};
-export const fees: Fee[] = [{id:"league",label:"League Fee",amount:110,icon:"◉"},{id:"uniform",label:"Uniform Fee",amount:60,icon:"♕"},{id:"platform",label:"Platform Fee",amount:1,icon:"▣"}];
+export const fees: Fee[] = [{id:"league",label:"League Fee",amount:110,icon:"◉"},{id:"uniform",label:"Uniform Fee",amount:60,icon:"♕"}];

@@ -23,14 +23,14 @@ export async function inviteOwnerAction(_:PlatformActionState,formData:FormData)
 
 export async function confirmSubscriptionAction(_:PlatformActionState,formData:FormData):Promise<PlatformActionState>{
   const id=String(formData.get("submissionId")??"");const supabase=await createClient();const {error}=await supabase.rpc("platform_review_subscription_payment",{p_submission_id:id,p_decision:"confirmed"});
-  if(error)return{error:error.message};revalidatePath("/platform");revalidatePath("/platform/payments");revalidatePath("/owner/payments");return{message:"Subscription payment confirmed."};
+  if(error)return{error:error.message};revalidatePath("/platform");revalidatePath("/platform/payments");revalidatePath("/owner/payments");return{message:"Season payment confirmed."};
 }
 
 export async function submitSubscriptionPaymentAction(_:PlatformActionState,formData:FormData):Promise<PlatformActionState>{
   const conferenceId=String(formData.get("conferenceId")??""),amountCents=money(String(formData.get("amount")??"")),method=String(formData.get("method")??"");
   if(!conferenceId||amountCents<1||!['zelle','cash'].includes(method))return{error:"Enter an amount and choose Zelle or Cash."};
   const supabase=await createClient();const {error}=await supabase.rpc("owner_submit_subscription_payment",{p_conference_id:conferenceId,p_amount_cents:amountCents,p_method:method});
-  if(error)return{error:error.message};revalidatePath("/owner/payments");revalidatePath("/platform");revalidatePath("/platform/payments");return{message:"Payment sent for platform confirmation."};
+  if(error)return{error:error.message};revalidatePath("/owner/payments");revalidatePath("/platform");revalidatePath("/platform/payments");return{message:"Season payment sent for platform confirmation."};
 }
 
 export async function acceptOwnerInvitationAction(_:PlatformActionState,formData:FormData):Promise<PlatformActionState>{
