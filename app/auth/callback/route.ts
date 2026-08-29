@@ -12,8 +12,7 @@ export async function GET(request:NextRequest){
     const {error}=await supabase.auth.exchangeCodeForSession(code);
     if(error){
       const errorUrl=new URL("/login",url.origin);
-      errorUrl.searchParams.set("forgot","1");
-      errorUrl.searchParams.set("resetError",process.env.NODE_ENV==="development"?error.message:"This reset link is no longer valid. Please request a new one.");
+      errorUrl.searchParams.set("confirmationError","1");
       return NextResponse.redirect(errorUrl);
     }
   }

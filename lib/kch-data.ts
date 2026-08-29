@@ -76,6 +76,11 @@ export async function getPlayerPortalData(): Promise<PlayerPortalData> {
     ]);
     if (!profile||!player) return fallback;
 
+    const playerContextPromise=Promise.all([
+      supabase.from("registrations").select("id,season_id,team_id,status,jersey_number,jersey_name,position,role_label,created_at").eq("player_id",player.id).not("team_id","is",null).eq("status","active").order("created_at",{ascending:false}),
+      supabase.rpc("get_player_context_owners"),
+      supabase.rpc("get_my_conference_player_statuses"),
+    ]);
     // Invitations are global to the player, not just the currently selected team.
     // This lets an active player respond to a new division invitation.
     const {data:pendingInvitationRow}=await supabase.from("season_invitations").select("id,response,broadcast_id,season_id,division_id").eq("player_id",player.id).eq("response","pending").order("created_at",{ascending:false}).limit(1).maybeSingle();
@@ -93,11 +98,7 @@ export async function getPlayerPortalData(): Promise<PlayerPortalData> {
     const pendingInvitation=pendingInvitationRow&&pendingBroadcastRow&&pendingSeasonRow&&pendingDivisionRow?{id:pendingInvitationRow.id,conferenceName:pendingConferenceRow?.name??"Conference",ownerName,seasonName:pendingSeasonRow.name,divisionName:pendingDivisionRow.name,startsOn:pendingSeasonRow.starts_on??"",endsOn:pendingSeasonRow.ends_on??"",leagueFee:pendingFinancialRow?.league_fee_enabled===false?0:(pendingFinancialRow?.league_fee_cents??0)/100,uniformFee:pendingFinancialRow?.uniform_fee_enabled===false?0:(pendingFinancialRow?.uniform_fee_cents??0)/100,message:pendingBroadcastRow.message,response:"pending" as const,responseDeadline:pendingBroadcastRow.response_deadline??"",teamCount:pendingBroadcastRow.team_count??0,playersPerTeam:pendingBroadcastRow.players_per_team??0,invitedCount:pendingBroadcastRow.invited_count??0}:null;
     const playerProfile={...fallback.profile,id:player.public_player_id,name:profile.display_name,initials:profile.display_name.split(/\s+/).map((part:string)=>part[0]).join("").slice(0,2).toUpperCase(),status:pendingInvitation?"Invitation pending":"KCH Player",email:player.email??"",mobile:profile.mobile??"",birthdate:profile.birthdate?new Intl.DateTimeFormat("en-US",{dateStyle:"long",timeZone:"UTC"}).format(new Date(`${profile.birthdate}T00:00:00Z`)):"",birthdateValue:profile.birthdate??"",location:profile.location??"",jerseyNumber:0,jerseyName:"",position:"",preferredPosition:player.preferred_position??"",uniformSize:player.preferred_uniform_size??"",role:"Player" as const};
 
-    const [{data:registrationRows},{data:contextOwnerRows},{data:conferenceStatusRows}] = await Promise.all([
-      supabase.from("registrations").select("id,season_id,team_id,status,jersey_number,jersey_name,position,role_label,created_at").eq("player_id",player.id).not("team_id","is",null).eq("status","active").order("created_at",{ascending:false}),
-      supabase.rpc("get_player_context_owners"),
-      supabase.rpc("get_my_conference_player_statuses"),
-    ]);
+    const [{data:registrationRows},{data:contextOwnerRows},{data:conferenceStatusRows}] = await playerContextPromise;
     if (!registrationRows?.length) return {...fallback,profile:playerProfile,invitation:pendingInvitation,source:"supabase"};
 
     const registeredTeamIds=[...new Set(registrationRows.flatMap(row=>row.team_id?[row.team_id]:[]))];

@@ -6,7 +6,7 @@ import {redirect} from "next/navigation";
 export default async function ResultsPage(){
   const data=await getPlayerPortalData();
   if(!data.contexts.length)redirect("/home");
-  return <AppShell active="schedule" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} profileNeedsAttention={data.profileNeedsAttention} paymentNeedsAttention={data.paymentNeedsAttention} teamHasUnavailable={data.teamHasUnavailable}>
+  return <AppShell active="schedule" contexts={data.contexts} activeRegistrationId={data.activeRegistrationId} notifications={data.notifications} profileNeedsAttention={data.profileNeedsAttention} paymentNeedsAttention={data.paymentNeedsAttention} teamHasUnavailable={data.teamHasUnavailable} conferenceName={data.context.conference}>
     <h1 className="title">Results</h1><p className="subtitle">Final scores from your division.</p>
     <p className="season-label">▦ &nbsp; {data.context.season} · {data.context.division}</p>
     <SeasonTabs active="results"/>

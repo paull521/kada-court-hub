@@ -27,14 +27,19 @@ export async function getOwnerPortalData():Promise<OwnerPortalData>{
   const userId=claims?.claims?.sub;
   if(!userId)return empty;
 
-  const {data:ownerProfile}=await supabase.from("profiles").select("display_name").eq("id",userId).maybeSingle();
-  const {data:platformOwnerRecord}=await supabase.from("platform_owner_records").select("status").eq("profile_id",userId).maybeSingle();
+  const[{data:ownerProfile},{data:platformOwnerRecord},{data:memberships}]=await Promise.all([
+    supabase.from("profiles").select("display_name").eq("id",userId).maybeSingle(),
+    supabase.from("platform_owner_records").select("status").eq("profile_id",userId).maybeSingle(),
+    supabase.from("conference_memberships").select("conference_id,created_at").eq("profile_id",userId).eq("role","owner").order("created_at",{ascending:false}),
+  ]);
   if(platformOwnerRecord?.status==="suspended")return empty;
-  const {data:memberships}=await supabase.from("conference_memberships").select("conference_id,created_at").eq("profile_id",userId).eq("role","owner").order("created_at",{ascending:false});
   if(!memberships?.length)return empty;
   const ownedConferenceIds=memberships.map(membership=>membership.conference_id);
-  const {data:conferenceRows}=await supabase.from("conferences").select("id,name,timezone").in("id",ownedConferenceIds);
-  const preferredConferenceId=(await cookies()).get("kch_owner_conference")?.value;
+  const[{data:conferenceRows},cookieStore]=await Promise.all([
+    supabase.from("conferences").select("id,name,timezone").in("id",ownedConferenceIds),
+    cookies(),
+  ]);
+  const preferredConferenceId=cookieStore.get("kch_owner_conference")?.value;
   const selectedConferenceId=preferredConferenceId&&ownedConferenceIds.includes(preferredConferenceId)?preferredConferenceId:ownedConferenceIds[0];
   const conference=conferenceRows?.find(item=>item.id===selectedConferenceId);
   if(!conference)return empty;
@@ -42,28 +47,35 @@ export async function getOwnerPortalData():Promise<OwnerPortalData>{
 
   const {data:seasonRows}=await supabase.from("seasons").select("id,name,starts_on,ends_on,registration_open").eq("conference_id",conference.id).is("archived_at",null).order("starts_on",{ascending:false});
   const seasonIds=(seasonRows??[]).map(row=>row.id);
-  const {data:financialRows}=seasonIds.length?await supabase.from("season_financial_summaries").select("season_id,court_cost_cents,referee_cost_cents,uniform_cost_cents,league_cost_cents,notes").in("season_id",seasonIds):{data:[]};
-  const {data:divisionRows}=seasonIds.length?await supabase.from("divisions").select("id,season_id,name").in("season_id",seasonIds).order("name"):{data:[]};
+  const[{data:financialRows},{data:divisionRows},{data:setupRows},{data:paymentSubmissionRows},{data:poolRows}]=await Promise.all([
+    seasonIds.length?supabase.from("season_financial_summaries").select("season_id,court_cost_cents,referee_cost_cents,uniform_cost_cents,league_cost_cents,notes").in("season_id",seasonIds):Promise.resolve({data:[]}),
+    seasonIds.length?supabase.from("divisions").select("id,season_id,name").in("season_id",seasonIds).order("name"):Promise.resolve({data:[]}),
+    seasonIds.length?supabase.from("seasons").select("id,setup_stage,preseason_ready,canceled_at,cancellation_reason,players_per_team").in("id",seasonIds):Promise.resolve({data:[]}),
+    supabase.from("payment_submissions").select("id,registration_id,fee_id,amount_cents,method,reference,status,created_at").order("created_at",{ascending:false}),
+    supabase.from("conference_player_pool").select("player_id,status").eq("conference_id",conference.id),
+  ]);
   const divisionIds=(divisionRows??[]).map(row=>row.id);
-  const {data:teamRows}=divisionIds.length?await supabase.from("teams").select("id,division_id,name,active").in("division_id",divisionIds).order("name"):{data:[]};
+  const[{data:teamRows},{data:uniformSettingRows},{data:financialSettingRows},{data:registrationRows},{data:invitationRows},{data:invitationBroadcastRows},{data:rosterBroadcastRows},{data:scheduleWorkflowRows},{data:gameRows},{data:rosterRequestRows}]=await Promise.all([
+    divisionIds.length?supabase.from("teams").select("id,division_id,name,active").in("division_id",divisionIds).order("name"):Promise.resolve({data:[]}),
+    divisionIds.length?supabase.from("division_uniform_settings").select("division_id,dark_uniform,light_uniform,dark_image_path,light_image_path").in("division_id",divisionIds):Promise.resolve({data:[]}),
+    divisionIds.length?supabase.from("division_financial_settings").select("division_id,league_fee_enabled,league_fee_cents,uniform_fee_enabled,uniform_fee_cents").in("division_id",divisionIds):Promise.resolve({data:[]}),
+    seasonIds.length?supabase.from("registrations").select("id,season_id,division_id,team_id,player_id,jersey_number,position,role_label,status").in("season_id",seasonIds).order("jersey_number"):Promise.resolve({data:[]}),
+    seasonIds.length?supabase.from("season_invitations").select("id,season_id,division_id,player_id,registration_id,response,selection_status").in("season_id",seasonIds).order("created_at"):Promise.resolve({data:[]}),
+    seasonIds.length?supabase.from("season_broadcasts").select("id,season_id,division_id,response_deadline,invited_count,flyer_path,created_at").in("season_id",seasonIds).eq("broadcast_type","player_invitation").order("created_at",{ascending:false}):Promise.resolve({data:[]}),
+    seasonIds.length?supabase.from("season_broadcasts").select("id,division_id,broadcast_type,response_deadline").in("season_id",seasonIds).in("broadcast_type",["roster_draft","roster_final"]):Promise.resolve({data:[]}),
+    divisionIds.length?supabase.from("division_schedule_workflows").select("division_id,mode,status").in("division_id",divisionIds):Promise.resolve({data:[]}),
+    seasonIds.length?supabase.from("games").select("id,season_id,home_team_id,away_team_id,starts_at,venue,court,duration_minutes,home_uniform,away_uniform,home_score,away_score,draft_home_score,draft_away_score,finalized_at,phase,status,status_reason").in("season_id",seasonIds).order("starts_at"):Promise.resolve({data:[]}),
+    seasonIds.length?supabase.from("roster_change_requests").select("id,season_id,team_id,request_type,details,status,owner_note,created_at").in("season_id",seasonIds).order("created_at",{ascending:false}):Promise.resolve({data:[]}),
+  ]);
   const teamIds=(teamRows??[]).map(row=>row.id);
-  const {data:uniformSettingRows}=divisionIds.length?await supabase.from("division_uniform_settings").select("division_id,dark_uniform,light_uniform,dark_image_path,light_image_path").in("division_id",divisionIds):{data:[]};
-  const {data:financialSettingRows}=divisionIds.length?await supabase.from("division_financial_settings").select("division_id,league_fee_enabled,league_fee_cents,uniform_fee_enabled,uniform_fee_cents").in("division_id",divisionIds):{data:[]};
-  const {data:registrationRows}=seasonIds.length?await supabase.from("registrations").select("id,season_id,division_id,team_id,player_id,jersey_number,position,role_label,status").in("season_id",seasonIds).order("jersey_number"):{data:[]};
   const {data:draftRows}=teamIds.length?await supabase.from("team_roster_drafts").select("team_id,status,owner_note").in("team_id",teamIds):{data:[]};
   const registrationIds=(registrationRows??[]).map(row=>row.id);
-  const {data:invitationRows}=seasonIds.length?await supabase.from("season_invitations").select("id,season_id,division_id,player_id,registration_id,response,selection_status").in("season_id",seasonIds).order("created_at"):{data:[]};
-  const {data:invitationBroadcastRows}=seasonIds.length?await supabase.from("season_broadcasts").select("id,season_id,division_id,response_deadline,invited_count,flyer_path,created_at").in("season_id",seasonIds).eq("broadcast_type","player_invitation").order("created_at",{ascending:false}):{data:[]};
-  const {data:rosterBroadcastRows}=seasonIds.length?await supabase.from("season_broadcasts").select("id,division_id,broadcast_type,response_deadline").in("season_id",seasonIds).in("broadcast_type",["roster_draft","roster_final"]):{data:[]};
-  const {data:scheduleWorkflowRows}=divisionIds.length?await supabase.from("division_schedule_workflows").select("division_id,mode,status").in("division_id",divisionIds):{data:[]};
-  const {data:gameRows}=seasonIds.length?await supabase.from("games").select("id,season_id,home_team_id,away_team_id,starts_at,venue,court,duration_minutes,home_uniform,away_uniform,home_score,away_score,draft_home_score,draft_away_score,finalized_at,phase,status,status_reason").in("season_id",seasonIds).order("starts_at"):{data:[]};
-  const {data:rosterRequestRows}=seasonIds.length?await supabase.from("roster_change_requests").select("id,season_id,team_id,request_type,details,status,owner_note,created_at").in("season_id",seasonIds).order("created_at",{ascending:false}):{data:[]};
-  const {data:paymentSubmissionRows}=await supabase.from("payment_submissions").select("id,registration_id,fee_id,amount_cents,method,reference,status,created_at").order("created_at",{ascending:false});
-  const {data:allFeeRows}=registrationIds.length?await supabase.from("fees").select("id,registration_id,category,description,amount_cents,status,due_on").in("registration_id",registrationIds):{data:[]};
+  const[{data:allFeeRows},{data:ownerPaymentRows},{data:registrationWaiverRows}]=await Promise.all([
+    registrationIds.length?supabase.from("fees").select("id,registration_id,category,description,amount_cents,status,due_on").in("registration_id",registrationIds):Promise.resolve({data:[]}),
+    registrationIds.length?supabase.from("payments").select("id,registration_id,fee_id,amount_cents,method,paid_at").in("registration_id",registrationIds).order("paid_at",{ascending:false}):Promise.resolve({data:[]}),
+    registrationIds.length?supabase.from("registration_waivers").select("registration_id,amount_cents").in("registration_id",registrationIds):Promise.resolve({data:[]}),
+  ]);
   const allFeeIds=(allFeeRows??[]).map(row=>row.id);
-  const {data:ownerPaymentRows}=registrationIds.length?await supabase.from("payments").select("id,registration_id,fee_id,amount_cents,method,paid_at").in("registration_id",registrationIds).order("paid_at",{ascending:false}):{data:[]};
-  const {data:registrationWaiverRows}=registrationIds.length?await supabase.from("registration_waivers").select("registration_id,amount_cents").in("registration_id",registrationIds):{data:[]};
-  const {data:poolRows}=await supabase.from("conference_player_pool").select("player_id,status").eq("conference_id",conference.id);
   const playerIds=[...new Set([...(registrationRows??[]).map(row=>row.player_id),...(invitationRows??[]).map(row=>row.player_id),...(poolRows??[]).map(row=>row.player_id)])];
   const {data:playerRows}=playerIds.length?await supabase.from("player_profiles").select("id,public_player_id,display_name,profile_id,email,mobile,preferred_uniform_size").in("id",playerIds):{data:[]};
   const playerDetails=new Map((playerRows??[]).map(row=>[row.id,row]));
@@ -78,7 +90,6 @@ export async function getOwnerPortalData():Promise<OwnerPortalData>{
   const imageUrl=(path:string|null|undefined)=>path?supabase.storage.from("uniform-photos").getPublicUrl(path).data.publicUrl:"";
   const flyerUrl=(path:string|null|undefined)=>path?supabase.storage.from("invitation-flyers").getPublicUrl(path).data.publicUrl:"";
   const divisions:OwnerDivision[]=(divisionRows??[]).map(division=>{const uniforms=uniformSettings.get(division.id);const financial=financialSettings.get(division.id);const invitation=(invitationBroadcastRows??[]).find(row=>row.division_id===division.id);const reviewBroadcast=(rosterBroadcastRows??[]).find(row=>row.division_id===division.id&&row.broadcast_type==="roster_draft");const scheduleWorkflow=(scheduleWorkflowRows??[]).find(row=>row.division_id===division.id);return{id:division.id,name:division.name,darkUniform:uniforms?.dark_uniform??"Dark / Navy",lightUniform:uniforms?.light_uniform??"White",darkImage:imageUrl(uniforms?.dark_image_path),lightImage:imageUrl(uniforms?.light_image_path),preseasonConfigured:Boolean(financial),leagueFeeEnabled:financial?.league_fee_enabled??true,leagueFee:financial?.league_fee_cents===null||financial?.league_fee_cents===undefined?null:financial.league_fee_cents/100,uniformFeeEnabled:financial?.uniform_fee_enabled??true,uniformFee:financial?.uniform_fee_cents===null||financial?.uniform_fee_cents===undefined?null:financial.uniform_fee_cents/100,invitationSent:Boolean(invitation),invitationCount:invitation?.invited_count??0,invitationDeadline:invitation?.response_deadline??"",invitationFlyer:flyerUrl(invitation?.flyer_path),rosterPublished:Boolean(reviewBroadcast),rosterReviewDeadline:reviewBroadcast?.response_deadline??"",rosterFinalPublished:(rosterBroadcastRows??[]).some(row=>row.division_id===division.id&&row.broadcast_type==="roster_final"),scheduleMode:scheduleWorkflow?.mode==="manual"?"manual":scheduleWorkflow?.mode==="kch"?"kch":"",scheduleStatus:scheduleWorkflow?.status==="final"?"final":scheduleWorkflow?"draft":"not_started",teams:teams.filter(team=>(teamRows??[]).find(row=>row.id===team.id)?.division_id===division.id)}});
-  const {data:setupRows}=seasonIds.length?await supabase.from("seasons").select("id,setup_stage,preseason_ready,canceled_at,cancellation_reason,players_per_team").in("id",seasonIds):{data:[]};
   const setupDetails=new Map((setupRows??[]).map(row=>[row.id,row]));
   const localStartsAt=(iso:string)=>{const parts=new Intl.DateTimeFormat("en-CA",{timeZone:conference.timezone||"America/Los_Angeles",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(new Date(iso));const get=(type:Intl.DateTimeFormatPartTypes)=>parts.find(part=>part.type===type)?.value??"";return `${get("year")}-${get("month")}-${get("day")}T${get("hour")}:${get("minute")}`};
   const seasons:OwnerSeason[]=(seasonRows??[]).map(season=>{const seasonDivisions=divisions.filter(division=>(divisionRows??[]).find(row=>row.id===division.id)?.season_id===season.id);const seasonTeams=seasonDivisions.flatMap(division=>division.teams);const seasonPlayers=seasonTeams.flatMap(team=>team.players);const teamNames=new Map(seasonTeams.map(team=>[team.id,team.name]));const teamDivisions=new Map((teamRows??[]).map(team=>[team.id,team.division_id]));const inferredStage=seasonPlayers.some(player=>player.status==="active"&&player.role==="Captain")?5:seasonPlayers.some(player=>player.status==="active")?4:seasonTeams.length?3:seasonDivisions.length?2:1;const setup=setupDetails.get(season.id);const invitees:OwnerInvitee[]=(invitationRows??[]).filter(row=>row.season_id===season.id).map(row=>{const player=playerDetails.get(row.player_id);const registration=(registrationRows??[]).find(item=>item.id===row.registration_id);return{invitationId:row.id,divisionId:row.division_id??"",registrationId:row.registration_id??"",publicPlayerId:player?.public_player_id??"",name:player?.display_name??"Unnamed player",email:player?.email??"",mobile:player?.mobile??"",response:row.response==="joining"?"joining":row.response==="not_joining"?"not_joining":"pending",selectionStatus:row.selection_status==="eligible"?"eligible":row.selection_status==="waitlisted"?"waitlisted":row.selection_status==="declined"?"declined":"awaiting_response",teamId:registration?.team_id??"",jerseyNumber:registration?.jersey_number??null,position:registration?.position??""}});const seasonGames:OwnerGame[]=(gameRows??[]).filter(row=>row.season_id===season.id).map(row=>({id:row.id,divisionId:teamDivisions.get(row.home_team_id)??"",homeTeamId:row.home_team_id,homeTeam:teamNames.get(row.home_team_id)??"Home Team",awayTeamId:row.away_team_id,awayTeam:teamNames.get(row.away_team_id)??"Away Team",startsAt:row.starts_at,localStartsAt:localStartsAt(row.starts_at),venue:row.venue,court:row.court??"",homeUniform:row.home_uniform??"",awayUniform:row.away_uniform??"",homeScore:row.home_score,awayScore:row.away_score,draftHomeScore:row.draft_home_score??null,draftAwayScore:row.draft_away_score??null,finalized:Boolean(row.finalized_at),phase:row.phase==="playoff"?"playoff":"regular",status:row.status==="postponed"?"postponed":row.status==="canceled"?"canceled":"scheduled",statusReason:row.status_reason??""}));return{id:season.id,name:season.name,startsOn:season.starts_on,endsOn:season.ends_on,registrationOpen:season.registration_open,playersPerTeam:setup?.players_per_team??null,setupStage:Number(setup?.setup_stage) || inferredStage,preseasonReady:setup?.preseason_ready??Number(setup?.setup_stage)>=5,canceledAt:setup?.canceled_at??"",cancelReason:setup?.cancellation_reason??"",divisions:seasonDivisions,invitees,games:seasonGames}});
