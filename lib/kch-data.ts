@@ -83,7 +83,7 @@ export async function getPlayerPortalData(scope:"full"|"home"="full"): Promise<P
     if (!profile||!player) return fallback;
 
     const playerContextPromise=Promise.all([
-      supabase.from("registrations").select("id,season_id,team_id,status,jersey_number,jersey_name,position,role_label,created_at").eq("player_id",player.id).not("team_id","is",null).eq("status","active").order("created_at",{ascending:false}),
+      supabase.from("registrations").select("id,season_id,team_id,status,jersey_number,jersey_name,position,role_label,created_at").eq("player_id",player.id).not("team_id","is",null).in("status",["active","pending"]).order("created_at",{ascending:false}),
       supabase.rpc("get_player_context_owners"),
       supabase.rpc("get_my_conference_player_statuses"),
     ]);
