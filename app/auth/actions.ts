@@ -1,6 +1,7 @@
 "use server";
 
 import {redirect} from "next/navigation";
+import {revalidatePath} from "next/cache";
 import {cookies,headers} from "next/headers";
 import {isSupabaseConfigured} from "@/lib/supabase/config";
 import {createClient} from "@/lib/supabase/server";
@@ -25,6 +26,7 @@ export async function loginAction(_: AuthActionState, formData: FormData): Promi
   if (error) return {error: "We could not log you in. Check your email and password."};
   const cookieStore=await cookies(),nextPath=safeReturnPath(String(formData.get("nextPath")??""))||safeReturnPath(cookieStore.get("kch_return_path")?.value??"");
   if(nextPath)cookieStore.delete("kch_return_path");
+  revalidatePath("/home");
   redirect(nextPath||"/home");
 }
 
