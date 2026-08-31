@@ -10,10 +10,11 @@ const initialState: AuthActionState = {};
 
 export function LoginForm({demoMode,nextPath="",allowSignUp=true}:{demoMode:boolean;nextPath?:string;allowSignUp?:boolean}) {
   const [state, action, pending] = useActionState(loginAction, initialState);
+  const [showPassword,setShowPassword] = useState(false);
   return <form action={action} className="card loginbox"><input type="hidden" name="nextPath" value={nextPath}/>
     {demoMode && <p className="setup-note">Demo mode is active. Log In opens the prototype until Supabase is connected.</p>}
     <label htmlFor="email">Email</label><div className="input-wrap"><span>✉</span><input id="email" name="email" type="email" autoComplete="email" placeholder="Enter your email"/></div>
-    <label htmlFor="password">Password</label><div className="input-wrap"><span>♙</span><input id="password" name="password" type="password" autoComplete="current-password" placeholder="Enter your password"/><b>◉</b></div>
+    <label htmlFor="password">Password</label><div className="input-wrap"><span>♙</span><input id="password" name="password" type={showPassword?"text":"password"} autoComplete="current-password" placeholder="Enter your password"/><button type="button" className="password-toggle" onClick={()=>setShowPassword(value=>!value)} aria-label={showPassword?"Hide password":"Show password"}>{showPassword?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.1A10.7 10.7 0 0 1 12 5c5.2 0 8.7 4.6 9.7 6.2a1.5 1.5 0 0 1 0 1.6 15.6 15.6 0 0 1-3.1 3.6M6.2 6.2a15.5 15.5 0 0 0-3.9 5 1.5 1.5 0 0 0 0 1.6C3.3 14.4 6.8 19 12 19c1 0 2-.2 2.9-.5"/></svg>:<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.3 12a1.5 1.5 0 0 1 0-1.6C3.3 8.8 6.8 5 12 5s8.7 3.8 9.7 5.4a1.5 1.5 0 0 1 0 1.6C20.7 13.6 17.2 17 12 17S3.3 13.6 2.3 12Z"/><circle cx="12" cy="11.2" r="3"/></svg>}</button></div>
     {state.error && <p className="form-error" role="alert">{state.error}</p>}
     <Link href="/login?forgot=1" className="forgot">Forgot Password?</Link><button className="btn primary" disabled={pending}>{pending?"Logging In…":"Log In"}</button>{allowSignUp&&<Link className="btn secondary" href={nextPath?`/sign-up?next=${encodeURIComponent(nextPath)}`:"/sign-up"}>Create Profile</Link>}
   </form>;

@@ -6,6 +6,7 @@ import {currentContext,currentPlayer,fees,games,roster,type Fee,type Game,type G
 
 export type PlayerContextOption = {
   registrationId: string;
+  conferenceId: string;
   conference: string;
   season: string;
   divisionId: string;
@@ -24,7 +25,7 @@ export type PlayerTeamInfo={homeUniform:string;awayUniform:string;nextGameUnifor
 export type NotificationPreferences={gameUpdates:boolean;teamUpdates:boolean;paymentUpdates:boolean;seasonUpdates:boolean};
 export type StandingRow={teamId:string;team:string;played:number;wins:number;losses:number;ties:number;pointsFor:number;pointsAgainst:number;difference:number;winPercentage:number;streak:string};
 export type SeasonResult={id:string;dateLabel:string;homeTeam:string;awayTeam:string;homeScore:number;awayScore:number;venue:string;court:string};
-export type DivisionScheduleGame={id:string;dateKey:string;dateLabel:string;time:string;homeTeam:string;awayTeam:string;venue:string;court:string};
+export type DivisionScheduleGame={id:string;dateKey:string;dateLabel:string;time:string;homeTeam:string;awayTeam:string;venue:string;court:string;homeScore:number|null;awayScore:number|null};
 
 export type PlayerPortalData = {
   context: typeof currentContext;
@@ -133,7 +134,7 @@ export async function getPlayerPortalData(scope:"full"|"home"="full"): Promise<P
       const today=new Date().toISOString().slice(0,10),lastGame=contextSeason?lastGameBySeason.get(contextSeason.id):undefined,lastGameAccessThrough=lastGame?new Date(`${lastGame}T00:00:00Z`):null;
       if(lastGameAccessThrough)lastGameAccessThrough.setUTCDate(lastGameAccessThrough.getUTCDate()+7);
       const gameAccessActive=lastGameAccessThrough?lastGameAccessThrough.toISOString().slice(0,10)>=today:false;
-      return contextTeam?.active&&contextDivision&&contextSeason&&(contextSeason.ends_on>=today||gameAccessActive)&&!contextSeason.canceled_at&&!contextSeason.archived_at&&contextConference&&conferenceStatus.get(contextConference.id)==="active"?[{registrationId:row.id,conference:contextConference.name,season:contextSeason.name,divisionId:contextDivision.id,division:contextDivision.name,team:contextTeam.name,ownerName:ownerNameByRegistration.get(row.id)??"Conference Owner"}]:[];
+      return contextTeam?.active&&contextDivision&&contextSeason&&(contextSeason.ends_on>=today||gameAccessActive)&&!contextSeason.canceled_at&&!contextSeason.archived_at&&contextConference&&conferenceStatus.get(contextConference.id)==="active"?[{registrationId:row.id,conferenceId:contextConference.id,conference:contextConference.name,season:contextSeason.name,divisionId:contextDivision.id,division:contextDivision.name,team:contextTeam.name,ownerName:ownerNameByRegistration.get(row.id)??"Conference Owner"}]:[];
     });
     if (!contexts.length) return {...fallback,profile:playerProfile,invitation:pendingInvitation,source:"supabase"};
 
@@ -216,7 +217,7 @@ export async function getPlayerPortalData(scope:"full"|"home"="full"): Promise<P
     const availability:PlayerAvailability[]=(availabilityRows??[]).map((row:{registration_id:string;player_name:string;jersey_number:number|null;player_position:string;role_label:string;available:boolean;responded:boolean})=>({registrationId:row.registration_id,name:row.player_name,jerseyNumber:row.jersey_number,position:row.player_position??"",role:row.role_label,available:row.available!==false,responded:Boolean(row.responded)}));
     const myAvailability=availability.find(item=>item.registrationId===registration.id)?.available??true;
     const teamHasUnavailable=availability.some(item=>!item.available);
-    const divisionSchedule:DivisionScheduleGame[]=publishedDivisionGames.filter(row=>row.home_score===null&&row.away_score===null&&new Date(row.starts_at).getTime()>=now).map(row=>{const date=new Date(row.starts_at),parts=new Intl.DateTimeFormat("en-US",{timeZone:timezone,year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(date),part=(type:Intl.DateTimeFormatPartTypes)=>parts.find(item=>item.type===type)?.value??"";return{id:row.id,dateKey:`${part("year")}-${part("month")}-${part("day")}`,dateLabel:new Intl.DateTimeFormat("en-US",{timeZone:timezone,weekday:"short",month:"short",day:"numeric"}).format(date),time:new Intl.DateTimeFormat("en-US",{timeZone:timezone,hour:"numeric",minute:"2-digit"}).format(date),homeTeam:teamNames.get(row.home_team_id)??"Home Team",awayTeam:teamNames.get(row.away_team_id)??"Away Team",venue:row.venue,court:row.court??""};});
+    const divisionSchedule:DivisionScheduleGame[]=publishedDivisionGames.filter(row=>(row.home_score!==null&&row.away_score!==null)||new Date(row.starts_at).getTime()>=now).map(row=>{const date=new Date(row.starts_at),parts=new Intl.DateTimeFormat("en-US",{timeZone:timezone,year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(date),part=(type:Intl.DateTimeFormatPartTypes)=>parts.find(item=>item.type===type)?.value??"";return{id:row.id,dateKey:`${part("year")}-${part("month")}-${part("day")}`,dateLabel:new Intl.DateTimeFormat("en-US",{timeZone:timezone,weekday:"short",month:"short",day:"numeric"}).format(date),time:new Intl.DateTimeFormat("en-US",{timeZone:timezone,hour:"numeric",minute:"2-digit"}).format(date),homeTeam:teamNames.get(row.home_team_id)??"Home Team",awayTeam:teamNames.get(row.away_team_id)??"Away Team",venue:row.venue,court:row.court??"",homeScore:row.home_score,awayScore:row.away_score};});
     const liveResults:GameResult[]=mappedGames.filter(item=>item.teamScore!==null&&item.opponentScore!==null).sort((a,b)=>b.startsAt-a.startsAt).map(item=>({...item.game,teamScore:item.teamScore!,opponentScore:item.opponentScore!,outcome:item.teamScore!>item.opponentScore!?"W":item.teamScore!<item.opponentScore!?"L":"T"}));
     const finalDivisionGames=(scheduleWorkflowRow?.status==="final"?seasonGameRows??[]:[]).filter(row=>divisionTeamIds.has(row.home_team_id)&&divisionTeamIds.has(row.away_team_id)&&row.status!=="postponed"&&row.status!=="canceled"&&row.home_score!==null&&row.away_score!==null);
     const standings:StandingRow[]=(divisionTeamRows??[]).map(standingTeam=>{

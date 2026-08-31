@@ -5,6 +5,8 @@ import {createClient} from "@/lib/supabase/server";
 
 export type ProfileActionState = {error?:string;message?:string};
 
+export async function submitPlatformFeedbackAction(_:ProfileActionState,formData:FormData):Promise<ProfileActionState>{const liked=String(formData.get("liked")??"").trim(),improve=String(formData.get("improve")??"").trim(),conferenceId=String(formData.get("conferenceId")??"");if(liked.length<2||improve.length<2)return{error:"Answer both questions."};const message=`What they like most: ${liked}\n\nWhat should improve: ${improve}`;const supabase=await createClient();const{error}=await supabase.rpc("submit_platform_feedback",{p_conference_id:conferenceId,p_message:message});if(error)return{error:error.message};revalidatePath("/profile");revalidatePath("/platform/support");return{message:"Thank you for your feedback."};}
+
 export async function updateProfileAction(_:ProfileActionState,formData:FormData):Promise<ProfileActionState>{
   const mobile=String(formData.get("mobile")??"").trim();
   const email=String(formData.get("email")??"").trim().toLowerCase();
