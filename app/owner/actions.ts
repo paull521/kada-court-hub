@@ -167,21 +167,6 @@ export async function createSeasonAction(
   );
 }
 
-export async function createDivisionAction(
-  _: OwnerActionState,
-  formData: FormData,
-): Promise<OwnerActionState> {
-  const seasonId = value(formData, "seasonId"),
-    name = value(formData, "name");
-  if (!uuidPattern.test(seasonId) || !validName(name))
-    return { error: "Choose a season and enter a division name." };
-  return ownerRpc(
-    "owner_create_division",
-    { p_season_id: seasonId, p_name: name },
-    `${name} was added.`,
-  );
-}
-
 export async function createDivisionsAction(
   _: OwnerActionState,
   formData: FormData,
@@ -204,21 +189,6 @@ export async function createDivisionsAction(
     "owner_create_divisions",
     { p_season_id: seasonId, p_names: names },
     `${names.length} division${names.length === 1 ? "" : "s"} saved.`,
-  );
-}
-
-export async function createTeamAction(
-  _: OwnerActionState,
-  formData: FormData,
-): Promise<OwnerActionState> {
-  const divisionId = value(formData, "divisionId"),
-    name = value(formData, "name");
-  if (!uuidPattern.test(divisionId) || !validName(name))
-    return { error: "Choose a division and enter a team name." };
-  return ownerRpc(
-    "owner_create_team",
-    { p_division_id: divisionId, p_name: name },
-    `${name} was added.`,
   );
 }
 
@@ -282,20 +252,6 @@ export async function assignDirectoryLeaderAction(
   );
 }
 
-export async function updateTeamAction(
-  _: OwnerActionState,
-  formData: FormData,
-): Promise<OwnerActionState> {
-  const teamId = value(formData, "teamId"),
-    name = value(formData, "name");
-  if (!uuidPattern.test(teamId) || !validName(name)) return { error: "Enter a valid team name." };
-  return ownerRpc(
-    "owner_update_team",
-    { p_team_id: teamId, p_name: name, p_active: formData.get("active") === "on" },
-    `${name} was updated.`,
-  );
-}
-
 export async function updateLeadershipAction(
   _: OwnerActionState,
   formData: FormData,
@@ -319,152 +275,6 @@ export async function updateLeadershipAction(
       p_co_captain_registration_id: coCaptainId || null,
     },
     "Team leadership was updated.",
-  );
-}
-
-export async function addRosterPlayerAction(
-  _: OwnerActionState,
-  formData: FormData,
-): Promise<OwnerActionState> {
-  const teamId = value(formData, "teamId"),
-    displayName = value(formData, "displayName"),
-    email = value(formData, "email"),
-    mobile = value(formData, "mobile"),
-    position = value(formData, "position"),
-    jersey = jerseyValue(value(formData, "jerseyNumber"));
-  if (!uuidPattern.test(teamId) || !validName(displayName))
-    return { error: "Choose a team and enter the player's name." };
-  if (email && (email.length > 254 || !email.includes("@")))
-    return { error: "Enter a valid email address." };
-  if (mobile.length > 40 || position.length > 40 || !validJersey(jersey))
-    return { error: "Check the mobile number, position, and jersey number." };
-  return ownerRpc(
-    "owner_add_roster_player",
-    {
-      p_team_id: teamId,
-      p_display_name: displayName,
-      p_email: email || null,
-      p_mobile: mobile || null,
-      p_jersey_number: jersey,
-      p_position: position || null,
-    },
-    `${displayName} was added to the roster.`,
-  );
-}
-
-export async function addExistingPlayerAction(
-  _: OwnerActionState,
-  formData: FormData,
-): Promise<OwnerActionState> {
-  const teamId = value(formData, "teamId"),
-    publicPlayerId = value(formData, "publicPlayerId").toUpperCase(),
-    position = value(formData, "position"),
-    jersey = jerseyValue(value(formData, "jerseyNumber"));
-  if (!uuidPattern.test(teamId) || !/^KCH-[A-Z0-9-]{4,40}$/.test(publicPlayerId))
-    return { error: "Choose a team and enter a valid KCH Player ID." };
-  if (position.length > 40 || !validJersey(jersey))
-    return { error: "Check the position and jersey number." };
-  return ownerRpc(
-    "owner_add_existing_player",
-    {
-      p_team_id: teamId,
-      p_public_player_id: publicPlayerId,
-      p_jersey_number: jersey,
-      p_position: position || null,
-    },
-    `${publicPlayerId} was added to the roster.`,
-  );
-}
-
-export async function updateRosterPlayerAction(
-  _: OwnerActionState,
-  formData: FormData,
-): Promise<OwnerActionState> {
-  const registrationId = value(formData, "registrationId"),
-    position = value(formData, "position"),
-    status = value(formData, "status"),
-    jersey = jerseyValue(value(formData, "jerseyNumber"));
-  if (
-    !uuidPattern.test(registrationId) ||
-    !validJersey(jersey) ||
-    position.length > 40 ||
-    !["pending", "active", "inactive"].includes(status)
-  )
-    return { error: "Check the roster details and try again." };
-  return ownerRpc(
-    "owner_update_roster_registration",
-    {
-      p_registration_id: registrationId,
-      p_jersey_number: jersey,
-      p_position: position || null,
-      p_status: status,
-    },
-    "Roster details were updated.",
-  );
-}
-
-export async function overrideInSeasonRosterAction(
-  _: OwnerActionState,
-  formData: FormData,
-): Promise<OwnerActionState> {
-  const registrationId = value(formData, "registrationId"),
-    teamId = value(formData, "teamId"),
-    status = value(formData, "status"),
-    position = value(formData, "position"),
-    reason = value(formData, "reason"),
-    jersey = jerseyValue(value(formData, "jerseyNumber"));
-  if (
-    !uuidPattern.test(registrationId) ||
-    !uuidPattern.test(teamId) ||
-    !["active", "inactive"].includes(status) ||
-    !validJersey(jersey) ||
-    position.length > 40 ||
-    reason.length < 3 ||
-    reason.length > 500
-  )
-    return { error: "Choose a team, status, and a short reason for this override." };
-  return ownerRpc(
-    "owner_override_inseason_registration",
-    {
-      p_registration_id: registrationId,
-      p_team_id: teamId,
-      p_status: status,
-      p_jersey_number: jersey,
-      p_position: position || null,
-      p_reason: reason,
-    },
-    "In-season roster override saved.",
-  );
-}
-
-export async function addInSeasonPlayerAction(
-  _: OwnerActionState,
-  formData: FormData,
-): Promise<OwnerActionState> {
-  const teamId = value(formData, "teamId"),
-    publicPlayerId = value(formData, "publicPlayerId").toUpperCase(),
-    position = value(formData, "position"),
-    reason = value(formData, "reason"),
-    jersey = jerseyValue(value(formData, "jerseyNumber"));
-  if (
-    !uuidPattern.test(teamId) ||
-    !/^KCH-[A-Z0-9-]{4,40}$/.test(publicPlayerId) ||
-    !validJersey(jersey) ||
-    position.length > 40 ||
-    reason.length < 3 ||
-    reason.length > 500
-  )
-    return { error: "Choose a team, KCH Player ID, and a short reason." };
-  return ownerRpc(
-    "owner_add_inseason_player",
-    {
-      p_team_id: teamId,
-      p_public_player_id: publicPlayerId,
-      p_jersey_number: jersey,
-      p_position: position || null,
-      p_reason: reason,
-    },
-    "Player added through the in-season override.",
   );
 }
 
@@ -498,62 +308,6 @@ export async function advanceSeasonSetupAction(
   );
 }
 
-export async function addTeamLeaderAction(
-  _: OwnerActionState,
-  formData: FormData,
-): Promise<OwnerActionState> {
-  const teamId = value(formData, "teamId"),
-    role = value(formData, "role"),
-    publicPlayerId = value(formData, "publicPlayerId").toUpperCase(),
-    displayName = value(formData, "displayName"),
-    email = value(formData, "email"),
-    mobile = value(formData, "mobile"),
-    position = value(formData, "position"),
-    jersey = jerseyValue(value(formData, "jerseyNumber"));
-  if (!uuidPattern.test(teamId) || !["Captain", "Co-captain"].includes(role))
-    return { error: "This leadership assignment is not valid." };
-  if (!publicPlayerId && !validName(displayName))
-    return { error: "Enter an existing KCH Player ID or a player name." };
-  if (publicPlayerId && !/^KCH-[A-Z0-9-]{4,40}$/.test(publicPlayerId))
-    return { error: "Enter a valid KCH Player ID." };
-  if (
-    (email && (email.length > 254 || !email.includes("@"))) ||
-    mobile.length > 40 ||
-    position.length > 40 ||
-    !validJersey(jersey)
-  )
-    return { error: "Check the leader's contact and roster details." };
-  return ownerRpc(
-    "owner_add_team_leader",
-    {
-      p_team_id: teamId,
-      p_role: role,
-      p_public_player_id: publicPlayerId || null,
-      p_display_name: displayName || null,
-      p_email: email || null,
-      p_mobile: mobile || null,
-      p_jersey_number: jersey,
-      p_position: position || null,
-    },
-    `${role} was assigned.`,
-  );
-}
-
-export async function broadcastSeasonAction(
-  _: OwnerActionState,
-  formData: FormData,
-): Promise<OwnerActionState> {
-  const seasonId = value(formData, "seasonId"),
-    message = value(formData, "message");
-  if (!uuidPattern.test(seasonId) || message.length < 1 || message.length > 1000)
-    return { error: "Enter a broadcast message of up to 1,000 characters." };
-  return ownerRpc(
-    "owner_broadcast_season",
-    { p_season_id: seasonId, p_message: message },
-    "Season published. Players can now respond Joining or Not Joining.",
-  );
-}
-
 export async function cancelSeasonAction(
   _: OwnerActionState,
   formData: FormData,
@@ -568,35 +322,6 @@ export async function cancelSeasonAction(
     "owner_cancel_season",
     { p_season_id: seasonId, p_reason: reason },
     "Season canceled. Its history has been preserved.",
-  );
-}
-
-export async function inviteConferencePlayersAction(
-  _: OwnerActionState,
-  formData: FormData,
-): Promise<OwnerActionState> {
-  const seasonId = value(formData, "seasonId"),
-    message = value(formData, "message"),
-    responseDeadline = value(formData, "responseDeadline"),
-    playersPerTeam = Number(value(formData, "playersPerTeam"));
-  if (!uuidPattern.test(seasonId) || message.length < 1 || message.length > 1000)
-    return { error: "Enter an invitation message of up to 1,000 characters." };
-  if (
-    !/^\d{4}-\d{2}-\d{2}$/.test(responseDeadline) ||
-    responseDeadline < new Date().toISOString().slice(0, 10)
-  )
-    return { error: "Choose a response deadline that is not in the past." };
-  if (!Number.isInteger(playersPerTeam) || playersPerTeam < 1 || playersPerTeam > 30)
-    return { error: "Players per team must be from 1 to 30." };
-  return ownerRpc(
-    "owner_invite_conference_players",
-    {
-      p_season_id: seasonId,
-      p_message: message,
-      p_response_deadline: responseDeadline,
-      p_players_per_team: playersPerTeam,
-    },
-    "Player invitations sent. Joining responses will appear in the Draft step.",
   );
 }
 
@@ -665,21 +390,6 @@ export async function inviteDivisionPlayersAction(
   return {
     message: `Invitations were sent to ${playerIds.length} selected player${playerIds.length === 1 ? "" : "s"}.`,
   };
-}
-
-export async function inviteExistingDivisionPlayerAction(
-  _: OwnerActionState,
-  formData: FormData,
-): Promise<OwnerActionState> {
-  const divisionId = value(formData, "divisionId"),
-    publicPlayerId = value(formData, "publicPlayerId").toUpperCase();
-  if (!uuidPattern.test(divisionId) || !/^KCH-[A-Z0-9]{8}$/.test(publicPlayerId))
-    return { error: "Enter a valid KCH Player ID." };
-  return ownerRpc(
-    "owner_invite_existing_division_player",
-    { p_division_id: divisionId, p_public_player_id: publicPlayerId },
-    "Player added to this division's invitation list.",
-  );
 }
 
 export async function sendLateTeamInvitationAction(
@@ -751,21 +461,6 @@ export async function returnPlayerToDraftPoolAction(
     "owner_return_player_to_draft_pool",
     { p_registration_id: registrationId, p_reason: reason },
     "Player returned to the division draft pool.",
-  );
-}
-
-export async function publishRosterDraftAction(
-  _: OwnerActionState,
-  formData: FormData,
-): Promise<OwnerActionState> {
-  const seasonId = value(formData, "seasonId"),
-    message = value(formData, "message");
-  if (!uuidPattern.test(seasonId) || message.length < 1 || message.length > 1000)
-    return { error: "Enter a roster-draft message of up to 1,000 characters." };
-  return ownerRpc(
-    "owner_publish_roster_draft",
-    { p_season_id: seasonId, p_message: message },
-    "Roster draft published to players and captains.",
   );
 }
 
@@ -894,50 +589,6 @@ export async function createGameAction(
   );
 }
 
-export async function updateGameAction(
-  _: OwnerActionState,
-  formData: FormData,
-): Promise<OwnerActionState> {
-  const gameId = value(formData, "gameId"),
-    startsAt = value(formData, "startsAt"),
-    venue = value(formData, "venue"),
-    court = value(formData, "court"),
-    homeUniform = value(formData, "homeUniform"),
-    awayUniform = value(formData, "awayUniform"),
-    homeScore = optionalScore(value(formData, "homeScore")),
-    awayScore = optionalScore(value(formData, "awayScore"));
-  if (
-    !uuidPattern.test(gameId) ||
-    !validLocalDateTime(startsAt) ||
-    !venue ||
-    venue.length > 120 ||
-    court.length > 60
-  )
-    return { error: "Check the game date, venue, and court." };
-  if (!["", "White", "Dark"].includes(homeUniform) || !["", "White", "Dark"].includes(awayUniform))
-    return { error: "Choose White or Dark uniforms." };
-  if (
-    (homeScore === null) !== (awayScore === null) ||
-    (homeScore !== null && (!Number.isInteger(homeScore) || homeScore < 0)) ||
-    (awayScore !== null && (!Number.isInteger(awayScore) || awayScore < 0))
-  )
-    return { error: "Enter both final scores as whole numbers, or leave both blank." };
-  return ownerRpc(
-    "owner_update_game",
-    {
-      p_game_id: gameId,
-      p_starts_at: startsAt,
-      p_venue: venue,
-      p_court: court || null,
-      p_home_uniform: homeUniform || null,
-      p_away_uniform: awayUniform || null,
-      p_home_score: homeScore,
-      p_away_score: awayScore,
-    },
-    homeScore === null ? "Game details updated." : "Final score posted.",
-  );
-}
-
 export async function finalizeGameScoreAction(
   _: OwnerActionState,
   formData: FormData,
@@ -1002,28 +653,6 @@ export async function reviewPaymentNoticeAction(
     decision === "confirmed"
       ? "Request approved and balance updated."
       : "Request declined. The player was notified.",
-  );
-}
-
-export async function updateDivisionUniformsAction(
-  _: OwnerActionState,
-  formData: FormData,
-): Promise<OwnerActionState> {
-  const divisionId = value(formData, "divisionId"),
-    darkUniform = value(formData, "darkUniform"),
-    lightUniform = value(formData, "lightUniform");
-  if (
-    !uuidPattern.test(divisionId) ||
-    !darkUniform ||
-    !lightUniform ||
-    darkUniform.length > 40 ||
-    lightUniform.length > 40
-  )
-    return { error: "Enter dark and light uniform labels of up to 40 characters." };
-  return ownerRpc(
-    "owner_update_division_uniforms",
-    { p_division_id: divisionId, p_dark_uniform: darkUniform, p_light_uniform: lightUniform },
-    "Division uniforms updated for every team.",
   );
 }
 
@@ -1219,53 +848,6 @@ export async function completePreseasonDetailsAction(
   );
 }
 
-export async function generateSeasonScheduleAction(
-  _: OwnerActionState,
-  formData: FormData,
-): Promise<OwnerActionState> {
-  const seasonId = value(formData, "seasonId"),
-    firstDate = value(formData, "firstGameDate"),
-    firstTime = value(formData, "firstGameTime"),
-    venue = value(formData, "venue");
-  const gameMinutes = Number(value(formData, "gameMinutes")),
-    gamesPerCourt = Number(value(formData, "gamesPerCourt"));
-  const courts = value(formData, "courts")
-    .split(/[\n,]+/)
-    .map((item) => item.trim())
-    .filter(Boolean);
-  if (
-    !uuidPattern.test(seasonId) ||
-    !/^\d{4}-\d{2}-\d{2}$/.test(firstDate) ||
-    !/^\d{2}:\d{2}$/.test(firstTime)
-  )
-    return { error: "Choose the first game date and time." };
-  if (!venue || venue.length > 120 || !courts.length || courts.some((court) => court.length > 60))
-    return { error: "Enter the venue and at least one court." };
-  if (
-    !Number.isInteger(gameMinutes) ||
-    gameMinutes < 30 ||
-    gameMinutes > 180 ||
-    !Number.isInteger(gamesPerCourt) ||
-    gamesPerCourt < 1 ||
-    gamesPerCourt > 12
-  )
-    return { error: "Check the game length and games per court." };
-  return ownerRpc(
-    "owner_generate_season_schedule",
-    {
-      p_season_id: seasonId,
-      p_first_game_date: firstDate,
-      p_first_game_time: firstTime,
-      p_game_minutes: gameMinutes,
-      p_games_per_court: gamesPerCourt,
-      p_venue: venue,
-      p_courts: courts,
-      p_double_round_robin: formData.get("doubleRoundRobin") === "on",
-    },
-    "Draft schedule generated. Review and finalize it on the Schedule page.",
-  );
-}
-
 export async function saveDivisionGameDayAction(
   _: OwnerActionState,
   formData: FormData,
@@ -1380,19 +962,6 @@ export async function finalizeDivisionScheduleAction(
     "owner_finalize_division_schedule",
     { p_division_id: divisionId },
     "This division schedule is final and players were notified.",
-  );
-}
-
-export async function completeExistingScheduleAction(
-  _: OwnerActionState,
-  formData: FormData,
-): Promise<OwnerActionState> {
-  const seasonId = value(formData, "seasonId");
-  if (!uuidPattern.test(seasonId)) return { error: "Invalid season." };
-  return ownerRpc(
-    "owner_complete_existing_schedule",
-    { p_season_id: seasonId },
-    "Schedule finalized and published to players.",
   );
 }
 

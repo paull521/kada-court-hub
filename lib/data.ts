@@ -1,5 +1,3 @@
-export type UserRole = "player" | "team_staff" | "owner" | "admin";
-
 export type Player = {
   id: string;
   number: number;

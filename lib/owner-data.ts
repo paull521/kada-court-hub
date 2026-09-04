@@ -420,7 +420,6 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
             .in("registration_id", registrationIds)
         : Promise.resolve({ data: [] }),
     ]);
-  const allFeeIds = (allFeeRows ?? []).map((row) => row.id);
   const playerIds = [
     ...new Set([
       ...(registrationRows ?? []).map((row) => row.player_id),
@@ -928,19 +927,4 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
     financials,
     rosterRequests,
   };
-}
-
-export async function hasOwnerAccess(): Promise<boolean> {
-  await connection();
-  const supabase = await createClient();
-  const { data: claims } = await supabase.auth.getClaims();
-  if (!claims?.claims?.sub) return false;
-  const { data } = await supabase
-    .from("conference_memberships")
-    .select("id")
-    .eq("profile_id", claims.claims.sub)
-    .eq("role", "owner")
-    .limit(1)
-    .maybeSingle();
-  return Boolean(data);
 }

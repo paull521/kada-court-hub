@@ -1,35 +1,25 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState, useEffect, useRef, useState } from "react";
 import styles from "./OwnerTeams.module.css";
 import directoryStyles from "./OwnerDirectory.module.css";
 import {
   addConferencePlayerAction,
-  addExistingPlayerAction,
-  addInSeasonPlayerAction,
-  addRosterPlayerAction,
   advanceSeasonSetupAction,
   assignDirectoryLeaderAction,
   assignDraftPlayerAction,
   cancelSeasonAction,
   changeGameStatusAction,
-  completeExistingScheduleAction,
   completePreseasonDetailsAction,
   copyPreviousUniformsAction,
-  createDivisionAction,
   createDivisionsAction,
   createGameAction,
   createSeasonAction,
-  createTeamAction,
   createTeamsAction,
   finalizeDivisionScheduleAction,
   generateDivisionScheduleAction,
-  generateSeasonScheduleAction,
   inviteDivisionPlayersAction,
-  inviteExistingDivisionPlayerAction,
   moveExistingDivisionPlayerAction,
-  overrideInSeasonRosterAction,
   publishDivisionFinalRosterAction,
   publishDivisionRosterAction,
   rescheduleGameAction,
@@ -44,8 +34,6 @@ import {
   setDivisionRosterReviewDeadlineAction,
   updateDivisionUniformImagesAction,
   updateLeadershipAction,
-  updateRosterPlayerAction,
-  updateTeamAction,
   type OwnerActionState,
 } from "@/app/owner/actions";
 import type {
@@ -127,67 +115,6 @@ export function CreateSeasonForm({ conferenceId }: { conferenceId: string }) {
   );
 }
 
-export function CreateDivisionForm({ seasons }: { seasons: OwnerSeason[] }) {
-  const [state, action, pending] = useActionState(createDivisionAction, initialState);
-  return (
-    <form action={action} className="owner-form inline-owner-form">
-      <label>
-        Season
-        <select name="seasonId" required defaultValue="">
-          <option value="" disabled>
-            Select season
-          </option>
-          {seasons.map((season) => (
-            <option key={season.id} value={season.id}>
-              {season.name}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label>
-        Division name
-        <input name="name" placeholder="Division name" maxLength={80} required />
-      </label>
-      <Feedback state={state} />
-      <button className="btn primary" disabled={pending}>
-        {pending ? "Adding…" : "Add Division"}
-      </button>
-    </form>
-  );
-}
-
-export function CreateTeamForm({ seasons }: { seasons: OwnerSeason[] }) {
-  const [state, action, pending] = useActionState(createTeamAction, initialState);
-  const divisions = seasons.flatMap((season) =>
-    season.divisions.map((division) => ({ ...division, seasonName: season.name })),
-  );
-  return (
-    <form action={action} className="owner-form inline-owner-form">
-      <label>
-        Division
-        <select name="divisionId" required defaultValue="">
-          <option value="" disabled>
-            Select division
-          </option>
-          {divisions.map((division) => (
-            <option key={division.id} value={division.id}>
-              {division.seasonName} — {division.name}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label>
-        Team name
-        <input name="name" placeholder="Team name" maxLength={80} required />
-      </label>
-      <Feedback state={state} />
-      <button className="btn primary" disabled={pending}>
-        {pending ? "Adding…" : "Add Team"}
-      </button>
-    </form>
-  );
-}
-
 export function ConferencePlayerDirectory({ conferenceId }: { conferenceId: string }) {
   const [state, action, pending] = useActionState(addConferencePlayerAction, initialState);
   return (
@@ -220,160 +147,6 @@ export function ConferencePlayerDirectory({ conferenceId }: { conferenceId: stri
         <Feedback state={state} />
         <button className="btn secondary" disabled={pending}>
           {pending ? "Adding…" : "Add Player"}
-        </button>
-      </form>
-    </details>
-  );
-}
-
-const teamOptions = (seasons: OwnerSeason[]) =>
-  seasons.flatMap((season) =>
-    season.divisions.flatMap((division) =>
-      division.teams.map((team) => ({
-        id: team.id,
-        label: `${season.name} — ${division.name} — ${team.name}`,
-      })),
-    ),
-  );
-
-export function RosterAddForms({ seasons }: { seasons: OwnerSeason[] }) {
-  const [newState, newAction, newPending] = useActionState(addRosterPlayerAction, initialState);
-  const [existingState, existingAction, existingPending] = useActionState(
-    addExistingPlayerAction,
-    initialState,
-  );
-  const teams = teamOptions(seasons);
-  const TeamSelect = ({ name }: { name: string }) => (
-    <select name={name} required defaultValue="">
-      <option value="" disabled>
-        Select team
-      </option>
-      {teams.map((team) => (
-        <option key={team.id} value={team.id}>
-          {team.label}
-        </option>
-      ))}
-    </select>
-  );
-  return (
-    <div className="roster-add-grid">
-      <form action={existingAction} className="owner-form roster-form">
-        <h3>Add Existing KCH Player</h3>
-        <p>Use the exact Player ID shown on the player&apos;s KCH profile.</p>
-        <label>
-          Team
-          <TeamSelect name="teamId" />
-        </label>
-        <label>
-          KCH Player ID
-          <input
-            name="publicPlayerId"
-            placeholder="KCH-XXXXXXXX"
-            autoCapitalize="characters"
-            required
-          />
-        </label>
-        <div className="compact-fields">
-          <label>
-            Jersey number
-            <input name="jerseyNumber" type="number" min="0" max="99" inputMode="numeric" />
-          </label>
-          <label>
-            Position
-            <input name="position" placeholder="Guard, Forward…" maxLength={40} />
-          </label>
-        </div>
-        <Feedback state={existingState} />
-        <button className="btn primary" disabled={existingPending || !teams.length}>
-          {existingPending ? "Adding…" : "Add Existing Player"}
-        </button>
-      </form>
-      <form action={newAction} className="owner-form roster-form">
-        <h3>Create Roster Placeholder</h3>
-        <p>For a player who has not created a KCH account yet.</p>
-        <label>
-          Team
-          <TeamSelect name="teamId" />
-        </label>
-        <label>
-          Player name
-          <input name="displayName" placeholder="Player name" maxLength={80} required />
-        </label>
-        <div className="compact-fields">
-          <label>
-            Email (optional)
-            <input name="email" type="email" autoComplete="off" placeholder="player@example.com" />
-          </label>
-          <label>
-            Mobile (optional)
-            <input name="mobile" inputMode="tel" autoComplete="off" maxLength={40} />
-          </label>
-          <label>
-            Jersey number
-            <input name="jerseyNumber" type="number" min="0" max="99" inputMode="numeric" />
-          </label>
-          <label>
-            Position
-            <input name="position" placeholder="Guard, Forward…" maxLength={40} />
-          </label>
-        </div>
-        <Feedback state={newState} />
-        <button className="btn primary" disabled={newPending || !teams.length}>
-          {newPending ? "Adding…" : "Create Roster Player"}
-        </button>
-      </form>
-    </div>
-  );
-}
-
-function RosterPlayerEditor({ player }: { player: OwnerRosterPlayer }) {
-  const [state, action, pending] = useActionState(updateRosterPlayerAction, initialState);
-  return (
-    <details className="roster-player-editor">
-      <summary>
-        <b className="roster-number">{player.jerseyNumber ?? "—"}</b>
-        <span>
-          <strong>{player.name}</strong>
-          <small>
-            {player.position || "Position not set"} · {player.role}
-          </small>
-        </span>
-        <em className={`roster-status ${player.status}`}>{player.status}</em>
-        <span>›</span>
-      </summary>
-      <form action={action} className="owner-form">
-        <input type="hidden" name="registrationId" value={player.registrationId} />
-        <div className="roster-identity">
-          <span>{player.publicPlayerId}</span>
-          <b>{player.claimed ? "Claimed KCH account" : "Unclaimed roster profile"}</b>
-        </div>
-        <div className="compact-fields">
-          <label>
-            Jersey number
-            <input
-              name="jerseyNumber"
-              type="number"
-              min="0"
-              max="99"
-              defaultValue={player.jerseyNumber ?? ""}
-            />
-          </label>
-          <label>
-            Position
-            <input name="position" maxLength={40} defaultValue={player.position} />
-          </label>
-          <label>
-            Roster status
-            <select name="status" defaultValue={player.status}>
-              <option value="active">Active</option>
-              <option value="pending">Pending</option>
-              <option value="inactive">Inactive</option>
-            </select>
-          </label>
-        </div>
-        <Feedback state={state} />
-        <button className="btn secondary" disabled={pending}>
-          {pending ? "Saving…" : "Save Roster Details"}
         </button>
       </form>
     </details>
@@ -533,108 +306,6 @@ function TeamsSetupStep({ season }: { season: OwnerSeason }) {
         <DivisionTeamBuilder key={division.id} division={division} />
       ))}
       <AdvanceStepForm seasonId={season.id} stage={2} label="Teams Complete — Continue" />
-    </div>
-  );
-}
-
-function TeamRosterBuilder({ team }: { team: OwnerTeam }) {
-  const [newState, newAction, newPending] = useActionState(addRosterPlayerAction, initialState);
-  const [existingState, existingAction, existingPending] = useActionState(
-    addExistingPlayerAction,
-    initialState,
-  );
-  return (
-    <details className="guided-group">
-      <summary>
-        <span>
-          <b>{team.name}</b>
-          <small>
-            {team.players.filter((player) => player.status === "active").length} active players
-          </small>
-        </span>
-        <span>›</span>
-      </summary>
-      <div>
-        <details className="guided-subform">
-          <summary>Add existing KCH player</summary>
-          <form action={existingAction} className="owner-form">
-            <input type="hidden" name="teamId" value={team.id} />
-            <label>
-              KCH Player ID
-              <input name="publicPlayerId" placeholder="KCH-XXXXXXXX" required />
-            </label>
-            <div className="compact-fields">
-              <label>
-                Jersey
-                <input name="jerseyNumber" type="number" min="0" max="99" />
-              </label>
-              <label>
-                Position
-                <input name="position" maxLength={40} />
-              </label>
-            </div>
-            <Feedback state={existingState} />
-            <button className="btn secondary" disabled={existingPending}>
-              {existingPending ? "Adding…" : "Add Existing Player"}
-            </button>
-          </form>
-        </details>
-        <details className="guided-subform">
-          <summary>Create unclaimed roster player</summary>
-          <form action={newAction} className="owner-form">
-            <input type="hidden" name="teamId" value={team.id} />
-            <label>
-              Player name
-              <input name="displayName" maxLength={80} required />
-            </label>
-            <div className="compact-fields">
-              <label>
-                Email (optional)
-                <input name="email" type="email" />
-              </label>
-              <label>
-                Mobile (optional)
-                <input name="mobile" maxLength={40} />
-              </label>
-              <label>
-                Jersey
-                <input name="jerseyNumber" type="number" min="0" max="99" />
-              </label>
-              <label>
-                Position
-                <input name="position" maxLength={40} />
-              </label>
-            </div>
-            <Feedback state={newState} />
-            <button className="btn secondary" disabled={newPending}>
-              {newPending ? "Adding…" : "Create Roster Player"}
-            </button>
-          </form>
-        </details>
-        {team.players.length > 0 && (
-          <div className="guided-roster-list">
-            {team.players.map((player) => (
-              <RosterPlayerEditor key={player.registrationId} player={player} />
-            ))}
-          </div>
-        )}
-      </div>
-    </details>
-  );
-}
-
-function PlayersSetupStep({ season }: { season: OwnerSeason }) {
-  const teams = season.divisions.flatMap((division) => division.teams);
-  return (
-    <div className="guided-step-body">
-      <p className="guided-instruction">
-        Open a team to add its players. The team is already selected, so there are no repeated
-        dropdowns.
-      </p>
-      {teams.map((team) => (
-        <TeamRosterBuilder key={team.id} team={team} />
-      ))}
-      <AdvanceStepForm seasonId={season.id} stage={3} label="Rosters Complete — Continue" />
     </div>
   );
 }
@@ -999,10 +670,6 @@ function DivisionInvitationForm({
   open: boolean;
 }) {
   const [state, action, pending] = useActionState(inviteDivisionPlayersAction, initialState);
-  const [addState, addAction, addPending] = useActionState(
-    inviteExistingDivisionPlayerAction,
-    initialState,
-  );
   const [playersPerTeam, setPlayersPerTeam] = useState(10);
   const [deadline, setDeadline] = useState("");
   const [customMessage, setCustomMessage] = useState("");
@@ -1401,194 +1068,6 @@ export function OwnerRosterChangeReviews({ requests }: { requests: OwnerRosterRe
         ))}
       </div>
     </details>
-  );
-}
-
-function InSeasonPlayerEditor({
-  player,
-  teams,
-}: {
-  player: OwnerRosterPlayer;
-  teams: OwnerTeam[];
-}) {
-  const [state, action, pending] = useActionState(overrideInSeasonRosterAction, initialState);
-  return (
-    <details className="roster-player-editor">
-      <summary>
-        <b className="roster-number">{player.jerseyNumber ?? "—"}</b>
-        <span>
-          <strong>{player.name}</strong>
-          <small>
-            {player.position || "Position not set"} · {player.status}
-          </small>
-        </span>
-        <span>›</span>
-      </summary>
-      <form action={action} className="owner-form">
-        <input type="hidden" name="registrationId" value={player.registrationId} />
-        <label>
-          Team
-          <select
-            name="teamId"
-            defaultValue={
-              teams.find((team) =>
-                team.players.some((item) => item.registrationId === player.registrationId),
-              )?.id ?? ""
-            }
-            required
-          >
-            {teams.map((team) => (
-              <option key={team.id} value={team.id}>
-                {team.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <div className="compact-fields">
-          <label>
-            Status
-            <select
-              name="status"
-              defaultValue={player.status === "inactive" ? "inactive" : "active"}
-            >
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </select>
-          </label>
-          <label>
-            Jersey
-            <input
-              name="jerseyNumber"
-              type="number"
-              min="0"
-              max="99"
-              defaultValue={player.jerseyNumber ?? ""}
-            />
-          </label>
-          <label>
-            Position
-            <input name="position" maxLength={40} defaultValue={player.position} />
-          </label>
-        </div>
-        <label>
-          Reason for this override
-          <textarea
-            name="reason"
-            maxLength={500}
-            required
-            placeholder="Late registration, injury, team balance…"
-          />
-        </label>
-        <Feedback state={state} />
-        <button className="btn secondary" disabled={pending}>
-          {pending ? "Saving…" : "Save Owner Override"}
-        </button>
-      </form>
-    </details>
-  );
-}
-
-export function OwnerInSeasonRosterManagement({ seasons }: { seasons: OwnerSeason[] }) {
-  const [state, action, pending] = useActionState(addInSeasonPlayerAction, initialState);
-  const divisions = seasons
-    .filter((season) => !season.canceledAt)
-    .flatMap((season) =>
-      season.divisions.map((division) => ({ ...division, seasonName: season.name })),
-    );
-  return (
-    <section className="owner-operations owner-page-section">
-      <p className="eyebrow">OWNER-ONLY ROSTER CHANGES</p>
-      <h2>In-Season Player Changes</h2>
-      <p className="operations-intro">
-        Add, activate, deactivate, or move players after setup. Every change requires a reason and
-        is recorded in the conference history.
-      </p>
-      <details className="card inseason-add" open>
-        <summary>
-          <span>
-            <b>Add a KCH player to a team</b>
-            <small>For late registration or an owner-approved roster change.</small>
-          </span>
-          <strong>›</strong>
-        </summary>
-        <form action={action} className="owner-form">
-          <label>
-            Team
-            <select name="teamId" defaultValue="" required>
-              <option value="" disabled>
-                Select team
-              </option>
-              {divisions.flatMap((division) =>
-                division.teams.map((team) => (
-                  <option key={team.id} value={team.id}>
-                    {division.seasonName} — {division.name} — {team.name}
-                  </option>
-                )),
-              )}
-            </select>
-          </label>
-          <label>
-            KCH Player ID
-            <input name="publicPlayerId" placeholder="KCH-XXXXXXXX" required />
-          </label>
-          <div className="compact-fields">
-            <label>
-              Jersey
-              <input name="jerseyNumber" type="number" min="0" max="99" />
-            </label>
-            <label>
-              Position
-              <input name="position" maxLength={40} />
-            </label>
-          </div>
-          <label>
-            Reason for this change
-            <textarea
-              name="reason"
-              maxLength={500}
-              required
-              placeholder="Late registration, replacement player…"
-            />
-          </label>
-          <Feedback state={state} />
-          <button className="btn primary" disabled={pending}>
-            {pending ? "Adding…" : "Add Player to Team"}
-          </button>
-        </form>
-      </details>
-      <div className="inseason-division-list">
-        {divisions.map((division) => (
-          <details className="card operations-season" key={division.id}>
-            <summary>
-              <span>
-                <b>
-                  {division.seasonName} · {division.name}
-                </b>
-                <small>
-                  {division.teams.reduce((sum, team) => sum + team.players.length, 0)} rostered
-                  players
-                </small>
-              </span>
-              <strong>›</strong>
-            </summary>
-            <div>
-              {division.teams.map((team) => (
-                <section className="inseason-team" key={team.id}>
-                  <b>{team.name}</b>
-                  {team.players.map((player) => (
-                    <InSeasonPlayerEditor
-                      key={player.registrationId}
-                      player={player}
-                      teams={division.teams}
-                    />
-                  ))}
-                </section>
-              ))}
-            </div>
-          </details>
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -4049,104 +3528,6 @@ export function OwnerUniformManagement({ seasons }: { seasons: OwnerSeason[] }) 
   );
 }
 
-function TeamManagementEditor({ team }: { team: OwnerTeam }) {
-  const [teamState, teamAction, teamPending] = useActionState(updateTeamAction, initialState);
-  const [leadershipState, leadershipAction, leadershipPending] = useActionState(
-    updateLeadershipAction,
-    initialState,
-  );
-  const activePlayers = team.players.filter((player) => player.status === "active");
-  const captainId = activePlayers.find((player) => player.role === "Captain")?.registrationId ?? "";
-  const coCaptainId =
-    activePlayers.find((player) => player.role === "Co-captain")?.registrationId ?? "";
-  return (
-    <details className="owner-team">
-      <summary>
-        <span className="owner-team-mark">{team.name.slice(0, 2).toUpperCase()}</span>
-        <span>
-          <b>{team.name}</b>
-          <small>
-            {activePlayers.length} active · {team.players.length} total ·{" "}
-            {team.active ? "Active team" : "Inactive team"}
-          </small>
-        </span>
-        <span>›</span>
-      </summary>
-      <div className="owner-team-body">
-        <form action={teamAction} className="owner-form">
-          <input type="hidden" name="teamId" value={team.id} />
-          <label>
-            Team name
-            <input name="name" defaultValue={team.name} maxLength={80} required />
-          </label>
-          <label className="check-row">
-            <input name="active" type="checkbox" defaultChecked={team.active} /> Active team
-          </label>
-          <Feedback state={teamState} />
-          <button className="btn secondary" disabled={teamPending}>
-            {teamPending ? "Saving…" : "Save Team"}
-          </button>
-        </form>
-        <div className="leadership-summary">
-          <span>
-            <small>CAPTAIN</small>
-            <b>{team.captain}</b>
-          </span>
-          <span>
-            <small>CO-CAPTAIN</small>
-            <b>{team.coCaptain}</b>
-          </span>
-        </div>
-        {activePlayers.length ? (
-          <form action={leadershipAction} className="owner-form">
-            <input type="hidden" name="teamId" value={team.id} />
-            <label>
-              Captain
-              <select name="captainId" defaultValue={captainId}>
-                <option value="">Unassigned</option>
-                {activePlayers.map((player) => (
-                  <option key={player.registrationId} value={player.registrationId}>
-                    {player.jerseyNumber === null ? "—" : `#${player.jerseyNumber}`} {player.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Co-captain
-              <select name="coCaptainId" defaultValue={coCaptainId}>
-                <option value="">Unassigned</option>
-                {activePlayers.map((player) => (
-                  <option key={player.registrationId} value={player.registrationId}>
-                    {player.jerseyNumber === null ? "—" : `#${player.jerseyNumber}`} {player.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <Feedback state={leadershipState} />
-            <button className="btn secondary" disabled={leadershipPending}>
-              {leadershipPending ? "Saving…" : "Save Leadership"}
-            </button>
-          </form>
-        ) : (
-          <p className="empty-note">Add an active player before assigning leadership.</p>
-        )}
-        <section className="team-roster-management">
-          <h4>Roster Management</h4>
-          {team.players.length ? (
-            <div>
-              {team.players.map((player) => (
-                <RosterPlayerEditor key={player.registrationId} player={player} />
-              ))}
-            </div>
-          ) : (
-            <p className="empty-note">No roster players yet.</p>
-          )}
-        </section>
-      </div>
-    </details>
-  );
-}
-
 function TeamLeadershipControl({
   team,
   role,
@@ -4324,50 +3705,5 @@ function TeamPlayerRow({ player }: { player: OwnerRosterPlayer }) {
         </button>
       </form>
     </details>
-  );
-}
-
-export function SeasonDirectory({ seasons }: { seasons: OwnerSeason[] }) {
-  if (!seasons.length)
-    return <p className="empty-note">No seasons yet. Create the first season above.</p>;
-  return (
-    <div className="season-directory">
-      {seasons.map((season) => (
-        <section className="owner-season" key={season.id}>
-          <header>
-            <span>
-              <b>{season.name}</b>
-              <small>
-                {season.startsOn} to {season.endsOn}
-              </small>
-            </span>
-            <em>{season.registrationOpen ? "Registration open" : "Registration closed"}</em>
-          </header>
-          {season.divisions.length ? (
-            season.divisions.map((division) => (
-              <div className="owner-division" key={division.id}>
-                <div className="division-heading">
-                  <b>{division.name}</b>
-                  <span>
-                    {division.teams.length} team{division.teams.length === 1 ? "" : "s"}
-                  </span>
-                </div>
-                {division.teams.length ? (
-                  <div className="owner-team-list">
-                    {division.teams.map((team) => (
-                      <TeamEditor key={team.id} team={team} />
-                    ))}
-                  </div>
-                ) : (
-                  <p className="empty-note">No teams in this division yet.</p>
-                )}
-              </div>
-            ))
-          ) : (
-            <p className="empty-note">No divisions in this season yet.</p>
-          )}
-        </section>
-      ))}
-    </div>
   );
 }

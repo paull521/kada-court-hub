@@ -789,7 +789,6 @@ export async function getPlayerPortalData(
       { data: seasonGameRows },
       { data: divisionTeamRows },
       { data: feeRows },
-      { data: invitationRow },
       { data: notificationRows },
       { data: submissionRows },
       { data: uniformSettings },
@@ -820,11 +819,6 @@ export async function getPlayerPortalData(
         .from("fees")
         .select("id,category,description,amount_cents,status")
         .eq("registration_id", registration.id),
-      supabase
-        .from("season_invitations")
-        .select("id,response,broadcast_id")
-        .eq("registration_id", registration.id)
-        .maybeSingle(),
       supabase
         .from("notifications")
         .select("id,notification_type,title,body,link_path,read_at,created_at")

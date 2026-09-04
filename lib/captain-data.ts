@@ -669,7 +669,3 @@ export async function getCaptainPortalData(
     hasUnavailable: availability.some((player) => !player.available),
   };
 }
-
-export async function hasCaptainAccess(): Promise<boolean> {
-  return (await getCaptainPortalData()).authorized;
-}

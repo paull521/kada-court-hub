@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { SubscriptionConfirmations } from "@/components/PlatformCreatorTools";
 import { getPlatformDashboard } from "@/lib/platform-data";
 
 export default async function PlatformCreatorPage() {

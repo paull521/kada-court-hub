@@ -22,20 +22,6 @@ const paymentTimestamp = (value: string) =>
     minute: "2-digit",
   }).format(new Date(value));
 
-export function SubscriptionConfirmations({ pendingCount }: { pendingCount: number }) {
-  return (
-    <section className="card platform-tile platform-payments">
-      <span className="platform-icon">▣</span>
-      <p className="eyebrow">SUBSCRIPTIONS</p>
-      <h2>Owner Payments</h2>
-      <p>Verify and approve payments.</p>
-      {pendingCount > 0 && (
-        <small className="platform-attention">{pendingCount} awaiting approval</small>
-      )}
-    </section>
-  );
-}
-
 export function OwnerSubscriptionPayment({
   conferenceId,
   billing,
