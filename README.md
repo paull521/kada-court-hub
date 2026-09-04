@@ -3,6 +3,7 @@
 This converts the original static KCH prototype to Next.js + React + TypeScript using the App Router.
 
 ## Routes
+
 - /login
 - /home
 - /my-team
@@ -10,20 +11,30 @@ This converts the original static KCH prototype to Next.js + React + TypeScript 
 - /more
 - /owner
 
-## Run locally on Mac
+## Run locally
 
-1. Install Node.js if you do not already have it.
-2. Open Terminal.
-3. Go to the migrated project folder:
-   cd /Users/pdl521/.codex/.chatgpt-projects/g-p-6a7b615dbb888191aa7ea1bad708653e/kch-app
-4. Install dependencies:
-   npm install
-5. Start the app:
-   npm run dev
-6. Open:
-   http://localhost:3000
+Requires Node 20.9 or newer.
+
+```bash
+npm install
+cp .env.example .env.local   # add the Supabase URL and publishable key
+npm run dev -- --port 3001   # http://127.0.0.1:3001
+```
+
+Port 3001 is the project convention and matches `allowedDevOrigins` in
+`next.config.ts`. With `.env.local` left empty the app runs in demo mode:
+it builds and serves, but there is no login and no live data.
+
+Other commands:
+
+```bash
+npm run build    # the only gate - there are no tests and no CI
+npm start        # serve the production build
+npm run format   # Prettier
+```
 
 ## Current scope
+
 - Working route navigation
 - Reusable player application shell
 - Player Home
@@ -36,13 +47,18 @@ This converts the original static KCH prototype to Next.js + React + TypeScript 
 - Shared mock data
 
 ## Not real yet
-- Live Supabase project connection
-- Applied remote database migration
+
 - Payments
-- Seeded conference data
 - Owner CRUD operations
 
-## Recommended next engineering step
-Create the Supabase project, copy `.env.example` to `.env.local`, add the Project URL and publishable key, and apply `supabase/migrations/0001_initial_schema.sql`. The app already contains cookie-based Supabase SSR clients, email/password login and sign-up actions, session refresh, and protected player routes. Without project keys, it remains in demo mode.
+## Database
 
-The approved product decisions and roadmap recovered from the project chats are in `../docs/KCH_PROJECT_BRIEF.md`.
+`supabase/migrations/` holds numbered SQL files applied by hand in the Supabase
+SQL Editor - there is no migration runner and no record in the repo of what has
+been applied. Confirm the live schema before writing a new migration, and note
+that `0046` and `0104` are each used twice, so the next free number is `0109`.
+
+`supabase/testing/` contains demo-data scripts. Those are not schema and must
+never be run against real league data.
+
+See `KCH_HANDOFF.md` for the product hierarchy, role model, and workflow rules.
