@@ -1,24 +1,111 @@
-.captain-roster-disclosure{border-radius:18px!important;margin-bottom:14px!important;background:rgba(255,255,255,.96)}
-.captain-roster-disclosure>summary{min-height:76px;padding:15px 17px!important}
-.captain-roster-disclosure>div{padding:15px 17px!important;background:#fcfbf9}
-.captain-roster-disclosure .captain-final-team{padding:0!important;background:transparent}
-.captain-roster-disclosure .captain-final-team .roster-row{padding:11px 0}
-.captain-roster-disclosure .captain-final-team .roster-row{grid-template-columns:48px minmax(0,1fr) auto!important;gap:12px;min-height:67px;padding:14px 0!important;align-items:center}
-.captain-roster-disclosure .captain-final-team .jersey{border-radius:14px;padding:7px 4px;font-size:15px}
-.captain-roster-disclosure .captain-final-team .roster-player-name{display:grid;gap:4px;min-width:0}
-.captain-roster-disclosure .captain-final-team .roster-player-name strong{font-size:15px;line-height:1.2}
-.captain-roster-disclosure .captain-final-team .roster-player-name small{font-size:12px;color:var(--muted);line-height:1.2}
-.captain-roster-disclosure .captain-final-team em{min-width:64px;text-align:right;font-size:12px!important;line-height:1.2}
-.captain-roster-disclosure .captain-final-team{padding:0 12px!important}
-.feature-card .uniform-line{grid-column:1/-1}
-.home-availability-card{margin-bottom:14px}
-.captain-request-form{display:grid!important;grid-template-columns:1fr!important;gap:12px!important;align-items:stretch!important}
-.captain-request-form label{width:100%}
-.captain-request-form textarea{width:100%;min-height:86px!important}
-.captain-request-form .btn{width:100%;min-height:48px}
-.captain-request-list{display:grid;gap:0!important}
-.captain-request-list article{border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;padding:13px 0!important;background:transparent!important}
-.captain-request-list article:last-child{border-bottom:0!important}
-.captain-request-list article>p{font-size:12px;line-height:1.45}
-.captain-manage-details{width:100%;margin:0 0 12px;min-height:45px;display:grid;place-items:center}
-.captain-player-details-disclosure .captain-draft-entry{border:0;box-shadow:none;padding:0}.captain-player-details-disclosure .captain-draft-entry>.owner-section-title{display:none}
+.captain-roster-disclosure {
+  border-radius: 18px !important;
+  margin-bottom: 14px !important;
+  background: rgba(255, 255, 255, 0.96);
+}
+.captain-roster-disclosure > summary {
+  min-height: 76px;
+  padding: 15px 17px !important;
+}
+.captain-roster-disclosure > div {
+  padding: 15px 17px !important;
+  background: #fcfbf9;
+}
+.captain-roster-disclosure .captain-final-team {
+  padding: 0 !important;
+  background: transparent;
+}
+.captain-roster-disclosure .captain-final-team .roster-row {
+  padding: 11px 0;
+}
+.captain-roster-disclosure .captain-final-team .roster-row {
+  grid-template-columns: 48px minmax(0, 1fr) auto !important;
+  gap: 12px;
+  min-height: 67px;
+  padding: 14px 0 !important;
+  align-items: center;
+}
+.captain-roster-disclosure .captain-final-team .jersey {
+  border-radius: 14px;
+  padding: 7px 4px;
+  font-size: 15px;
+}
+.captain-roster-disclosure .captain-final-team .roster-player-name {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.captain-roster-disclosure .captain-final-team .roster-player-name strong {
+  font-size: 15px;
+  line-height: 1.2;
+}
+.captain-roster-disclosure .captain-final-team .roster-player-name small {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.2;
+}
+.captain-roster-disclosure .captain-final-team em {
+  min-width: 64px;
+  text-align: right;
+  font-size: 12px !important;
+  line-height: 1.2;
+}
+.captain-roster-disclosure .captain-final-team {
+  padding: 0 12px !important;
+}
+.feature-card .uniform-line {
+  grid-column: 1/-1;
+}
+.home-availability-card {
+  margin-bottom: 14px;
+}
+.captain-request-form {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 12px !important;
+  align-items: stretch !important;
+}
+.captain-request-form label {
+  width: 100%;
+}
+.captain-request-form textarea {
+  width: 100%;
+  min-height: 86px !important;
+}
+.captain-request-form .btn {
+  width: 100%;
+  min-height: 48px;
+}
+.captain-request-list {
+  display: grid;
+  gap: 0 !important;
+}
+.captain-request-list article {
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  padding: 13px 0 !important;
+  background: transparent !important;
+}
+.captain-request-list article:last-child {
+  border-bottom: 0 !important;
+}
+.captain-request-list article > p {
+  font-size: 12px;
+  line-height: 1.45;
+}
+.captain-manage-details {
+  width: 100%;
+  margin: 0 0 12px;
+  min-height: 45px;
+  display: grid;
+  place-items: center;
+}
+.captain-player-details-disclosure .captain-draft-entry {
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+}
+.captain-player-details-disclosure .captain-draft-entry > .owner-section-title {
+  display: none;
+}
