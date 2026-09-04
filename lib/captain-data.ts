@@ -2,6 +2,7 @@ import "server-only";
 import { connection } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { CAPTAIN_ROLE_LABELS, CAPTAIN_REGISTRATION_STATUS } from "@/lib/roles";
 
 export type CaptainRequest = {
   id: string;
@@ -143,9 +144,9 @@ export async function getCaptainPortalData(
       .from("registrations")
       .select("id,team_id,season_id,role_label,created_at")
       .eq("player_id", player.id)
-      .in("role_label", ["Captain", "Co-captain"])
+      .in("role_label", CAPTAIN_ROLE_LABELS)
       .not("team_id", "is", null)
-      .eq("status", "active")
+      .eq("status", CAPTAIN_REGISTRATION_STATUS)
       .order("created_at", { ascending: false }),
   ]);
   if (!leaderRows?.length) return empty;

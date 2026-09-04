@@ -3,6 +3,15 @@ import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
 export type AvailableRoles = { player: boolean; captain: boolean; owner: boolean };
+
+/**
+ * A registration only counts as a captaincy when it is active AND attached to a
+ * team. getCaptainPortalData() in lib/captain-data.ts builds the entire captain
+ * workspace from exactly these rows, so any gate that admits more than this
+ * offers a Captain role that leads to an empty page.
+ */
+export const CAPTAIN_ROLE_LABELS = ["Captain", "Co-captain"];
+export const CAPTAIN_REGISTRATION_STATUS = "active";
 export async function getAvailableRoles(): Promise<AvailableRoles> {
   await connection();
   const supabase = await createClient();
@@ -25,8 +34,9 @@ export async function getAvailableRoles(): Promise<AvailableRoles> {
       .from("registrations")
       .select("id")
       .eq("player_id", player.id)
-      .in("role_label", ["Captain", "Co-captain"])
-      .in("status", ["active", "pending"])
+      .in("role_label", CAPTAIN_ROLE_LABELS)
+      .not("team_id", "is", null)
+      .eq("status", CAPTAIN_REGISTRATION_STATUS)
       .limit(1)
       .maybeSingle();
     captain = Boolean(data);
