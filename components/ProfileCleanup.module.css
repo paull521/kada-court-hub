@@ -1,1 +1,3 @@
-:global(.profile-account-list a[href="/payments#payment-history"]){display:none}
+:global(.profile-account-list a[href="/payments#payment-history"]) {
+  display: none;
+}
