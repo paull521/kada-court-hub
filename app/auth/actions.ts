@@ -41,7 +41,7 @@ export async function loginAction(
       safeReturnPath(cookieStore.get("kch_return_path")?.value ?? "");
   if (nextPath) cookieStore.delete("kch_return_path");
   revalidatePath("/home");
-  redirect(nextPath || "/home");
+  redirect(nextPath || `/home?login=${Date.now()}`);
 }
 
 export async function signUpAction(

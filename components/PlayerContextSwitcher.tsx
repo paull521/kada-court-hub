@@ -20,11 +20,6 @@ export default function PlayerContextSwitcher({
   const active =
     contexts.find((context) => context.registrationId === selectedRegistrationId) ?? contexts[0];
   const hasContextChoices = contexts.length > 1;
-  const conferenceLabel =
-    active?.conference?.toLowerCase().includes("seattle filipino") ||
-    active?.conference?.toLowerCase().includes("kch basketball")
-      ? "KCH BBALL"
-      : active?.conference || "KCH BBALL";
 
   useEffect(() => {
     if (!open) return;
@@ -63,7 +58,7 @@ export default function PlayerContextSwitcher({
         disabled={!hasContextChoices}
       >
         <span>
-          <b>{conferenceLabel}</b>
+          <b>{active.team}</b>
         </span>
         {hasContextChoices && <i aria-hidden="true">⌄</i>}
       </button>
@@ -83,7 +78,7 @@ export default function PlayerContextSwitcher({
             <header>
               <span>
                 <small>PLAYER VIEW</small>
-                <h2 id="context-title">Choose your conference or division</h2>
+                <h2 id="context-title">Choose your team</h2>
               </span>
               <button type="button" onClick={() => setOpen(false)} aria-label="Close">
                 ×
