@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import AppShell from "@/components/AppShell";
 import SeasonTabs from "@/components/SeasonTabs";
 import { getPlayerPortalData, type DivisionScheduleGame } from "@/lib/kch-data";
@@ -76,7 +77,9 @@ function DivisionWeeklyView({ games }: { games: DivisionScheduleGame[] }) {
                 <small>
                   {weekGames.length} game{weekGames.length === 1 ? "" : "s"}
                 </small>
-                <strong>›</strong>
+                <strong aria-hidden="true">
+                  <ChevronRight className="go-caret" />
+                </strong>
               </summary>
               <div className="schedule-table-scroll">
                 <table>

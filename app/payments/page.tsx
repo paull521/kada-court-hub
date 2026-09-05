@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import AppShell from "@/components/AppShell";
 import PlayerPaymentForm from "@/components/PlayerPaymentForm";
 import { getPlayerPortalData } from "@/lib/kch-data";
@@ -53,7 +54,9 @@ export default async function Payments() {
         <summary>
           <span>◷</span>
           <b>Payment History</b>
-          <strong>›</strong>
+          <strong aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </strong>
         </summary>
         <div className="payment-history-scroll">
           {data.paymentHistory.length ? (

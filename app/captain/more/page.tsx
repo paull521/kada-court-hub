@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import CaptainShell from "@/components/CaptainShell";
@@ -23,7 +24,9 @@ export default async function CaptainMorePage() {
             <b>Player Profile</b>
             <small>Personal details and uniform size</small>
           </div>
-          <strong>›</strong>
+          <strong aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </strong>
         </Link>
         <Link href="/captain/availability">
           <span>✓</span>
@@ -31,14 +34,18 @@ export default async function CaptainMorePage() {
             <b>Availability</b>
             <small>Next-game team responses</small>
           </div>
-          <strong>›</strong>
+          <strong aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </strong>
         </Link>
         <Link href="/legal">
           <span>▢</span>
           <div>
             <b>Privacy &amp; Terms</b>
           </div>
-          <strong>›</strong>
+          <strong aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </strong>
         </Link>
       </nav>
     </CaptainShell>

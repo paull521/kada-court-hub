@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -87,7 +87,11 @@ export default function OwnerConferenceSwitcher({
                       <small>Conference owner workspace</small>
                     </span>
                     <strong aria-hidden="true">
-                      {conference.id === current.id ? "Current" : "›"}
+                      {conference.id === current.id ? (
+                        "Current"
+                      ) : (
+                        <ChevronRight className="go-caret" />
+                      )}
                     </strong>
                   </button>
                 </form>

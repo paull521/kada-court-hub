@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
 import { useActionState } from "react";
 import {
   acceptOwnerInvitationAction,
@@ -76,7 +77,9 @@ export function OwnerSubscriptionPayment({
           <em className={`owner-subscription-status ${statusClass}`}>
             {pilotSeason ? "Pilot" : status}
           </em>
-          <strong>›</strong>
+          <strong aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </strong>
         </summary>
         <div className="monthly-subscription-body">
           <div className="owner-platform-table-wrap">
@@ -174,7 +177,9 @@ export function OwnerSubscriptionPayment({
       <details className="card payment-history-panel owner-subscription-history">
         <summary>
           <b>Payment History</b>
-          <strong>›</strong>
+          <strong aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </strong>
         </summary>
         <div className="payment-history-scroll">
           {billing.submissions.length ? (

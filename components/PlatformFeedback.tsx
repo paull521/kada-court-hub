@@ -1,4 +1,5 @@
 "use client";
+import { ChevronRight } from "lucide-react";
 import { useActionState } from "react";
 import { submitPlatformFeedbackAction, type ProfileActionState } from "@/app/profile/actions";
 const initial: ProfileActionState = {};
@@ -9,7 +10,9 @@ export default function PlatformFeedback({ conferenceId }: { conferenceId: strin
       <summary>
         <span>✦</span>
         <b>Platform Feedback</b>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <form action={action}>
         <input type="hidden" name="conferenceId" value={conferenceId} />

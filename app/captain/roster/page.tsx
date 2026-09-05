@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import { redirect } from "next/navigation";
 import CaptainShell from "@/components/CaptainShell";
 import CaptainRequestForm from "@/components/CaptainRequestForm";
@@ -33,7 +34,9 @@ export default async function CaptainRosterPage() {
                   <small>Open the published team list.</small>
                 </span>
               </span>
-              <strong>›</strong>
+              <strong aria-hidden="true">
+                <ChevronRight className="go-caret" />
+              </strong>
             </summary>
             <div className="captain-final-team">
               {data.roster.map((player) => (
@@ -60,7 +63,9 @@ export default async function CaptainRosterPage() {
                   <small>Update Jersey Number, Name, Position and Uniform Size</small>
                 </span>
               </span>
-              <strong>›</strong>
+              <strong aria-hidden="true">
+                <ChevronRight className="go-caret" />
+              </strong>
             </summary>
             <div>
               <CaptainDraftRoster data={data} detailsOnly />
@@ -77,7 +82,9 @@ export default async function CaptainRosterPage() {
               <small>Send a team change for owner approval.</small>
             </span>
           </span>
-          <strong>›</strong>
+          <strong aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </strong>
         </summary>
         <div>
           <CaptainRequestForm data={data} enabled={data.draftPublished} />
@@ -96,7 +103,9 @@ export default async function CaptainRosterPage() {
               </small>
             </span>
           </span>
-          <strong>›</strong>
+          <strong aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </strong>
         </summary>
         <div>
           {data.requests.length ? (

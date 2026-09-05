@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import AppShell from "@/components/AppShell";
@@ -115,7 +116,9 @@ export default async function Home() {
             {data.context.division} &nbsp;•&nbsp; {data.context.season}
           </em>
         </span>
-        <b>›</b>
+        <b aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </b>
       </Link>
       <Link className="card home-row season-home-row" href="/schedule">
         <span className="roundel">▦</span>
@@ -124,7 +127,9 @@ export default async function Home() {
           <strong>{data.context.season}</strong>
           <em>View schedule, standings, and results</em>
         </span>
-        <b aria-hidden="true">›</b>
+        <b aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </b>
       </Link>
       {data.paymentAccount.balance > 0 && (
         <Link className="card home-payment-reminder" href="/payments">
@@ -134,7 +139,9 @@ export default async function Home() {
             <strong>${data.paymentAccount.balance.toFixed(2)} remaining</strong>
             <em>Open Payments to submit or review your payment.</em>
           </span>
-          <b>›</b>
+          <b aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </b>
         </Link>
       )}
       <section className="family-banner">

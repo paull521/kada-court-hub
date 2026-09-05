@@ -8582,3 +8582,31 @@ body:has(.context-overlay-open) .bottom {
   white-space: nowrap;
   border: 0;
 }
+
+/* Lucide icons inside the notification chrome. The glyphs these replaced were
+   sized by font-size, which has no effect on an SVG. */
+.notification svg {
+  width: 26px;
+  height: 26px;
+}
+.notification-item > i svg {
+  width: 20px;
+  height: 20px;
+}
+.notification-item > strong svg {
+  width: 18px;
+  height: 18px;
+}
+.notification-empty > span svg {
+  width: 30px;
+  height: 30px;
+}
+
+/* Shared "go" caret. Replaces U+203A / U+2039, which were text glyphs sized by
+   font-size and centred on their baseline rather than their box. */
+.go-caret {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  vertical-align: middle;
+}

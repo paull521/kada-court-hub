@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import { redirect } from "next/navigation";
 import CaptainShell from "@/components/CaptainShell";
 import { getCaptainPortalData, type CaptainGame } from "@/lib/captain-data";
@@ -77,7 +78,9 @@ function WeeklyView({ games }: { games: CaptainGame[] }) {
                 <small>
                   {weekGames.length} game{weekGames.length === 1 ? "" : "s"}
                 </small>
-                <strong>›</strong>
+                <strong aria-hidden="true">
+                  <ChevronRight className="go-caret" />
+                </strong>
               </summary>
               <div className="schedule-table-scroll">
                 <table>

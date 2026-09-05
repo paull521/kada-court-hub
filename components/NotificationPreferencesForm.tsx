@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
 import { useState } from "react";
 import {
   updateNotificationPreferencesAction,
@@ -42,7 +43,9 @@ export default function NotificationPreferencesForm({
       <summary>
         <span>🔔</span>
         <b>Notification Preferences</b>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <div className="preference-form">
         <p>Choose what appears in your notification bell.</p>

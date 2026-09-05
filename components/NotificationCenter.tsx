@@ -1,5 +1,7 @@
 "use client";
 
+import { Bell, CalendarDays, Check, ChevronRight, Sparkles, Users } from "lucide-react";
+
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -52,7 +54,8 @@ export default function NotificationCenter({
         aria-label={unread ? `${unread} unread notifications` : "Notifications"}
         onClick={() => setOpen(true)}
       >
-        🔔{unread > 0 && <span />}
+        <Bell aria-hidden="true" />
+        {unread > 0 && <span />}
       </button>
       {open && (
         <div
@@ -92,24 +95,30 @@ export default function NotificationCenter({
                     key={notification.id}
                   >
                     <i aria-hidden="true">
-                      {notification.type.includes("game")
-                        ? "▦"
-                        : notification.type.includes("roster")
-                          ? "♟"
-                          : "✦"}
+                      {notification.type.includes("game") ? (
+                        <CalendarDays />
+                      ) : notification.type.includes("roster") ? (
+                        <Users />
+                      ) : (
+                        <Sparkles />
+                      )}
                     </i>
                     <span>
                       <b>{notification.title}</b>
                       <small>{notification.body}</small>
                       <em>{notification.createdLabel}</em>
                     </span>
-                    <strong aria-hidden="true">›</strong>
+                    <strong aria-hidden="true">
+                      <ChevronRight />
+                    </strong>
                   </button>
                 ))}
               </div>
             ) : (
               <div className="notification-empty">
-                <span>✓</span>
+                <span>
+                  <Check />
+                </span>
                 <h3>You’re all caught up</h3>
                 <p>Game, roster, and season updates will appear here.</p>
               </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { switchCaptainContextAction } from "@/app/captain/context-actions";
@@ -106,7 +106,11 @@ export default function CaptainContextSwitcher({
                     <small>{context.seasonName}</small>
                   </span>
                   <strong aria-hidden="true">
-                    {context.registrationId === active.registrationId ? "Current" : "›"}
+                    {context.registrationId === active.registrationId ? (
+                      "Current"
+                    ) : (
+                      <ChevronRight className="go-caret" />
+                    )}
                   </strong>
                 </button>
               ))}

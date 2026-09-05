@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import AppShell from "@/components/AppShell";
 import NotificationPreferencesForm from "@/components/NotificationPreferencesForm";
@@ -93,7 +94,9 @@ export default async function Profile({
       >
         <span>▢</span>
         <b>Rules &amp; Discipline</b>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </Link>
     ) : acknowledgedRule ? (
       <Link
@@ -102,7 +105,9 @@ export default async function Profile({
       >
         <span>▢</span>
         <b>Rules &amp; Discipline</b>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </Link>
     ) : null;
   const today = new Date().toISOString().slice(0, 10),
@@ -151,7 +156,9 @@ export default async function Profile({
         <Link href="/legal" className="card account-link">
           <span>▢</span>
           <b>Privacy &amp; Terms</b>
-          <strong>›</strong>
+          <strong aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </strong>
         </Link>
         <OwnerSupportRequest
           conferenceId={ownerData.conferenceId}
@@ -167,7 +174,9 @@ export default async function Profile({
           <button className="card account-link logout-account">
             <span>↪</span>
             <b>Log Out</b>
-            <strong>›</strong>
+            <strong aria-hidden="true">
+              <ChevronRight className="go-caret" />
+            </strong>
           </button>
         </form>
       </div>
@@ -210,7 +219,9 @@ export default async function Profile({
         <Link href="/legal" className="card account-link">
           <span>▢</span>
           <b>Privacy &amp; Terms</b>
-          <strong>›</strong>
+          <strong aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </strong>
         </Link>
         {ownerData?.authorized && (
           <OwnerSupportRequest
@@ -228,7 +239,9 @@ export default async function Profile({
           <button className="card account-link logout-account">
             <span>↪</span>
             <b>Log Out</b>
-            <strong>›</strong>
+            <strong aria-hidden="true">
+              <ChevronRight className="go-caret" />
+            </strong>
           </button>
         </form>
       </div>

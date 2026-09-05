@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
 import { useActionState, useState } from "react";
 import {
   finalizeGameScoreAction,
@@ -104,7 +105,9 @@ function DivisionScores({ season, division }: { season: OwnerSeason; division: O
             {games.filter((game) => game.finalized).length} of {games.length} results posted
           </small>
         </span>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <div className="scoreboard-list">
         {games.some((game) => !game.finalized) && (
@@ -142,7 +145,9 @@ export default function OwnerScoresheets({ seasons }: { seasons: OwnerSeason[] }
                 {season.divisions.length} division{season.divisions.length === 1 ? "" : "s"}
               </small>
             </span>
-            <strong>›</strong>
+            <strong aria-hidden="true">
+              <ChevronRight className="go-caret" />
+            </strong>
           </summary>
           <div>
             {season.divisions.map((division) => (
