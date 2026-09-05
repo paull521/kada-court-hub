@@ -121,6 +121,14 @@ body {
   font-size: 17px;
   margin: 0 0 24px;
 }
+:root {
+  /* Home card stack. The rows and the availability card share a gutter so their
+     content starts on the same left edge, and a radius so the stack reads as
+     one group. */
+  --home-row-radius: 14px;
+  --home-row-gutter: 18px;
+  --home-row-mark: 58px;
+}
 .card {
   background: rgba(255, 255, 255, 0.94);
   border: 1px solid var(--line);
@@ -383,10 +391,17 @@ body {
 }
 .home-row {
   display: grid;
-  grid-template-columns: 72px 1fr auto;
+  /* The first column is sized to the roundel itself. It used to be 72px around
+     a 58px roundel, which left 14px of dead space inside the column and read as
+     the mark being off-centre against the text block. The gap now does that
+     spacing explicitly. The last column is a fixed box for the chevron so it
+     centres on the card rather than on its own text baseline. */
+  grid-template-columns: var(--home-row-mark) 1fr 22px;
+  gap: 14px;
   align-items: center;
-  padding: 18px;
+  padding: var(--home-row-gutter);
   margin-bottom: 14px;
+  border-radius: var(--home-row-radius);
 }
 .home-row > span:nth-child(2) {
   display: grid;
@@ -409,7 +424,14 @@ body {
   font-style: normal;
 }
 .home-row > b {
-  font-size: 30px;
+  font-size: 26px;
+  /* A text glyph centres on its baseline, not its box, which is what made the
+     arrow sit low. Centring it in a fixed box fixes that. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  height: 100%;
 }
 .roundel {
   width: 58px;

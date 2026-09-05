@@ -279,8 +279,11 @@
   border-color: #061d3c;
 }
 .home-availability-card {
-  padding: 14px;
+  /* Was 14px, which put "ARE YOU PLAYING?" 4px left of the roundel on the cards
+     below it. Sharing the gutter lines the whole stack up on one edge. */
+  padding: var(--home-row-gutter);
   margin-top: 12px;
+  border-radius: var(--home-row-radius);
 }
 .availability-control {
   display: grid;
