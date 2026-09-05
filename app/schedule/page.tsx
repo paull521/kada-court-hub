@@ -130,6 +130,7 @@ export default async function Schedule() {
   const [next, ...upcoming] = data.games;
   return (
     <AppShell
+      contentClass="two-col"
       active="schedule"
       contexts={data.contexts}
       activeRegistrationId={data.activeRegistrationId}
@@ -145,58 +146,62 @@ export default async function Schedule() {
         <CalendarDays className="ui-icon" /> &nbsp; {data.context.season} · {data.context.division}
       </p>
       <SeasonTabs active="schedule" />
-      {next ? (
-        <>
-          <section className="card feature-card schedule-feature">
-            <div className="feature-copy">
-              <p className="eyebrow">NEXT GAME</p>
-              <p className="feature-date">{next.dateLabel}</p>
-              <strong className="feature-time">{next.time}</strong>
-            </div>
-            <div className="matchup-logos">
-              <div>
-                <span className="team-mark">K</span>
-                <b>{data.context.team}</b>
+      <div className="col-pane col-pane-a">
+        {next ? (
+          <>
+            <section className="card feature-card schedule-feature">
+              <div className="feature-copy">
+                <p className="eyebrow">NEXT GAME</p>
+                <p className="feature-date">{next.dateLabel}</p>
+                <strong className="feature-time">{next.time}</strong>
               </div>
-              <strong className="versus">VS</strong>
-              <div>
-                <span className="team-mark opponent">
-                  {next.opponent.slice(0, 2).toUpperCase()}
-                </span>
-                <b>{next.opponent}</b>
+              <div className="matchup-logos">
+                <div>
+                  <span className="team-mark">K</span>
+                  <b>{data.context.team}</b>
+                </div>
+                <strong className="versus">VS</strong>
+                <div>
+                  <span className="team-mark opponent">
+                    {next.opponent.slice(0, 2).toUpperCase()}
+                  </span>
+                  <b>{next.opponent}</b>
+                </div>
               </div>
-            </div>
-            <p className="feature-venue">
-              <MapPin className="ui-icon" /> {next.venue}
-              {next.court ? ` · ${next.court}` : ""}
-            </p>
-            <div className="uniform-line">
-              <small>UNIFORM</small>
-              <span className={`uniform-dot ${next.uniform.toLowerCase()}`} />
-              <b>{next.uniform.toUpperCase()}</b>
-            </div>
+              <p className="feature-venue">
+                <MapPin className="ui-icon" /> {next.venue}
+                {next.court ? ` · ${next.court}` : ""}
+              </p>
+              <div className="uniform-line">
+                <small>UNIFORM</small>
+                <span className={`uniform-dot ${next.uniform.toLowerCase()}`} />
+                <b>{next.uniform.toUpperCase()}</b>
+              </div>
+            </section>
+            {upcoming.length > 0 && (
+              <>
+                <h2 className="list-label">UPCOMING GAMES</h2>
+                <div className="schedule-list">
+                  {upcoming.map((game) => (
+                    <GameRow game={game} teamName={data.context.team} key={game.id} />
+                  ))}
+                </div>
+              </>
+            )}
+          </>
+        ) : (
+          <section className="card schedule-empty">
+            <span>
+              <CalendarDays className="ui-icon" />
+            </span>
+            <h2>No games scheduled for your team</h2>
+            <p>New games will appear here as soon as the conference owner publishes them.</p>
           </section>
-          {upcoming.length > 0 && (
-            <>
-              <h2 className="list-label">UPCOMING GAMES</h2>
-              <div className="schedule-list">
-                {upcoming.map((game) => (
-                  <GameRow game={game} teamName={data.context.team} key={game.id} />
-                ))}
-              </div>
-            </>
-          )}
-        </>
-      ) : (
-        <section className="card schedule-empty">
-          <span>
-            <CalendarDays className="ui-icon" />
-          </span>
-          <h2>No games scheduled for your team</h2>
-          <p>New games will appear here as soon as the conference owner publishes them.</p>
-        </section>
-      )}
-      <DivisionWeeklyView games={data.divisionSchedule} />
+        )}
+      </div>
+      <div className="col-pane col-pane-b">
+        <DivisionWeeklyView games={data.divisionSchedule} />
+      </div>
     </AppShell>
   );
 }

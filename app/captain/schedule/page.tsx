@@ -121,65 +121,70 @@ export default async function CaptainSchedulePage() {
   const [next, ...upcoming] = data.games;
   return (
     <CaptainShell
+      contentClass="two-col"
       data={data}
       active="schedule"
       title="Schedule"
       subtitle="Stay updated. Be ready. One game at a time."
     >
-      {next ? (
-        <>
-          <section className="card feature-card schedule-feature">
-            <div className="feature-copy">
-              <p className="eyebrow">NEXT GAME</p>
-              <p className="feature-date">{next.dateLabel}</p>
-              <strong className="feature-time">{next.time}</strong>
-            </div>
-            <div className="matchup-logos">
-              <div>
-                <span className="team-mark">K</span>
-                <b>{data.teamName}</b>
+      <div className="col-pane col-pane-a">
+        {next ? (
+          <>
+            <section className="card feature-card schedule-feature">
+              <div className="feature-copy">
+                <p className="eyebrow">NEXT GAME</p>
+                <p className="feature-date">{next.dateLabel}</p>
+                <strong className="feature-time">{next.time}</strong>
               </div>
-              <strong className="versus">VS</strong>
-              <div>
-                <span className="team-mark opponent">
-                  {next.opponent.slice(0, 2).toUpperCase()}
-                </span>
-                <b>{next.opponent}</b>
+              <div className="matchup-logos">
+                <div>
+                  <span className="team-mark">K</span>
+                  <b>{data.teamName}</b>
+                </div>
+                <strong className="versus">VS</strong>
+                <div>
+                  <span className="team-mark opponent">
+                    {next.opponent.slice(0, 2).toUpperCase()}
+                  </span>
+                  <b>{next.opponent}</b>
+                </div>
               </div>
-            </div>
-            <p className="feature-venue">
-              <MapPin className="ui-icon" /> {next.venue}
-              {next.court ? ` · ${next.court}` : ""}
-            </p>
-            <div className="uniform-line">
-              <small>UNIFORM</small>
-              <span
-                className={`uniform-dot ${next.uniform.toLowerCase().includes("dark") ? "dark" : "white"}`}
-              />
-              <b>{next.uniform.toUpperCase()}</b>
-            </div>
+              <p className="feature-venue">
+                <MapPin className="ui-icon" /> {next.venue}
+                {next.court ? ` · ${next.court}` : ""}
+              </p>
+              <div className="uniform-line">
+                <small>UNIFORM</small>
+                <span
+                  className={`uniform-dot ${next.uniform.toLowerCase().includes("dark") ? "dark" : "white"}`}
+                />
+                <b>{next.uniform.toUpperCase()}</b>
+              </div>
+            </section>
+            {upcoming.length > 0 && (
+              <>
+                <h2 className="list-label">UPCOMING GAMES</h2>
+                <div className="captain-game-list">
+                  {upcoming.map((game) => (
+                    <CompactGameRow game={game} teamName={data.teamName} key={game.id} />
+                  ))}
+                </div>
+              </>
+            )}
+          </>
+        ) : (
+          <section className="card schedule-empty">
+            <span>
+              <CalendarDays className="ui-icon" />
+            </span>
+            <h2>No games scheduled</h2>
+            <p>Games appear after the owner finalizes this division’s schedule.</p>
           </section>
-          {upcoming.length > 0 && (
-            <>
-              <h2 className="list-label">UPCOMING GAMES</h2>
-              <div className="captain-game-list">
-                {upcoming.map((game) => (
-                  <CompactGameRow game={game} teamName={data.teamName} key={game.id} />
-                ))}
-              </div>
-            </>
-          )}
-        </>
-      ) : (
-        <section className="card schedule-empty">
-          <span>
-            <CalendarDays className="ui-icon" />
-          </span>
-          <h2>No games scheduled</h2>
-          <p>Games appear after the owner finalizes this division’s schedule.</p>
-        </section>
-      )}
-      <WeeklyView games={data.divisionGames} />
+        )}
+      </div>
+      <div className="col-pane col-pane-b">
+        <WeeklyView games={data.divisionGames} />
+      </div>
     </CaptainShell>
   );
 }

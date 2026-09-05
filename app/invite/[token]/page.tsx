@@ -11,7 +11,7 @@ export default async function ConferenceInvitePage({
   const { token } = await params;
   if (!validToken(token))
     return (
-      <main className="shell">
+      <main className="shell invite-shell">
         <section className="content">
           <section className="card join-card">
             <h1>Invitation unavailable</h1>
@@ -27,7 +27,7 @@ export default async function ConferenceInvitePage({
   const conferenceName = Array.isArray(details) ? details[0]?.conference_name : undefined;
   if (!conferenceName)
     return (
-      <main className="shell">
+      <main className="shell invite-shell">
         <section className="content">
           <section className="card join-card">
             <h1>Invitation unavailable</h1>
@@ -37,7 +37,7 @@ export default async function ConferenceInvitePage({
     );
   const nextPath = `/invite/${token}`;
   return (
-    <main className="shell">
+    <main className="shell invite-shell">
       <section className="content">
         {claims?.claims?.sub ? (
           <ConferenceInviteForm token={token} conferenceName={conferenceName} />

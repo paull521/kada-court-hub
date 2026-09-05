@@ -48,6 +48,7 @@ export default async function Home() {
     );
   return (
     <AppShell
+      contentClass="two-col"
       active="home"
       contexts={data.contexts}
       activeRegistrationId={data.activeRegistrationId}
@@ -59,97 +60,101 @@ export default async function Home() {
     >
       <h1 className="title welcome">Hello, {firstName}!</h1>
       <p className="subtitle">Ready for game day?</p>
-      {data.invitation && <SeasonInvitationCard invitation={data.invitation} />}
-      {next ? (
-        <>
-          <section className="card feature-card">
-            <div className="feature-copy">
-              <p className="eyebrow">NEXT GAME</p>
-              <p className="feature-date">{next.dateLabel}</p>
-              <strong className="feature-time">{next.time}</strong>
-            </div>
-            <div className="matchup-logos">
-              <div>
-                <span className="team-mark">K</span>
-                <b>{data.context.team}</b>
+      <div className="col-pane col-pane-a">
+        {data.invitation && <SeasonInvitationCard invitation={data.invitation} />}
+        {next ? (
+          <>
+            <section className="card feature-card">
+              <div className="feature-copy">
+                <p className="eyebrow">NEXT GAME</p>
+                <p className="feature-date">{next.dateLabel}</p>
+                <strong className="feature-time">{next.time}</strong>
               </div>
-              <strong className="versus">VS</strong>
-              <div>
-                <span className="team-mark opponent">
-                  {next.opponent.slice(0, 2).toUpperCase()}
-                </span>
-                <b>{next.opponent}</b>
+              <div className="matchup-logos">
+                <div>
+                  <span className="team-mark">K</span>
+                  <b>{data.context.team}</b>
+                </div>
+                <strong className="versus">VS</strong>
+                <div>
+                  <span className="team-mark opponent">
+                    {next.opponent.slice(0, 2).toUpperCase()}
+                  </span>
+                  <b>{next.opponent}</b>
+                </div>
               </div>
-            </div>
-            <p className="feature-venue">
-              <MapPin className="ui-icon" /> {next.venue}
-              {next.court ? ` · ${next.court}` : ""}
-            </p>
-            <div className="uniform-line">
-              <small>JERSEY COLOR</small>
-              <span
-                className={`uniform-dot ${next.uniform.toLowerCase().includes("dark") ? "dark" : "white"}`}
-              />
-              <b>{next.uniform.toUpperCase()}</b>
+              <p className="feature-venue">
+                <MapPin className="ui-icon" /> {next.venue}
+                {next.court ? ` · ${next.court}` : ""}
+              </p>
+              <div className="uniform-line">
+                <small>JERSEY COLOR</small>
+                <span
+                  className={`uniform-dot ${next.uniform.toLowerCase().includes("dark") ? "dark" : "white"}`}
+                />
+                <b>{next.uniform.toUpperCase()}</b>
+              </div>
+            </section>
+            <section className="card home-availability-card">
+              <AvailabilityControl gameId={next.id} available={data.myAvailability} />
+            </section>
+          </>
+        ) : (
+          <section className="card empty-feature">
+            <span>
+              <CalendarDays className="ui-icon" />
+            </span>
+            <div>
+              <p className="eyebrow">SCHEDULE</p>
+              <h2>No upcoming game yet</h2>
+              <p>Your conference owner will publish the next game here.</p>
             </div>
           </section>
-          <section className="card home-availability-card">
-            <AvailabilityControl gameId={next.id} available={data.myAvailability} />
-          </section>
-        </>
-      ) : (
-        <section className="card empty-feature">
+        )}
+      </div>
+      <div className="col-pane col-pane-b">
+        <Link className="card home-row" href="/my-team">
+          <span className="roundel team-mark small">K</span>
           <span>
-            <CalendarDays className="ui-icon" />
-          </span>
-          <div>
-            <p className="eyebrow">SCHEDULE</p>
-            <h2>No upcoming game yet</h2>
-            <p>Your conference owner will publish the next game here.</p>
-          </div>
-        </section>
-      )}
-      <Link className="card home-row" href="/my-team">
-        <span className="roundel team-mark small">K</span>
-        <span>
-          <small>MY TEAM</small>
-          <strong>{data.context.team}</strong>
-          <em>
-            {data.context.division} &nbsp;•&nbsp; {data.context.season}
-          </em>
-        </span>
-        <b aria-hidden="true">
-          <ChevronRight className="go-caret" />
-        </b>
-      </Link>
-      <Link className="card home-row season-home-row" href="/schedule">
-        <span className="roundel">
-          <CalendarDays className="ui-icon" />
-        </span>
-        <span>
-          <small>SCHEDULE</small>
-          <strong>{data.context.season}</strong>
-          <em>View schedule, standings, and results</em>
-        </span>
-        <b aria-hidden="true">
-          <ChevronRight className="go-caret" />
-        </b>
-      </Link>
-      {data.paymentAccount.balance > 0 && (
-        <Link className="card home-payment-reminder" href="/payments">
-          <span>
-            <Wallet className="ui-icon" />
-          </span>
-          <span>
-            <small>PAYMENT DUE</small>
-            <strong>${data.paymentAccount.balance.toFixed(2)} remaining</strong>
-            <em>Open Payments to submit or review your payment.</em>
+            <small>MY TEAM</small>
+            <strong>{data.context.team}</strong>
+            <em>
+              {data.context.division} &nbsp;•&nbsp; {data.context.season}
+            </em>
           </span>
           <b aria-hidden="true">
             <ChevronRight className="go-caret" />
           </b>
         </Link>
-      )}
+        <Link className="card home-row season-home-row" href="/schedule">
+          <span className="roundel">
+            <CalendarDays className="ui-icon" />
+          </span>
+          <span>
+            <small>SCHEDULE</small>
+            <strong>{data.context.season}</strong>
+            <em>View schedule, standings, and results</em>
+          </span>
+          <b aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </b>
+        </Link>
+        {data.paymentAccount.balance > 0 && (
+          <Link className="card home-payment-reminder" href="/payments">
+            <span>
+              <Wallet className="ui-icon" />
+            </span>
+            <span>
+              <small>PAYMENT DUE</small>
+              <strong>${data.paymentAccount.balance.toFixed(2)} remaining</strong>
+              <em>Open Payments to submit or review your payment.</em>
+            </span>
+            <b aria-hidden="true">
+              <ChevronRight className="go-caret" />
+            </b>
+          </Link>
+        )}
+      </div>
       <section className="family-banner">
         <strong>
           One Team. One Court. <span>One Family.</span>

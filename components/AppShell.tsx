@@ -27,6 +27,7 @@ export default function AppShell({
   conferenceName = "",
   headerAction,
   headerNotification,
+  contentClass = "",
 }: {
   children: ReactNode;
   active: string;
@@ -40,6 +41,7 @@ export default function AppShell({
   conferenceName?: string;
   headerAction?: ReactNode;
   headerNotification?: ReactNode;
+  contentClass?: string;
 }) {
   const items = links.map(({ href, key, icon, label }) => ({
     href: key === "home" ? homeHref : href,
@@ -77,11 +79,11 @@ export default function AppShell({
           {headerNotification ?? <NotificationCenter notifications={notifications} />}
         </div>
       </header>
-      <main className="content">
+      <FastBottomNav items={items} active={active} label="Player navigation" />
+      <main className={`content ${contentClass}`.trim()}>
         {conferenceName && <p className="eyebrow">CONFERENCE: {conferenceName}</p>}
         {children}
       </main>
-      <FastBottomNav items={items} active={active} label="Player navigation" />
     </div>
   );
 }
