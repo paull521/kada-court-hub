@@ -78,19 +78,21 @@ describe("the laptop layer stays inside its media query", () => {
  * placing children it was not told about and the layout silently degrades.
  */
 describe("two-column pages declare both panes", () => {
-  const pages = readdirSync(join(root, "app"), { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => join(root, "app", entry.name, "page.tsx"))
-    .filter((path) => {
-      try {
-        return readFileSync(path, "utf8").includes('contentClass="two-col"');
-      } catch {
-        return false;
-      }
+  // Recursive: captain and owner pages are nested deeper than one level, and a
+  // shallow walk would silently report zero of them.
+  const walk = (dir: string): string[] =>
+    readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) return walk(full);
+      return entry.name === "page.tsx" ? [full] : [];
     });
 
+  const pages = walk(join(root, "app")).filter((path) =>
+    readFileSync(path, "utf8").includes('contentClass="two-col"'),
+  );
+
   it("finds the opted-in pages", () => {
-    expect(pages.length).toBeGreaterThanOrEqual(4);
+    expect(pages.length).toBeGreaterThanOrEqual(5);
   });
 
   it.each(pages.map((path) => path.replace(`${root}/`, "")))(

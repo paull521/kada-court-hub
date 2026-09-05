@@ -20,12 +20,14 @@ export default function CaptainShell({
   title,
   subtitle,
   children,
+  contentClass = "",
 }: {
   data: CaptainPortalData;
   active: CaptainNavKey;
   title: string;
   subtitle: string;
   children: ReactNode;
+  contentClass?: string;
 }) {
   const selected = active === "dashboard" ? "home" : active === "more" ? "profile" : active;
   const items = links.map(({ href, key, icon, label }) => ({
@@ -51,7 +53,7 @@ export default function CaptainShell({
           activeRegistrationId={data.activeRegistrationId}
         />
       </header>
-      <main className="content captain-content">
+      <main className={`content captain-content ${contentClass}`.trim()}>
         <p className="eyebrow">CONFERENCE: {data.conferenceName}</p>
         <h1 className="title">{title}</h1>
         <p className="subtitle">{subtitle}</p>

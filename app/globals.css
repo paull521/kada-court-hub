@@ -8799,4 +8799,10 @@ body:has(.context-overlay-open) .bottom {
   .content:not(.two-col) {
     max-width: 1120px;
   }
+
+  /* The captain dashboard is a 2x3 stack of square tiles on a phone. With the
+     width available it reads as one row rather than a column of pairs. */
+  .captain-dashboard-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
