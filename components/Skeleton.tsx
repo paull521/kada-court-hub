@@ -2,10 +2,6 @@
  * Placeholder blocks used by route-level loading.tsx files. Purely presentational
  * and aria-hidden: the surrounding loading.tsx carries the live-region label.
  */
-export function SkeletonLine({ width = "100%" }: { width?: string }) {
-  return <span className="skeleton skeleton-line" style={{ width }} aria-hidden="true" />;
-}
-
 export function SkeletonTitle() {
   return <span className="skeleton skeleton-title" aria-hidden="true" />;
 }
