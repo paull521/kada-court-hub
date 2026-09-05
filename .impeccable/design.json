@@ -1,0 +1,400 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-05T23:44:29Z",
+  "title": "Design System: KadaCourtHub",
+  "extensions": {
+    "colorMeta": {
+      "flag-navy": {
+        "role": "primary",
+        "displayName": "Flag Navy",
+        "canonical": "#071f3d",
+        "tonalRamp": [
+          "oklch(15% 0.06 255)",
+          "oklch(25% 0.06 255)",
+          "oklch(35% 0.06 255)",
+          "oklch(45% 0.06 255)",
+          "oklch(58% 0.06 255)",
+          "oklch(72% 0.06 255)",
+          "oklch(85% 0.06 255)",
+          "oklch(95% 0.06 255)"
+        ]
+      },
+      "flag-navy-lifted": {
+        "role": "primary",
+        "displayName": "Flag Navy Lifted",
+        "canonical": "#0b315c",
+        "tonalRamp": [
+          "oklch(15% 0.08 252)",
+          "oklch(25% 0.08 252)",
+          "oklch(35% 0.08 252)",
+          "oklch(45% 0.08 252)",
+          "oklch(58% 0.08 252)",
+          "oklch(72% 0.08 252)",
+          "oklch(85% 0.08 252)",
+          "oklch(95% 0.08 252)"
+        ]
+      },
+      "sun-gold": {
+        "role": "secondary",
+        "displayName": "Sun Gold",
+        "canonical": "#d18408",
+        "tonalRamp": [
+          "oklch(15% 0.13 70)",
+          "oklch(25% 0.13 70)",
+          "oklch(35% 0.13 70)",
+          "oklch(45% 0.13 70)",
+          "oklch(58% 0.13 70)",
+          "oklch(72% 0.13 70)",
+          "oklch(85% 0.13 70)",
+          "oklch(95% 0.13 70)"
+        ]
+      },
+      "sun-gold-bright": {
+        "role": "secondary",
+        "displayName": "Sun Gold Bright",
+        "canonical": "#f4a31b",
+        "tonalRamp": [
+          "oklch(15% 0.15 72)",
+          "oklch(25% 0.15 72)",
+          "oklch(35% 0.15 72)",
+          "oklch(45% 0.15 72)",
+          "oklch(58% 0.15 72)",
+          "oklch(72% 0.15 72)",
+          "oklch(85% 0.15 72)",
+          "oklch(95% 0.15 72)"
+        ]
+      },
+      "flag-scarlet": {
+        "role": "tertiary",
+        "displayName": "Flag Scarlet",
+        "canonical": "#d11f26",
+        "tonalRamp": [
+          "oklch(15% 0.2 27)",
+          "oklch(25% 0.2 27)",
+          "oklch(35% 0.2 27)",
+          "oklch(45% 0.2 27)",
+          "oklch(58% 0.2 27)",
+          "oklch(72% 0.2 27)",
+          "oklch(85% 0.2 27)",
+          "oklch(95% 0.2 27)"
+        ]
+      },
+      "available-green": {
+        "role": "tertiary",
+        "displayName": "Available Green",
+        "canonical": "#188536",
+        "tonalRamp": [
+          "oklch(15% 0.14 145)",
+          "oklch(25% 0.14 145)",
+          "oklch(35% 0.14 145)",
+          "oklch(45% 0.14 145)",
+          "oklch(58% 0.14 145)",
+          "oklch(72% 0.14 145)",
+          "oklch(85% 0.14 145)",
+          "oklch(95% 0.14 145)"
+        ]
+      },
+      "court-blue": {
+        "role": "tertiary",
+        "displayName": "Court Blue",
+        "canonical": "#174aa5",
+        "tonalRamp": [
+          "oklch(15% 0.15 262)",
+          "oklch(25% 0.15 262)",
+          "oklch(35% 0.15 262)",
+          "oklch(45% 0.15 262)",
+          "oklch(58% 0.15 262)",
+          "oklch(72% 0.15 262)",
+          "oklch(85% 0.15 262)",
+          "oklch(95% 0.15 262)"
+        ]
+      },
+      "paper-white": {
+        "role": "neutral",
+        "displayName": "Paper White",
+        "canonical": "#fffdf9",
+        "tonalRamp": [
+          "oklch(15% 0.012 85)",
+          "oklch(25% 0.012 85)",
+          "oklch(35% 0.012 85)",
+          "oklch(45% 0.012 85)",
+          "oklch(58% 0.012 85)",
+          "oklch(72% 0.012 85)",
+          "oklch(85% 0.012 85)",
+          "oklch(95% 0.012 85)"
+        ]
+      },
+      "paper-cream": {
+        "role": "neutral",
+        "displayName": "Paper Cream",
+        "canonical": "#fbf8f3",
+        "tonalRamp": [
+          "oklch(15% 0.014 85)",
+          "oklch(25% 0.014 85)",
+          "oklch(35% 0.014 85)",
+          "oklch(45% 0.014 85)",
+          "oklch(58% 0.014 85)",
+          "oklch(72% 0.014 85)",
+          "oklch(85% 0.014 85)",
+          "oklch(95% 0.014 85)"
+        ]
+      },
+      "page-ground": {
+        "role": "neutral",
+        "displayName": "Page Ground",
+        "canonical": "#e9e5df",
+        "tonalRamp": [
+          "oklch(15% 0.01 80)",
+          "oklch(25% 0.01 80)",
+          "oklch(35% 0.01 80)",
+          "oklch(45% 0.01 80)",
+          "oklch(58% 0.01 80)",
+          "oklch(72% 0.01 80)",
+          "oklch(85% 0.01 80)",
+          "oklch(95% 0.01 80)"
+        ]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Ink Muted",
+        "canonical": "#5d697a",
+        "tonalRamp": [
+          "oklch(15% 0.03 250)",
+          "oklch(25% 0.03 250)",
+          "oklch(35% 0.03 250)",
+          "oklch(45% 0.03 250)",
+          "oklch(58% 0.03 250)",
+          "oklch(72% 0.03 250)",
+          "oklch(85% 0.03 250)",
+          "oklch(95% 0.03 250)"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#e5e1dc",
+        "tonalRamp": [
+          "oklch(15% 0.008 80)",
+          "oklch(25% 0.008 80)",
+          "oklch(35% 0.008 80)",
+          "oklch(45% 0.008 80)",
+          "oklch(58% 0.008 80)",
+          "oklch(72% 0.008 80)",
+          "oklch(85% 0.008 80)",
+          "oklch(95% 0.008 80)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "One per screen. The greeting or page name. Never two."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "The name of the thing in a row - a team, a season, a balance."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "The muted supporting sentence under a display."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Supporting detail inside a card - division and season, venue and court."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "The gold eyebrow. Orients the reader before they read anything else."
+      }
+    },
+    "shadows": [
+      {
+        "name": "ambient-card",
+        "value": "0 8px 20px rgba(13, 38, 69, 0.08)",
+        "purpose": "Current resting card shadow. Being reduced toward flat-by-default."
+      },
+      {
+        "name": "ambient-control",
+        "value": "0 5px 14px rgba(13, 38, 69, 0.06)",
+        "purpose": "Small floating controls such as the header context pill."
+      },
+      {
+        "name": "nav-lift",
+        "value": "0 -5px 20px rgba(13, 38, 69, 0.08)",
+        "purpose": "The fixed bottom bar, casting upward onto content beneath it."
+      },
+      {
+        "name": "hairline-ring",
+        "value": "0 0 0 1px rgba(7, 31, 61, 0.07)",
+        "purpose": "Replaces the drop shadow on the shell above the desktop breakpoint."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-ease",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Default easing for hover and active state transitions."
+      },
+      {
+        "name": "state-duration",
+        "value": "120ms",
+        "purpose": "Nav tab colour shift; deliberately short - this is a utility product."
+      },
+      {
+        "name": "sheet-in",
+        "value": "180ms ease-out",
+        "purpose": "Bottom sheet entry on phones. Suppressed above the breakpoint, where the sheet becomes a centred dialog."
+      },
+      {
+        "name": "skeleton-shimmer",
+        "value": "1.4s ease-in-out infinite",
+        "purpose": "Loading skeleton sweep. Disabled under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone-narrow",
+        "value": "410px"
+      },
+      {
+        "name": "laptop",
+        "value": "900px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The only button style that carries a destination or a commitment. Gold is never used here.",
+      "html": "<button class=\"ds-btn-primary\">Save Changes</button>",
+      "css": ".ds-btn-primary{background:var(--navy,#071f3d);color:#fff;border:0;border-radius:13px;padding:15px 28px;font:800 14px/1.2 Inter,-apple-system,sans-serif;cursor:pointer;transition:background 120ms cubic-bezier(0.4,0,0.2,1),transform 120ms cubic-bezier(0.4,0,0.2,1)}.ds-btn-primary:hover{background:var(--navy2,#0b315c);transform:translateY(-1px)}.ds-btn-primary:focus-visible{outline:2px solid var(--gold,#d18408);outline-offset:2px}.ds-btn-primary:disabled{opacity:.65;cursor:wait;transform:none}"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The default surface. White at 94% so the warm ground reads faintly through.",
+      "html": "<div class=\"ds-card\"><small class=\"ds-card-label\">MY TEAM</small><strong class=\"ds-card-title\">Magenta Ballers</strong><em class=\"ds-card-meta\">40 Over &nbsp;&bull;&nbsp; Cardio Friday Season IV</em></div>",
+      "css": ".ds-card{background:rgba(255,255,255,.94);border:1px solid var(--line,#e5e1dc);border-radius:20px;padding:18px;display:grid;gap:4px;font-family:Inter,-apple-system,sans-serif}.ds-card-label{font-size:12px;font-weight:800;letter-spacing:.2px;color:var(--gold,#d18408)}.ds-card-title{font-size:22px;font-weight:700;color:var(--navy,#071f3d)}.ds-card-meta{font-size:13px;font-style:normal;color:var(--muted,#5d697a)}"
+    },
+    {
+      "name": "Feature Card",
+      "kind": "card",
+      "refersTo": "card-feature",
+      "description": "The Next Game hero. Inverts to a navy field. At most one per screen.",
+      "html": "<div class=\"ds-card-feature\"><small class=\"ds-feature-label\">NEXT GAME</small><div class=\"ds-feature-date\">Friday, Sep 11</div><div class=\"ds-feature-time\">8:00 PM</div></div>",
+      "css": ".ds-card-feature{background:radial-gradient(circle at 88% 45%,rgba(76,113,150,.23),transparent 38%),linear-gradient(125deg,#08243e,#0a3767);color:#fff;border-radius:20px;padding:22px;font-family:Inter,-apple-system,sans-serif;min-height:150px}.ds-feature-label{font-size:12px;font-weight:800;letter-spacing:.2px;color:var(--gold,#f4a31b)}.ds-feature-date{font-size:17px;font-weight:600;margin-top:10px}.ds-feature-time{font-size:37px;font-weight:800;letter-spacing:-1.1px;line-height:1.02}"
+    },
+    {
+      "name": "Team Crest",
+      "kind": "custom",
+      "refersTo": "team-crest",
+      "description": "The signature form. Square-shouldered above, rounded to a point below - a jersey shield. Never reduce to a circle.",
+      "html": "<span class=\"ds-crest\">K</span>",
+      "css": ".ds-crest{width:68px;height:68px;display:grid;place-items:center;border:4px solid #f4a31b;outline:2px solid var(--red,#d11f26);border-radius:18px 18px 45% 45%;background:var(--navy,#071f3d);color:#f4a31b;font:900 31px/1 Inter,-apple-system,sans-serif}"
+    },
+    {
+      "name": "Availability Control",
+      "kind": "custom",
+      "refersTo": "availability-yes",
+      "description": "The most-used control in the product. Deliberately large and unambiguous - answered quickly, often, by someone about to pocket their phone.",
+      "html": "<div class=\"ds-avail\"><button class=\"ds-avail-btn ds-avail-yes\">Yes</button><button class=\"ds-avail-btn\">No</button></div>",
+      "css": ".ds-avail{display:inline-grid;grid-template-columns:1fr 1fr;background:#eef1f4;border-radius:12px;padding:4px;font-family:Inter,-apple-system,sans-serif}.ds-avail-btn{min-width:64px;padding:9px;border:0;border-radius:9px;background:transparent;font-weight:900;font-size:14px;color:#5a6675;cursor:pointer;transition:background 120ms cubic-bezier(0.4,0,0.2,1)}.ds-avail-btn:hover{color:var(--navy,#071f3d)}.ds-avail-btn:focus-visible{outline:2px solid var(--navy,#071f3d);outline-offset:1px}.ds-avail-yes{background:#258b45;color:#fff}.ds-avail-yes:hover{color:#fff}"
+    },
+    {
+      "name": "Context Switcher",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Header control carrying the current team. 9px radius, not a capsule - a capsule read as a chip rather than a control.",
+      "html": "<button class=\"ds-switcher\"><span>Magenta Ballers</span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m6 9 6 6 6-6\"/></svg></button>",
+      "css": ".ds-switcher{display:grid;grid-template-columns:minmax(0,1fr) 16px;align-items:center;gap:6px;max-width:174px;border:1px solid rgba(7,31,61,.11);background:rgba(255,255,255,.82);border-radius:9px;padding:9px 11px;box-shadow:0 5px 14px rgba(13,38,69,.06);font:700 11px/1.2 Inter,-apple-system,sans-serif;color:var(--navy,#071f3d);cursor:pointer;text-align:left}.ds-switcher span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-switcher svg{width:16px;height:16px;color:rgba(7,31,61,.45)}.ds-switcher:focus-visible{outline:2px solid var(--navy,#071f3d);outline-offset:2px}"
+    },
+    {
+      "name": "Navigation Tab",
+      "kind": "nav",
+      "refersTo": "nav-tab",
+      "description": "Above 900px the fixed bottom bar becomes this horizontal strip. Same component, un-fixed and laid out in a row.",
+      "html": "<nav class=\"ds-tabs\"><a class=\"ds-tab ds-tab-active\" href=\"#\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\"/><path d=\"M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/></svg>Home</a><a class=\"ds-tab\" href=\"#\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M16 3.128a4 4 0 0 1 0 7.744\"/><path d=\"M22 21v-2a4 4 0 0 0-3-3.87\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2\"/></svg>Teams</a></nav>",
+      "css": ".ds-tabs{display:flex;gap:2px;border-bottom:1px solid var(--line,#e5e1dc);font-family:Inter,-apple-system,sans-serif}.ds-tab{display:flex;align-items:center;gap:9px;padding:13px 16px 12px;font-size:14px;font-weight:700;color:#667080;text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 120ms cubic-bezier(0.4,0,0.2,1)}.ds-tab svg{width:18px;height:18px}.ds-tab:hover{color:var(--navy,#071f3d)}.ds-tab:focus-visible{outline:2px solid var(--navy,#071f3d);outline-offset:-2px}.ds-tab-active{color:var(--navy,#071f3d);border-bottom-color:var(--navy,#071f3d)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Barangay Court",
+    "overview": "A barangay is the neighborhood - the smallest unit of belonging in the Philippines, and the one people actually mean when they say where they are from. KCH is that, with a hardwood floor. It is not a sports platform that happens to serve a Filipino-American league; it is a neighborhood's league that happens to have software. The palette is the Philippine flag, the sign-off is \"One Team. One Court. One Family.\", and the warm paper ground is a community board rather than a product surface.\n\nThat heritage is load-bearing, not decorative. Royal blue, scarlet, and the golden sun are the flag's own colors, and they appear here for the same reason a jersey carries them. Future work may restyle almost anything in this system, but swapping these hues for arbitrary brand colors would remove the only thing that makes the product feel like it belongs to the people using it.\n\nThe register is warm and unhurried. A player opens KCH standing in a gym, answers one question, and leaves; the interface should feel like it was made by someone in the league rather than sold to it. The confirmed anti-reference is enterprise sports software - the institutional grey of TeamSnap or SportsEngine, feature-dense and committee-designed, with no point of view.",
+    "keyCharacteristics": [
+      "Warm paper ground, never a grey chrome shell",
+      "Philippine flag palette used as identity, not as accent decoration",
+      "Jersey-crest geometry as the recurring signature form",
+      "Generous touch targets and legible type, driven by a 40 Over player base",
+      "Gold reserved for orientation labels; scarlet reserved for attention",
+      "Phone is the real usage scene; the laptop layout is an accommodation, not the target"
+    ],
+    "rules": [
+      {
+        "name": "The Flag Rule",
+        "body": "Navy, gold, and scarlet are heritage, not theme. They may be retinted for contrast but never replaced with an unrelated brand palette. A KCH that is teal and slate is no longer KCH.",
+        "section": "colors"
+      },
+      {
+        "name": "The Gold Is A Signpost Rule",
+        "body": "Gold labels say where you are. It never appears on a button, never carries an action, and never competes with navy for the eye. If gold is the most prominent thing on a screen, the screen is wrong.",
+        "section": "colors"
+      },
+      {
+        "name": "The Warm Ground Rule",
+        "body": "No surface in this product is #ffffff or a neutral grey. Every background carries warmth. The moment a screen goes cool-grey it has drifted toward the anti-reference.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Display Rule",
+        "body": "Exactly one 37px display per screen. Everything else steps down. Two displays on one screen means the page has two subjects and should be two pages.",
+        "section": "typography"
+      },
+      {
+        "name": "The Label Leads Rule",
+        "body": "A card announces itself with a gold label before it says anything else. The reader should be able to scan only the gold and know what the screen holds.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Breakpoint Rule",
+        "body": "There is exactly one desktop breakpoint (900px) and every rule above it lives inside that query. Nothing in the desktop layer may leak out of it, because the phone and the laptop share one component tree and one stylesheet. This is enforced by a test, not by discipline.",
+        "section": "layout"
+      },
+      {
+        "name": "The Thumb Rule",
+        "body": "Below the breakpoint, primary navigation stays within thumb reach at the bottom edge. Above it, navigation moves to the top, where a pointer and a reading eye already are.",
+        "section": "layout"
+      },
+      {
+        "name": "The Navy Shadow Rule",
+        "body": "Shadows use rgba(13, 38, 69, ...), never rgba(0,0,0,...). The ground is warm; a black shadow muddies it.",
+        "section": "elevation"
+      },
+      {
+        "name": "The No Pill Rule",
+        "body": "Interactive surfaces are rounded rectangles, not capsules. The header context switcher was a capsule and read as a chip rather than a control; it is now 9px. Full rounding is reserved for genuinely circular marks.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do lead a card with its gold eyebrow label, then its subject.",
+      "Do keep exactly one 37px display per screen.",
+      "Do tint every shadow with navy (rgba(13, 38, 69, ...)).",
+      "Do keep every desktop rule inside the single @media (min-width: 900px) query - the phone and laptop share one stylesheet.",
+      "Do size for a 40 Over player standing in a gym: large targets, nothing under 11px, nothing thin.",
+      "Do use Lucide for icons, at a consistent stroke weight."
+    ],
+    "donts": [
+      "Don't put gold on a button or an action. Gold orients; navy commits.",
+      "Don't introduce a fourth identity hue. Green and scarlet are semantic; court blue is for links. The identity is navy and gold.",
+      "Don't use pure white or neutral grey for any surface. Every ground is warm.",
+      "Don't replace the flag palette with an arbitrary brand palette.",
+      "Don't reduce the team crest to a circle or a plain square.",
+      "Don't add resting shadow. Elevation is a response to state.",
+      "Don't let the product drift toward institutional sports software - dense grey tables, committee features, no point of view. That is the confirmed anti-reference.",
+      "Don't mistake the laptop layout for the target. The phone is the real usage scene."
+    ]
+  }
+}
