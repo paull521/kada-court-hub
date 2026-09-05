@@ -2,6 +2,7 @@ import "server-only";
 import { connection } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { getSessionPlayer, getSessionUserId } from "@/lib/session";
 import {
   currentContext,
   currentPlayer,
@@ -263,21 +264,16 @@ export async function getPlayerPortalData(
   await connection();
   try {
     const supabase = await createClient();
-    const { data: claimsData } = await supabase.auth.getClaims();
-    const userId = claimsData?.claims?.sub;
+    const userId = await getSessionUserId();
     if (!userId) return fallback;
 
-    const [{ data: profile }, { data: player }] = await Promise.all([
+    const [{ data: profile }, player] = await Promise.all([
       supabase
         .from("profiles")
         .select("id,display_name,mobile,birthdate,location")
         .eq("id", userId)
         .maybeSingle(),
-      supabase
-        .from("player_profiles")
-        .select("id,public_player_id,display_name,email,preferred_uniform_size,preferred_position")
-        .eq("profile_id", userId)
-        .maybeSingle(),
+      getSessionPlayer(),
     ]);
     if (!profile || !player) return fallback;
 

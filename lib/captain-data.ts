@@ -2,6 +2,7 @@ import "server-only";
 import { connection } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { getSessionPlayer, getSessionUserId } from "@/lib/session";
 import { CAPTAIN_ROLE_LABELS, CAPTAIN_REGISTRATION_STATUS } from "@/lib/roles";
 
 export type CaptainRequest = {
@@ -129,14 +130,9 @@ export async function getCaptainPortalData(
 ): Promise<CaptainPortalData> {
   await connection();
   const supabase = await createClient();
-  const { data: claims } = await supabase.auth.getClaims();
-  const userId = claims?.claims?.sub;
+  const userId = await getSessionUserId();
   if (!userId) return empty;
-  const { data: player } = await supabase
-    .from("player_profiles")
-    .select("id")
-    .eq("profile_id", userId)
-    .maybeSingle();
+  const player = await getSessionPlayer();
   if (!player) return empty;
   const [{ data: conferenceStatusRows }, { data: leaderRows }] = await Promise.all([
     supabase.rpc("get_my_conference_player_statuses"),

@@ -2,6 +2,7 @@ import "server-only";
 import { connection } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { getSessionUserId } from "@/lib/session";
 
 export type OwnerRosterPlayer = {
   playerId: string;
@@ -220,8 +221,7 @@ const empty: OwnerPortalData = {
 export async function getOwnerPortalData(): Promise<OwnerPortalData> {
   await connection();
   const supabase = await createClient();
-  const { data: claims } = await supabase.auth.getClaims();
-  const userId = claims?.claims?.sub;
+  const userId = await getSessionUserId();
   if (!userId) return empty;
 
   const [{ data: ownerProfile }, { data: platformOwnerRecord }, { data: memberships }] =
