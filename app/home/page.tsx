@@ -48,7 +48,7 @@ export default async function Home() {
     );
   return (
     <AppShell
-      contentClass="home-content"
+      contentClass="two-col"
       active="home"
       contexts={data.contexts}
       activeRegistrationId={data.activeRegistrationId}
@@ -60,7 +60,7 @@ export default async function Home() {
     >
       <h1 className="title welcome">Hello, {firstName}!</h1>
       <p className="subtitle">Ready for game day?</p>
-      <div className="home-col home-col-main">
+      <div className="col-pane col-pane-a">
         {data.invitation && <SeasonInvitationCard invitation={data.invitation} />}
         {next ? (
           <>
@@ -112,7 +112,7 @@ export default async function Home() {
           </section>
         )}
       </div>
-      <div className="home-col home-col-side">
+      <div className="col-pane col-pane-b">
         <Link className="card home-row" href="/my-team">
           <span className="roundel team-mark small">K</span>
           <span>

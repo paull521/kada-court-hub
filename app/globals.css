@@ -8650,7 +8650,7 @@ body:has(.context-overlay-open) .bottom {
 
 /* The desktop column wrappers on Home are transparent to layout everywhere
    except the laptop breakpoint, so the phone stack is exactly as it was. */
-.home-col {
+.col-pane {
   display: contents;
 }
 
@@ -8761,36 +8761,42 @@ body:has(.context-overlay-open) .bottom {
     font-size: 42px;
   }
 
-  /* Home splits into what is happening now, and where to go next. */
-  .home-content {
+  /* Pages that opt in split into two independent stacks. */
+  .content.two-col {
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
+    grid-template-columns: 1.05fr 0.95fr;
     column-gap: 24px;
     align-content: start;
   }
-  .home-content > .eyebrow,
-  .home-content > .title,
-  .home-content > .subtitle,
-  .home-content > .family-banner {
+  /* Headings and anything that introduces the whole page run the full width. */
+  .content.two-col > .eyebrow,
+  .content.two-col > .title,
+  .content.two-col > .subtitle,
+  .content.two-col > .season-label,
+  .content.two-col > .season-tabs,
+  .content.two-col > .family-banner {
     grid-column: 1 / -1;
   }
-  /* Each column is its own flex stack. Placing the cards directly in the grid
-     with only a column set made auto-placement advance the row cursor past the
-     left column, so the right column started below it and both ended up with
-     ragged gaps. Two stacks size independently. */
-  .home-col {
+  /* Each pane is its own flex stack. Placing cards directly in the grid with
+     only a column set made auto-placement advance the row cursor past the left
+     column, so the right column began below it and both ended up ragged. */
+  .col-pane {
     display: flex;
     flex-direction: column;
     gap: 14px;
-    align-content: start;
   }
-  .home-col-main {
+  .col-pane-a {
     grid-column: 1;
   }
-  .home-col-side {
+  .col-pane-b {
     grid-column: 2;
   }
-  .home-content > .family-banner {
+  .content.two-col > .family-banner {
     margin-top: 18px;
+  }
+  /* Pages with no desktop grid keep a readable measure instead of stretching a
+     single column the whole width of the window. */
+  .content:not(.two-col) {
+    max-width: 1120px;
   }
 }

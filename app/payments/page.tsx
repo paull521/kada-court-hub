@@ -10,6 +10,7 @@ export default async function Payments() {
   const account = data.paymentAccount;
   return (
     <AppShell
+      contentClass="two-col"
       active="payments"
       contexts={data.contexts}
       activeRegistrationId={data.activeRegistrationId}
@@ -24,65 +25,69 @@ export default async function Payments() {
       <p className="season-label">
         <CalendarDays className="ui-icon" /> &nbsp; {data.context.season}
       </p>
-      <section className="card balance-card">
-        <p>TOTAL BALANCE DUE</p>
-        <strong>${account.balance.toFixed(2)}</strong>
-        <span>
-          ${account.paid.toFixed(2)} paid
-          {account.waived ? ` · $${account.waived.toFixed(2)} waived` : ""}
-          {account.pending ? ` · $${account.pending.toFixed(2)} awaiting confirmation` : ""}
-        </span>
-      </section>
-      <section className="card panel">
-        <h2>FEE BREAKDOWN</h2>
-        {data.fees.length ? (
-          data.fees.map((fee) => (
-            <div className="fee-row" key={fee.id}>
-              <span>{fee.icon}</span>
-              <b>{fee.label}</b>
-              <strong>${fee.amount.toFixed(2)}</strong>
-            </div>
-          ))
-        ) : (
-          <p className="empty-note">No outstanding fees.</p>
-        )}
-      </section>
-      <PlayerPaymentForm
-        registrationId={data.activeRegistrationId}
-        balance={account.balance}
-        submissions={data.paymentSubmissions}
-      />
-      <details className="card payment-history-panel">
-        <summary>
+      <div className="col-pane col-pane-a">
+        <section className="card balance-card">
+          <p>TOTAL BALANCE DUE</p>
+          <strong>${account.balance.toFixed(2)}</strong>
           <span>
-            <Clock className="ui-icon" />
+            ${account.paid.toFixed(2)} paid
+            {account.waived ? ` · $${account.waived.toFixed(2)} waived` : ""}
+            {account.pending ? ` · $${account.pending.toFixed(2)} awaiting confirmation` : ""}
           </span>
-          <b>Payment History</b>
-          <strong aria-hidden="true">
-            <ChevronRight className="go-caret" />
-          </strong>
-        </summary>
-        <div className="payment-history-scroll">
-          {data.paymentHistory.length ? (
-            data.paymentHistory.slice(0, 10).map((payment) => (
-              <div className="payment-history-row" key={payment.id}>
-                <span>
-                  <Check className="ui-icon" />
-                </span>
-                <span>
-                  <b>{payment.feeLabel}</b>
-                  <small>
-                    {payment.paidLabel} · {payment.method.toUpperCase()}
-                  </small>
-                </span>
-                <strong>${payment.amount.toFixed(2)}</strong>
+        </section>
+        <section className="card panel">
+          <h2>FEE BREAKDOWN</h2>
+          {data.fees.length ? (
+            data.fees.map((fee) => (
+              <div className="fee-row" key={fee.id}>
+                <span>{fee.icon}</span>
+                <b>{fee.label}</b>
+                <strong>${fee.amount.toFixed(2)}</strong>
               </div>
             ))
           ) : (
-            <p className="empty-note">Confirmed payments will appear here.</p>
+            <p className="empty-note">No outstanding fees.</p>
           )}
-        </div>
-      </details>
+        </section>
+      </div>
+      <div className="col-pane col-pane-b">
+        <PlayerPaymentForm
+          registrationId={data.activeRegistrationId}
+          balance={account.balance}
+          submissions={data.paymentSubmissions}
+        />
+        <details className="card payment-history-panel">
+          <summary>
+            <span>
+              <Clock className="ui-icon" />
+            </span>
+            <b>Payment History</b>
+            <strong aria-hidden="true">
+              <ChevronRight className="go-caret" />
+            </strong>
+          </summary>
+          <div className="payment-history-scroll">
+            {data.paymentHistory.length ? (
+              data.paymentHistory.slice(0, 10).map((payment) => (
+                <div className="payment-history-row" key={payment.id}>
+                  <span>
+                    <Check className="ui-icon" />
+                  </span>
+                  <span>
+                    <b>{payment.feeLabel}</b>
+                    <small>
+                      {payment.paidLabel} · {payment.method.toUpperCase()}
+                    </small>
+                  </span>
+                  <strong>${payment.amount.toFixed(2)}</strong>
+                </div>
+              ))
+            ) : (
+              <p className="empty-note">Confirmed payments will appear here.</p>
+            )}
+          </div>
+        </details>
+      </div>
     </AppShell>
   );
 }
