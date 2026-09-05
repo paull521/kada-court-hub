@@ -8630,3 +8630,21 @@ body:has(.context-overlay-open) .bottom {
   vertical-align: middle;
   flex-shrink: 0;
 }
+
+/* Results: who won. Colour alone would fail a colourblind reader, so the
+   winner also carries the heavier weight and the loser drops to muted - the
+   pair reads as a result even in greyscale. A draw colours neither side. */
+.season-result-card .result-won b,
+.season-result-card .result-won strong {
+  color: var(--green);
+}
+.season-result-card .result-won strong {
+  font-weight: 900;
+}
+.season-result-card .result-lost b,
+.season-result-card .result-lost strong {
+  color: var(--muted);
+}
+.season-result-card .result-lost strong {
+  font-weight: 700;
+}

@@ -4,6 +4,12 @@ import SeasonTabs from "@/components/SeasonTabs";
 import { getPlayerPortalData } from "@/lib/kch-data";
 import { redirect } from "next/navigation";
 
+/** A drawn game colours neither side - nobody won it. */
+function outcomeClass(score: number, opponentScore: number) {
+  if (score === opponentScore) return "";
+  return score > opponentScore ? "result-won" : "result-lost";
+}
+
 export default async function ResultsPage() {
   const data = await getPlayerPortalData();
   if (!data.contexts.length) redirect("/home");
@@ -30,11 +36,11 @@ export default async function ResultsPage() {
             <article className="card season-result-card" key={result.id}>
               <time>{result.dateLabel}</time>
               <div>
-                <span>
+                <span className={outcomeClass(result.homeScore, result.awayScore)}>
                   <b>{result.homeTeam}</b>
                   <strong>{result.homeScore}</strong>
                 </span>
-                <span>
+                <span className={outcomeClass(result.awayScore, result.homeScore)}>
                   <b>{result.awayTeam}</b>
                   <strong>{result.awayScore}</strong>
                 </span>
