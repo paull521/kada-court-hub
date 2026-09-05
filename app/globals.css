@@ -8684,6 +8684,14 @@ body:has(.context-overlay-open) .bottom {
     height: 380px;
   }
 
+  /* Login has no navigation and one short form. Full-bleed suits an app screen,
+     not a sign-in box, so these keep a narrow centred column. */
+  .shell.login-shell {
+    width: min(100%, 540px);
+    margin: 0 auto;
+    box-shadow: 0 0 0 1px rgba(7, 31, 61, 0.07);
+  }
+
   .topbar {
     height: auto;
     padding: 22px clamp(32px, 4vw, 72px) 14px;
@@ -8708,6 +8716,9 @@ body:has(.context-overlay-open) .bottom {
     border-radius: 0;
     box-shadow: none;
     z-index: auto;
+  }
+  .owner-bottom {
+    width: auto;
   }
   .nav {
     display: flex;
