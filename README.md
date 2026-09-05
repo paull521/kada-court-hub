@@ -28,10 +28,15 @@ it builds and serves, but there is no login and no live data.
 Other commands:
 
 ```bash
-npm run build    # the only gate - there are no tests and no CI
+npm test         # Vitest, single pass
+npm run test:watch
+npm run build    # production build
 npm start        # serve the production build
 npm run format   # Prettier
 ```
+
+There is no CI, so `npm test` and `npm run build` are the gates and have to be
+run by hand. See `tests/README.md` for what is covered and what is not.
 
 ## Current scope
 

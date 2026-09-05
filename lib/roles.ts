@@ -1,6 +1,7 @@
 import "server-only";
 import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getSessionPlayer, getSessionUserId } from "@/lib/session";
 
 export type AvailableRoles = { player: boolean; captain: boolean; owner: boolean };
 
@@ -15,11 +16,10 @@ export const CAPTAIN_REGISTRATION_STATUS = "active";
 export async function getAvailableRoles(): Promise<AvailableRoles> {
   await connection();
   const supabase = await createClient();
-  const { data: claims } = await supabase.auth.getClaims();
-  const userId = claims?.claims?.sub;
+  const userId = await getSessionUserId();
   if (!userId) return { player: false, captain: false, owner: false };
-  const [{ data: player }, { data: owner }] = await Promise.all([
-    supabase.from("player_profiles").select("id").eq("profile_id", userId).maybeSingle(),
+  const [player, { data: owner }] = await Promise.all([
+    getSessionPlayer(),
     supabase
       .from("conference_memberships")
       .select("id")

@@ -2,6 +2,7 @@ import "server-only";
 import { connection } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { getSessionUserId } from "@/lib/session";
 
 export type OwnerRosterPlayer = {
   playerId: string;
@@ -220,8 +221,7 @@ const empty: OwnerPortalData = {
 export async function getOwnerPortalData(): Promise<OwnerPortalData> {
   await connection();
   const supabase = await createClient();
-  const { data: claims } = await supabase.auth.getClaims();
-  const userId = claims?.claims?.sub;
+  const userId = await getSessionUserId();
   if (!userId) return empty;
 
   const [{ data: ownerProfile }, { data: platformOwnerRecord }, { data: memberships }] =
@@ -234,7 +234,7 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
         .maybeSingle(),
       supabase
         .from("conference_memberships")
-        .select("conference_id,created_at")
+        .select("conference_id,created_at,conferences(id,name,timezone)")
         .eq("profile_id", userId)
         .eq("role", "owner")
         .order("created_at", { ascending: false }),
@@ -242,10 +242,13 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
   if (platformOwnerRecord?.status === "suspended") return empty;
   if (!memberships?.length) return empty;
   const ownedConferenceIds = memberships.map((membership) => membership.conference_id);
-  const [{ data: conferenceRows }, cookieStore] = await Promise.all([
-    supabase.from("conferences").select("id,name,timezone").in("id", ownedConferenceIds),
-    cookies(),
-  ]);
+  // The conference rows come back on the memberships read above, so this no
+  // longer needs a round trip of its own. cookies() is local.
+  type OwnedConference = { id: string; name: string; timezone: string };
+  const conferenceRows = (
+    memberships as unknown as { conferences: OwnedConference | null }[]
+  ).flatMap((membership) => (membership.conferences ? [membership.conferences] : []));
+  const cookieStore = await cookies();
   const preferredConferenceId = cookieStore.get("kch_owner_conference")?.value;
   const selectedConferenceId =
     preferredConferenceId && ownedConferenceIds.includes(preferredConferenceId)
@@ -299,7 +302,9 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
       .order("created_at", { ascending: false }),
     supabase
       .from("conference_player_pool")
-      .select("player_id,status")
+      .select(
+        "player_id,status,player:player_profiles!player_id(id,public_player_id,display_name,profile_id,email,mobile,preferred_uniform_size)",
+      )
       .eq("conference_id", conference.id),
   ]);
   const divisionIds = (divisionRows ?? []).map((row) => row.id);
@@ -318,7 +323,7 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
     divisionIds.length
       ? supabase
           .from("teams")
-          .select("id,division_id,name,active")
+          .select("id,division_id,name,active,team_roster_drafts(team_id,status,owner_note)")
           .in("division_id", divisionIds)
           .order("name")
       : Promise.resolve({ data: [] }),
@@ -340,7 +345,7 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
       ? supabase
           .from("registrations")
           .select(
-            "id,season_id,division_id,team_id,player_id,jersey_number,position,role_label,status",
+            "id,season_id,division_id,team_id,player_id,jersey_number,position,role_label,status,fees(id,registration_id,category,description,amount_cents,status,due_on),payments(id,registration_id,fee_id,amount_cents,method,paid_at),registration_waivers(registration_id,amount_cents),player:player_profiles!player_id(id,public_player_id,display_name,profile_id,email,mobile,preferred_uniform_size)",
           )
           .in("season_id", seasonIds)
           .order("jersey_number")
@@ -348,7 +353,9 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
     seasonIds.length
       ? supabase
           .from("season_invitations")
-          .select("id,season_id,division_id,player_id,registration_id,response,selection_status")
+          .select(
+            "id,season_id,division_id,player_id,registration_id,response,selection_status,player:player_profiles!player_id(id,public_player_id,display_name,profile_id,email,mobile,preferred_uniform_size)",
+          )
           .in("season_id", seasonIds)
           .order("created_at")
       : Promise.resolve({ data: [] }),
@@ -390,50 +397,65 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
           .order("created_at", { ascending: false })
       : Promise.resolve({ data: [] }),
   ]);
-  const teamIds = (teamRows ?? []).map((row) => row.id);
-  const { data: draftRows } = teamIds.length
-    ? await supabase
-        .from("team_roster_drafts")
-        .select("team_id,status,owner_note")
-        .in("team_id", teamIds)
-    : { data: [] };
-  const registrationIds = (registrationRows ?? []).map((row) => row.id);
-  const [{ data: allFeeRows }, { data: ownerPaymentRows }, { data: registrationWaiverRows }] =
-    await Promise.all([
-      registrationIds.length
-        ? supabase
-            .from("fees")
-            .select("id,registration_id,category,description,amount_cents,status,due_on")
-            .in("registration_id", registrationIds)
-        : Promise.resolve({ data: [] }),
-      registrationIds.length
-        ? supabase
-            .from("payments")
-            .select("id,registration_id,fee_id,amount_cents,method,paid_at")
-            .in("registration_id", registrationIds)
-            .order("paid_at", { ascending: false })
-        : Promise.resolve({ data: [] }),
-      registrationIds.length
-        ? supabase
-            .from("registration_waivers")
-            .select("registration_id,amount_cents")
-            .in("registration_id", registrationIds)
-        : Promise.resolve({ data: [] }),
-    ]);
-  const playerIds = [
-    ...new Set([
-      ...(registrationRows ?? []).map((row) => row.player_id),
-      ...(invitationRows ?? []).map((row) => row.player_id),
-      ...(poolRows ?? []).map((row) => row.player_id),
-    ]),
-  ];
-  const { data: playerRows } = playerIds.length
-    ? await supabase
-        .from("player_profiles")
-        .select("id,public_player_id,display_name,profile_id,email,mobile,preferred_uniform_size")
-        .in("id", playerIds)
-    : { data: [] };
-  const playerDetails = new Map((playerRows ?? []).map((row) => [row.id, row]));
+  // Roster drafts arrive nested on the teams read rather than a follow-up
+  // keyed on the ids that read just returned.
+  type NestedDraft = { team_id: string; status: string; owner_note: string | null };
+  const draftRows = (
+    (teamRows ?? []) as unknown as { team_roster_drafts: NestedDraft[] | null }[]
+  ).flatMap((row) => row.team_roster_drafts ?? []);
+  // Fees, payments and waivers all hang off registration_id, so they come back
+  // nested on the registrations read rather than costing another round trip.
+  // The paid_at ordering the separate query applied is reproduced here.
+  type NestedFee = {
+    id: string;
+    registration_id: string;
+    category: string;
+    description: string;
+    amount_cents: number;
+    status: string;
+    due_on: string | null;
+  };
+  type NestedPayment = {
+    id: string;
+    registration_id: string;
+    fee_id: string;
+    amount_cents: number;
+    method: string;
+    paid_at: string;
+  };
+  type NestedWaiver = { registration_id: string; amount_cents: number };
+  const registrationsWithMoney = (registrationRows ?? []) as unknown as {
+    fees: NestedFee[] | null;
+    payments: NestedPayment[] | null;
+    registration_waivers: NestedWaiver[] | null;
+  }[];
+  const allFeeRows = registrationsWithMoney.flatMap((row) => row.fees ?? []);
+  const ownerPaymentRows = registrationsWithMoney
+    .flatMap((row) => row.payments ?? [])
+    .sort((a, b) => (a.paid_at < b.paid_at ? 1 : a.paid_at > b.paid_at ? -1 : 0));
+  const registrationWaiverRows = registrationsWithMoney.flatMap(
+    (row) => row.registration_waivers ?? [],
+  );
+  // Player details ride along on all three reads that reference a player, so the
+  // dedupe that the separate lookup did with a Set now happens on the Map.
+  type NestedPlayer = {
+    id: string;
+    public_player_id: string;
+    display_name: string | null;
+    profile_id: string | null;
+    email: string | null;
+    mobile: string | null;
+    preferred_uniform_size: string | null;
+  };
+  const withPlayer = (rows: unknown) =>
+    ((rows ?? []) as { player: NestedPlayer | null }[]).flatMap((row) =>
+      row.player ? [[row.player.id, row.player] as const] : [],
+    );
+  const playerDetails = new Map<string, NestedPlayer>([
+    ...withPlayer(registrationRows),
+    ...withPlayer(invitationRows),
+    ...withPlayer(poolRows),
+  ]);
 
   const uniformSettings = new Map((uniformSettingRows ?? []).map((row) => [row.division_id, row]));
   const draftDetails = new Map((draftRows ?? []).map((row) => [row.team_id, row]));
@@ -869,7 +891,7 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
   }));
   const poolDetails = new Map((poolRows ?? []).map((row) => [row.player_id, row]));
   const currentSeasonId = seasons.find((season) => !season.canceledAt)?.id ?? "";
-  const directory: OwnerDirectoryPlayer[] = (playerRows ?? [])
+  const directory: OwnerDirectoryPlayer[] = [...playerDetails.values()]
     .filter((row) => poolDetails.has(row.id))
     .map((row) => {
       const registrations = (registrationRows ?? []).filter(

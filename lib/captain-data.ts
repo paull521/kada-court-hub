@@ -2,6 +2,7 @@ import "server-only";
 import { connection } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { getSessionPlayer, getSessionUserId } from "@/lib/session";
 import { CAPTAIN_ROLE_LABELS, CAPTAIN_REGISTRATION_STATUS } from "@/lib/roles";
 
 export type CaptainRequest = {
@@ -129,14 +130,9 @@ export async function getCaptainPortalData(
 ): Promise<CaptainPortalData> {
   await connection();
   const supabase = await createClient();
-  const { data: claims } = await supabase.auth.getClaims();
-  const userId = claims?.claims?.sub;
+  const userId = await getSessionUserId();
   if (!userId) return empty;
-  const { data: player } = await supabase
-    .from("player_profiles")
-    .select("id")
-    .eq("profile_id", userId)
-    .maybeSingle();
+  const player = await getSessionPlayer();
   if (!player) return empty;
   const [{ data: conferenceStatusRows }, { data: leaderRows }] = await Promise.all([
     supabase.rpc("get_my_conference_player_statuses"),
@@ -151,40 +147,94 @@ export async function getCaptainPortalData(
   ]);
   if (!leaderRows?.length) return empty;
   const teamIds = [...new Set(leaderRows.map((row) => row.team_id!))];
-  const { data: teamRows } = await supabase
+  // One embedded read in place of the teams -> divisions -> seasons ->
+  // conferences chain. Same RLS applies to embedded tables as to plain selects.
+  type CaptainTeamRow = {
+    id: string;
+    name: string;
+    division_id: string;
+    active: boolean;
+    divisions: {
+      id: string;
+      name: string;
+      season_id: string;
+      seasons: {
+        id: string;
+        name: string;
+        conference_id: string;
+        players_per_team: number;
+        starts_on: string;
+        ends_on: string;
+        canceled_at: string | null;
+        archived_at: string | null;
+        conferences: { id: string; name: string } | null;
+      } | null;
+    } | null;
+  };
+  const { data: teamRowsRaw } = await supabase
     .from("teams")
-    .select("id,name,division_id,active")
+    .select(
+      "id,name,division_id,active,divisions(id,name,season_id,seasons(id,name,conference_id,players_per_team,starts_on,ends_on,canceled_at,archived_at,conferences(id,name)))",
+    )
     .in("id", teamIds);
-  const divisionIds = [...new Set((teamRows ?? []).map((row) => row.division_id))];
-  const { data: divisionRows } = divisionIds.length
-    ? await supabase.from("divisions").select("id,name,season_id").in("id", divisionIds)
+  const teamRows = (teamRowsRaw ?? []) as unknown as CaptainTeamRow[];
+  const seasonsById = new Map(
+    teamRows.flatMap((row) => {
+      const season = row.divisions?.seasons;
+      return season ? [[season.id, season] as const] : [];
+    }),
+  );
+  const seasonIds = [...seasonsById.keys()];
+  const { data: seasonGames } = seasonIds.length
+    ? await supabase
+        .from("games")
+        .select("season_id,starts_at,status")
+        .in("season_id", seasonIds)
+        .neq("status", "canceled")
     : { data: [] };
-  const seasonIds = [...new Set((divisionRows ?? []).map((row) => row.season_id))];
-  const [{ data: seasonRows }, { data: seasonGames }] = await Promise.all([
-    seasonIds.length
-      ? supabase
-          .from("seasons")
-          .select(
-            "id,name,conference_id,players_per_team,starts_on,ends_on,canceled_at,archived_at",
-          )
-          .in("id", seasonIds)
-      : Promise.resolve({ data: [] }),
-    seasonIds.length
-      ? supabase
-          .from("games")
-          .select("season_id,starts_at,status")
-          .in("season_id", seasonIds)
-          .neq("status", "canceled")
-      : Promise.resolve({ data: [] }),
-  ]);
-  const conferenceIds = [...new Set((seasonRows ?? []).map((row) => row.conference_id))];
-  const { data: conferenceRows } = conferenceIds.length
-    ? await supabase.from("conferences").select("id,name").in("id", conferenceIds)
-    : { data: [] };
-  const teamMap = new Map((teamRows ?? []).map((row) => [row.id, row])),
-    divisionMap = new Map((divisionRows ?? []).map((row) => [row.id, row])),
-    seasonMap = new Map((seasonRows ?? []).map((row) => [row.id, row])),
-    conferenceMap = new Map((conferenceRows ?? []).map((row) => [row.id, row])),
+  const teamMap = new Map(
+      teamRows.map((row) => [
+        row.id,
+        { id: row.id, name: row.name, division_id: row.division_id, active: row.active },
+      ]),
+    ),
+    divisionMap = new Map(
+      teamRows.flatMap((row) =>
+        row.divisions
+          ? [
+              [
+                row.divisions.id,
+                {
+                  id: row.divisions.id,
+                  name: row.divisions.name,
+                  season_id: row.divisions.season_id,
+                },
+              ] as const,
+            ]
+          : [],
+      ),
+    ),
+    seasonMap = new Map(
+      [...seasonsById.values()].map((season) => [
+        season.id,
+        {
+          id: season.id,
+          name: season.name,
+          conference_id: season.conference_id,
+          players_per_team: season.players_per_team,
+          starts_on: season.starts_on,
+          ends_on: season.ends_on,
+          canceled_at: season.canceled_at,
+          archived_at: season.archived_at,
+        },
+      ]),
+    ),
+    conferenceMap = new Map(
+      teamRows.flatMap((row) => {
+        const conference = row.divisions?.seasons?.conferences;
+        return conference ? [[conference.id, conference] as const] : [];
+      }),
+    ),
     conferenceStatus = new Map(
       (conferenceStatusRows ?? []).map((row: { conference_id: string; status: string }) => [
         row.conference_id,
