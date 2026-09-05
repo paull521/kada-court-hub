@@ -422,27 +422,92 @@ export async function getPlayerPortalData(
     const registeredTeamIds = [
       ...new Set(registrationRows.flatMap((row) => (row.team_id ? [row.team_id] : []))),
     ];
-    const { data: registeredTeams } = registeredTeamIds.length
+    // One embedded read replaces the teams -> divisions -> seasons -> conferences
+    // chain that previously cost four sequential round trips purely to resolve
+    // foreign keys. PostgREST applies the same row-level security to embedded
+    // tables as it does to standalone selects, so visibility is unchanged.
+    type RegisteredTeamRow = {
+      id: string;
+      name: string;
+      division_id: string;
+      active: boolean;
+      divisions: {
+        id: string;
+        name: string;
+        season_id: string;
+        seasons: {
+          id: string;
+          name: string;
+          conference_id: string;
+          starts_on: string;
+          ends_on: string;
+          canceled_at: string | null;
+          archived_at: string | null;
+          conferences: { id: string; name: string; timezone: string } | null;
+        } | null;
+      } | null;
+    };
+    const { data: registeredTeamRows } = registeredTeamIds.length
       ? await supabase
           .from("teams")
-          .select("id,name,division_id,active")
+          .select(
+            "id,name,division_id,active,divisions(id,name,season_id,seasons(id,name,conference_id,starts_on,ends_on,canceled_at,archived_at,conferences(id,name,timezone)))",
+          )
           .in("id", registeredTeamIds)
       : { data: [] };
-    const registeredDivisionIds = [
-      ...new Set((registeredTeams ?? []).map((row) => row.division_id)),
-    ];
-    const { data: registeredDivisions } = registeredDivisionIds.length
-      ? await supabase.from("divisions").select("id,name,season_id").in("id", registeredDivisionIds)
-      : { data: [] };
-    const registeredSeasonIds = [
-      ...new Set((registeredDivisions ?? []).map((row) => row.season_id)),
-    ];
-    const { data: registeredSeasons } = registeredSeasonIds.length
-      ? await supabase
-          .from("seasons")
-          .select("id,name,conference_id,starts_on,ends_on,canceled_at,archived_at")
-          .in("id", registeredSeasonIds)
-      : { data: [] };
+    const registeredTeams = (registeredTeamRows ?? []) as unknown as RegisteredTeamRow[];
+
+    const teamMap = new Map(
+      registeredTeams.map((row) => [
+        row.id,
+        { id: row.id, name: row.name, division_id: row.division_id, active: row.active },
+      ]),
+    );
+    const divisionMap = new Map(
+      registeredTeams.flatMap((row) =>
+        row.divisions
+          ? [
+              [
+                row.divisions.id,
+                {
+                  id: row.divisions.id,
+                  name: row.divisions.name,
+                  season_id: row.divisions.season_id,
+                },
+              ] as const,
+            ]
+          : [],
+      ),
+    );
+    const seasonMap = new Map(
+      registeredTeams.flatMap((row) => {
+        const season = row.divisions?.seasons;
+        return season
+          ? [
+              [
+                season.id,
+                {
+                  id: season.id,
+                  name: season.name,
+                  conference_id: season.conference_id,
+                  starts_on: season.starts_on,
+                  ends_on: season.ends_on,
+                  canceled_at: season.canceled_at,
+                  archived_at: season.archived_at,
+                },
+              ] as const,
+            ]
+          : [];
+      }),
+    );
+    const conferenceMap = new Map(
+      registeredTeams.flatMap((row) => {
+        const conference = row.divisions?.seasons?.conferences;
+        return conference ? [[conference.id, conference] as const] : [];
+      }),
+    );
+
+    const registeredSeasonIds = [...seasonMap.keys()];
     const { data: registeredGames } = registeredSeasonIds.length
       ? await supabase
           .from("games")
@@ -450,26 +515,13 @@ export async function getPlayerPortalData(
           .in("season_id", registeredSeasonIds)
           .neq("status", "canceled")
       : { data: [] };
-    const registeredConferenceIds = [
-      ...new Set((registeredSeasons ?? []).map((row) => row.conference_id)),
-    ];
-    const { data: registeredConferences } = registeredConferenceIds.length
-      ? await supabase
-          .from("conferences")
-          .select("id,name,timezone")
-          .in("id", registeredConferenceIds)
-      : { data: [] };
 
-    const teamMap = new Map((registeredTeams ?? []).map((row) => [row.id, row]));
-    const divisionMap = new Map((registeredDivisions ?? []).map((row) => [row.id, row]));
-    const seasonMap = new Map((registeredSeasons ?? []).map((row) => [row.id, row]));
     const lastGameBySeason = new Map<string, string>();
     for (const game of registeredGames ?? []) {
       const date = game.starts_at.slice(0, 10),
         previous = lastGameBySeason.get(game.season_id);
       if (!previous || date > previous) lastGameBySeason.set(game.season_id, date);
     }
-    const conferenceMap = new Map((registeredConferences ?? []).map((row) => [row.id, row]));
     const conferenceStatus = new Map(
       (conferenceStatusRows ?? []).map((row: { conference_id: string; status: string }) => [
         row.conference_id,
@@ -550,7 +602,7 @@ export async function getPlayerPortalData(
         supabase
           .from("games")
           .select(
-            "id,home_team_id,away_team_id,starts_at,venue,court,home_uniform,away_uniform,home_score,away_score,status",
+            "id,home_team_id,away_team_id,starts_at,venue,court,home_uniform,away_uniform,home_score,away_score,status,home_team:teams!home_team_id(id,name),away_team:teams!away_team_id(id,name)",
           )
           .eq("season_id", season.id)
           .or(`home_team_id.eq.${team.id},away_team_id.eq.${team.id}`)
@@ -592,13 +644,14 @@ export async function getPlayerPortalData(
           .select("amount_cents")
           .eq("registration_id", registration.id),
       ]);
-      const homeTeamIds = [
-        ...new Set((homeGameRows ?? []).flatMap((row) => [row.home_team_id, row.away_team_id])),
-      ];
-      const { data: homeTeamRows } = homeTeamIds.length
-        ? await supabase.from("teams").select("id,name").in("id", homeTeamIds)
-        : { data: [] };
-      const homeTeamNames = new Map((homeTeamRows ?? []).map((row) => [row.id, row.name]));
+      // Team names ride along on the games read above rather than costing a
+      // second round trip to resolve home_team_id / away_team_id.
+      type NamedTeam = { id: string; name: string } | null;
+      const homeTeamNames = new Map(
+        ((homeGameRows ?? []) as unknown as { home_team: NamedTeam; away_team: NamedTeam }[])
+          .flatMap((row) => [row.home_team, row.away_team])
+          .flatMap((team) => (team ? [[team.id, team.name] as const] : [])),
+      );
       const timezone = conference.timezone || "America/Los_Angeles",
         now = Date.now();
       const mappedHomeGames = (workflowRow?.status === "final" ? (homeGameRows ?? []) : [])
@@ -799,13 +852,15 @@ export async function getPlayerPortalData(
     ] = await Promise.all([
       supabase
         .from("registrations")
-        .select("player_id,jersey_number,jersey_name,position,role_label")
+        .select(
+          "player_id,jersey_number,jersey_name,position,role_label,player:player_profiles!player_id(id,display_name)",
+        )
         .eq("team_id", team.id)
         .order("jersey_number"),
       supabase
         .from("games")
         .select(
-          "id,home_team_id,away_team_id,starts_at,venue,court,home_uniform,away_uniform,home_score,away_score,status,finalized_at",
+          "id,home_team_id,away_team_id,starts_at,venue,court,home_uniform,away_uniform,home_score,away_score,status,finalized_at,home_team:teams!home_team_id(id,name),away_team:teams!away_team_id(id,name)",
         )
         .eq("season_id", season.id)
         .order("starts_at"),
@@ -855,12 +910,16 @@ export async function getPlayerPortalData(
         .maybeSingle(),
     ]);
 
-    const playerIds = (registrations ?? []).map((row) => row.player_id);
-    const { data: playerRows } = playerIds.length
-      ? await supabase.from("player_profiles").select("id,display_name").in("id", playerIds)
-      : { data: [] };
+    // Display names arrive with the roster read above instead of a follow-up
+    // lookup keyed on the player ids it just returned.
     const names = new Map(
-      (playerRows ?? []).map((row) => [row.id, row.display_name ?? "Unnamed Player"]),
+      (
+        (registrations ?? []) as unknown as {
+          player: { id: string; display_name: string | null } | null;
+        }[]
+      ).flatMap((row) =>
+        row.player ? [[row.player.id, row.player.display_name ?? "Unnamed Player"] as const] : [],
+      ),
     );
     const liveRoster: Player[] = (registrations ?? [])
       .map((row) => ({
@@ -901,13 +960,18 @@ export async function getPlayerPortalData(
         .sort(rosterOrder),
     }));
 
-    const allTeamIds = [
-      ...new Set((seasonGameRows ?? []).flatMap((row) => [row.home_team_id, row.away_team_id])),
-    ];
-    const { data: teamRows } = allTeamIds.length
-      ? await supabase.from("teams").select("id,name").in("id", allTeamIds)
-      : { data: [] };
-    const teamNames = new Map((teamRows ?? []).map((row) => [row.id, row.name]));
+    // Same trick as the player's own games: names come back on the games read.
+    type NamedSeasonTeam = { id: string; name: string } | null;
+    const teamNames = new Map(
+      (
+        (seasonGameRows ?? []) as unknown as {
+          home_team: NamedSeasonTeam;
+          away_team: NamedSeasonTeam;
+        }[]
+      )
+        .flatMap((row) => [row.home_team, row.away_team])
+        .flatMap((team) => (team ? [[team.id, team.name] as const] : [])),
+    );
     const timezone = conference.timezone || "America/Los_Angeles";
     const divisionTeamIds = new Set((divisionTeamRows ?? []).map((row) => row.id));
     const publishedDivisionGames =
