@@ -1,4 +1,17 @@
-import { ChevronRight } from "lucide-react";
+import type { ReactNode } from "react";
+import {
+  BookOpen,
+  CalendarDays,
+  ChevronRight,
+  Clock,
+  FileCheck,
+  LogOut,
+  Mail,
+  MapPin,
+  Phone,
+  Shirt,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import AppShell from "@/components/AppShell";
 import NotificationPreferencesForm from "@/components/NotificationPreferencesForm";
@@ -14,12 +27,19 @@ import PlatformFeedback from "@/components/PlatformFeedback";
 import OwnerConferenceSwitcher from "@/components/OwnerConferenceSwitcher";
 import "@/components/ProfileCleanup.module.css";
 
-function InfoPanel({ title, rows }: { title: string; rows: string[][] }) {
+function InfoPanel({
+  title,
+  rows,
+}: {
+  title: string;
+  // The leading cell is an icon element now, so the row is no longer all strings.
+  rows: (ReactNode | string)[][];
+}) {
   return (
     <section className="card panel info-panel">
       <h2>{title}</h2>
       {rows.map(([icon, label, value]) => (
-        <div className="info-row" key={label}>
+        <div className="info-row" key={String(label)}>
           <span>{icon}</span>
           <b>{label}</b>
           <em>{value}</em>
@@ -63,18 +83,22 @@ export default async function Profile({
   const player = data.profile,
     context = data.context;
   const personal = [
-    ["☎", "Mobile Number", player.mobile || "Not provided"],
-    ["✉", "Email", player.email],
-    ["▦", "Birthdate", player.birthdate || "Not provided"],
-    ["⌖", "Location", player.location || "Not provided"],
+    [<Phone className="ui-icon" />, "Mobile Number", player.mobile || "Not provided"],
+    [<Mail className="ui-icon" />, "Email", player.email],
+    [<CalendarDays className="ui-icon" />, "Birthdate", player.birthdate || "Not provided"],
+    [<MapPin className="ui-icon" />, "Location", player.location || "Not provided"],
   ];
   const details = [
-    ["♕", "Jersey Number", String(player.jerseyNumber || "Not assigned")],
-    ["♕", "Jersey Name", player.jerseyName || "Not assigned"],
-    ["♙", "Position", player.position || "Not assigned"],
-    ["◇", "Team", context.team],
-    ["♙", "Preferred Position", player.preferredPosition || "Please complete"],
-    ["♕", "Preferred Uniform Size", player.uniformSize || "Not provided"],
+    [<Shirt className="ui-icon" />, "Jersey Number", String(player.jerseyNumber || "Not assigned")],
+    [<Shirt className="ui-icon" />, "Jersey Name", player.jerseyName || "Not assigned"],
+    [<User className="ui-icon" />, "Position", player.position || "Not assigned"],
+    [<FileCheck className="ui-icon" />, "Team", context.team],
+    [
+      <User className="ui-icon" />,
+      "Preferred Position",
+      player.preferredPosition || "Please complete",
+    ],
+    [<Shirt className="ui-icon" />, "Preferred Uniform Size", player.uniformSize || "Not provided"],
   ];
   const currentRule = requiredRules?.[0] as
     { rules_document_id: string; acknowledged_at: string | null } | undefined;
@@ -92,7 +116,9 @@ export default async function Profile({
         href={`/rules?registration=${data.activeRegistrationId}`}
         className="card rules-account-link"
       >
-        <span>▢</span>
+        <span>
+          <BookOpen className="ui-icon" />
+        </span>
         <b>Rules &amp; Discipline</b>
         <strong aria-hidden="true">
           <ChevronRight className="go-caret" />
@@ -103,7 +129,9 @@ export default async function Profile({
         href={`/rules?acknowledgment=${acknowledgedRule.acknowledgment_id}`}
         className="card rules-account-link"
       >
-        <span>▢</span>
+        <span>
+          <BookOpen className="ui-icon" />
+        </span>
         <b>Rules &amp; Discipline</b>
         <strong aria-hidden="true">
           <ChevronRight className="go-caret" />
@@ -139,10 +167,14 @@ export default async function Profile({
       <InfoPanel
         title="CONFERENCE DETAILS"
         rows={[
-          ["◇", "Conference Name", ownerData.conferenceName],
-          ["◷", "Season Active", activeSeason?.name ?? "No active season"],
+          [<FileCheck className="ui-icon" />, "Conference Name", ownerData.conferenceName],
           [
-            "▦",
+            <Clock className="ui-icon" />,
+            "Season Active",
+            activeSeason?.name ?? "No active season",
+          ],
+          [
+            <CalendarDays className="ui-icon" />,
             "Divisions Active",
             activeSeason?.divisions.map((division) => division.name).join(", ") ||
               "No active divisions",
@@ -154,7 +186,9 @@ export default async function Profile({
         <PlatformFeedback conferenceId={ownerData.conferenceId} />
         <NotificationPreferencesForm preferences={data.notificationPreferences} />
         <Link href="/legal" className="card account-link">
-          <span>▢</span>
+          <span>
+            <BookOpen className="ui-icon" />
+          </span>
           <b>Privacy &amp; Terms</b>
           <strong aria-hidden="true">
             <ChevronRight className="go-caret" />
@@ -172,7 +206,9 @@ export default async function Profile({
         />
         <form action={logoutAction}>
           <button className="card account-link logout-account">
-            <span>↪</span>
+            <span>
+              <LogOut className="ui-icon" />
+            </span>
             <b>Log Out</b>
             <strong aria-hidden="true">
               <ChevronRight className="go-caret" />
@@ -217,7 +253,9 @@ export default async function Profile({
         <NotificationPreferencesForm preferences={data.notificationPreferences} />
         {rulesLink}
         <Link href="/legal" className="card account-link">
-          <span>▢</span>
+          <span>
+            <BookOpen className="ui-icon" />
+          </span>
           <b>Privacy &amp; Terms</b>
           <strong aria-hidden="true">
             <ChevronRight className="go-caret" />
@@ -237,7 +275,9 @@ export default async function Profile({
         )}
         <form action={logoutAction}>
           <button className="card account-link logout-account">
-            <span>↪</span>
+            <span>
+              <LogOut className="ui-icon" />
+            </span>
             <b>Log Out</b>
             <strong aria-hidden="true">
               <ChevronRight className="go-caret" />

@@ -1,3 +1,4 @@
+import { BookOpen } from "lucide-react";
 import Link from "next/link";
 import AppShell from "@/components/AppShell";
 import RulesAcknowledgmentForm from "./RulesAcknowledgmentForm";
@@ -109,7 +110,9 @@ export default async function RulesPage({
       </p>
       <section className="card rules-document">
         <header>
-          <span>▢</span>
+          <span>
+            <BookOpen className="ui-icon" />
+          </span>
           <div>
             <h2>{record.title}</h2>
             <p>

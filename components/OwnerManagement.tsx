@@ -1,6 +1,19 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import {
+  CalendarDays,
+  Camera,
+  Check,
+  ChevronRight,
+  Download,
+  FileCheck,
+  Landmark,
+  Pencil,
+  Plus,
+  Sparkles,
+  Users,
+  Wallet,
+} from "lucide-react";
 import { useActionState, useEffect, useRef, useState } from "react";
 import styles from "./OwnerTeams.module.css";
 import directoryStyles from "./OwnerDirectory.module.css";
@@ -122,7 +135,9 @@ export function ConferencePlayerDirectory({ conferenceId }: { conferenceId: stri
     <details className="card owner-section conference-player-directory">
       <summary>
         <span className="owner-section-title">
-          <span className="owner-icon">＋</span>
+          <span className="owner-icon">
+            <Plus className="ui-icon" />
+          </span>
           <span>
             <h2>Add a confirmed player</h2>
             <p>Only needed when someone new must be added to this conference.</p>
@@ -192,7 +207,9 @@ function DivisionSetupStep({ season }: { season: OwnerSeason }) {
       {season.divisions.length > 0 && (
         <div className="setup-chips">
           {season.divisions.map((division) => (
-            <span key={division.id}>✓ {division.name}</span>
+            <span key={division.id}>
+              <Check className="ui-icon" /> {division.name}
+            </span>
           ))}
         </div>
       )}
@@ -258,7 +275,9 @@ function DivisionTeamBuilder({ division }: { division: OwnerSeason["divisions"][
         {division.teams.length > 0 && (
           <div className="setup-chips">
             {division.teams.map((team) => (
-              <span key={team.id}>✓ {team.name}</span>
+              <span key={team.id}>
+                <Check className="ui-icon" /> {team.name}
+              </span>
             ))}
           </div>
         )}
@@ -390,7 +409,7 @@ function DirectoryLeaderPicker({
         )}
         {selected && (
           <p className="leader-selected">
-            ✓ Selected: <b>{selected.name}</b>
+            <Check className="ui-icon" /> Selected: <b>{selected.name}</b>
           </p>
         )}
         <p className="field-help">
@@ -588,7 +607,9 @@ function PreseasonDivisionForm({
               {division.darkImage ? (
                 <img src={division.darkImage} alt={`${division.name} dark uniform`} />
               ) : (
-                <i>📷</i>
+                <i>
+                  <Camera className="ui-icon" />
+                </i>
               )}
               <input name="darkImage" type="file" accept="image/jpeg,image/png,image/webp" />
             </label>
@@ -599,7 +620,9 @@ function PreseasonDivisionForm({
               {division.lightImage ? (
                 <img src={division.lightImage} alt={`${division.name} light uniform`} />
               ) : (
-                <i>📷</i>
+                <i>
+                  <Camera className="ui-icon" />
+                </i>
               )}
               <input name="lightImage" type="file" accept="image/jpeg,image/png,image/webp" />
             </label>
@@ -1184,7 +1207,9 @@ function LateInvitationForm({
     <details className="card owner-section conference-player-directory">
       <summary>
         <span className="owner-section-title">
-          <span className="owner-icon">＋</span>
+          <span className="owner-icon">
+            <Plus className="ui-icon" />
+          </span>
           <span>
             <h2>Add late invitation or move players</h2>
             <p>Only for last minute player addition.</p>
@@ -1267,7 +1292,8 @@ function LateInvitationForm({
         )}
         {(isMove ? selectedMove : selected) && (
           <p className="leader-selected">
-            ✓ Selected: <b>{isMove ? selectedMove?.name : selected?.name}</b>
+            <Check className="ui-icon" /> Selected:{" "}
+            <b>{isMove ? selectedMove?.name : selected?.name}</b>
           </p>
         )}
         <label>
@@ -1347,7 +1373,9 @@ function OwnerTeamsWorkspace({
                 {season.divisions.map((division) => (
                   <details className="game-action-card" key={division.id}>
                     <summary>
-                      <span className="owner-icon">♟</span>
+                      <span className="owner-icon">
+                        <Users className="ui-icon" />
+                      </span>
                       <span>
                         <b>{division.name}</b>
                         <small>
@@ -1687,7 +1715,9 @@ function DivisionRosterPublish({
   if (division.rosterFinalPublished)
     return (
       <section className="division-roster-shared final">
-        <b>✓ Final roster published for {division.name}</b>
+        <b>
+          <Check className="ui-icon" /> Final roster published for {division.name}
+        </b>
         <small>Everyone joining this division can see the final team assignments.</small>
       </section>
     );
@@ -1828,7 +1858,7 @@ function DraftSetupStep({ season }: { season: OwnerSeason }) {
                 className="btn primary draft-sheet-download"
                 onClick={() => downloadDivisionDraftSheet(season, division)}
               >
-                ↓ Download {division.name} Draft Sheet
+                <Download className="ui-icon" /> Download {division.name} Draft Sheet
               </button>
               <p className="draft-file-note">
                 The download remains available for owners who want a printed or computer-based
@@ -2082,7 +2112,7 @@ export function OwnerSetupWizard({
         <div className="completed-seasons">
           {published.map((season) => (
             <span className={season.canceledAt ? "canceled" : ""} key={season.id}>
-              {season.canceledAt ? "×" : "✓"} {season.name}{" "}
+              {season.canceledAt ? "×" : <Check className="ui-icon" />} {season.name}{" "}
               {season.canceledAt ? "canceled" : "published"}
             </span>
           ))}
@@ -2181,7 +2211,9 @@ export function OwnerSetupWizard({
                 : "Locked";
         const heading = (
           <>
-            <b className="step-number">{completed && !invitationWorkspace ? "✓" : visualStep}</b>
+            <b className="step-number">
+              {completed && !invitationWorkspace ? <Check className="ui-icon" /> : visualStep}
+            </b>
             <span>
               <small>STEP {visualStep} OF 8</small>
               <h2>{label}</h2>
@@ -2526,7 +2558,9 @@ function FinalizeDivisionSchedule({
   if (division.scheduleStatus === "final")
     return (
       <section className="division-schedule-final">
-        <b>✓ Final Schedule</b>
+        <b>
+          <Check className="ui-icon" /> Final Schedule
+        </b>
         <small>Players in {division.name} can now see these games.</small>
       </section>
     );
@@ -2567,7 +2601,9 @@ function CreateGameForm({
   return (
     <details className="game-action-card">
       <summary>
-        <span className="owner-icon">＋</span>
+        <span className="owner-icon">
+          <Plus className="ui-icon" />
+        </span>
         <span>
           <b>{playoffAvailable ? "Add Regular or Playoff Game" : "Add a Regular-Season Game"}</b>
           <small>
@@ -2908,7 +2944,9 @@ function ScheduleMethodPicker({
           onClick={() => choose("manual")}
           aria-expanded={method === "manual"}
         >
-          <span>✎</span>
+          <span>
+            <Pencil className="ui-icon" />
+          </span>
           <b>Manual</b>
           <small>Create each game day.</small>
         </button>
@@ -2925,7 +2963,9 @@ function ScheduleMethodPicker({
           onClick={() => choose("automate")}
           aria-expanded={method === "automate"}
         >
-          <span>✦</span>
+          <span>
+            <Sparkles className="ui-icon" />
+          </span>
           <b>Automate</b>
           <small>Let KCH build a draft.</small>
         </button>
@@ -3011,7 +3051,9 @@ function DivisionScheduleOperation({
                 {division.scheduleStatus !== "final" && division.scheduleMode !== "kch" && (
                   <details className="schedule-method-card continue-manual">
                     <summary>
-                      <span>＋</span>
+                      <span>
+                        <Plus className="ui-icon" />
+                      </span>
                       <span>
                         <b>Add Another Game Day</b>
                         <small>Save the next day&apos;s games as one group.</small>
@@ -3084,7 +3126,9 @@ export function OwnerGameManagement({ seasons }: { seasons: OwnerSeason[] }) {
   if (!scheduleSeasons.length)
     return (
       <section className="card owner-empty-operation">
-        <span>▦</span>
+        <span>
+          <CalendarDays className="ui-icon" />
+        </span>
         <div>
           <h3>No schedule workspace yet</h3>
           <p>Complete the roster draft in Season Setup to begin Step 8.</p>
@@ -3150,7 +3194,13 @@ function PaymentReviewCard({ submission }: { submission: OwnerPaymentSubmission 
     <details className={`payment-review-card ${isWaiver ? "waiver-review-card" : ""}`}>
       <summary>
         <span className="payment-review-icon">
-          {isWaiver ? "◇" : submission.method === "zelle" ? "ℤ" : "▣"}
+          {isWaiver ? (
+            <FileCheck className="ui-icon" />
+          ) : submission.method === "zelle" ? (
+            <Landmark className="ui-icon" />
+          ) : (
+            <Wallet className="ui-icon" />
+          )}
         </span>
         <span>
           <b>{submission.playerName}</b>
@@ -3530,7 +3580,9 @@ function DivisionUniformForm({
               {division.darkImage ? (
                 <img src={division.darkImage} alt={`${division.name} dark uniform`} />
               ) : (
-                <i>📷</i>
+                <i>
+                  <Camera className="ui-icon" />
+                </i>
               )}
               <input name="darkImage" type="file" accept="image/jpeg,image/png,image/webp" />
             </label>
@@ -3539,7 +3591,9 @@ function DivisionUniformForm({
               {division.lightImage ? (
                 <img src={division.lightImage} alt={`${division.name} light uniform`} />
               ) : (
-                <i>📷</i>
+                <i>
+                  <Camera className="ui-icon" />
+                </i>
               )}
               <input name="lightImage" type="file" accept="image/jpeg,image/png,image/webp" />
             </label>

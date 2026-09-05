@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { Check, ChevronDown, ChevronRight } from "lucide-react";
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -80,7 +80,7 @@ export default function OwnerConferenceSwitcher({
                     disabled={conference.id === current.id}
                   >
                     <span className="context-option-mark" aria-hidden="true">
-                      {conference.id === current.id ? "✓" : "K"}
+                      {conference.id === current.id ? <Check className="ui-icon" /> : "K"}
                     </span>
                     <span>
                       <b>{conference.name}</b>

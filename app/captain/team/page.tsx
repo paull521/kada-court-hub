@@ -1,3 +1,4 @@
+import { Clock } from "lucide-react";
 import { redirect } from "next/navigation";
 import CaptainShell from "@/components/CaptainShell";
 import { getCaptainPortalData } from "@/lib/captain-data";
@@ -14,7 +15,9 @@ export default async function CaptainTeamPage() {
     >
       {!data.finalPublished ? (
         <section className="card schedule-empty">
-          <span>◷</span>
+          <span>
+            <Clock className="ui-icon" />
+          </span>
           <h2>Final roster not published</h2>
           <p>Continue working from Team Roster until the commissioner finalizes this division.</p>
         </section>

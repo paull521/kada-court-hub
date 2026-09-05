@@ -1,5 +1,5 @@
 "use client";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Sparkles } from "lucide-react";
 import { useActionState } from "react";
 import { submitPlatformFeedbackAction, type ProfileActionState } from "@/app/profile/actions";
 const initial: ProfileActionState = {};
@@ -8,7 +8,9 @@ export default function PlatformFeedback({ conferenceId }: { conferenceId: strin
   return (
     <details className="card account-disclosure platform-feedback">
       <summary>
-        <span>✦</span>
+        <span>
+          <Sparkles className="ui-icon" />
+        </span>
         <b>Platform Feedback</b>
         <strong aria-hidden="true">
           <ChevronRight className="go-caret" />

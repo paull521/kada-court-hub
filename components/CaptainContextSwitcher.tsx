@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { Check, ChevronDown, ChevronRight } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { switchCaptainContextAction } from "@/app/captain/context-actions";
@@ -99,7 +99,11 @@ export default function CaptainContextSwitcher({
                   key={context.registrationId}
                 >
                   <span className="context-option-mark" aria-hidden="true">
-                    {context.registrationId === active.registrationId ? "✓" : "K"}
+                    {context.registrationId === active.registrationId ? (
+                      <Check className="ui-icon" />
+                    ) : (
+                      "K"
+                    )}
                   </span>
                   <span>
                     <b>{context.teamName}</b>

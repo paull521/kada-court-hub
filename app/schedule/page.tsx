@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { CalendarDays, ChevronRight, MapPin } from "lucide-react";
 import AppShell from "@/components/AppShell";
 import SeasonTabs from "@/components/SeasonTabs";
 import { getPlayerPortalData, type DivisionScheduleGame } from "@/lib/kch-data";
@@ -18,7 +18,7 @@ function GameRow({ game, teamName }: { game: Game; teamName: string }) {
           {teamName} <span>vs</span> {game.opponent}
         </strong>
         <small>
-          ⌖ {game.venue}
+          <MapPin className="ui-icon" /> {game.venue}
           {game.court ? ` · ${game.court}` : ""}
         </small>
       </div>
@@ -142,7 +142,7 @@ export default async function Schedule() {
       <h1 className="title">Schedule</h1>
       <p className="subtitle">Stay updated. Be ready. One game at a time.</p>
       <p className="season-label">
-        ▦ &nbsp; {data.context.season} · {data.context.division}
+        <CalendarDays className="ui-icon" /> &nbsp; {data.context.season} · {data.context.division}
       </p>
       <SeasonTabs active="schedule" />
       {next ? (
@@ -167,7 +167,7 @@ export default async function Schedule() {
               </div>
             </div>
             <p className="feature-venue">
-              ⌖ {next.venue}
+              <MapPin className="ui-icon" /> {next.venue}
               {next.court ? ` · ${next.court}` : ""}
             </p>
             <div className="uniform-line">
@@ -189,7 +189,9 @@ export default async function Schedule() {
         </>
       ) : (
         <section className="card schedule-empty">
-          <span>▦</span>
+          <span>
+            <CalendarDays className="ui-icon" />
+          </span>
           <h2>No games scheduled for your team</h2>
           <p>New games will appear here as soon as the conference owner publishes them.</p>
         </section>

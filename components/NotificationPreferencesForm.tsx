@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { Bell, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import {
   updateNotificationPreferencesAction,
@@ -41,7 +41,9 @@ export default function NotificationPreferencesForm({
   return (
     <details className="card account-disclosure">
       <summary>
-        <span>🔔</span>
+        <span>
+          <Bell className="ui-icon" />
+        </span>
         <b>Notification Preferences</b>
         <strong aria-hidden="true">
           <ChevronRight className="go-caret" />

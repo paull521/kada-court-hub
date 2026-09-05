@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, DollarSign, Wallet } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import OwnerPageShell from "@/components/OwnerPageShell";
@@ -24,7 +24,9 @@ export default async function OwnerMorePage() {
       <RoleSwitcher roles={roles} active="owner" />
       <nav className="owner-more-list" aria-label="More owner tools">
         <Link href="/owner/payments">
-          <span>▣</span>
+          <span>
+            <Wallet className="ui-icon" />
+          </span>
           <div>
             <b>Payments</b>
             <small>Review and confirm player payment notices</small>
@@ -35,7 +37,9 @@ export default async function OwnerMorePage() {
           </strong>
         </Link>
         <Link href="/owner/financials">
-          <span>＄</span>
+          <span>
+            <DollarSign className="ui-icon" />
+          </span>
           <div>
             <b>Financial Summary</b>
             <small>Track season income, expenses, and profit or loss</small>

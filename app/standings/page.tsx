@@ -1,3 +1,4 @@
+import { CalendarDays, Trophy } from "lucide-react";
 import AppShell from "@/components/AppShell";
 import SeasonTabs from "@/components/SeasonTabs";
 import { getPlayerPortalData } from "@/lib/kch-data";
@@ -20,7 +21,7 @@ export default async function StandingsPage() {
       <h1 className="title">Standings</h1>
       <p className="subtitle">See where every team stands.</p>
       <p className="season-label">
-        ▦ &nbsp; {data.context.season} · {data.context.division}
+        <CalendarDays className="ui-icon" /> &nbsp; {data.context.season} · {data.context.division}
       </p>
       <SeasonTabs active="standings" />
       {data.standings.length ? (
@@ -49,7 +50,9 @@ export default async function StandingsPage() {
         </section>
       ) : (
         <section className="card season-empty">
-          <span>♜</span>
+          <span>
+            <Trophy className="ui-icon" />
+          </span>
           <h2>Standings will appear here</h2>
           <p>Teams appear after they are added to this division.</p>
         </section>

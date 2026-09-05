@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { ArrowLeftRight, Check, ChevronRight, List, User } from "lucide-react";
 import { redirect } from "next/navigation";
 import CaptainShell from "@/components/CaptainShell";
 import CaptainRequestForm from "@/components/CaptainRequestForm";
@@ -28,7 +28,9 @@ export default async function CaptainRosterPage() {
           <details className="card captain-roster-disclosure">
             <summary>
               <span>
-                <i>✓</i>
+                <i>
+                  <Check className="ui-icon" />
+                </i>
                 <span>
                   <b>Published Roster</b>
                   <small>Open the published team list.</small>
@@ -57,7 +59,9 @@ export default async function CaptainRosterPage() {
           <details className="card captain-roster-disclosure captain-player-details-disclosure">
             <summary>
               <span>
-                <i>♙</i>
+                <i>
+                  <User className="ui-icon" />
+                </i>
                 <span>
                   <b>Change Player Details</b>
                   <small>Update Jersey Number, Name, Position and Uniform Size</small>
@@ -76,7 +80,9 @@ export default async function CaptainRosterPage() {
       <details className="card captain-roster-disclosure">
         <summary>
           <span>
-            <i>↔</i>
+            <i>
+              <ArrowLeftRight className="ui-icon" />
+            </i>
             <span>
               <b>Request Change</b>
               <small>Send a team change for owner approval.</small>
@@ -93,7 +99,9 @@ export default async function CaptainRosterPage() {
       <details className="card captain-roster-disclosure">
         <summary>
           <span>
-            <i>☷</i>
+            <i>
+              <List className="ui-icon" />
+            </i>
             <span>
               <b>Request History</b>
               <small>

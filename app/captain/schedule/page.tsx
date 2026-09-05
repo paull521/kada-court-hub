@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { CalendarDays, ChevronRight, MapPin } from "lucide-react";
 import { redirect } from "next/navigation";
 import CaptainShell from "@/components/CaptainShell";
 import { getCaptainPortalData, type CaptainGame } from "@/lib/captain-data";
@@ -34,7 +34,7 @@ function CompactGameRow({ game, teamName }: { game: CaptainGame; teamName: strin
           {teamName} <span>vs</span> {game.opponent}
         </strong>
         <small>
-          ⌖ {game.venue}
+          <MapPin className="ui-icon" /> {game.venue}
           {game.court ? ` · ${game.court}` : ""}
         </small>
       </div>
@@ -148,7 +148,7 @@ export default async function CaptainSchedulePage() {
               </div>
             </div>
             <p className="feature-venue">
-              ⌖ {next.venue}
+              <MapPin className="ui-icon" /> {next.venue}
               {next.court ? ` · ${next.court}` : ""}
             </p>
             <div className="uniform-line">
@@ -172,7 +172,9 @@ export default async function CaptainSchedulePage() {
         </>
       ) : (
         <section className="card schedule-empty">
-          <span>▦</span>
+          <span>
+            <CalendarDays className="ui-icon" />
+          </span>
           <h2>No games scheduled</h2>
           <p>Games appear after the owner finalizes this division’s schedule.</p>
         </section>

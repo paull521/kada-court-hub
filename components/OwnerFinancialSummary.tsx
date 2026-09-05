@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, DollarSign } from "lucide-react";
 import { useActionState } from "react";
 import { saveSeasonFinancialSummaryAction, type OwnerActionState } from "@/app/owner/actions";
 import type { OwnerPaymentGroup, OwnerSeason, OwnerSeasonFinancial } from "@/lib/owner-data";
@@ -192,7 +192,9 @@ export default function OwnerFinancialSummary({
   if (!seasons.length)
     return (
       <section className="card owner-empty-operation">
-        <span>＄</span>
+        <span>
+          <DollarSign className="ui-icon" />
+        </span>
         <div>
           <h3>No seasons yet</h3>
           <p>Create a season before tracking income and expenses.</p>

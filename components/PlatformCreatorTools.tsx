@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { Check, ChevronRight, Landmark, Wallet } from "lucide-react";
 import { useActionState } from "react";
 import {
   acceptOwnerInvitationAction,
@@ -154,13 +154,19 @@ export function OwnerSubscriptionPayment({
                   <label>
                     <input type="radio" name="method" value="zelle" required />
                     <span>
-                      <b>ℤ</b> Zelle
+                      <b>
+                        <Landmark className="ui-icon" />
+                      </b>{" "}
+                      Zelle
                     </span>
                   </label>
                   <label>
                     <input type="radio" name="method" value="cash" required />
                     <span>
-                      <b>▣</b> Cash
+                      <b>
+                        <Wallet className="ui-icon" />
+                      </b>{" "}
+                      Cash
                     </span>
                   </label>
                 </fieldset>
@@ -185,7 +191,9 @@ export function OwnerSubscriptionPayment({
           {billing.submissions.length ? (
             billing.submissions.map((submission) => (
               <div className="payment-history-row" key={submission.id}>
-                <span>{submission.status === "confirmed" ? "✓" : "!"}</span>
+                <span>
+                  {submission.status === "confirmed" ? <Check className="ui-icon" /> : "!"}
+                </span>
                 <span>
                   <b>{submission.method === "zelle" ? "Zelle" : "Cash"} payment</b>
                   <small>

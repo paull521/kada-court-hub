@@ -1,3 +1,4 @@
+import { Star } from "lucide-react";
 import Image from "next/image";
 import { LoginForm, PasswordResetRequestForm } from "@/components/AuthForm";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -55,7 +56,8 @@ export default async function Login({
             )}
             <LoginForm demoMode={!isSupabaseConfigured()} nextPath={nextPath} allowSignUp={false} />
             <p className="login-tagline">
-              ★<br />
+              <Star className="ui-icon" />
+              <br />
               <b>
                 One profile. <span>Multiple conferences.</span>
               </b>

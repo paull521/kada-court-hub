@@ -1,5 +1,6 @@
 "use client";
 
+import { Mail, User } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useEffect, useState, type FormEvent } from "react";
 import { loginAction, logoutAction, signUpAction, type AuthActionState } from "@/app/auth/actions";
@@ -29,7 +30,9 @@ export function LoginForm({
       )}
       <label htmlFor="email">Email</label>
       <div className="input-wrap">
-        <span>✉</span>
+        <span>
+          <Mail className="ui-icon" />
+        </span>
         <input
           id="email"
           name="email"
@@ -40,7 +43,9 @@ export function LoginForm({
       </div>
       <label htmlFor="password">Password</label>
       <div className="input-wrap">
-        <span>♙</span>
+        <span>
+          <User className="ui-icon" />
+        </span>
         <input
           id="password"
           name="password"
@@ -121,7 +126,9 @@ export function PasswordResetRequestForm() {
     <form onSubmit={sendLink} className="card loginbox">
       <label htmlFor="resetEmail">Email</label>
       <div className="input-wrap">
-        <span>✉</span>
+        <span>
+          <Mail className="ui-icon" />
+        </span>
         <input
           id="resetEmail"
           name="email"
@@ -220,7 +227,9 @@ export function ResetPasswordForm() {
     <form onSubmit={savePassword} className="card loginbox">
       <label htmlFor="newPassword">New Password</label>
       <div className="input-wrap">
-        <span>♙</span>
+        <span>
+          <User className="ui-icon" />
+        </span>
         <input
           id="newPassword"
           name="password"
@@ -259,7 +268,9 @@ export function SignUpForm({ nextPath = "" }: { nextPath?: string }) {
       <input type="hidden" name="nextPath" value={nextPath} />
       <label htmlFor="displayName">Full Name</label>
       <div className="input-wrap">
-        <span>♙</span>
+        <span>
+          <User className="ui-icon" />
+        </span>
         <input
           id="displayName"
           name="displayName"
@@ -270,7 +281,9 @@ export function SignUpForm({ nextPath = "" }: { nextPath?: string }) {
       </div>
       <label htmlFor="signupEmail">Email</label>
       <div className="input-wrap">
-        <span>✉</span>
+        <span>
+          <Mail className="ui-icon" />
+        </span>
         <input
           id="signupEmail"
           name="email"
@@ -282,7 +295,9 @@ export function SignUpForm({ nextPath = "" }: { nextPath?: string }) {
       </div>
       <label htmlFor="signupPassword">Password</label>
       <div className="input-wrap">
-        <span>♙</span>
+        <span>
+          <User className="ui-icon" />
+        </span>
         <input
           id="signupPassword"
           name="password"

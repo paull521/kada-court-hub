@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { BookOpen, Check, ChevronRight, User } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import CaptainShell from "@/components/CaptainShell";
@@ -19,7 +19,9 @@ export default async function CaptainMorePage() {
       <RoleSwitcher roles={roles} current="captain" />
       <nav className="owner-more-list">
         <Link href="/profile">
-          <span>♙</span>
+          <span>
+            <User className="ui-icon" />
+          </span>
           <div>
             <b>Player Profile</b>
             <small>Personal details and uniform size</small>
@@ -29,7 +31,9 @@ export default async function CaptainMorePage() {
           </strong>
         </Link>
         <Link href="/captain/availability">
-          <span>✓</span>
+          <span>
+            <Check className="ui-icon" />
+          </span>
           <div>
             <b>Availability</b>
             <small>Next-game team responses</small>
@@ -39,7 +43,9 @@ export default async function CaptainMorePage() {
           </strong>
         </Link>
         <Link href="/legal">
-          <span>▢</span>
+          <span>
+            <BookOpen className="ui-icon" />
+          </span>
           <div>
             <b>Privacy &amp; Terms</b>
           </div>

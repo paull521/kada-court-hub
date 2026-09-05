@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { CalendarDays, Check, ChevronRight, Clock } from "lucide-react";
 import AppShell from "@/components/AppShell";
 import PlayerPaymentForm from "@/components/PlayerPaymentForm";
 import { getPlayerPortalData } from "@/lib/kch-data";
@@ -21,7 +21,9 @@ export default async function Payments() {
     >
       <h1 className="title">Payments</h1>
       <p className="subtitle">View fees and report manual payments.</p>
-      <p className="season-label">▦ &nbsp; {data.context.season}</p>
+      <p className="season-label">
+        <CalendarDays className="ui-icon" /> &nbsp; {data.context.season}
+      </p>
       <section className="card balance-card">
         <p>TOTAL BALANCE DUE</p>
         <strong>${account.balance.toFixed(2)}</strong>
@@ -52,7 +54,9 @@ export default async function Payments() {
       />
       <details className="card payment-history-panel">
         <summary>
-          <span>◷</span>
+          <span>
+            <Clock className="ui-icon" />
+          </span>
           <b>Payment History</b>
           <strong aria-hidden="true">
             <ChevronRight className="go-caret" />
@@ -62,7 +66,9 @@ export default async function Payments() {
           {data.paymentHistory.length ? (
             data.paymentHistory.slice(0, 10).map((payment) => (
               <div className="payment-history-row" key={payment.id}>
-                <span>✓</span>
+                <span>
+                  <Check className="ui-icon" />
+                </span>
                 <span>
                   <b>{payment.feeLabel}</b>
                   <small>

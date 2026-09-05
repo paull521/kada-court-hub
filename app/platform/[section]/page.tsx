@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ClipboardList } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -80,7 +80,9 @@ export default async function PlatformSection({
       </form>
     ) : (
       <section className="card platform-section-note">
-        <span>⌁</span>
+        <span>
+          <ClipboardList className="ui-icon" />
+        </span>
         <div>
           <b>Workspace ready</b>
           <p>This section is ready for its focused workflow.</p>

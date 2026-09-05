@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { CalendarDays, ChevronRight, MapPin, Wallet } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import AppShell from "@/components/AppShell";
@@ -82,7 +82,7 @@ export default async function Home() {
               </div>
             </div>
             <p className="feature-venue">
-              ⌖ {next.venue}
+              <MapPin className="ui-icon" /> {next.venue}
               {next.court ? ` · ${next.court}` : ""}
             </p>
             <div className="uniform-line">
@@ -99,7 +99,9 @@ export default async function Home() {
         </>
       ) : (
         <section className="card empty-feature">
-          <span>▦</span>
+          <span>
+            <CalendarDays className="ui-icon" />
+          </span>
           <div>
             <p className="eyebrow">SCHEDULE</p>
             <h2>No upcoming game yet</h2>
@@ -121,7 +123,9 @@ export default async function Home() {
         </b>
       </Link>
       <Link className="card home-row season-home-row" href="/schedule">
-        <span className="roundel">▦</span>
+        <span className="roundel">
+          <CalendarDays className="ui-icon" />
+        </span>
         <span>
           <small>SCHEDULE</small>
           <strong>{data.context.season}</strong>
@@ -133,7 +137,9 @@ export default async function Home() {
       </Link>
       {data.paymentAccount.balance > 0 && (
         <Link className="card home-payment-reminder" href="/payments">
-          <span>▣</span>
+          <span>
+            <Wallet className="ui-icon" />
+          </span>
           <span>
             <small>PAYMENT DUE</small>
             <strong>${data.paymentAccount.balance.toFixed(2)} remaining</strong>

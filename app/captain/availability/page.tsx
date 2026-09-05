@@ -1,3 +1,4 @@
+import { Check } from "lucide-react";
 import { redirect } from "next/navigation";
 import CaptainShell from "@/components/CaptainShell";
 import { getCaptainPortalData } from "@/lib/captain-data";
@@ -37,7 +38,9 @@ export default async function CaptainAvailabilityPage() {
         </section>
       ) : (
         <section className="card schedule-empty">
-          <span>✓</span>
+          <span>
+            <Check className="ui-icon" />
+          </span>
           <h2>No availability needed</h2>
           <p>There is no upcoming game.</p>
         </section>

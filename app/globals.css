@@ -8610,3 +8610,15 @@ body:has(.context-overlay-open) .bottom {
   display: inline-block;
   vertical-align: middle;
 }
+
+/* Default size for Lucide icons that replaced inline glyphs. Individual call
+   sites can still size them, but the glyphs these replaced were sized by
+   font-size, which has no effect on an SVG - so without this they render at
+   Lucide's own 24px default and look oversized next to small labels. */
+.ui-icon {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
