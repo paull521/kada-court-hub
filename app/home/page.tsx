@@ -152,11 +152,7 @@ export default async function Home() {
       )}
       <section className="family-banner">
         <strong>
-          One Team.
-          <br />
-          One Court.
-          <br />
-          <span>One Family.</span>
+          One Team. One Court. <span>One Family.</span>
         </strong>
       </section>
     </AppShell>
