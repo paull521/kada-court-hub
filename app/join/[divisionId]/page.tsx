@@ -1,6 +1,6 @@
 export default function JoinPage() {
   return (
-    <main className="shell">
+    <main className="shell invite-shell">
       <section className="content">
         <section className="card join-card">
           <h1>Invitation unavailable</h1>

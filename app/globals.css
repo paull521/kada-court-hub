@@ -8685,11 +8685,28 @@ body:has(.context-overlay-open) .bottom {
   }
 
   /* Login has no navigation and one short form. Full-bleed suits an app screen,
-     not a sign-in box, so these keep a narrow centred column. */
-  .shell.login-shell {
+     not a sign-in box, so these keep a narrow centred column. The invitation
+     and join screens are the same shape: one decision, no navigation. */
+  .shell.login-shell,
+  .shell.invite-shell {
     width: min(100%, 540px);
     margin: 0 auto;
     box-shadow: 0 0 0 1px rgba(7, 31, 61, 0.07);
+  }
+
+  /* The context sheet slides up from the bottom edge, which is where a thumb
+     is. A pointer is wherever the click was, so it becomes a centred dialog
+     and drops the drag handle that implies a swipe. */
+  .context-overlay {
+    align-items: center;
+  }
+  .context-sheet {
+    border-radius: 18px;
+    box-shadow: 0 24px 60px rgba(4, 18, 35, 0.28);
+    animation: none;
+  }
+  .context-sheet-handle {
+    display: none;
   }
 
   .topbar {
