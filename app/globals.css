@@ -8647,3 +8647,139 @@ body:has(.context-overlay-open) .bottom {
 .season-result-card .result-lost strong {
   font-weight: 700;
 }
+
+/* The desktop column wrappers on Home are transparent to layout everywhere
+   except the laptop breakpoint, so the phone stack is exactly as it was. */
+.home-col {
+  display: contents;
+}
+
+/* ============================================================================
+   Laptop layout.
+
+   Purely additive: below 900px none of this applies and the phone layout is
+   untouched. The breakpoint is a viewport question rather than a device
+   question, so it is a media query and not user-agent detection - that keeps
+   resizing correct and avoids a server/client hydration mismatch in Next.
+   ========================================================================== */
+@media (min-width: 900px) {
+  body {
+    background: #edeae4;
+  }
+
+  /* The shell stops pretending to be a phone. The 50px drop shadow read as a
+     device mockup floating on a page; at this width it is simply the app. */
+  .shell {
+    /* Fills the window rather than sitting in a fixed column with the page
+       background showing down both sides. */
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    box-shadow: none;
+  }
+  .shell:before {
+    right: -160px;
+    top: -90px;
+    width: 640px;
+    height: 380px;
+  }
+
+  .topbar {
+    height: auto;
+    padding: 22px clamp(32px, 4vw, 72px) 14px;
+  }
+  .logo {
+    width: 172px;
+  }
+
+  /* The bottom bar becomes a tab strip under the header. Bottom nav is a
+     thumb-reach convention; with a pointer and a keyboard the tabs belong at
+     the top, where the eye already is. */
+  .bottom {
+    position: static;
+    width: auto;
+    height: auto;
+    display: flex;
+    gap: 2px;
+    padding: 0 clamp(32px, 4vw, 72px);
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    z-index: auto;
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 13px 16px 12px;
+    font-size: 14px;
+    font-weight: 700;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.12s ease;
+  }
+  .nav:hover {
+    color: var(--navy);
+  }
+  .nav.active {
+    border-bottom-color: var(--navy);
+  }
+  .nav b {
+    margin-bottom: 0;
+  }
+  .nav b svg {
+    width: 18px;
+    height: 18px;
+  }
+  /* The dots were positioned for a stacked, centred nav item. In a horizontal
+     one they belong on the icon, not at a percentage of a much wider box. */
+  .nav .nav-team-dot,
+  .nav .nav-alert-dot {
+    top: 9px;
+    right: auto;
+    left: 27px;
+  }
+
+  /* No fixed bar left to clear, so the 112px of bottom padding goes. */
+  .content {
+    padding: 28px clamp(32px, 4vw, 72px) 60px;
+  }
+  .title {
+    font-size: 42px;
+  }
+
+  /* Home splits into what is happening now, and where to go next. */
+  .home-content {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    column-gap: 24px;
+    align-content: start;
+  }
+  .home-content > .eyebrow,
+  .home-content > .title,
+  .home-content > .subtitle,
+  .home-content > .family-banner {
+    grid-column: 1 / -1;
+  }
+  /* Each column is its own flex stack. Placing the cards directly in the grid
+     with only a column set made auto-placement advance the row cursor past the
+     left column, so the right column started below it and both ended up with
+     ragged gaps. Two stacks size independently. */
+  .home-col {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-content: start;
+  }
+  .home-col-main {
+    grid-column: 1;
+  }
+  .home-col-side {
+    grid-column: 2;
+  }
+  .home-content > .family-banner {
+    margin-top: 18px;
+  }
+}
