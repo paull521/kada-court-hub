@@ -26,6 +26,7 @@ export default function AppShell({
   homeHref = "/home",
   conferenceName = "",
   headerAction,
+  headerNotification,
 }: {
   children: ReactNode;
   active: string;
@@ -38,6 +39,7 @@ export default function AppShell({
   homeHref?: string;
   conferenceName?: string;
   headerAction?: ReactNode;
+  headerNotification?: ReactNode;
 }) {
   const items = links.map(({ href, key, icon, label }) => ({
     href: key === "home" ? homeHref : href,
@@ -72,7 +74,7 @@ export default function AppShell({
               activeRegistrationId={activeRegistrationId}
             />
           )}
-          <NotificationCenter notifications={notifications} />
+          {headerNotification ?? <NotificationCenter notifications={notifications} />}
         </div>
       </header>
       <main className="content">

@@ -8547,6 +8547,14 @@ body:has(.context-overlay-open) .bottom {
   width: 104px;
   border-radius: 999px;
 }
+/* Matches the 26px bell icon in .topbar-actions so the header does not change
+   width or jump when the real notification button replaces it. */
+.skeleton-bell {
+  height: 26px;
+  width: 26px;
+  border-radius: 50%;
+  flex: none;
+}
 .skeleton-card {
   height: 108px;
   margin: 0 0 14px;
