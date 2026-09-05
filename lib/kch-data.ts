@@ -862,6 +862,9 @@ export async function getPlayerPortalData(
       { data: preferenceRow },
       { data: rosterBroadcastRows },
       { data: scheduleWorkflowRow },
+      { data: publishedRosterRows },
+      { data: paymentRows },
+      { data: waiverRows },
     ] = await Promise.all([
       supabase
         .from("registrations")
@@ -921,6 +924,19 @@ export async function getPlayerPortalData(
         .select("status")
         .eq("division_id", division.id)
         .maybeSingle(),
+      // These three only ever needed division.id and registration.id, both
+      // resolved well before this group runs, so they belong in it rather than
+      // costing two more sequential round trips further down.
+      supabase.rpc("get_published_division_roster", { p_division_id: division.id }),
+      supabase
+        .from("payments")
+        .select("id,registration_id,fee_id,amount_cents,method,paid_at")
+        .eq("registration_id", registration.id)
+        .order("paid_at", { ascending: false }),
+      supabase
+        .from("registration_waivers")
+        .select("amount_cents")
+        .eq("registration_id", registration.id),
     ]);
 
     // Display names arrive with the roster read above instead of a follow-up
@@ -944,9 +960,6 @@ export async function getPlayerPortalData(
         role: roleName(row.role_label),
       }))
       .sort(rosterOrder);
-    const { data: publishedRosterRows } = await supabase.rpc("get_published_division_roster", {
-      p_division_id: division.id,
-    });
     const divisionRosters: DivisionRosterTeam[] = (divisionTeamRows ?? []).map((rosterTeam) => ({
       id: rosterTeam.id,
       name: rosterTeam.name,
@@ -1231,17 +1244,6 @@ export async function getPlayerPortalData(
           dateStyle: "medium",
         }).format(new Date(row.created_at)),
       }));
-    const [{ data: paymentRows }, { data: waiverRows }] = await Promise.all([
-      supabase
-        .from("payments")
-        .select("id,registration_id,fee_id,amount_cents,method,paid_at")
-        .eq("registration_id", registration.id)
-        .order("paid_at", { ascending: false }),
-      supabase
-        .from("registration_waivers")
-        .select("amount_cents")
-        .eq("registration_id", registration.id),
-    ]);
     const feeLabels = new Map((feeRows ?? []).map((row) => [row.id, row.description]));
     const livePaymentHistory: PaymentHistoryItem[] = (paymentRows ?? []).map((row) => ({
       id: row.id,
