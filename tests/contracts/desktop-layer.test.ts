@@ -104,3 +104,38 @@ describe("two-column pages declare both panes", () => {
     },
   );
 });
+
+/**
+ * The desktop measure cap hangs off .content. A shell that renders its own
+ * markup and forgets that class opts itself out of the cap silently and
+ * stretches across the whole window. app/owner/page.tsx builds its shell inline
+ * rather than going through OwnerPageShell, which is exactly where that drifts.
+ */
+describe("every shell carries the content class", () => {
+  const walk = (dir: string): string[] =>
+    readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) return walk(full);
+      return /\.tsx$/.test(entry.name) ? [full] : [];
+    });
+
+  const shellFiles = [...walk(join(root, "app")), ...walk(join(root, "components"))].filter(
+    (path) => /className="shell\b/.test(readFileSync(path, "utf8")),
+  );
+
+  it("finds the files that build a shell", () => {
+    expect(shellFiles.length).toBeGreaterThanOrEqual(4);
+  });
+
+  it.each(shellFiles.map((path) => path.replace(`${root}/`, "")))(
+    "%s pairs its shell with a .content main",
+    (relative) => {
+      const source = readFileSync(join(root, relative), "utf8");
+      const shells = source.match(/className="shell\b/g)?.length ?? 0;
+      // login screens are a single centred form with no nav and no content main
+      if (/className="shell login-shell/.test(source)) return;
+      const mains = source.match(/className=\{?[`"]content\b/g)?.length ?? 0;
+      expect(mains).toBeGreaterThanOrEqual(shells);
+    },
+  );
+});

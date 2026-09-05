@@ -8805,4 +8805,20 @@ body:has(.context-overlay-open) .bottom {
   .captain-dashboard-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+
+  /* The owner workspace is the one place that wants more width, not less: its
+     pages are rosters, schedule builders and payment tables rather than a
+     reading column. This sits after the cap above and beats it on source order
+     at equal specificity, so it is written to be read as the exception. */
+  .content.owner-content:not(.two-col) {
+    max-width: 1500px;
+  }
+  /* Owner home's task tiles, and the More menu, were paired columns sized for a
+     thumb. */
+  .owner-action-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .owner-more-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
