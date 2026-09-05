@@ -258,7 +258,7 @@ const rosterOrder = (left: Player, right: Player) => {
 };
 
 export async function getPlayerPortalData(
-  scope: "full" | "home" = "full",
+  scope: "full" | "home" | "payments" | "profile" = "full",
 ): Promise<PlayerPortalData> {
   await connection();
   try {
@@ -588,7 +588,12 @@ export async function getPlayerPortalData(
     const season = seasonMap.get(division.season_id)!;
     const conference = conferenceMap.get(season.conference_id)!;
 
-    if (scope === "home") {
+    // The compact branch reads only what Home, Payments and Profile render. It
+    // already covers fees, payments, waivers and submissions, so /payments
+    // needs no extra query beyond the history projection below, and /profile
+    // needs nothing extra at all. /my-team and /schedule still take the full
+    // path because they need the roster and the whole-division schedule.
+    if (scope !== "full") {
       const [
         { data: homeGameRows },
         { data: feeRows },
@@ -797,6 +802,17 @@ export async function getPlayerPortalData(
           pending,
           balance: Math.max(0, totalCharges - paid - waived),
         };
+      const compactFeeLabels = new Map((feeRows ?? []).map((row) => [row.id, row.description]));
+      const compactPaymentHistory: PaymentHistoryItem[] = (paymentRows ?? []).map((row) => ({
+        id: row.id,
+        feeLabel: compactFeeLabels.get(row.fee_id) ?? "Account payment",
+        amount: row.amount_cents / 100,
+        method: row.method,
+        paidLabel: new Intl.DateTimeFormat("en-US", {
+          timeZone: timezone,
+          dateStyle: "medium",
+        }).format(new Date(row.paid_at)),
+      }));
       return {
         ...fallback,
         context: {
@@ -830,6 +846,7 @@ export async function getPlayerPortalData(
           availability.find((item) => item.registrationId === registration.id)?.available ?? true,
         teamHasUnavailable: availability.some((item) => !item.available),
         paymentAccount,
+        paymentHistory: compactPaymentHistory,
         notificationPreferences,
         fees: liveFees,
         invitation: pendingInvitation,

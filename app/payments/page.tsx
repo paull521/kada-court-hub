@@ -4,7 +4,7 @@ import { getPlayerPortalData } from "@/lib/kch-data";
 import { redirect } from "next/navigation";
 
 export default async function Payments() {
-  const data = await getPlayerPortalData();
+  const data = await getPlayerPortalData("payments");
   if (!data.contexts.length) redirect("/home");
   const account = data.paymentAccount;
   return (

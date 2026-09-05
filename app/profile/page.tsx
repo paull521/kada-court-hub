@@ -35,7 +35,7 @@ export default async function Profile({
 }) {
   const requestedView = (await searchParams).view;
   const [data, roles, supabase] = await Promise.all([
-    getPlayerPortalData(),
+    getPlayerPortalData("profile"),
     getAvailableRoles(),
     createClient(),
   ]);
