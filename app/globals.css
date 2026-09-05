@@ -478,10 +478,18 @@ body {
   background: var(--gold);
 }
 .nav b {
-  display: block;
-  font-size: 23px;
-  line-height: 1.1;
+  /* The icon is an SVG now, so it is sized by width/height rather than
+     font-size. Flex centring keeps it on the same optical axis as the label. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
   margin-bottom: 4px;
+}
+.nav b svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2;
 }
 .team-banner {
   background: linear-gradient(125deg, #08243e, #0a3767);
@@ -6279,8 +6287,9 @@ button.account-link {
   .owner-bottom .nav {
     font-size: 10px;
   }
-  .owner-bottom .nav b {
-    font-size: 21px;
+  .owner-bottom .nav b svg {
+    width: 20px;
+    height: 20px;
   }
 }
 .payment-submit-form .method-choice {

@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-type Item = { href: string; key: string; icon: string; label: string; dot?: string };
+type Item = { href: string; key: string; icon: ReactNode; label: string; dot?: string };
 
 export default function FastBottomNav({
   items,
