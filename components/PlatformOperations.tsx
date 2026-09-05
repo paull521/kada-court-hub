@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
 import { useActionState, useEffect, useState } from "react";
 import {
   confirmSubscriptionAction,
@@ -223,7 +224,9 @@ export function OwnerPayments({ records }: { records: PlatformOwnerPaymentBillin
                   </small>
                 </span>
                 <em className={statusClass}>{status}</em>
-                <strong>›</strong>
+                <strong aria-hidden="true">
+                  <ChevronRight className="go-caret" />
+                </strong>
               </summary>
               <div>
                 <p className="platform-payment-contact">
@@ -301,7 +304,9 @@ function SupportRequestRow({ request }: { request: PlatformOperations["support"]
       <summary>
         <b>{request.subject}</b>
         <em className={request.status}>{status}</em>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <div>
         <p>{request.message}</p>
@@ -356,7 +361,9 @@ export function SupportRequests({
                       {conferenceRequests.length === 1 ? "" : "s"}
                     </small>
                   </span>
-                  <strong>›</strong>
+                  <strong aria-hidden="true">
+                    <ChevronRight className="go-caret" />
+                  </strong>
                 </summary>
                 <div>
                   {conferenceRequests.map((request) => (
@@ -385,7 +392,9 @@ export function SupportRequests({
                       {items.length} feedback item{items.length === 1 ? "" : "s"}
                     </small>
                   </span>
-                  <strong>›</strong>
+                  <strong aria-hidden="true">
+                    <ChevronRight className="go-caret" />
+                  </strong>
                 </summary>
                 <div>
                   {items.map((item) => (
@@ -393,7 +402,9 @@ export function SupportRequests({
                       <summary>
                         <b>{item.playerName}</b>
                         <em className="received">Feedback</em>
-                        <strong>›</strong>
+                        <strong aria-hidden="true">
+                          <ChevronRight className="go-caret" />
+                        </strong>
                       </summary>
                       <div>
                         <p>{item.message}</p>
@@ -430,7 +441,9 @@ export function OwnerSupportRequest({
       <summary>
         <span>?</span>
         <b>Request Support</b>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <form action={a}>
         <input type="hidden" name="conferenceId" value={conferenceId} />

@@ -1,3 +1,4 @@
+import { ChevronLeft, ChevronRight, ClipboardList } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -72,12 +73,16 @@ export default async function PlatformSection({
       <form action={platformLogoutAction}>
         <button className="card platform-logout-card" type="submit">
           <b>Log Out</b>
-          <strong>›</strong>
+          <strong aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </strong>
         </button>
       </form>
     ) : (
       <section className="card platform-section-note">
-        <span>⌁</span>
+        <span>
+          <ClipboardList className="ui-icon" />
+        </span>
         <div>
           <b>Workspace ready</b>
           <p>This section is ready for its focused workflow.</p>
@@ -96,7 +101,7 @@ export default async function PlatformSection({
           priority
         />
         <Link href="/platform" className="muted platform-signout">
-          ‹ Dashboard
+          <ChevronLeft className="go-caret" /> Dashboard
         </Link>
       </header>
       <main className="content owner-content platform-content">

@@ -1,3 +1,4 @@
+import { CalendarDays, Check, Users, Wallet } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import CaptainShell from "@/components/CaptainShell";
@@ -34,7 +35,9 @@ export default async function CaptainDashboard() {
     >
       <section className="captain-dashboard-grid">
         <Link href="/captain/schedule" className="card captain-task-tile featured">
-          <span>▦</span>
+          <span>
+            <CalendarDays className="ui-icon" />
+          </span>
           <small>SCHEDULE</small>
           <b>{next ? next.dateLabel : "No game"}</b>
           <em>{next ? `${next.time} · ${next.uniform}` : "Waiting for schedule"}</em>
@@ -43,7 +46,9 @@ export default async function CaptainDashboard() {
           href="/captain/availability"
           className={`card captain-task-tile ${noCount ? "attention" : ""}`}
         >
-          <span>✓</span>
+          <span>
+            <Check className="ui-icon" />
+          </span>
           <small>AVAILABILITY</small>
           <b>
             {data.availability.length - noCount} Yes · {noCount} No
@@ -51,7 +56,9 @@ export default async function CaptainDashboard() {
           <em>{next ? `For ${next.opponent}` : "No upcoming game"}</em>
         </Link>
         <Link href="/captain/roster" className={`card captain-task-tile ${data.draftStatus}`}>
-          <span>♟</span>
+          <span>
+            <Users className="ui-icon" />
+          </span>
           <small>TEAM ROSTER</small>
           <b>{rosterStatus}</b>
           <em>{data.roster.length} players</em>
@@ -60,7 +67,9 @@ export default async function CaptainDashboard() {
           href="/captain/payments"
           className={`card captain-task-tile featured ${notPaid ? "attention" : ""}`}
         >
-          <span>▣</span>
+          <span>
+            <Wallet className="ui-icon" />
+          </span>
           <small>PAYMENTS</small>
           <b>
             {notPaid} balance{notPaid === 1 ? "" : "s"} due

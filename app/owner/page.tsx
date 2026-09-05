@@ -1,3 +1,4 @@
+import { CalendarDays, ClipboardList, DollarSign, Plus, User, Wallet } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import OwnerBottomNav from "@/components/OwnerBottomNav";
@@ -120,7 +121,9 @@ export default async function Owner() {
         <p className="owner-dashboard-question">What would you like to do?</p>
         <nav className="owner-action-grid" aria-label="Conference commissioner actions">
           <Link href="/owner/setup" className="owner-action-card season-action">
-            <span className="owner-action-icon">＋</span>
+            <span className="owner-action-icon">
+              <Plus className="ui-icon" />
+            </span>
             {activeSeason && (
               <i className="owner-action-dot" aria-label="Season setup needs attention" />
             )}
@@ -131,7 +134,9 @@ export default async function Owner() {
             </div>
           </Link>
           <Link href="/owner/roster" className="owner-action-card">
-            <span className="owner-action-icon">♙</span>
+            <span className="owner-action-icon">
+              <User className="ui-icon" />
+            </span>
             {pendingRosterRequests > 0 && (
               <i
                 className="owner-action-dot"
@@ -145,7 +150,9 @@ export default async function Owner() {
             </div>
           </Link>
           <Link href="/owner/schedule" className="owner-action-card">
-            <span className="owner-action-icon">▦</span>
+            <span className="owner-action-icon">
+              <CalendarDays className="ui-icon" />
+            </span>
             {scheduleNeedsAttention && (
               <i className="owner-action-dot" aria-label="Schedule setup needs attention" />
             )}
@@ -160,7 +167,9 @@ export default async function Owner() {
             </div>
           </Link>
           <Link href="/owner/scores" className="owner-action-card owner-featured-action">
-            <span className="owner-action-icon">⌁</span>
+            <span className="owner-action-icon">
+              <ClipboardList className="ui-icon" />
+            </span>
             {missingScores > 0 && (
               <i className="owner-action-dot" aria-label="Scores need attention" />
             )}
@@ -175,7 +184,9 @@ export default async function Owner() {
             </div>
           </Link>
           <Link href="/owner/payments" className="owner-action-card owner-featured-action">
-            <span className="owner-action-icon">▣</span>
+            <span className="owner-action-icon">
+              <Wallet className="ui-icon" />
+            </span>
             {pendingPayments > 0 && (
               <i className="owner-action-dot" aria-label="Payments need attention" />
             )}
@@ -188,7 +199,9 @@ export default async function Owner() {
             </div>
           </Link>
           <Link href="/owner/financials" className="owner-action-card financial-action">
-            <span className="owner-action-icon">＄</span>
+            <span className="owner-action-icon">
+              <DollarSign className="ui-icon" />
+            </span>
             <div>
               <small>FINANCIAL SUMMARY</small>
               <b>Track profit and loss</b>

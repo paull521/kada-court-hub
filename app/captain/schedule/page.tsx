@@ -1,3 +1,4 @@
+import { CalendarDays, ChevronRight, MapPin } from "lucide-react";
 import { redirect } from "next/navigation";
 import CaptainShell from "@/components/CaptainShell";
 import { getCaptainPortalData, type CaptainGame } from "@/lib/captain-data";
@@ -33,7 +34,7 @@ function CompactGameRow({ game, teamName }: { game: CaptainGame; teamName: strin
           {teamName} <span>vs</span> {game.opponent}
         </strong>
         <small>
-          ⌖ {game.venue}
+          <MapPin className="ui-icon" /> {game.venue}
           {game.court ? ` · ${game.court}` : ""}
         </small>
       </div>
@@ -77,7 +78,9 @@ function WeeklyView({ games }: { games: CaptainGame[] }) {
                 <small>
                   {weekGames.length} game{weekGames.length === 1 ? "" : "s"}
                 </small>
-                <strong>›</strong>
+                <strong aria-hidden="true">
+                  <ChevronRight className="go-caret" />
+                </strong>
               </summary>
               <div className="schedule-table-scroll">
                 <table>
@@ -145,7 +148,7 @@ export default async function CaptainSchedulePage() {
               </div>
             </div>
             <p className="feature-venue">
-              ⌖ {next.venue}
+              <MapPin className="ui-icon" /> {next.venue}
               {next.court ? ` · ${next.court}` : ""}
             </p>
             <div className="uniform-line">
@@ -169,7 +172,9 @@ export default async function CaptainSchedulePage() {
         </>
       ) : (
         <section className="card schedule-empty">
-          <span>▦</span>
+          <span>
+            <CalendarDays className="ui-icon" />
+          </span>
           <h2>No games scheduled</h2>
           <p>Games appear after the owner finalizes this division’s schedule.</p>
         </section>

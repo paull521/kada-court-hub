@@ -1,5 +1,7 @@
 "use client";
 
+import { Check, ChevronDown, ChevronRight } from "lucide-react";
+
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { selectOwnerConferenceAction } from "@/app/owner/actions";
@@ -40,7 +42,7 @@ export default function OwnerConferenceSwitcher({
         <span>
           <b>{current.name}</b>
         </span>
-        {hasChoices && <i aria-hidden="true">⌄</i>}
+        {hasChoices && <ChevronDown className="context-switcher-caret" aria-hidden="true" />}
       </button>
       {open && (
         <div
@@ -78,14 +80,18 @@ export default function OwnerConferenceSwitcher({
                     disabled={conference.id === current.id}
                   >
                     <span className="context-option-mark" aria-hidden="true">
-                      {conference.id === current.id ? "✓" : "K"}
+                      {conference.id === current.id ? <Check className="ui-icon" /> : "K"}
                     </span>
                     <span>
                       <b>{conference.name}</b>
                       <small>Conference owner workspace</small>
                     </span>
                     <strong aria-hidden="true">
-                      {conference.id === current.id ? "Current" : "›"}
+                      {conference.id === current.id ? (
+                        "Current"
+                      ) : (
+                        <ChevronRight className="go-caret" />
+                      )}
                     </strong>
                   </button>
                 </form>

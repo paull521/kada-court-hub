@@ -1,5 +1,7 @@
 "use client";
 
+import { Check, ChevronDown, ChevronRight } from "lucide-react";
+
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { switchPlayerContextAction } from "@/app/context/actions";
@@ -60,7 +62,7 @@ export default function PlayerContextSwitcher({
         <span>
           <b>{active.team}</b>
         </span>
-        {hasContextChoices && <i aria-hidden="true">⌄</i>}
+        {hasContextChoices && <ChevronDown className="context-switcher-caret" aria-hidden="true" />}
       </button>
       {open && (
         <div
@@ -97,7 +99,11 @@ export default function PlayerContextSwitcher({
                   key={context.registrationId}
                 >
                   <span className="context-option-mark" aria-hidden="true">
-                    {context.registrationId === active.registrationId ? "✓" : "K"}
+                    {context.registrationId === active.registrationId ? (
+                      <Check className="ui-icon" />
+                    ) : (
+                      "K"
+                    )}
                   </span>
                   <span>
                     <b>{context.team}</b>
@@ -107,7 +113,11 @@ export default function PlayerContextSwitcher({
                     </em>
                   </span>
                   <strong aria-hidden="true">
-                    {context.registrationId === active.registrationId ? "Current" : "›"}
+                    {context.registrationId === active.registrationId ? (
+                      "Current"
+                    ) : (
+                      <ChevronRight className="go-caret" />
+                    )}
                   </strong>
                 </button>
               ))}

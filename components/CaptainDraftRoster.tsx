@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
 import { useActionState, useState } from "react";
 import {
   saveDraftPlayerAction,
@@ -41,7 +42,9 @@ function DraftedPlayer({
             {player.jerseyName ? ` · ${player.jerseyName}` : ""}
           </small>
         </span>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <form action={action} className="owner-form">
         <input type="hidden" name="teamId" value={teamId} />

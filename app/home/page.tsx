@@ -1,3 +1,4 @@
+import { CalendarDays, ChevronRight, MapPin, Wallet } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import AppShell from "@/components/AppShell";
@@ -81,7 +82,7 @@ export default async function Home() {
               </div>
             </div>
             <p className="feature-venue">
-              ⌖ {next.venue}
+              <MapPin className="ui-icon" /> {next.venue}
               {next.court ? ` · ${next.court}` : ""}
             </p>
             <div className="uniform-line">
@@ -98,7 +99,9 @@ export default async function Home() {
         </>
       ) : (
         <section className="card empty-feature">
-          <span>▦</span>
+          <span>
+            <CalendarDays className="ui-icon" />
+          </span>
           <div>
             <p className="eyebrow">SCHEDULE</p>
             <h2>No upcoming game yet</h2>
@@ -115,35 +118,41 @@ export default async function Home() {
             {data.context.division} &nbsp;•&nbsp; {data.context.season}
           </em>
         </span>
-        <b>›</b>
+        <b aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </b>
       </Link>
       <Link className="card home-row season-home-row" href="/schedule">
-        <span className="roundel">▦</span>
+        <span className="roundel">
+          <CalendarDays className="ui-icon" />
+        </span>
         <span>
           <small>SCHEDULE</small>
           <strong>{data.context.season}</strong>
           <em>View schedule, standings, and results</em>
         </span>
-        <b aria-hidden="true">›</b>
+        <b aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </b>
       </Link>
       {data.paymentAccount.balance > 0 && (
         <Link className="card home-payment-reminder" href="/payments">
-          <span>▣</span>
+          <span>
+            <Wallet className="ui-icon" />
+          </span>
           <span>
             <small>PAYMENT DUE</small>
             <strong>${data.paymentAccount.balance.toFixed(2)} remaining</strong>
             <em>Open Payments to submit or review your payment.</em>
           </span>
-          <b>›</b>
+          <b aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </b>
         </Link>
       )}
       <section className="family-banner">
         <strong>
-          One Team.
-          <br />
-          One Court.
-          <br />
-          <span>One Family.</span>
+          One Team. One Court. <span>One Family.</span>
         </strong>
       </section>
     </AppShell>

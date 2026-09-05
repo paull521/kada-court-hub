@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { CalendarDays, Home, User, Users, Wallet } from "lucide-react";
 import { ReactNode } from "react";
 import PlayerContextSwitcher from "@/components/PlayerContextSwitcher";
 import NotificationCenter from "@/components/NotificationCenter";
@@ -6,12 +7,12 @@ import FastBottomNav from "@/components/FastBottomNav";
 import type { PlayerContextOption, PlayerNotification } from "@/lib/kch-data";
 
 const links = [
-  ["/home", "home", "⌂", "Home"],
-  ["/my-team", "team", "♟", "Teams"],
-  ["/schedule", "schedule", "▦", "Schedule"],
-  ["/payments", "payments", "▣", "Payments"],
-  ["/profile", "profile", "♙", "Profile"],
-] as const;
+  { href: "/home", key: "home", icon: <Home />, label: "Home" },
+  { href: "/my-team", key: "team", icon: <Users />, label: "Teams" },
+  { href: "/schedule", key: "schedule", icon: <CalendarDays />, label: "Schedule" },
+  { href: "/payments", key: "payments", icon: <Wallet />, label: "Payments" },
+  { href: "/profile", key: "profile", icon: <User />, label: "Profile" },
+];
 
 export default function AppShell({
   children,
@@ -25,6 +26,7 @@ export default function AppShell({
   homeHref = "/home",
   conferenceName = "",
   headerAction,
+  headerNotification,
 }: {
   children: ReactNode;
   active: string;
@@ -37,8 +39,9 @@ export default function AppShell({
   homeHref?: string;
   conferenceName?: string;
   headerAction?: ReactNode;
+  headerNotification?: ReactNode;
 }) {
-  const items = links.map(([href, key, icon, label]) => ({
+  const items = links.map(({ href, key, icon, label }) => ({
     href: key === "home" ? homeHref : href,
     key,
     icon,
@@ -71,7 +74,7 @@ export default function AppShell({
               activeRegistrationId={activeRegistrationId}
             />
           )}
-          <NotificationCenter notifications={notifications} />
+          {headerNotification ?? <NotificationCenter notifications={notifications} />}
         </div>
       </header>
       <main className="content">

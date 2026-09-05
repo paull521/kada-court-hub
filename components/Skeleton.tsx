@@ -29,3 +29,7 @@ export function SkeletonRow({ count = 1 }: { count?: number }) {
     </>
   );
 }
+
+export function SkeletonBell() {
+  return <span className="skeleton skeleton-bell" aria-hidden="true" />;
+}

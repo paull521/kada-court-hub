@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
 import { useActionState } from "react";
 import { updateProfileAction, type ProfileActionState } from "@/app/profile/actions";
 
@@ -22,7 +23,10 @@ export default function ProfileEditForm({
   return (
     <details className="card edit-profile">
       <summary>
-        Edit My Profile <span>›</span>
+        Edit My Profile{" "}
+        <span aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </span>
       </summary>
       <form action={action}>
         <label htmlFor="editMobile">Mobile Number</label>

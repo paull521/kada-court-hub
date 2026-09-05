@@ -1,3 +1,4 @@
+import { ChevronRight, Wallet } from "lucide-react";
 import { redirect } from "next/navigation";
 import CaptainShell from "@/components/CaptainShell";
 import { getCaptainPortalData } from "@/lib/captain-data";
@@ -21,7 +22,9 @@ export default async function CaptainPaymentsPage() {
                   <small>Remaining {money(player.balance)}</small>
                 </span>
                 <em className={`payment-flag ${status}`}>{status}</em>
-                <strong>›</strong>
+                <strong aria-hidden="true">
+                  <ChevronRight className="go-caret" />
+                </strong>
               </summary>
               <div>
                 <div className="captain-balance-grid">
@@ -61,7 +64,9 @@ export default async function CaptainPaymentsPage() {
         })}
         {!data.payments.length && (
           <section className="card schedule-empty">
-            <span>▣</span>
+            <span>
+              <Wallet className="ui-icon" />
+            </span>
             <h2>No player balances</h2>
             <p>Balances appear after the owner publishes division fees.</p>
           </section>

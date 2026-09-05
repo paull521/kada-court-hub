@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronRight, DollarSign } from "lucide-react";
 import { useActionState } from "react";
 import { saveSeasonFinancialSummaryAction, type OwnerActionState } from "@/app/owner/actions";
 import type { OwnerPaymentGroup, OwnerSeason, OwnerSeasonFinancial } from "@/lib/owner-data";
@@ -46,7 +47,9 @@ function SeasonFinancialCard({
           <small>{profitLoss >= 0 ? "PROFIT" : "LOSS"}</small>
           <b>{money(Math.abs(profitLoss))}</b>
         </span>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <div className="financial-season-body">
         <p className="payment-card-label">SEASON INCOME</p>
@@ -74,7 +77,9 @@ function SeasonFinancialCard({
               <b>Update Season Expenses</b>
               <small>Court, referee, uniforms, and league operations</small>
             </span>
-            <strong>›</strong>
+            <strong aria-hidden="true">
+              <ChevronRight className="go-caret" />
+            </strong>
           </summary>
           <form action={action} className="owner-form">
             <input type="hidden" name="seasonId" value={season.id} />
@@ -187,7 +192,9 @@ export default function OwnerFinancialSummary({
   if (!seasons.length)
     return (
       <section className="card owner-empty-operation">
-        <span>＄</span>
+        <span>
+          <DollarSign className="ui-icon" />
+        </span>
         <div>
           <h3>No seasons yet</h3>
           <p>Create a season before tracking income and expenses.</p>

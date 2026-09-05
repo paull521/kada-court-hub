@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { CalendarDays, Home, User, Users, Wallet } from "lucide-react";
 import FastBottomNav from "@/components/FastBottomNav";
 import { SkeletonChip, SkeletonTitle, SkeletonCard, SkeletonRow } from "@/components/Skeleton";
 
@@ -6,11 +7,11 @@ import { SkeletonChip, SkeletonTitle, SkeletonCard, SkeletonRow } from "@/compon
 // CaptainShell requires a full CaptainPortalData, which this boundary
 // renders before there is any data to give it.
 const items = [
-  { href: "/captain", key: "home", icon: "⌂", label: "Home" },
-  { href: "/captain/team", key: "team", icon: "♟", label: "Teams" },
-  { href: "/captain/schedule", key: "schedule", icon: "▦", label: "Schedule" },
-  { href: "/captain/payments", key: "payments", icon: "▣", label: "Payments" },
-  { href: "/profile", key: "profile", icon: "♙", label: "Profile" },
+  { href: "/captain", key: "home", icon: <Home />, label: "Home" },
+  { href: "/captain/team", key: "team", icon: <Users />, label: "Teams" },
+  { href: "/captain/schedule", key: "schedule", icon: <CalendarDays />, label: "Schedule" },
+  { href: "/captain/payments", key: "payments", icon: <Wallet />, label: "Payments" },
+  { href: "/profile", key: "profile", icon: <User />, label: "Profile" },
 ];
 
 export default function Loading() {

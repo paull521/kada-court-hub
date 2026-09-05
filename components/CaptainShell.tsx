@@ -1,17 +1,18 @@
 import Image from "next/image";
+import { CalendarDays, Home, User, Users, Wallet } from "lucide-react";
 import type { ReactNode } from "react";
 import CaptainContextSwitcher from "@/components/CaptainContextSwitcher";
 import FastBottomNav from "@/components/FastBottomNav";
 import type { CaptainPortalData } from "@/lib/captain-data";
 
 const links = [
-  ["/captain", "home", "⌂", "Home"],
-  ["/captain/team", "team", "♟", "Teams"],
-  ["/captain/schedule", "schedule", "▦", "Schedule"],
-  ["/captain/payments", "payments", "▣", "Payments"],
-  ["/profile", "profile", "♙", "Profile"],
+  { href: "/captain", key: "home", icon: <Home />, label: "Home" },
+  { href: "/captain/team", key: "team", icon: <Users />, label: "Teams" },
+  { href: "/captain/schedule", key: "schedule", icon: <CalendarDays />, label: "Schedule" },
+  { href: "/captain/payments", key: "payments", icon: <Wallet />, label: "Payments" },
+  { href: "/profile", key: "profile", icon: <User />, label: "Profile" },
 ] as const;
-export type CaptainNavKey = (typeof links)[number][1] | "dashboard" | "more";
+export type CaptainNavKey = (typeof links)[number]["key"] | "dashboard" | "more";
 
 export default function CaptainShell({
   data,
@@ -27,7 +28,7 @@ export default function CaptainShell({
   children: ReactNode;
 }) {
   const selected = active === "dashboard" ? "home" : active === "more" ? "profile" : active;
-  const items = links.map(([href, key, icon, label]) => ({
+  const items = links.map(({ href, key, icon, label }) => ({
     href,
     key,
     icon,

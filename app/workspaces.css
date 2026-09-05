@@ -279,7 +279,9 @@
   border-color: #061d3c;
 }
 .home-availability-card {
-  padding: 14px;
+  /* Was 14px against .home-row's 18px, which started "ARE YOU PLAYING?" left of
+     the cards below it. Shared gutter lines the stack up on one edge. */
+  padding: 18px;
   margin-top: 12px;
 }
 .availability-control {

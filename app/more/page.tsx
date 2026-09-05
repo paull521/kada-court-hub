@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import AppShell from "@/components/AppShell";
 export default function More() {
   return (
@@ -6,16 +7,28 @@ export default function More() {
       <h1 className="title">More</h1>
       <section className="card section menu">
         <a href="#">
-          Profile <span>›</span>
+          Profile{" "}
+          <span aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </span>
         </a>
         <a href="#">
-          Payments <span>›</span>
+          Payments{" "}
+          <span aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </span>
         </a>
         <a href="#">
-          Conference <span>›</span>
+          Conference{" "}
+          <span aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </span>
         </a>
         <a href="#">
-          Settings <span>›</span>
+          Settings{" "}
+          <span aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </span>
         </a>
       </section>
     </AppShell>

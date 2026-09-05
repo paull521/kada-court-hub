@@ -1,5 +1,6 @@
 "use client";
 
+import { Check, ChevronRight, Landmark, Wallet } from "lucide-react";
 import { useActionState } from "react";
 import {
   acceptOwnerInvitationAction,
@@ -76,7 +77,9 @@ export function OwnerSubscriptionPayment({
           <em className={`owner-subscription-status ${statusClass}`}>
             {pilotSeason ? "Pilot" : status}
           </em>
-          <strong>›</strong>
+          <strong aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </strong>
         </summary>
         <div className="monthly-subscription-body">
           <div className="owner-platform-table-wrap">
@@ -151,13 +154,19 @@ export function OwnerSubscriptionPayment({
                   <label>
                     <input type="radio" name="method" value="zelle" required />
                     <span>
-                      <b>ℤ</b> Zelle
+                      <b>
+                        <Landmark className="ui-icon" />
+                      </b>{" "}
+                      Zelle
                     </span>
                   </label>
                   <label>
                     <input type="radio" name="method" value="cash" required />
                     <span>
-                      <b>▣</b> Cash
+                      <b>
+                        <Wallet className="ui-icon" />
+                      </b>{" "}
+                      Cash
                     </span>
                   </label>
                 </fieldset>
@@ -174,13 +183,17 @@ export function OwnerSubscriptionPayment({
       <details className="card payment-history-panel owner-subscription-history">
         <summary>
           <b>Payment History</b>
-          <strong>›</strong>
+          <strong aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </strong>
         </summary>
         <div className="payment-history-scroll">
           {billing.submissions.length ? (
             billing.submissions.map((submission) => (
               <div className="payment-history-row" key={submission.id}>
-                <span>{submission.status === "confirmed" ? "✓" : "!"}</span>
+                <span>
+                  {submission.status === "confirmed" ? <Check className="ui-icon" /> : "!"}
+                </span>
                 <span>
                   <b>{submission.method === "zelle" ? "Zelle" : "Cash"} payment</b>
                   <small>

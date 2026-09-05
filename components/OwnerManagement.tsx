@@ -1,5 +1,19 @@
 "use client";
 
+import {
+  CalendarDays,
+  Camera,
+  Check,
+  ChevronRight,
+  Download,
+  FileCheck,
+  Landmark,
+  Pencil,
+  Plus,
+  Sparkles,
+  Users,
+  Wallet,
+} from "lucide-react";
 import { useActionState, useEffect, useRef, useState } from "react";
 import styles from "./OwnerTeams.module.css";
 import directoryStyles from "./OwnerDirectory.module.css";
@@ -121,12 +135,16 @@ export function ConferencePlayerDirectory({ conferenceId }: { conferenceId: stri
     <details className="card owner-section conference-player-directory">
       <summary>
         <span className="owner-section-title">
-          <span className="owner-icon">＋</span>
+          <span className="owner-icon">
+            <Plus className="ui-icon" />
+          </span>
           <span>
             <h2>Add a confirmed player</h2>
             <p>Only needed when someone new must be added to this conference.</p>
           </span>
-          <strong>›</strong>
+          <strong aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </strong>
         </span>
       </summary>
       <form action={action} className="owner-form">
@@ -189,7 +207,9 @@ function DivisionSetupStep({ season }: { season: OwnerSeason }) {
       {season.divisions.length > 0 && (
         <div className="setup-chips">
           {season.divisions.map((division) => (
-            <span key={division.id}>✓ {division.name}</span>
+            <span key={division.id}>
+              <Check className="ui-icon" /> {division.name}
+            </span>
           ))}
         </div>
       )}
@@ -247,13 +267,17 @@ function DivisionTeamBuilder({ division }: { division: OwnerSeason["divisions"][
             {division.teams.length} team{division.teams.length === 1 ? "" : "s"} saved
           </small>
         </span>
-        <span>›</span>
+        <span aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </span>
       </summary>
       <div>
         {division.teams.length > 0 && (
           <div className="setup-chips">
             {division.teams.map((team) => (
-              <span key={team.id}>✓ {team.name}</span>
+              <span key={team.id}>
+                <Check className="ui-icon" /> {team.name}
+              </span>
             ))}
           </div>
         )}
@@ -385,7 +409,7 @@ function DirectoryLeaderPicker({
         )}
         {selected && (
           <p className="leader-selected">
-            ✓ Selected: <b>{selected.name}</b>
+            <Check className="ui-icon" /> Selected: <b>{selected.name}</b>
           </p>
         )}
         <p className="field-help">
@@ -440,7 +464,9 @@ function CaptainsSetupStep({
                 Captain: {team.captain} · Co-captain: {team.coCaptain}
               </small>
             </span>
-            <span>›</span>
+            <span aria-hidden="true">
+              <ChevronRight className="go-caret" />
+            </span>
           </summary>
           <div>
             <DirectoryLeaderPicker
@@ -493,7 +519,9 @@ function PreseasonDivisionForm({
               : "Fees not saved"}
           </small>
         </span>
-        <span>›</span>
+        <span aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </span>
       </summary>
       <div>
         {previousDivisions.length > 0 && (
@@ -579,7 +607,9 @@ function PreseasonDivisionForm({
               {division.darkImage ? (
                 <img src={division.darkImage} alt={`${division.name} dark uniform`} />
               ) : (
-                <i>📷</i>
+                <i>
+                  <Camera className="ui-icon" />
+                </i>
               )}
               <input name="darkImage" type="file" accept="image/jpeg,image/png,image/webp" />
             </label>
@@ -590,7 +620,9 @@ function PreseasonDivisionForm({
               {division.lightImage ? (
                 <img src={division.lightImage} alt={`${division.name} light uniform`} />
               ) : (
-                <i>📷</i>
+                <i>
+                  <Camera className="ui-icon" />
+                </i>
               )}
               <input name="lightImage" type="file" accept="image/jpeg,image/png,image/webp" />
             </label>
@@ -704,7 +736,9 @@ function DivisionInvitationForm({
             <small>{division.invitationCount} invited · Final roster published</small>
           </span>
           <em>LOCKED</em>
-          <strong>›</strong>
+          <strong aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </strong>
         </summary>
         <div className="division-invitation-locked">
           <b>Invitation list locked</b>
@@ -730,7 +764,9 @@ function DivisionInvitationForm({
           </small>
         </span>
         <em>{division.invitationSent ? "SENT" : "TO DO"}</em>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <form action={action} className="owner-form division-invitation-form">
         <input type="hidden" name="divisionId" value={division.id} />
@@ -957,7 +993,9 @@ function TeamDraftReview({
           </small>
         </span>
         <em>{statusLabel}</em>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <div className="team-review-body">
         <div className="team-review-roster">
@@ -1060,7 +1098,9 @@ export function OwnerRosterChangeReviews({ requests }: { requests: OwnerRosterRe
           <b>Captain Change Requests</b>
           <small>{pending.length} awaiting owner approval</small>
         </span>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <div>
         {requests.slice(0, 10).map((request) => (
@@ -1167,12 +1207,16 @@ function LateInvitationForm({
     <details className="card owner-section conference-player-directory">
       <summary>
         <span className="owner-section-title">
-          <span className="owner-icon">＋</span>
+          <span className="owner-icon">
+            <Plus className="ui-icon" />
+          </span>
           <span>
             <h2>Add late invitation or move players</h2>
             <p>Only for last minute player addition.</p>
           </span>
-          <strong>›</strong>
+          <strong aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </strong>
         </span>
       </summary>
       <form action={isMove ? moveAction : lateAction} className="owner-form">
@@ -1248,7 +1292,8 @@ function LateInvitationForm({
         )}
         {(isMove ? selectedMove : selected) && (
           <p className="leader-selected">
-            ✓ Selected: <b>{isMove ? selectedMove?.name : selected?.name}</b>
+            <Check className="ui-icon" /> Selected:{" "}
+            <b>{isMove ? selectedMove?.name : selected?.name}</b>
           </p>
         )}
         <label>
@@ -1320,20 +1365,26 @@ function OwnerTeamsWorkspace({
                     {season.divisions.length === 1 ? "" : "s"}
                   </small>
                 </span>
-                <strong>›</strong>
+                <strong aria-hidden="true">
+                  <ChevronRight className="go-caret" />
+                </strong>
               </summary>
               <div>
                 {season.divisions.map((division) => (
                   <details className="game-action-card" key={division.id}>
                     <summary>
-                      <span className="owner-icon">♟</span>
+                      <span className="owner-icon">
+                        <Users className="ui-icon" />
+                      </span>
                       <span>
                         <b>{division.name}</b>
                         <small>
                           {division.teams.length} team{division.teams.length === 1 ? "" : "s"}
                         </small>
                       </span>
-                      <strong>›</strong>
+                      <strong aria-hidden="true">
+                        <ChevronRight className="go-caret" />
+                      </strong>
                     </summary>
                     <div className="game-form">
                       <div className="owner-team-list">
@@ -1372,7 +1423,9 @@ function DirectoryPlayer({
         <b>{player.name}</b>
         <span className={directoryStyles.details}>{player.publicPlayerId}</span>
         <em className={directoryStyles[player.status]}>{player.status}</em>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <div className={directoryStyles.playerDetails}>
         <p>
@@ -1503,7 +1556,9 @@ function DivisionRespondedPlayers({ players }: { players: OwnerSeason["invitees"
           <b>Responded Players</b>
           <small>{players.length} responses · Tap to view the draft list</small>
         </span>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <div className="draft-list-filters">
         <button
@@ -1581,7 +1636,9 @@ function OwnerDraftOverride({
             the owner activity history.
           </small>
         </span>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <form action={action} className="owner-form">
         <label>
@@ -1658,7 +1715,9 @@ function DivisionRosterPublish({
   if (division.rosterFinalPublished)
     return (
       <section className="division-roster-shared final">
-        <b>✓ Final roster published for {division.name}</b>
+        <b>
+          <Check className="ui-icon" /> Final roster published for {division.name}
+        </b>
         <small>Everyone joining this division can see the final team assignments.</small>
       </section>
     );
@@ -1789,7 +1848,9 @@ function DraftSetupStep({ season }: { season: OwnerSeason }) {
                 <b>{division.name}</b>
                 <small>{divisionStatus}</small>
               </span>
-              <strong>›</strong>
+              <strong aria-hidden="true">
+                <ChevronRight className="go-caret" />
+              </strong>
             </summary>
             <div>
               <button
@@ -1797,7 +1858,7 @@ function DraftSetupStep({ season }: { season: OwnerSeason }) {
                 className="btn primary draft-sheet-download"
                 onClick={() => downloadDivisionDraftSheet(season, division)}
               >
-                ↓ Download {division.name} Draft Sheet
+                <Download className="ui-icon" /> Download {division.name} Draft Sheet
               </button>
               <p className="draft-file-note">
                 The download remains available for owners who want a printed or computer-based
@@ -1922,7 +1983,9 @@ function ExpandExistingSeason({ season }: { season: OwnerSeason }) {
           <b>{season.name}</b>
           <small>{season.divisions.length} of 10 divisions · Keep this season and expand it</small>
         </span>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <div>
         {remaining > 0 ? (
@@ -2007,7 +2070,9 @@ export function OwnerSetupWizard({
             </span>
             <span className="step-state">
               <em>Choose a path</em>
-              <strong>›</strong>
+              <strong aria-hidden="true">
+                <ChevronRight className="go-caret" />
+              </strong>
             </span>
           </summary>
           <div className="guided-step-body">
@@ -2047,7 +2112,7 @@ export function OwnerSetupWizard({
         <div className="completed-seasons">
           {published.map((season) => (
             <span className={season.canceledAt ? "canceled" : ""} key={season.id}>
-              {season.canceledAt ? "×" : "✓"} {season.name}{" "}
+              {season.canceledAt ? "×" : <Check className="ui-icon" />} {season.name}{" "}
               {season.canceledAt ? "canceled" : "published"}
             </span>
           ))}
@@ -2146,14 +2211,20 @@ export function OwnerSetupWizard({
                 : "Locked";
         const heading = (
           <>
-            <b className="step-number">{completed && !invitationWorkspace ? "✓" : visualStep}</b>
+            <b className="step-number">
+              {completed && !invitationWorkspace ? <Check className="ui-icon" /> : visualStep}
+            </b>
             <span>
               <small>STEP {visualStep} OF 8</small>
               <h2>{label}</h2>
             </span>
             <span className="step-state">
               <em>{status}</em>
-              {!locked && <strong>›</strong>}
+              {!locked && (
+                <strong aria-hidden="true">
+                  <ChevronRight className="go-caret" />
+                </strong>
+              )}
             </span>
           </>
         );
@@ -2457,7 +2528,9 @@ function DivisionMatchupProgress({
             {complete} of {total} unique matchups scheduled
           </small>
         </span>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       {missing.length ? (
         <div>
@@ -2485,7 +2558,9 @@ function FinalizeDivisionSchedule({
   if (division.scheduleStatus === "final")
     return (
       <section className="division-schedule-final">
-        <b>✓ Final Schedule</b>
+        <b>
+          <Check className="ui-icon" /> Final Schedule
+        </b>
         <small>Players in {division.name} can now see these games.</small>
       </section>
     );
@@ -2526,7 +2601,9 @@ function CreateGameForm({
   return (
     <details className="game-action-card">
       <summary>
-        <span className="owner-icon">＋</span>
+        <span className="owner-icon">
+          <Plus className="ui-icon" />
+        </span>
         <span>
           <b>{playoffAvailable ? "Add Regular or Playoff Game" : "Add a Regular-Season Game"}</b>
           <small>
@@ -2535,7 +2612,9 @@ function CreateGameForm({
               : `${regularGamesRemaining} round-robin result${regularGamesRemaining === 1 ? "" : "s"} remaining before playoffs`}
           </small>
         </span>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <form action={action} className="owner-form game-form">
         <input type="hidden" name="divisionId" value={division.id} />
@@ -2664,7 +2743,9 @@ function GameEditor({ game }: { game: OwnerSeason["games"][number] }) {
     >
       <summary>
         <span>{summary}</span>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <section className="game-change-panel update-schedule-panel">
         <header>
@@ -2769,7 +2850,9 @@ function WeeklyScheduleTable({ season }: { season: OwnerSeason }) {
                 <small>
                   {games.length} game{games.length === 1 ? "" : "s"}
                 </small>
-                <strong>›</strong>
+                <strong aria-hidden="true">
+                  <ChevronRight className="go-caret" />
+                </strong>
               </summary>
               <div className="schedule-table-scroll">
                 <table>
@@ -2861,7 +2944,9 @@ function ScheduleMethodPicker({
           onClick={() => choose("manual")}
           aria-expanded={method === "manual"}
         >
-          <span>✎</span>
+          <span>
+            <Pencil className="ui-icon" />
+          </span>
           <b>Manual</b>
           <small>Create each game day.</small>
         </button>
@@ -2878,7 +2963,9 @@ function ScheduleMethodPicker({
           onClick={() => choose("automate")}
           aria-expanded={method === "automate"}
         >
-          <span>✦</span>
+          <span>
+            <Sparkles className="ui-icon" />
+          </span>
           <b>Automate</b>
           <small>Let KCH build a draft.</small>
         </button>
@@ -2945,7 +3032,9 @@ function DivisionScheduleOperation({
         >
           {status}
         </em>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <div>
         {!division.rosterFinalPublished ? (
@@ -2962,12 +3051,16 @@ function DivisionScheduleOperation({
                 {division.scheduleStatus !== "final" && division.scheduleMode !== "kch" && (
                   <details className="schedule-method-card continue-manual">
                     <summary>
-                      <span>＋</span>
+                      <span>
+                        <Plus className="ui-icon" />
+                      </span>
                       <span>
                         <b>Add Another Game Day</b>
                         <small>Save the next day&apos;s games as one group.</small>
                       </span>
-                      <strong>›</strong>
+                      <strong aria-hidden="true">
+                        <ChevronRight className="go-caret" />
+                      </strong>
                     </summary>
                     <ManualGameDayBuilder season={season} division={division} />
                   </details>
@@ -3008,7 +3101,9 @@ function ScheduleSeasonOperations({ season, index }: { season: OwnerSeason; inde
             schedules final
           </small>
         </span>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <div>
         <div className="division-operation-list">
@@ -3031,7 +3126,9 @@ export function OwnerGameManagement({ seasons }: { seasons: OwnerSeason[] }) {
   if (!scheduleSeasons.length)
     return (
       <section className="card owner-empty-operation">
-        <span>▦</span>
+        <span>
+          <CalendarDays className="ui-icon" />
+        </span>
         <div>
           <h3>No schedule workspace yet</h3>
           <p>Complete the roster draft in Season Setup to begin Step 8.</p>
@@ -3061,7 +3158,9 @@ export function OwnerGameManagement({ seasons }: { seasons: OwnerSeason[] }) {
                 {completed.length} completed season{completed.length === 1 ? "" : "s"}
               </small>
             </span>
-            <strong>›</strong>
+            <strong aria-hidden="true">
+              <ChevronRight className="go-caret" />
+            </strong>
           </summary>
           {completed.map((season) => (
             <details className="operations-season card" key={season.id}>
@@ -3072,7 +3171,9 @@ export function OwnerGameManagement({ seasons }: { seasons: OwnerSeason[] }) {
                     {season.games.length} game{season.games.length === 1 ? "" : "s"} · completed
                   </small>
                 </span>
-                <strong>›</strong>
+                <strong aria-hidden="true">
+                  <ChevronRight className="go-caret" />
+                </strong>
               </summary>
               <div>
                 <WeeklyScheduleTable season={season} />
@@ -3093,7 +3194,13 @@ function PaymentReviewCard({ submission }: { submission: OwnerPaymentSubmission 
     <details className={`payment-review-card ${isWaiver ? "waiver-review-card" : ""}`}>
       <summary>
         <span className="payment-review-icon">
-          {isWaiver ? "◇" : submission.method === "zelle" ? "ℤ" : "▣"}
+          {isWaiver ? (
+            <FileCheck className="ui-icon" />
+          ) : submission.method === "zelle" ? (
+            <Landmark className="ui-icon" />
+          ) : (
+            <Wallet className="ui-icon" />
+          )}
         </span>
         <span>
           <b>{submission.playerName}</b>
@@ -3102,7 +3209,9 @@ function PaymentReviewCard({ submission }: { submission: OwnerPaymentSubmission 
             {submission.amount.toFixed(2)}
           </small>
         </span>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <form action={action} className="owner-form">
         <input type="hidden" name="submissionId" value={submission.id} />
@@ -3211,7 +3320,9 @@ export function OwnerPaymentManagement({
                     <small>NOT PAID</small>
                     <b>{group.unpaidPlayers}</b>
                   </span>
-                  <strong>›</strong>
+                  <strong aria-hidden="true">
+                    <ChevronRight className="go-caret" />
+                  </strong>
                 </summary>
                 <div className="payment-season-body">
                   <p className="payment-card-label">PLAYER PAYMENT STATUS</p>
@@ -3267,7 +3378,9 @@ export function OwnerPaymentManagement({
                         <b>Player Payment Details</b>
                         <small>Paid, not paid, waived, and payment method</small>
                       </span>
-                      <strong>›</strong>
+                      <strong aria-hidden="true">
+                        <ChevronRight className="go-caret" />
+                      </strong>
                     </summary>
                     <div className="payment-player-list">
                       {group.players.map((player) => (
@@ -3351,7 +3464,9 @@ export function OwnerPastPaymentsArchive({ groups }: { groups: OwnerPaymentGroup
                     {group.totalPlayers} rostered players · {money(group.received)} received
                   </small>
                 </span>
-                <strong>›</strong>
+                <strong aria-hidden="true">
+                  <ChevronRight className="go-caret" />
+                </strong>
               </summary>
               <div className="payment-season-body">
                 <div className="payment-division-stats">
@@ -3374,7 +3489,9 @@ export function OwnerPastPaymentsArchive({ groups }: { groups: OwnerPaymentGroup
                       <b>Player Payment Details</b>
                       <small>Read-only payment history</small>
                     </span>
-                    <strong>›</strong>
+                    <strong aria-hidden="true">
+                      <ChevronRight className="go-caret" />
+                    </strong>
                   </summary>
                   <div className="payment-player-list">
                     {group.players.map((player) => (
@@ -3450,7 +3567,9 @@ function DivisionUniformForm({
             {seasonName} · {division.teams.length} teams · Dark &amp; Light photos
           </small>
         </span>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <div className="division-uniform-editor">
         <form action={photoAction} className="owner-form uniform-photo-upload">
@@ -3461,7 +3580,9 @@ function DivisionUniformForm({
               {division.darkImage ? (
                 <img src={division.darkImage} alt={`${division.name} dark uniform`} />
               ) : (
-                <i>📷</i>
+                <i>
+                  <Camera className="ui-icon" />
+                </i>
               )}
               <input name="darkImage" type="file" accept="image/jpeg,image/png,image/webp" />
             </label>
@@ -3470,7 +3591,9 @@ function DivisionUniformForm({
               {division.lightImage ? (
                 <img src={division.lightImage} alt={`${division.name} light uniform`} />
               ) : (
-                <i>📷</i>
+                <i>
+                  <Camera className="ui-icon" />
+                </i>
               )}
               <input name="lightImage" type="file" accept="image/jpeg,image/png,image/webp" />
             </label>
@@ -3510,7 +3633,9 @@ export function OwnerUniformManagement({ seasons }: { seasons: OwnerSeason[] }) 
                   {season.divisions.length} division{season.divisions.length === 1 ? "" : "s"}
                 </small>
               </span>
-              <strong>›</strong>
+              <strong aria-hidden="true">
+                <ChevronRight className="go-caret" />
+              </strong>
             </summary>
             <div className="uniform-settings-list">
               {season.divisions.map((division) => (
@@ -3657,7 +3782,9 @@ function TeamEditor({ team }: { team: OwnerTeam }) {
             {players.length} player{players.length === 1 ? "" : "s"}
           </small>
         </span>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <div className="game-form">
         <TeamLeadershipEditor team={team} />
@@ -3682,7 +3809,9 @@ function TeamPlayerRow({ player }: { player: OwnerRosterPlayer }) {
             #{player.jerseyNumber ?? "—"} · {player.position || "Position not set"} · {player.role}
           </small>
         </span>
-        <strong>›</strong>
+        <strong aria-hidden="true">
+          <ChevronRight className="go-caret" />
+        </strong>
       </summary>
       <form action={action} className="owner-form">
         <input type="hidden" name="registrationId" value={player.registrationId} />

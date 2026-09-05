@@ -1,5 +1,6 @@
 "use client";
 
+import { Clock, FileCheck, Landmark, Wallet } from "lucide-react";
 import { useActionState, useState } from "react";
 import { submitPaymentNoticeAction, type PaymentActionState } from "@/app/payments/actions";
 import type { PaymentSubmission } from "@/lib/kch-data";
@@ -25,7 +26,9 @@ export default function PlayerPaymentForm({
       <h2>PAYMENT METHODS</h2>
       {awaiting.map((submission) => (
         <div className="payment-status-card" key={submission.id}>
-          <span>◷</span>
+          <span>
+            <Clock className="ui-icon" />
+          </span>
           <div>
             <b>{submission.method === "waiver" ? "Waiver request" : "Payment"}</b>
             <small>
@@ -69,7 +72,10 @@ export default function PlayerPaymentForm({
               onChange={(event) => setMethod(event.target.value)}
             />
             <span>
-              <b>ℤ</b> Zelle
+              <b>
+                <Landmark className="ui-icon" />
+              </b>{" "}
+              Zelle
             </span>
           </label>
           <label>
@@ -82,7 +88,10 @@ export default function PlayerPaymentForm({
               onChange={(event) => setMethod(event.target.value)}
             />
             <span>
-              <b>▣</b> Cash
+              <b>
+                <Wallet className="ui-icon" />
+              </b>{" "}
+              Cash
             </span>
           </label>
           <label>
@@ -95,7 +104,10 @@ export default function PlayerPaymentForm({
               onChange={(event) => setMethod(event.target.value)}
             />
             <span>
-              <b>◇</b> Waiver
+              <b>
+                <FileCheck className="ui-icon" />
+              </b>{" "}
+              Waiver
             </span>
           </label>
         </fieldset>
