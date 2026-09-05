@@ -1,5 +1,7 @@
 "use client";
 
+import { ChevronDown } from "lucide-react";
+
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { switchPlayerContextAction } from "@/app/context/actions";
@@ -60,7 +62,7 @@ export default function PlayerContextSwitcher({
         <span>
           <b>{active.team}</b>
         </span>
-        {hasContextChoices && <i aria-hidden="true">⌄</i>}
+        {hasContextChoices && <ChevronDown className="context-switcher-caret" aria-hidden="true" />}
       </button>
       {open && (
         <div

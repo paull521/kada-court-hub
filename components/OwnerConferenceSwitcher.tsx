@@ -1,5 +1,7 @@
 "use client";
 
+import { ChevronDown } from "lucide-react";
+
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { selectOwnerConferenceAction } from "@/app/owner/actions";
@@ -40,7 +42,7 @@ export default function OwnerConferenceSwitcher({
         <span>
           <b>{current.name}</b>
         </span>
-        {hasChoices && <i aria-hidden="true">⌄</i>}
+        {hasChoices && <ChevronDown className="context-switcher-caret" aria-hidden="true" />}
       </button>
       {open && (
         <div

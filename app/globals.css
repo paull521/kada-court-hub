@@ -139,10 +139,12 @@ body {
   min-width: 0;
   border: 1px solid rgba(7, 31, 61, 0.11);
   background: rgba(255, 255, 255, 0.82);
-  border-radius: 15px;
+  /* Was 15px on a ~33px-tall control, i.e. half its height, so it rendered as a
+     full pill rather than a rounded rectangle. */
+  border-radius: 9px;
   padding: 9px 11px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 12px;
+  grid-template-columns: minmax(0, 1fr) 16px;
   align-items: center;
   gap: 6px;
   box-shadow: 0 5px 14px rgba(13, 38, 69, 0.06);
@@ -158,9 +160,13 @@ body {
   text-overflow: ellipsis;
   font-size: 11px;
 }
-.context-switcher-trigger i {
-  font-size: 11px;
-  font-style: normal;
+/* The caret used to be a text glyph, which centres on its baseline rather than
+   its box and always sat low next to the label. An SVG centres on its box. */
+.context-switcher-trigger .context-switcher-caret {
+  display: block;
+  width: 16px;
+  height: 16px;
+  color: rgba(7, 31, 61, 0.45);
 }
 .context-overlay {
   position: fixed;

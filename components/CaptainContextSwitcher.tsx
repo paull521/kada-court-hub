@@ -1,4 +1,6 @@
 "use client";
+
+import { ChevronDown } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { switchCaptainContextAction } from "@/app/captain/context-actions";
@@ -58,7 +60,9 @@ export default function CaptainContextSwitcher({
         <span>
           <b>{active.teamName}</b>
         </span>
-        {contexts.length > 1 && <i aria-hidden="true">⌄</i>}
+        {contexts.length > 1 && (
+          <ChevronDown className="context-switcher-caret" aria-hidden="true" />
+        )}
       </button>
       {open && (
         <div
