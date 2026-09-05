@@ -58,7 +58,7 @@ export default function PlayerContextSwitcher({
         disabled={!hasContextChoices}
       >
         <span>
-          <b>{active?.team ?? "KCH BBALL"}</b>
+          <b>{active.team}</b>
         </span>
         {hasContextChoices && <i aria-hidden="true">⌄</i>}
       </button>
