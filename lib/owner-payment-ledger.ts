@@ -39,7 +39,7 @@ export type PlatformOwnerPaymentBilling = {
 };
 
 const empty: OwnerPaymentBilling = { entries: [], submissions: [], divisions: [] };
-const toEntry = (row: Record<string, unknown>): LedgerEntry => ({
+export const toEntry = (row: Record<string, unknown>): LedgerEntry => ({
   id: String(row.id ?? ""),
   chargeType: row.chargeType === "platform_fee" ? "platform_fee" : "subscription",
   label: String(row.label ?? ""),
@@ -49,7 +49,7 @@ const toEntry = (row: Record<string, unknown>): LedgerEntry => ({
   status: row.status === "paid" ? "paid" : row.status === "partial" ? "partial" : "due",
   dueOn: typeof row.dueOn === "string" ? row.dueOn : null,
 });
-const toSubmission = (row: Record<string, unknown>): SubscriptionSubmission => ({
+export const toSubmission = (row: Record<string, unknown>): SubscriptionSubmission => ({
   id: String(row.id ?? ""),
   amountCents: Number(row.amountCents ?? 0),
   method: row.method === "cash" ? "cash" : "zelle",
@@ -58,7 +58,7 @@ const toSubmission = (row: Record<string, unknown>): SubscriptionSubmission => (
   submittedAt: String(row.submittedAt ?? ""),
   reviewedAt: typeof row.reviewedAt === "string" ? row.reviewedAt : null,
 });
-const toBilling = (value: unknown): OwnerPaymentBilling => {
+export const toBilling = (value: unknown): OwnerPaymentBilling => {
   const row = value && typeof value === "object" ? (value as Record<string, unknown>) : {};
   return {
     entries: Array.isArray(row.entries)

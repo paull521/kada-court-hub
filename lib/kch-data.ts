@@ -218,11 +218,11 @@ const fallback: PlayerPortalData = {
   invitation: null,
   source: "fallback",
 };
-const roleName = (value: string): Player["role"] =>
+export const roleName = (value: string): Player["role"] =>
   value === "Captain" || value === "Co-captain" ? value : "Player";
-const feeIcon = (category: string) =>
+export const feeIcon = (category: string) =>
   category === "league" ? "◉" : category === "uniform" ? "♕" : "▣";
-const playerFacingFees = (
+export const playerFacingFees = (
   rows: Array<{ id: string; category: string; description: string; amount_cents: number }>,
 ): Fee[] => {
   const platformAmount = rows
@@ -249,7 +249,7 @@ const playerFacingFees = (
   }
   return visible;
 };
-const rosterOrder = (left: Player, right: Player) => {
+export const rosterOrder = (left: Player, right: Player) => {
   const rank = (role: Player["role"]) => (role === "Captain" ? 0 : role === "Co-captain" ? 1 : 2);
   return (
     rank(left.role) - rank(right.role) ||
