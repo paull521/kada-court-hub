@@ -1,14 +1,19 @@
 import { redirect } from "next/navigation";
 import { OwnerPastPaymentsArchive, OwnerPaymentManagement } from "@/components/OwnerManagement";
 import OwnerPageShell from "@/components/OwnerPageShell";
-import { getOwnerPortalData } from "@/lib/owner-data";
+import { getOwnerConferenceId, getOwnerPortalData } from "@/lib/owner-data";
 import { getOwnerPaymentBilling } from "@/lib/owner-payment-ledger";
 import { OwnerSubscriptionPayment } from "@/components/PlatformCreatorTools";
 
 export default async function OwnerPaymentsPage() {
-  const data = await getOwnerPortalData();
+  // getOwnerPaymentBilling() needs only the conference id, which the owner's
+  // own membership settles - it does not depend on anything the portal read
+  // returns. Awaiting it after the portal cost a whole extra round trip.
+  const [data, billing] = await Promise.all([
+    getOwnerPortalData(),
+    getOwnerConferenceId().then(getOwnerPaymentBilling),
+  ]);
   if (!data.authorized) redirect("/owner");
-  const billing = await getOwnerPaymentBilling(data.conferenceId);
   const today = new Date().toISOString().slice(0, 10),
     currentSeasonIds = new Set(
       data.seasons

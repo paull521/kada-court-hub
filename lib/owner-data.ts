@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { connection } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
@@ -224,11 +225,41 @@ const empty: OwnerPortalData = {
   rosterRequests: [],
 };
 
-export async function getOwnerPortalData(): Promise<OwnerPortalData> {
+/**
+ * Which conference this owner is looking at, and what else they could switch
+ * to. This is the first wave of getOwnerPortalData(), lifted out on its own
+ * because several callers need only this much: the conference switcher in the
+ * header, /owner/conferences, and getOwnerPaymentBilling(), which takes a
+ * conference id and nothing else.
+ *
+ * cache() is React's request-scoped memo, so a page that calls both this and
+ * getOwnerPortalData() still pays for the reads once. It lives for a single
+ * render pass and is never shared between requests or between viewers, which
+ * is what makes it safe for RLS-scoped data - see lib/session.ts.
+ */
+export type OwnerConferenceContext = {
+  authorized: boolean;
+  conferenceId: string;
+  conferenceName: string;
+  timezone: string;
+  ownerName: string;
+  conferences: OwnerConferenceOption[];
+};
+
+const emptyContext: OwnerConferenceContext = {
+  authorized: false,
+  conferenceId: "",
+  conferenceName: "",
+  timezone: "America/Los_Angeles",
+  ownerName: "",
+  conferences: [],
+};
+
+export const getOwnerConferenceContext = cache(async (): Promise<OwnerConferenceContext> => {
   await connection();
   const supabase = await createClient();
   const userId = await getSessionUserId();
-  if (!userId) return empty;
+  if (!userId) return emptyContext;
 
   const [{ data: ownerProfile }, { data: platformOwnerRecord }, { data: memberships }] =
     await Promise.all([
@@ -245,8 +276,8 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
         .eq("role", "owner")
         .order("created_at", { ascending: false }),
     ]);
-  if (platformOwnerRecord?.status === "suspended") return empty;
-  if (!memberships?.length) return empty;
+  if (platformOwnerRecord?.status === "suspended") return emptyContext;
+  if (!memberships?.length) return emptyContext;
   const ownedConferenceIds = memberships.map((membership) => membership.conference_id);
   // The conference rows come back on the memberships read above, so this no
   // longer needs a round trip of its own. cookies() is local.
@@ -261,11 +292,35 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
       ? preferredConferenceId
       : ownedConferenceIds[0];
   const conference = conferenceRows?.find((item) => item.id === selectedConferenceId);
-  if (!conference) return empty;
-  const conferences = ownedConferenceIds.flatMap((id) => {
-    const item = conferenceRows?.find((row) => row.id === id);
-    return item ? [{ id: item.id, name: item.name }] : [];
-  });
+  if (!conference) return emptyContext;
+  return {
+    authorized: true,
+    conferenceId: conference.id,
+    conferenceName: conference.name,
+    timezone: conference.timezone || "America/Los_Angeles",
+    ownerName: ownerProfile?.display_name ?? "Conference Owner",
+    conferences: ownedConferenceIds.flatMap((id) => {
+      const item = conferenceRows?.find((row) => row.id === id);
+      return item ? [{ id: item.id, name: item.name }] : [];
+    }),
+  };
+});
+
+/** The selected conference id on its own, for callers that need only that. */
+export async function getOwnerConferenceId(): Promise<string> {
+  return (await getOwnerConferenceContext()).conferenceId;
+}
+
+export async function getOwnerPortalData(): Promise<OwnerPortalData> {
+  const supabase = await createClient();
+  const context = await getOwnerConferenceContext();
+  if (!context.authorized) return empty;
+  const conference = {
+    id: context.conferenceId,
+    name: context.conferenceName,
+    timezone: context.timezone,
+  };
+  const conferences = context.conferences;
 
   const { data: seasonRows } = await supabase
     .from("seasons")
@@ -963,7 +1018,7 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
     conferenceName: conference.name,
     conferences,
     directory,
-    ownerName: ownerProfile?.display_name ?? "Conference Owner",
+    ownerName: context.ownerName,
     timezone: conference.timezone || "America/Los_Angeles",
     seasons,
     paymentSubmissions,
