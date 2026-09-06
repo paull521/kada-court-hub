@@ -52,9 +52,9 @@ export default async function Home() {
       profileNeedsAttention={data.profileNeedsAttention}
       paymentNeedsAttention={data.paymentNeedsAttention}
       teamHasUnavailable={data.teamHasUnavailable}
-      title={data.context.team}
-      subtitle={`${data.context.division} · ${data.context.season}`}
     >
+      <h1 className="title welcome">Hello, {firstName}!</h1>
+      <p className="subtitle">Ready for game day?</p>
       <div className="col-pane col-pane-a">
         {data.invitation && <SeasonInvitationCard invitation={data.invitation} />}
         {next ? (

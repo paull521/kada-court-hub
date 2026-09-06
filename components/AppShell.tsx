@@ -25,8 +25,6 @@ export default function AppShell({
   role = "player",
   headerAction,
   headerNotification,
-  title = "",
-  subtitle = "",
   contentClass = "",
 }: {
   children: ReactNode;
@@ -40,9 +38,6 @@ export default function AppShell({
   role?: "player" | "captain" | "owner";
   headerAction?: ReactNode;
   headerNotification?: ReactNode;
-  /** Page heading. Names the team the page is showing, as the captain shell does. */
-  title?: string;
-  subtitle?: string;
   contentClass?: string;
 }) {
   const { links, className: navClass, label: navLabel } = nav[role];
@@ -71,11 +66,7 @@ export default function AppShell({
         </div>
       </header>
       <FastBottomNav items={items} active={active} className={navClass} label={navLabel} />
-      <main className={`content ${contentClass}`.trim()}>
-        {title && <h1 className="title">{title}</h1>}
-        {subtitle && <p className="subtitle">{subtitle}</p>}
-        {children}
-      </main>
+      <main className={`content ${contentClass}`.trim()}>{children}</main>
     </div>
   );
 }
