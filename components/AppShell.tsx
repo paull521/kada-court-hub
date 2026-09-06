@@ -23,7 +23,8 @@ export default function AppShell({
   homeHref = "/home",
   headerAction,
   headerNotification,
-  heading,
+  title = "",
+  subtitle = "",
   contentClass = "",
 }: {
   children: ReactNode;
@@ -35,8 +36,9 @@ export default function AppShell({
   homeHref?: string;
   headerAction?: ReactNode;
   headerNotification?: ReactNode;
-  /** Page heading, if any. Runs above the page content. */
-  heading?: ReactNode;
+  /** Page heading. Names the team the page is showing, as the captain shell does. */
+  title?: string;
+  subtitle?: string;
   contentClass?: string;
 }) {
   const items = links.map(({ href, key, icon, label }) => ({
@@ -65,7 +67,8 @@ export default function AppShell({
       </header>
       <FastBottomNav items={items} active={active} label="Player navigation" />
       <main className={`content ${contentClass}`.trim()}>
-        {heading}
+        {title && <h1 className="title">{title}</h1>}
+        {subtitle && <p className="subtitle">{subtitle}</p>}
         {children}
       </main>
     </div>

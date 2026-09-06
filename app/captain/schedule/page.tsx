@@ -124,8 +124,8 @@ export default async function CaptainSchedulePage() {
       contentClass="two-col"
       data={data}
       active="schedule"
-      title="Schedule"
-      subtitle="Stay updated. Be ready. One game at a time."
+      title={data.teamName}
+      subtitle={`${data.divisionName} · ${data.seasonName}`}
     >
       <div className="col-pane col-pane-a">
         {next ? (
