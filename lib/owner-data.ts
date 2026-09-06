@@ -377,40 +377,60 @@ export const getOwnerPortalData = cache(async (): Promise<OwnerPortalData> => {
   };
   const conferences = context.conferences;
 
-  // Every column the portal needs off seasons, in one read. This used to be two
-  // reads of the same rows a wave apart - the second one existed only to pick up
-  // setup_stage and the four columns beside it.
-  const { data: seasonRows } = await supabase
-    .from("seasons")
-    .select(
-      "id,name,starts_on,ends_on,registration_open,setup_stage,preseason_ready,canceled_at,cancellation_reason,players_per_team",
-    )
-    .eq("conference_id", conference.id)
-    .is("archived_at", null)
-    .order("starts_on", { ascending: false });
-  const seasonIds = (seasonRows ?? []).map((row) => row.id);
-  const setupRows = seasonRows;
+  // One wave, not three.
+  //
+  // These reads used to be chained: seasons, then the reads keyed on the season
+  // ids it returned, then the reads keyed on the division ids *those* returned.
+  // Three round trips deep before the heavy registrations read even started.
+  //
+  // Every one of these tables reaches the conference through a chain of
+  // not-null foreign keys, so an inner-join filter on conference_id selects
+  // exactly the same rows without waiting for the ids to come back. Checked
+  // row-for-row against the id-list version across all four conferences before
+  // the switch.
+  //
+  // The `!inner` is load-bearing. A plain embed left-joins, which would keep
+  // every row whose parent did not match instead of dropping it.
+  const conf = conference.id;
   const [
+    { data: seasonRows },
     { data: financialRows },
     { data: divisionRows },
     { data: paymentSubmissionRows },
     { data: poolRows },
+    { data: teamRows },
+    { data: uniformSettingRows },
+    { data: financialSettingRows },
+    { data: registrationRows },
+    { data: invitationRows },
+    { data: invitationBroadcastRows },
+    { data: rosterBroadcastRows },
+    { data: scheduleWorkflowRows },
+    { data: gameRows },
+    { data: rosterRequestRows },
   ] = await Promise.all([
-    seasonIds.length
-      ? supabase
-          .from("season_financial_summaries")
-          .select(
-            "season_id,court_cost_cents,referee_cost_cents,uniform_cost_cents,league_cost_cents,notes",
-          )
-          .in("season_id", seasonIds)
-      : Promise.resolve({ data: [] }),
-    seasonIds.length
-      ? supabase
-          .from("divisions")
-          .select("id,season_id,name")
-          .in("season_id", seasonIds)
-          .order("name")
-      : Promise.resolve({ data: [] }),
+    // Every column the portal needs off seasons, in one read. This used to be
+    // two reads of the same rows a wave apart - the second existed only to pick
+    // up setup_stage and the four columns beside it.
+    supabase
+      .from("seasons")
+      .select(
+        "id,name,starts_on,ends_on,registration_open,setup_stage,preseason_ready,canceled_at,cancellation_reason,players_per_team",
+      )
+      .eq("conference_id", conf)
+      .is("archived_at", null)
+      .order("starts_on", { ascending: false }),
+    supabase
+      .from("season_financial_summaries")
+      .select(
+        "season_id,court_cost_cents,referee_cost_cents,uniform_cost_cents,league_cost_cents,notes,seasons!inner(conference_id)",
+      )
+      .eq("seasons.conference_id", conf),
+    supabase
+      .from("divisions")
+      .select("id,season_id,name,seasons!inner(conference_id)")
+      .eq("seasons.conference_id", conf)
+      .order("name"),
     // Deliberately unfiltered, which looks like an oversight and is not.
     //
     // A submission reaches its conference by one of two paths, and neither one
@@ -434,98 +454,73 @@ export const getOwnerPortalData = cache(async (): Promise<OwnerPortalData> => {
       .select(
         "player_id,status,player:player_profiles!player_id(id,public_player_id,display_name,profile_id,email,mobile,preferred_uniform_size)",
       )
-      .eq("conference_id", conference.id),
+      .eq("conference_id", conf),
+    supabase
+      .from("teams")
+      .select(
+        "id,division_id,name,active,team_roster_drafts(team_id,status,owner_note),divisions!inner(seasons!inner(conference_id))",
+      )
+      .eq("divisions.seasons.conference_id", conf)
+      .order("name"),
+    supabase
+      .from("division_uniform_settings")
+      .select(
+        "division_id,dark_uniform,light_uniform,dark_image_path,light_image_path,divisions!inner(seasons!inner(conference_id))",
+      )
+      .eq("divisions.seasons.conference_id", conf),
+    supabase
+      .from("division_financial_settings")
+      .select(
+        "division_id,league_fee_enabled,league_fee_cents,uniform_fee_enabled,uniform_fee_cents,divisions!inner(seasons!inner(conference_id))",
+      )
+      .eq("divisions.seasons.conference_id", conf),
+    supabase
+      .from("registrations")
+      .select(
+        "id,season_id,division_id,team_id,player_id,jersey_number,position,role_label,status,fees(id,registration_id,category,description,amount_cents,status,due_on),payments(id,registration_id,fee_id,amount_cents,method,paid_at),registration_waivers(registration_id,amount_cents),player:player_profiles!player_id(id,public_player_id,display_name,profile_id,email,mobile,preferred_uniform_size),seasons!inner(conference_id)",
+      )
+      .eq("seasons.conference_id", conf)
+      .order("jersey_number"),
+    supabase
+      .from("season_invitations")
+      .select(
+        "id,season_id,division_id,player_id,registration_id,response,selection_status,player:player_profiles!player_id(id,public_player_id,display_name,profile_id,email,mobile,preferred_uniform_size),seasons!inner(conference_id)",
+      )
+      .eq("seasons.conference_id", conf)
+      .order("created_at"),
+    supabase
+      .from("season_broadcasts")
+      .select(
+        "id,season_id,division_id,response_deadline,invited_count,flyer_path,created_at,seasons!inner(conference_id)",
+      )
+      .eq("seasons.conference_id", conf)
+      .eq("broadcast_type", "player_invitation")
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("season_broadcasts")
+      .select("id,division_id,broadcast_type,response_deadline,seasons!inner(conference_id)")
+      .eq("seasons.conference_id", conf)
+      .in("broadcast_type", ["roster_draft", "roster_final"]),
+    supabase
+      .from("division_schedule_workflows")
+      .select("division_id,mode,status,divisions!inner(seasons!inner(conference_id))")
+      .eq("divisions.seasons.conference_id", conf),
+    supabase
+      .from("games")
+      .select(
+        "id,season_id,home_team_id,away_team_id,starts_at,venue,court,duration_minutes,home_uniform,away_uniform,home_score,away_score,draft_home_score,draft_away_score,finalized_at,phase,status,status_reason,seasons!inner(conference_id)",
+      )
+      .eq("seasons.conference_id", conf)
+      .order("starts_at"),
+    supabase
+      .from("roster_change_requests")
+      .select(
+        "id,season_id,team_id,request_type,details,status,owner_note,created_at,seasons!inner(conference_id)",
+      )
+      .eq("seasons.conference_id", conf)
+      .order("created_at", { ascending: false }),
   ]);
-  const divisionIds = (divisionRows ?? []).map((row) => row.id);
-  const [
-    { data: teamRows },
-    { data: uniformSettingRows },
-    { data: financialSettingRows },
-    { data: registrationRows },
-    { data: invitationRows },
-    { data: invitationBroadcastRows },
-    { data: rosterBroadcastRows },
-    { data: scheduleWorkflowRows },
-    { data: gameRows },
-    { data: rosterRequestRows },
-  ] = await Promise.all([
-    divisionIds.length
-      ? supabase
-          .from("teams")
-          .select("id,division_id,name,active,team_roster_drafts(team_id,status,owner_note)")
-          .in("division_id", divisionIds)
-          .order("name")
-      : Promise.resolve({ data: [] }),
-    divisionIds.length
-      ? supabase
-          .from("division_uniform_settings")
-          .select("division_id,dark_uniform,light_uniform,dark_image_path,light_image_path")
-          .in("division_id", divisionIds)
-      : Promise.resolve({ data: [] }),
-    divisionIds.length
-      ? supabase
-          .from("division_financial_settings")
-          .select(
-            "division_id,league_fee_enabled,league_fee_cents,uniform_fee_enabled,uniform_fee_cents",
-          )
-          .in("division_id", divisionIds)
-      : Promise.resolve({ data: [] }),
-    seasonIds.length
-      ? supabase
-          .from("registrations")
-          .select(
-            "id,season_id,division_id,team_id,player_id,jersey_number,position,role_label,status,fees(id,registration_id,category,description,amount_cents,status,due_on),payments(id,registration_id,fee_id,amount_cents,method,paid_at),registration_waivers(registration_id,amount_cents),player:player_profiles!player_id(id,public_player_id,display_name,profile_id,email,mobile,preferred_uniform_size)",
-          )
-          .in("season_id", seasonIds)
-          .order("jersey_number")
-      : Promise.resolve({ data: [] }),
-    seasonIds.length
-      ? supabase
-          .from("season_invitations")
-          .select(
-            "id,season_id,division_id,player_id,registration_id,response,selection_status,player:player_profiles!player_id(id,public_player_id,display_name,profile_id,email,mobile,preferred_uniform_size)",
-          )
-          .in("season_id", seasonIds)
-          .order("created_at")
-      : Promise.resolve({ data: [] }),
-    seasonIds.length
-      ? supabase
-          .from("season_broadcasts")
-          .select("id,season_id,division_id,response_deadline,invited_count,flyer_path,created_at")
-          .in("season_id", seasonIds)
-          .eq("broadcast_type", "player_invitation")
-          .order("created_at", { ascending: false })
-      : Promise.resolve({ data: [] }),
-    seasonIds.length
-      ? supabase
-          .from("season_broadcasts")
-          .select("id,division_id,broadcast_type,response_deadline")
-          .in("season_id", seasonIds)
-          .in("broadcast_type", ["roster_draft", "roster_final"])
-      : Promise.resolve({ data: [] }),
-    divisionIds.length
-      ? supabase
-          .from("division_schedule_workflows")
-          .select("division_id,mode,status")
-          .in("division_id", divisionIds)
-      : Promise.resolve({ data: [] }),
-    seasonIds.length
-      ? supabase
-          .from("games")
-          .select(
-            "id,season_id,home_team_id,away_team_id,starts_at,venue,court,duration_minutes,home_uniform,away_uniform,home_score,away_score,draft_home_score,draft_away_score,finalized_at,phase,status,status_reason",
-          )
-          .in("season_id", seasonIds)
-          .order("starts_at")
-      : Promise.resolve({ data: [] }),
-    seasonIds.length
-      ? supabase
-          .from("roster_change_requests")
-          .select("id,season_id,team_id,request_type,details,status,owner_note,created_at")
-          .in("season_id", seasonIds)
-          .order("created_at", { ascending: false })
-      : Promise.resolve({ data: [] }),
-  ]);
+  const setupRows = seasonRows;
   // Roster drafts arrive nested on the teams read rather than a follow-up
   // keyed on the ids that read just returned.
   type NestedDraft = { team_id: string; status: string; owner_note: string | null };
