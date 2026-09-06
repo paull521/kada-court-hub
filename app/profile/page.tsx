@@ -21,7 +21,7 @@ import { logoutAction } from "@/app/auth/actions";
 import { getPlayerPortalData } from "@/lib/kch-data";
 import { getAvailableRoles } from "@/lib/roles";
 import { createClient } from "@/lib/supabase/server";
-import { getOwnerPortalData } from "@/lib/owner-data";
+import { getOwnerProfileSummary } from "@/lib/owner-data";
 import { OwnerSupportRequest } from "@/components/PlatformOperations";
 import PlatformFeedback from "@/components/PlatformFeedback";
 import OwnerConferenceSwitcher from "@/components/OwnerConferenceSwitcher";
@@ -55,31 +55,49 @@ export default async function Profile({
   searchParams: Promise<{ view?: string }>;
 }) {
   const requestedView = (await searchParams).view;
+  // The owner read used to be awaited only after getAvailableRoles() came back,
+  // which put its round trips *after* the whole player portal had finished -
+  // the two never overlapped, and this was the slowest route in the app because
+  // of it. Starting it here costs nothing when the viewer turns out not to be
+  // an owner: it returns the unauthorized empty record as soon as its
+  // membership read comes back.
+  const ownerDataPromise = requestedView === "owner" ? getOwnerProfileSummary() : null;
   const [data, roles, supabase] = await Promise.all([
     getPlayerPortalData("profile"),
     getAvailableRoles(),
     createClient(),
   ]);
   const ownerMode = requestedView === "owner" && roles.owner;
-  const ownerData = ownerMode ? await getOwnerPortalData() : null;
-  const [{ data: rulesAcknowledgments }, { data: requiredRules }] = await Promise.all([
+  // Neither rules read depends on the owner portal, so they run alongside it
+  // rather than behind it.
+  const rulesPromise = Promise.all([
     supabase.rpc("get_player_rule_acknowledgments"),
     data.activeRegistrationId
       ? supabase.rpc("get_registration_rules", { p_registration_id: data.activeRegistrationId })
       : Promise.resolve({ data: null }),
   ]);
+  // Awaited whenever it was started, never only when ownerMode holds - a
+  // started promise that nothing awaits becomes an unhandled rejection if the
+  // read fails, and swallowing it here would hide a real error behind an empty
+  // owner panel.
+  const ownerPortal = ownerDataPromise ? await ownerDataPromise : null;
+  const ownerData = ownerMode ? ownerPortal : null;
+  const [[{ data: rulesAcknowledgments }, { data: requiredRules }], { data: ownerSupportRows }] =
+    await Promise.all([
+      rulesPromise,
+      ownerData?.authorized
+        ? supabase
+            .from("platform_support_requests")
+            .select("id,subject,message,status,created_at")
+            .eq("conference_id", ownerData.conferenceId)
+            .order("created_at", { ascending: false })
+        : Promise.resolve({ data: [] }),
+    ]);
   const currentRole = ownerMode
     ? "owner"
     : requestedView === "captain" && roles.captain
       ? "captain"
       : "player";
-  const { data: ownerSupportRows } = ownerData?.authorized
-    ? await supabase
-        .from("platform_support_requests")
-        .select("id,subject,message,status,created_at")
-        .eq("conference_id", ownerData.conferenceId)
-        .order("created_at", { ascending: false })
-    : { data: [] };
   const player = data.profile,
     context = data.context;
   const personal = [
@@ -138,13 +156,6 @@ export default async function Profile({
         </strong>
       </Link>
     ) : null;
-  const today = new Date().toISOString().slice(0, 10),
-    activeSeason =
-      ownerData?.seasons.find(
-        (season) => !season.canceledAt && season.startsOn <= today && season.endsOn >= today,
-      ) ??
-      ownerData?.seasons.find((season) => !season.canceledAt) ??
-      null;
   const ownerProfileContent = ownerData?.authorized ? (
     <>
       <section className="card profile-card">
@@ -171,13 +182,12 @@ export default async function Profile({
           [
             <Clock className="ui-icon" />,
             "Season Active",
-            activeSeason?.name ?? "No active season",
+            ownerData.activeSeasonName || "No active season",
           ],
           [
             <CalendarDays className="ui-icon" />,
             "Divisions Active",
-            activeSeason?.divisions.map((division) => division.name).join(", ") ||
-              "No active divisions",
+            ownerData.activeSeasonDivisions.join(", ") || "No active divisions",
           ],
         ]}
       />

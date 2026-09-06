@@ -1,24 +1,28 @@
+import { Suspense } from "react";
 import { ChevronRight, DollarSign, Wallet } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import OwnerPageShell from "@/components/OwnerPageShell";
 import RoleSwitcher from "@/components/RoleSwitcher";
-import { getOwnerPortalData } from "@/lib/owner-data";
+import { getOwnerConferenceContext, getOwnerPortalData } from "@/lib/owner-data";
 import { getAvailableRoles } from "@/lib/roles";
 
+/**
+ * Everything here is static except the pending-payment count, which is the one
+ * thing that needs the owner portal. The list renders immediately and the count
+ * appears in place when it arrives, so a badge does not hold up two links and a
+ * role switcher.
+ */
 export default async function OwnerMorePage() {
-  const [data, roles] = await Promise.all([getOwnerPortalData(), getAvailableRoles()]);
-  if (!data.authorized) redirect("/owner");
-  const pendingPayments = data.paymentSubmissions.filter(
-    (submission) => submission.status === "pending",
-  ).length;
+  const [context, roles] = await Promise.all([getOwnerConferenceContext(), getAvailableRoles()]);
+  if (!context.authorized) redirect("/owner");
   return (
     <OwnerPageShell
       title="More Tools"
       subtitle="Additional conference tasks and records."
       active="more"
-      conferenceId={data.conferenceId}
-      conferences={data.conferences}
+      conferenceId={context.conferenceId}
+      conferences={context.conferences}
     >
       <RoleSwitcher roles={roles} active="owner" />
       <nav className="owner-more-list" aria-label="More owner tools">
@@ -30,7 +34,9 @@ export default async function OwnerMorePage() {
             <b>Payments</b>
             <small>Review and confirm player payment notices</small>
           </div>
-          {pendingPayments > 0 && <em>{pendingPayments}</em>}
+          <Suspense fallback={null}>
+            <PendingPaymentCount />
+          </Suspense>
           <strong aria-hidden="true">
             <ChevronRight className="go-caret" />
           </strong>
@@ -50,4 +56,12 @@ export default async function OwnerMorePage() {
       </nav>
     </OwnerPageShell>
   );
+}
+
+async function PendingPaymentCount() {
+  const data = await getOwnerPortalData();
+  const pending = data.paymentSubmissions.filter(
+    (submission) => submission.status === "pending",
+  ).length;
+  return pending > 0 ? <em>{pending}</em> : null;
 }

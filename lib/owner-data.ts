@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { connection } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
@@ -224,11 +225,41 @@ const empty: OwnerPortalData = {
   rosterRequests: [],
 };
 
-export async function getOwnerPortalData(): Promise<OwnerPortalData> {
+/**
+ * Which conference this owner is looking at, and what else they could switch
+ * to. This is the first wave of getOwnerPortalData(), lifted out on its own
+ * because several callers need only this much: the conference switcher in the
+ * header, /owner/conferences, and getOwnerPaymentBilling(), which takes a
+ * conference id and nothing else.
+ *
+ * cache() is React's request-scoped memo, so a page that calls both this and
+ * getOwnerPortalData() still pays for the reads once. It lives for a single
+ * render pass and is never shared between requests or between viewers, which
+ * is what makes it safe for RLS-scoped data - see lib/session.ts.
+ */
+export type OwnerConferenceContext = {
+  authorized: boolean;
+  conferenceId: string;
+  conferenceName: string;
+  timezone: string;
+  ownerName: string;
+  conferences: OwnerConferenceOption[];
+};
+
+const emptyContext: OwnerConferenceContext = {
+  authorized: false,
+  conferenceId: "",
+  conferenceName: "",
+  timezone: "America/Los_Angeles",
+  ownerName: "",
+  conferences: [],
+};
+
+export const getOwnerConferenceContext = cache(async (): Promise<OwnerConferenceContext> => {
   await connection();
   const supabase = await createClient();
   const userId = await getSessionUserId();
-  if (!userId) return empty;
+  if (!userId) return emptyContext;
 
   const [{ data: ownerProfile }, { data: platformOwnerRecord }, { data: memberships }] =
     await Promise.all([
@@ -245,8 +276,8 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
         .eq("role", "owner")
         .order("created_at", { ascending: false }),
     ]);
-  if (platformOwnerRecord?.status === "suspended") return empty;
-  if (!memberships?.length) return empty;
+  if (platformOwnerRecord?.status === "suspended") return emptyContext;
+  if (!memberships?.length) return emptyContext;
   const ownedConferenceIds = memberships.map((membership) => membership.conference_id);
   // The conference rows come back on the memberships read above, so this no
   // longer needs a round trip of its own. cookies() is local.
@@ -261,60 +292,112 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
       ? preferredConferenceId
       : ownedConferenceIds[0];
   const conference = conferenceRows?.find((item) => item.id === selectedConferenceId);
-  if (!conference) return empty;
-  const conferences = ownedConferenceIds.flatMap((id) => {
-    const item = conferenceRows?.find((row) => row.id === id);
-    return item ? [{ id: item.id, name: item.name }] : [];
-  });
+  if (!conference) return emptyContext;
+  return {
+    authorized: true,
+    conferenceId: conference.id,
+    conferenceName: conference.name,
+    timezone: conference.timezone || "America/Los_Angeles",
+    ownerName: ownerProfile?.display_name ?? "Conference Owner",
+    conferences: ownedConferenceIds.flatMap((id) => {
+      const item = conferenceRows?.find((row) => row.id === id);
+      return item ? [{ id: item.id, name: item.name }] : [];
+    }),
+  };
+});
 
+/** The selected conference id on its own, for callers that need only that. */
+export async function getOwnerConferenceId(): Promise<string> {
+  return (await getOwnerConferenceContext()).conferenceId;
+}
+
+/**
+ * What /profile?view=owner renders of the owner workspace: the conference
+ * header, and the name of the current season with its division names.
+ *
+ * It used to reach for getOwnerPortalData(), which reads every registration,
+ * fee, payment, game and invitation in the conference - about 19 requests - to
+ * render two lines of text. This is the same two lines in one request.
+ *
+ * Deliberately not a "scope" argument on getOwnerPortalData(). A scope that
+ * returns the full record with most of it left empty fails silently when a page
+ * later reads a field the scope never filled; a named function with only the
+ * fields it provides cannot.
+ */
+export type OwnerProfileSummary = {
+  authorized: boolean;
+  conferenceId: string;
+  conferenceName: string;
+  conferences: OwnerConferenceOption[];
+  ownerName: string;
+  activeSeasonName: string;
+  activeSeasonDivisions: string[];
+};
+
+export async function getOwnerProfileSummary(): Promise<OwnerProfileSummary> {
+  const context = await getOwnerConferenceContext();
+  if (!context.authorized)
+    return { ...emptyContext, activeSeasonName: "", activeSeasonDivisions: [] };
+  const supabase = await createClient();
   const { data: seasonRows } = await supabase
     .from("seasons")
-    .select("id,name,starts_on,ends_on,registration_open")
-    .eq("conference_id", conference.id)
+    .select("id,name,starts_on,ends_on,canceled_at,divisions(name)")
+    .eq("conference_id", context.conferenceId)
     .is("archived_at", null)
-    .order("starts_on", { ascending: false });
-  const seasonIds = (seasonRows ?? []).map((row) => row.id);
+    .order("starts_on", { ascending: false })
+    .order("name", { referencedTable: "divisions" });
+  // The same choice getOwnerPortalData()'s consumers make: the season running
+  // today, else the most recent one that was not canceled.
+  const today = new Date().toISOString().slice(0, 10);
+  const live = (seasonRows ?? []).filter((season) => !season.canceled_at);
+  const active =
+    live.find((season) => season.starts_on <= today && season.ends_on >= today) ?? live[0] ?? null;
+  return {
+    ...context,
+    activeSeasonName: active?.name ?? "",
+    activeSeasonDivisions: (active?.divisions ?? []).map((division) => division.name),
+  };
+}
+
+/**
+ * Memoised for the same reason getOwnerConferenceContext() is: pages now render
+ * several <Suspense> boundaries that each need the portal, and without cache()
+ * every boundary would repeat the whole read. React's cache() lives for a
+ * single render pass, so the boundaries share one in-flight request and nothing
+ * is held across requests or between viewers.
+ */
+export const getOwnerPortalData = cache(async (): Promise<OwnerPortalData> => {
+  const supabase = await createClient();
+  const context = await getOwnerConferenceContext();
+  if (!context.authorized) return empty;
+  const conference = {
+    id: context.conferenceId,
+    name: context.conferenceName,
+    timezone: context.timezone,
+  };
+  const conferences = context.conferences;
+
+  // One wave, not three.
+  //
+  // These reads used to be chained: seasons, then the reads keyed on the season
+  // ids it returned, then the reads keyed on the division ids *those* returned.
+  // Three round trips deep before the heavy registrations read even started.
+  //
+  // Every one of these tables reaches the conference through a chain of
+  // not-null foreign keys, so an inner-join filter on conference_id selects
+  // exactly the same rows without waiting for the ids to come back. Checked
+  // row-for-row against the id-list version across all four conferences before
+  // the switch.
+  //
+  // The `!inner` is load-bearing. A plain embed left-joins, which would keep
+  // every row whose parent did not match instead of dropping it.
+  const conf = conference.id;
   const [
+    { data: seasonRows },
     { data: financialRows },
     { data: divisionRows },
-    { data: setupRows },
     { data: paymentSubmissionRows },
     { data: poolRows },
-  ] = await Promise.all([
-    seasonIds.length
-      ? supabase
-          .from("season_financial_summaries")
-          .select(
-            "season_id,court_cost_cents,referee_cost_cents,uniform_cost_cents,league_cost_cents,notes",
-          )
-          .in("season_id", seasonIds)
-      : Promise.resolve({ data: [] }),
-    seasonIds.length
-      ? supabase
-          .from("divisions")
-          .select("id,season_id,name")
-          .in("season_id", seasonIds)
-          .order("name")
-      : Promise.resolve({ data: [] }),
-    seasonIds.length
-      ? supabase
-          .from("seasons")
-          .select("id,setup_stage,preseason_ready,canceled_at,cancellation_reason,players_per_team")
-          .in("id", seasonIds)
-      : Promise.resolve({ data: [] }),
-    supabase
-      .from("payment_submissions")
-      .select("id,registration_id,fee_id,amount_cents,method,reference,status,created_at")
-      .order("created_at", { ascending: false }),
-    supabase
-      .from("conference_player_pool")
-      .select(
-        "player_id,status,player:player_profiles!player_id(id,public_player_id,display_name,profile_id,email,mobile,preferred_uniform_size)",
-      )
-      .eq("conference_id", conference.id),
-  ]);
-  const divisionIds = (divisionRows ?? []).map((row) => row.id);
-  const [
     { data: teamRows },
     { data: uniformSettingRows },
     { data: financialSettingRows },
@@ -326,83 +409,118 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
     { data: gameRows },
     { data: rosterRequestRows },
   ] = await Promise.all([
-    divisionIds.length
-      ? supabase
-          .from("teams")
-          .select("id,division_id,name,active,team_roster_drafts(team_id,status,owner_note)")
-          .in("division_id", divisionIds)
-          .order("name")
-      : Promise.resolve({ data: [] }),
-    divisionIds.length
-      ? supabase
-          .from("division_uniform_settings")
-          .select("division_id,dark_uniform,light_uniform,dark_image_path,light_image_path")
-          .in("division_id", divisionIds)
-      : Promise.resolve({ data: [] }),
-    divisionIds.length
-      ? supabase
-          .from("division_financial_settings")
-          .select(
-            "division_id,league_fee_enabled,league_fee_cents,uniform_fee_enabled,uniform_fee_cents",
-          )
-          .in("division_id", divisionIds)
-      : Promise.resolve({ data: [] }),
-    seasonIds.length
-      ? supabase
-          .from("registrations")
-          .select(
-            "id,season_id,division_id,team_id,player_id,jersey_number,position,role_label,status,fees(id,registration_id,category,description,amount_cents,status,due_on),payments(id,registration_id,fee_id,amount_cents,method,paid_at),registration_waivers(registration_id,amount_cents),player:player_profiles!player_id(id,public_player_id,display_name,profile_id,email,mobile,preferred_uniform_size)",
-          )
-          .in("season_id", seasonIds)
-          .order("jersey_number")
-      : Promise.resolve({ data: [] }),
-    seasonIds.length
-      ? supabase
-          .from("season_invitations")
-          .select(
-            "id,season_id,division_id,player_id,registration_id,response,selection_status,player:player_profiles!player_id(id,public_player_id,display_name,profile_id,email,mobile,preferred_uniform_size)",
-          )
-          .in("season_id", seasonIds)
-          .order("created_at")
-      : Promise.resolve({ data: [] }),
-    seasonIds.length
-      ? supabase
-          .from("season_broadcasts")
-          .select("id,season_id,division_id,response_deadline,invited_count,flyer_path,created_at")
-          .in("season_id", seasonIds)
-          .eq("broadcast_type", "player_invitation")
-          .order("created_at", { ascending: false })
-      : Promise.resolve({ data: [] }),
-    seasonIds.length
-      ? supabase
-          .from("season_broadcasts")
-          .select("id,division_id,broadcast_type,response_deadline")
-          .in("season_id", seasonIds)
-          .in("broadcast_type", ["roster_draft", "roster_final"])
-      : Promise.resolve({ data: [] }),
-    divisionIds.length
-      ? supabase
-          .from("division_schedule_workflows")
-          .select("division_id,mode,status")
-          .in("division_id", divisionIds)
-      : Promise.resolve({ data: [] }),
-    seasonIds.length
-      ? supabase
-          .from("games")
-          .select(
-            "id,season_id,home_team_id,away_team_id,starts_at,venue,court,duration_minutes,home_uniform,away_uniform,home_score,away_score,draft_home_score,draft_away_score,finalized_at,phase,status,status_reason",
-          )
-          .in("season_id", seasonIds)
-          .order("starts_at")
-      : Promise.resolve({ data: [] }),
-    seasonIds.length
-      ? supabase
-          .from("roster_change_requests")
-          .select("id,season_id,team_id,request_type,details,status,owner_note,created_at")
-          .in("season_id", seasonIds)
-          .order("created_at", { ascending: false })
-      : Promise.resolve({ data: [] }),
+    // Every column the portal needs off seasons, in one read. This used to be
+    // two reads of the same rows a wave apart - the second existed only to pick
+    // up setup_stage and the four columns beside it.
+    supabase
+      .from("seasons")
+      .select(
+        "id,name,starts_on,ends_on,registration_open,setup_stage,preseason_ready,canceled_at,cancellation_reason,players_per_team",
+      )
+      .eq("conference_id", conf)
+      .is("archived_at", null)
+      .order("starts_on", { ascending: false }),
+    supabase
+      .from("season_financial_summaries")
+      .select(
+        "season_id,court_cost_cents,referee_cost_cents,uniform_cost_cents,league_cost_cents,notes,seasons!inner(conference_id)",
+      )
+      .eq("seasons.conference_id", conf),
+    supabase
+      .from("divisions")
+      .select("id,season_id,name,seasons!inner(conference_id)")
+      .eq("seasons.conference_id", conf)
+      .order("name"),
+    // Deliberately unfiltered, which looks like an oversight and is not.
+    //
+    // A submission reaches its conference by one of two paths, and neither one
+    // is always present: fee_id was made nullable by 0018 for account-level
+    // payments and waivers, and registration_id only arrived in 0037 so older
+    // rows can be missing it. Filtering through either alone silently drops the
+    // rows that took the other path - a `fees!inner(...)` filter tried here
+    // returned 2 of the 8 rows in the table - and PostgREST cannot OR across
+    // two embedded joins in one request.
+    //
+    // The mapping below resolves both paths and discards anything outside the
+    // conference, so reading the table whole is what keeps the result correct.
+    // If this table ever grows enough to matter, the fix is two filtered reads
+    // merged here, not one filter that quietly loses half the rows.
+    supabase
+      .from("payment_submissions")
+      .select("id,registration_id,fee_id,amount_cents,method,reference,status,created_at")
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("conference_player_pool")
+      .select(
+        "player_id,status,player:player_profiles!player_id(id,public_player_id,display_name,profile_id,email,mobile,preferred_uniform_size)",
+      )
+      .eq("conference_id", conf),
+    supabase
+      .from("teams")
+      .select(
+        "id,division_id,name,active,team_roster_drafts(team_id,status,owner_note),divisions!inner(seasons!inner(conference_id))",
+      )
+      .eq("divisions.seasons.conference_id", conf)
+      .order("name"),
+    supabase
+      .from("division_uniform_settings")
+      .select(
+        "division_id,dark_uniform,light_uniform,dark_image_path,light_image_path,divisions!inner(seasons!inner(conference_id))",
+      )
+      .eq("divisions.seasons.conference_id", conf),
+    supabase
+      .from("division_financial_settings")
+      .select(
+        "division_id,league_fee_enabled,league_fee_cents,uniform_fee_enabled,uniform_fee_cents,divisions!inner(seasons!inner(conference_id))",
+      )
+      .eq("divisions.seasons.conference_id", conf),
+    supabase
+      .from("registrations")
+      .select(
+        "id,season_id,division_id,team_id,player_id,jersey_number,position,role_label,status,fees(id,registration_id,category,description,amount_cents,status,due_on),payments(id,registration_id,fee_id,amount_cents,method,paid_at),registration_waivers(registration_id,amount_cents),player:player_profiles!player_id(id,public_player_id,display_name,profile_id,email,mobile,preferred_uniform_size),seasons!inner(conference_id)",
+      )
+      .eq("seasons.conference_id", conf)
+      .order("jersey_number"),
+    supabase
+      .from("season_invitations")
+      .select(
+        "id,season_id,division_id,player_id,registration_id,response,selection_status,player:player_profiles!player_id(id,public_player_id,display_name,profile_id,email,mobile,preferred_uniform_size),seasons!inner(conference_id)",
+      )
+      .eq("seasons.conference_id", conf)
+      .order("created_at"),
+    supabase
+      .from("season_broadcasts")
+      .select(
+        "id,season_id,division_id,response_deadline,invited_count,flyer_path,created_at,seasons!inner(conference_id)",
+      )
+      .eq("seasons.conference_id", conf)
+      .eq("broadcast_type", "player_invitation")
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("season_broadcasts")
+      .select("id,division_id,broadcast_type,response_deadline,seasons!inner(conference_id)")
+      .eq("seasons.conference_id", conf)
+      .in("broadcast_type", ["roster_draft", "roster_final"]),
+    supabase
+      .from("division_schedule_workflows")
+      .select("division_id,mode,status,divisions!inner(seasons!inner(conference_id))")
+      .eq("divisions.seasons.conference_id", conf),
+    supabase
+      .from("games")
+      .select(
+        "id,season_id,home_team_id,away_team_id,starts_at,venue,court,duration_minutes,home_uniform,away_uniform,home_score,away_score,draft_home_score,draft_away_score,finalized_at,phase,status,status_reason,seasons!inner(conference_id)",
+      )
+      .eq("seasons.conference_id", conf)
+      .order("starts_at"),
+    supabase
+      .from("roster_change_requests")
+      .select(
+        "id,season_id,team_id,request_type,details,status,owner_note,created_at,seasons!inner(conference_id)",
+      )
+      .eq("seasons.conference_id", conf)
+      .order("created_at", { ascending: false }),
   ]);
+  const setupRows = seasonRows;
   // Roster drafts arrive nested on the teams read rather than a follow-up
   // keyed on the ids that read just returned.
   type NestedDraft = { team_id: string; status: string; owner_note: string | null };
@@ -963,7 +1081,7 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
     conferenceName: conference.name,
     conferences,
     directory,
-    ownerName: ownerProfile?.display_name ?? "Conference Owner",
+    ownerName: context.ownerName,
     timezone: conference.timezone || "America/Los_Angeles",
     seasons,
     paymentSubmissions,
@@ -971,4 +1089,4 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
     financials,
     rosterRequests,
   };
-}
+});

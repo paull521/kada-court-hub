@@ -1,9 +1,12 @@
+import { Suspense } from "react";
 import { ArrowLeftRight, Check, ChevronRight, List, User } from "lucide-react";
 import { redirect } from "next/navigation";
 import CaptainShell from "@/components/CaptainShell";
 import CaptainRequestForm from "@/components/CaptainRequestForm";
 import CaptainDraftRoster from "@/components/CaptainDraftRoster";
-import { getCaptainPortalData } from "@/lib/captain-data";
+import { ContentPlaceholder } from "@/components/Skeleton";
+import { getCaptainPortalData, type CaptainPortalData } from "@/lib/captain-data";
+import { getAvailableRoles } from "@/lib/roles";
 
 const labels: Record<string, string> = {
   trade: "Trade",
@@ -13,8 +16,9 @@ const labels: Record<string, string> = {
 };
 
 export default async function CaptainRosterPage() {
-  const data = await getCaptainPortalData();
-  if (!data.authorized) redirect("/profile");
+  const roles = await getAvailableRoles();
+  if (!roles.captain) redirect("/profile");
+  const data = getCaptainPortalData();
   return (
     <CaptainShell
       data={data}
@@ -22,6 +26,17 @@ export default async function CaptainRosterPage() {
       title="Team Roster"
       subtitle="Build, submit, and revise your team roster."
     >
+      <Suspense fallback={<ContentPlaceholder />}>
+        <RosterBody data={data} />
+      </Suspense>
+    </CaptainShell>
+  );
+}
+
+async function RosterBody({ data: portal }: { data: Promise<CaptainPortalData> }) {
+  const data = await portal;
+  return (
+    <>
       {!data.finalPublished && <CaptainDraftRoster data={data} />}
       {data.finalPublished && (
         <>
@@ -138,6 +153,6 @@ export default async function CaptainRosterPage() {
           )}
         </div>
       </details>
-    </CaptainShell>
+    </>
   );
 }
