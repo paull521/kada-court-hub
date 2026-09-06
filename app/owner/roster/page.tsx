@@ -1,15 +1,17 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { OwnerPlayerDirectoryManagement } from "@/components/OwnerManagement";
 import OwnerPageShell from "@/components/OwnerPageShell";
-import { getOwnerPortalData } from "@/lib/owner-data";
+import { OwnerContentPlaceholder } from "@/components/Skeleton";
+import { getOwnerConferenceContext, getOwnerPortalData } from "@/lib/owner-data";
+
 export default async function OwnerRosterOverridesPage({
   searchParams,
 }: {
   searchParams: Promise<{ view?: string }>;
 }) {
-  const data = await getOwnerPortalData();
-  if (!data.authorized) redirect("/owner");
-  const { view } = await searchParams;
+  const [context, { view }] = await Promise.all([getOwnerConferenceContext(), searchParams]);
+  if (!context.authorized) redirect("/owner");
   const selectedView = view === "teams" ? "teams" : "directory";
   const title = selectedView === "directory" ? "Player Directory" : "Teams";
   const subtitle =
@@ -19,16 +21,31 @@ export default async function OwnerRosterOverridesPage({
       title={title}
       subtitle={subtitle}
       active="teams"
-      conferenceId={data.conferenceId}
-      conferences={data.conferences}
+      conferenceId={context.conferenceId}
+      conferences={context.conferences}
     >
-      <OwnerPlayerDirectoryManagement
-        conferenceId={data.conferenceId}
-        directory={data.directory}
-        seasons={data.seasons}
-        requests={data.rosterRequests}
-        view={selectedView}
-      />
+      <Suspense fallback={<OwnerContentPlaceholder />}>
+        <RosterContent conferenceId={context.conferenceId} view={selectedView} />
+      </Suspense>
     </OwnerPageShell>
+  );
+}
+
+async function RosterContent({
+  conferenceId,
+  view,
+}: {
+  conferenceId: string;
+  view: "teams" | "directory";
+}) {
+  const data = await getOwnerPortalData();
+  return (
+    <OwnerPlayerDirectoryManagement
+      conferenceId={conferenceId}
+      directory={data.directory}
+      seasons={data.seasons}
+      requests={data.rosterRequests}
+      view={view}
+    />
   );
 }

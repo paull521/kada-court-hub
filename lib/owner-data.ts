@@ -359,7 +359,14 @@ export async function getOwnerProfileSummary(): Promise<OwnerProfileSummary> {
   };
 }
 
-export async function getOwnerPortalData(): Promise<OwnerPortalData> {
+/**
+ * Memoised for the same reason getOwnerConferenceContext() is: pages now render
+ * several <Suspense> boundaries that each need the portal, and without cache()
+ * every boundary would repeat the whole read. React's cache() lives for a
+ * single render pass, so the boundaries share one in-flight request and nothing
+ * is held across requests or between viewers.
+ */
+export const getOwnerPortalData = cache(async (): Promise<OwnerPortalData> => {
   const supabase = await createClient();
   const context = await getOwnerConferenceContext();
   if (!context.authorized) return empty;
@@ -1074,4 +1081,4 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
     financials,
     rosterRequests,
   };
-}
+});

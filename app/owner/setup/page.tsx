@@ -1,25 +1,42 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { OwnerSetupWizard } from "@/components/OwnerManagement";
 import OwnerPageShell from "@/components/OwnerPageShell";
-import { getOwnerPortalData } from "@/lib/owner-data";
+import { OwnerContentPlaceholder } from "@/components/Skeleton";
+import { getOwnerConferenceContext, getOwnerPortalData } from "@/lib/owner-data";
 
 export default async function OwnerSetupPage() {
-  const data = await getOwnerPortalData();
-  if (!data.authorized) redirect("/owner");
+  const context = await getOwnerConferenceContext();
+  if (!context.authorized) redirect("/owner");
   return (
     <OwnerPageShell
       title="Season Setup"
-      subtitle={`${data.conferenceName} · Create seasons, divisions, and teams.`}
+      subtitle={`${context.conferenceName} · Create seasons, divisions, and teams.`}
       active="home"
-      conferenceId={data.conferenceId}
-      conferences={data.conferences}
+      conferenceId={context.conferenceId}
+      conferences={context.conferences}
     >
-      <OwnerSetupWizard
-        conferenceId={data.conferenceId}
-        conferenceName={data.conferenceName}
-        seasons={data.seasons}
-        directory={data.directory}
-      />
+      <Suspense fallback={<OwnerContentPlaceholder />}>
+        <SetupContent conferenceId={context.conferenceId} conferenceName={context.conferenceName} />
+      </Suspense>
     </OwnerPageShell>
+  );
+}
+
+async function SetupContent({
+  conferenceId,
+  conferenceName,
+}: {
+  conferenceId: string;
+  conferenceName: string;
+}) {
+  const data = await getOwnerPortalData();
+  return (
+    <OwnerSetupWizard
+      conferenceId={conferenceId}
+      conferenceName={conferenceName}
+      seasons={data.seasons}
+      directory={data.directory}
+    />
   );
 }

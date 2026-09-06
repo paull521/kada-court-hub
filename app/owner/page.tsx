@@ -1,15 +1,24 @@
+import { Suspense } from "react";
 import { CalendarDays, ClipboardList, DollarSign, Plus, User, Wallet } from "lucide-react";
 import KchLogo from "@/components/KchLogo";
 import Link from "next/link";
 import OwnerBottomNav from "@/components/OwnerBottomNav";
 import OwnerConferenceSwitcher from "@/components/OwnerConferenceSwitcher";
 import ConferencePlayerInvitation from "@/components/ConferencePlayerInvitation";
-import { getOwnerPortalData } from "@/lib/owner-data";
+import { getOwnerConferenceContext, getOwnerPortalData } from "@/lib/owner-data";
 import { createClient } from "@/lib/supabase/server";
 
+/**
+ * The landing page after a role switch, and the slowest thing about becoming an
+ * owner. Every card here has a fixed icon, title and destination; only the
+ * badge dots and the one-line counts underneath them come from the owner
+ * portal. So the page awaits just the conference context, paints the whole grid
+ * as working links, and streams each count into place as it arrives - the
+ * commissioner can tap through to Schedule or Payments before the numbers land.
+ */
 export default async function Owner() {
-  const data = await getOwnerPortalData();
-  if (!data.authorized)
+  const context = await getOwnerConferenceContext();
+  if (!context.authorized)
     return (
       <div className="shell owner-shell">
         <header className="topbar">
@@ -35,69 +44,24 @@ export default async function Owner() {
       </div>
     );
   const hour = Number(
-    new Intl.DateTimeFormat("en-US", { timeZone: data.timezone, hour: "2-digit", hourCycle: "h23" })
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: context.timezone,
+      hour: "2-digit",
+      hourCycle: "h23",
+    })
       .formatToParts(new Date())
       .find((part) => part.type === "hour")?.value ?? 0,
   );
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good night";
-  const lastName = data.ownerName.trim().split(/\s+/).at(-1) ?? "Owner";
-  const activeSeason = data.seasons.find((season) => !season.canceledAt && season.setupStage < 7);
-  const games = data.seasons
-    .filter((season) => !season.canceledAt)
-    .flatMap((season) => season.games);
-  const missingScores = data.seasons
-    .filter((season) => !season.canceledAt && season.setupStage >= 7)
-    .flatMap((season) => season.games)
-    .filter(
-      (game) =>
-        game.status === "scheduled" &&
-        new Date(game.startsAt) <= new Date() &&
-        (game.homeScore === null || game.awayScore === null),
-    ).length;
-  const pendingPayments = data.paymentSubmissions.filter(
-    (submission) => submission.status === "pending",
-  ).length;
-  const balancesDue = data.paymentGroups
-    .flatMap((group) => group.players)
-    .filter((player) => player.due > 0).length;
-  const pendingRosterRequests = data.rosterRequests.filter(
-    (request) => request.status === "pending",
-  ).length;
-  const scheduleNeedsAttention = Boolean(activeSeason && activeSeason.setupStage < 7);
-  const activeVisualStep = activeSeason
-    ? activeSeason.setupStage <= 3
-      ? activeSeason.setupStage + 1
-      : activeSeason.setupStage === 4
-        ? activeSeason.preseasonReady
-          ? 6
-          : 5
-        : activeSeason.setupStage === 5
-          ? 7
-          : 8
-    : 1;
-  const setupStepNames = [
-    "Create Season",
-    "Add Divisions",
-    "Add Teams",
-    "Assign Captains",
-    "Fees & Uniforms",
-    "Invite Players",
-    "Draft Rosters",
-    "Build Schedule",
-  ];
-  const seasonDetail = activeSeason
-    ? `${data.conferenceName} · Step ${activeVisualStep} — ${setupStepNames[activeVisualStep - 1]}`
-    : data.conferenceName;
-  const supabase = await createClient();
-  const { data: conferenceInvitationToken } = await supabase.rpc(
-    "owner_get_conference_player_invitation_token",
-    { p_conference_id: data.conferenceId },
-  );
+  const lastName = context.ownerName.trim().split(/\s+/).at(-1) ?? "Owner";
   return (
     <div className="shell owner-shell guided-owner-shell">
       <header className="topbar">
         <KchLogo className="logo" />
-        <OwnerConferenceSwitcher conferences={data.conferences} currentId={data.conferenceId} />
+        <OwnerConferenceSwitcher
+          conferences={context.conferences}
+          currentId={context.conferenceId}
+        />
       </header>
       <OwnerBottomNav active="home" />
       <main className="content owner-content owner-dashboard">
@@ -110,25 +74,26 @@ export default async function Owner() {
             <span className="owner-action-icon">
               <Plus className="ui-icon" />
             </span>
-            {activeSeason && (
-              <i className="owner-action-dot" aria-label="Season setup needs attention" />
-            )}
+            <Suspense fallback={null}>
+              <SeasonDot />
+            </Suspense>
             <div>
               <small>SEASON</small>
               <b>Create Season Tournament</b>
-              <p>{seasonDetail}</p>
+              <p>
+                <Suspense fallback={context.conferenceName}>
+                  <SeasonDetail conferenceName={context.conferenceName} />
+                </Suspense>
+              </p>
             </div>
           </Link>
           <Link href="/owner/roster" className="owner-action-card">
             <span className="owner-action-icon">
               <User className="ui-icon" />
             </span>
-            {pendingRosterRequests > 0 && (
-              <i
-                className="owner-action-dot"
-                aria-label="Player Directory has roster requests waiting"
-              />
-            )}
+            <Suspense fallback={null}>
+              <RosterRequestDot />
+            </Suspense>
             <div>
               <small>PLAYER DIRECTORY</small>
               <b>Manage conference players</b>
@@ -139,16 +104,16 @@ export default async function Owner() {
             <span className="owner-action-icon">
               <CalendarDays className="ui-icon" />
             </span>
-            {scheduleNeedsAttention && (
-              <i className="owner-action-dot" aria-label="Schedule setup needs attention" />
-            )}
+            <Suspense fallback={null}>
+              <ScheduleDot />
+            </Suspense>
             <div>
               <small>SCHEDULE</small>
               <b>View or update schedule</b>
               <p>
-                {games.length
-                  ? `${games.length} total scheduled game${games.length === 1 ? "" : "s"}`
-                  : "No schedule has been created yet"}
+                <Suspense fallback="Loading schedule…">
+                  <ScheduleDetail />
+                </Suspense>
               </p>
             </div>
           </Link>
@@ -156,16 +121,16 @@ export default async function Owner() {
             <span className="owner-action-icon">
               <ClipboardList className="ui-icon" />
             </span>
-            {missingScores > 0 && (
-              <i className="owner-action-dot" aria-label="Scores need attention" />
-            )}
+            <Suspense fallback={null}>
+              <ScoresDot />
+            </Suspense>
             <div>
               <small>SCORES</small>
               <b>Update game results</b>
               <p>
-                {missingScores
-                  ? `${missingScores} completed game${missingScores === 1 ? "" : "s"} need results`
-                  : "No completed games are awaiting scores"}
+                <Suspense fallback="Checking completed games…">
+                  <ScoresDetail />
+                </Suspense>
               </p>
             </div>
           </Link>
@@ -173,13 +138,15 @@ export default async function Owner() {
             <span className="owner-action-icon">
               <Wallet className="ui-icon" />
             </span>
-            {pendingPayments > 0 && (
-              <i className="owner-action-dot" aria-label="Payments need attention" />
-            )}
+            <Suspense fallback={null}>
+              <PaymentsDot />
+            </Suspense>
             <div>
               <small>PAYMENTS</small>
               <b>
-                {balancesDue} balance{balancesDue === 1 ? "" : "s"} due
+                <Suspense fallback="Balances due">
+                  <BalancesDue />
+                </Suspense>
               </b>
               <p>Review payments and balances.</p>
             </div>
@@ -194,11 +161,129 @@ export default async function Owner() {
               <p>Income and expense report.</p>
             </div>
           </Link>
-          {typeof conferenceInvitationToken === "string" && (
-            <ConferencePlayerInvitation token={conferenceInvitationToken} />
-          )}
+          <Suspense fallback={null}>
+            <ConferenceInvitation conferenceId={context.conferenceId} />
+          </Suspense>
         </nav>
       </main>
     </div>
   );
+}
+
+/**
+ * The setup step the active season is on. getOwnerPortalData() is memoised for
+ * the request, so every slot below shares one read of it.
+ */
+const activeSetupSeason = async () => {
+  const data = await getOwnerPortalData();
+  return data.seasons.find((season) => !season.canceledAt && season.setupStage < 7) ?? null;
+};
+
+const setupStepNames = [
+  "Create Season",
+  "Add Divisions",
+  "Add Teams",
+  "Assign Captains",
+  "Fees & Uniforms",
+  "Invite Players",
+  "Draft Rosters",
+  "Build Schedule",
+];
+
+async function SeasonDot() {
+  return (await activeSetupSeason()) ? (
+    <i className="owner-action-dot" aria-label="Season setup needs attention" />
+  ) : null;
+}
+
+async function SeasonDetail({ conferenceName }: { conferenceName: string }) {
+  const activeSeason = await activeSetupSeason();
+  if (!activeSeason) return conferenceName;
+  const step =
+    activeSeason.setupStage <= 3
+      ? activeSeason.setupStage + 1
+      : activeSeason.setupStage === 4
+        ? activeSeason.preseasonReady
+          ? 6
+          : 5
+        : activeSeason.setupStage === 5
+          ? 7
+          : 8;
+  return `${conferenceName} · Step ${step} — ${setupStepNames[step - 1]}`;
+}
+
+async function RosterRequestDot() {
+  const data = await getOwnerPortalData();
+  const pending = data.rosterRequests.filter((request) => request.status === "pending").length;
+  return pending > 0 ? (
+    <i className="owner-action-dot" aria-label="Player Directory has roster requests waiting" />
+  ) : null;
+}
+
+async function ScheduleDot() {
+  return (await activeSetupSeason()) ? (
+    <i className="owner-action-dot" aria-label="Schedule setup needs attention" />
+  ) : null;
+}
+
+async function ScheduleDetail() {
+  const data = await getOwnerPortalData();
+  const games = data.seasons
+    .filter((season) => !season.canceledAt)
+    .flatMap((season) => season.games);
+  return games.length
+    ? `${games.length} total scheduled game${games.length === 1 ? "" : "s"}`
+    : "No schedule has been created yet";
+}
+
+const missingScoreCount = async () => {
+  const data = await getOwnerPortalData();
+  return data.seasons
+    .filter((season) => !season.canceledAt && season.setupStage >= 7)
+    .flatMap((season) => season.games)
+    .filter(
+      (game) =>
+        game.status === "scheduled" &&
+        new Date(game.startsAt) <= new Date() &&
+        (game.homeScore === null || game.awayScore === null),
+    ).length;
+};
+
+async function ScoresDot() {
+  return (await missingScoreCount()) > 0 ? (
+    <i className="owner-action-dot" aria-label="Scores need attention" />
+  ) : null;
+}
+
+async function ScoresDetail() {
+  const missingScores = await missingScoreCount();
+  return missingScores
+    ? `${missingScores} completed game${missingScores === 1 ? "" : "s"} need results`
+    : "No completed games are awaiting scores";
+}
+
+async function PaymentsDot() {
+  const data = await getOwnerPortalData();
+  const pending = data.paymentSubmissions.filter(
+    (submission) => submission.status === "pending",
+  ).length;
+  return pending > 0 ? (
+    <i className="owner-action-dot" aria-label="Payments need attention" />
+  ) : null;
+}
+
+async function BalancesDue() {
+  const data = await getOwnerPortalData();
+  const balancesDue = data.paymentGroups
+    .flatMap((group) => group.players)
+    .filter((player) => player.due > 0).length;
+  return `${balancesDue} balance${balancesDue === 1 ? "" : "s"} due`;
+}
+
+async function ConferenceInvitation({ conferenceId }: { conferenceId: string }) {
+  const supabase = await createClient();
+  const { data: token } = await supabase.rpc("owner_get_conference_player_invitation_token", {
+    p_conference_id: conferenceId,
+  });
+  return typeof token === "string" ? <ConferencePlayerInvitation token={token} /> : null;
 }
