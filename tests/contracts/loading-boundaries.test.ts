@@ -36,8 +36,14 @@ describe("route loading boundaries", () => {
   const shellPages = pages.filter((page) => {
     const source = readFileSync(page, "utf8");
     const rendersShell = /\b(AppShell|CaptainShell|OwnerPageShell)\b/.test(source);
+    // Promise.all counts too. app/legal/page.tsx awaited getPlayerPortalData
+    // directly until it was changed to await a Promise.all of three calls, and
+    // this pattern quietly stopped matching it - the page kept its boundary,
+    // but nothing was checking any more.
     const fetchesData =
-      /\bawait\s+(get[A-Za-z]*(PortalData|Roles|Dashboard|Operations)|supabase)/.test(source);
+      /\bawait\s+(get[A-Za-z]*(PortalData|Roles|Dashboard|Operations)|supabase|Promise\.all)/.test(
+        source,
+      );
     return rendersShell && fetchesData;
   });
 
