@@ -484,6 +484,46 @@ body {
   height: 22px;
   stroke-width: 2;
 }
+/* The banner opens its own panel under itself rather than a sheet from the
+   bottom edge: the pointer is already at the banner, and the choices belong
+   where the control is. */
+.team-switcher {
+  position: relative;
+  margin-bottom: 14px;
+}
+/* The page behind the open list recedes, the way the sheet's backdrop used to
+   do it, while the banner itself stays sharp above the blur. */
+.team-dropdown-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(4, 18, 35, 0.22);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+/* .content sets z-index 2, so without this the list and its scrim would sit
+   under the bottom nav's 20. */
+.content:has(.team-dropdown) {
+  z-index: 30;
+}
+.team-switcher.open .team-banner {
+  position: relative;
+  z-index: 35;
+}
+.team-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 40;
+  background: #fffdf9;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 18px 44px rgba(4, 18, 35, 0.22);
+  padding: 9px;
+  max-height: min(58vh, 420px);
+  overflow: auto;
+}
 /* The banner is the team switcher, so it is sized as a control rather than a
    hero: the small mark and a single line of meta halve the height it had. */
 .team-banner {
@@ -494,7 +534,7 @@ body {
   grid-template-columns: 54px minmax(0, 1fr) auto;
   gap: 14px;
   align-items: center;
-  margin: 0 0 14px;
+  margin: 0;
   width: 100%;
   text-align: left;
   border-color: rgba(7, 31, 61, 0.22);
@@ -522,6 +562,10 @@ body {
   width: 20px;
   height: 20px;
   color: rgba(255, 255, 255, 0.62);
+  transition: transform 0.15s ease;
+}
+.team-switcher.open .team-banner-caret {
+  transform: rotate(180deg);
 }
 .team-banner:disabled {
   cursor: default;
@@ -8600,6 +8644,9 @@ body:has(.context-overlay-open) .bottom {
 @media (prefers-reduced-motion: reduce) {
   .skeleton {
     animation: none;
+  }
+  .team-banner-caret {
+    transition: none;
   }
 }
 
