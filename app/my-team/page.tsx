@@ -19,7 +19,6 @@ export default async function Team() {
         <PlayerContextSwitcher
           contexts={data.contexts}
           activeRegistrationId={data.activeRegistrationId}
-          variant="banner"
         />
       </div>
       <div className="col-pane col-pane-b">
