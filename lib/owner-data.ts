@@ -377,17 +377,22 @@ export const getOwnerPortalData = cache(async (): Promise<OwnerPortalData> => {
   };
   const conferences = context.conferences;
 
+  // Every column the portal needs off seasons, in one read. This used to be two
+  // reads of the same rows a wave apart - the second one existed only to pick up
+  // setup_stage and the four columns beside it.
   const { data: seasonRows } = await supabase
     .from("seasons")
-    .select("id,name,starts_on,ends_on,registration_open")
+    .select(
+      "id,name,starts_on,ends_on,registration_open,setup_stage,preseason_ready,canceled_at,cancellation_reason,players_per_team",
+    )
     .eq("conference_id", conference.id)
     .is("archived_at", null)
     .order("starts_on", { ascending: false });
   const seasonIds = (seasonRows ?? []).map((row) => row.id);
+  const setupRows = seasonRows;
   const [
     { data: financialRows },
     { data: divisionRows },
-    { data: setupRows },
     { data: paymentSubmissionRows },
     { data: poolRows },
   ] = await Promise.all([
@@ -406,12 +411,20 @@ export const getOwnerPortalData = cache(async (): Promise<OwnerPortalData> => {
           .in("season_id", seasonIds)
           .order("name")
       : Promise.resolve({ data: [] }),
-    seasonIds.length
-      ? supabase
-          .from("seasons")
-          .select("id,setup_stage,preseason_ready,canceled_at,cancellation_reason,players_per_team")
-          .in("id", seasonIds)
-      : Promise.resolve({ data: [] }),
+    // Deliberately unfiltered, which looks like an oversight and is not.
+    //
+    // A submission reaches its conference by one of two paths, and neither one
+    // is always present: fee_id was made nullable by 0018 for account-level
+    // payments and waivers, and registration_id only arrived in 0037 so older
+    // rows can be missing it. Filtering through either alone silently drops the
+    // rows that took the other path - a `fees!inner(...)` filter tried here
+    // returned 2 of the 8 rows in the table - and PostgREST cannot OR across
+    // two embedded joins in one request.
+    //
+    // The mapping below resolves both paths and discards anything outside the
+    // conference, so reading the table whole is what keeps the result correct.
+    // If this table ever grows enough to matter, the fix is two filtered reads
+    // merged here, not one filter that quietly loses half the rows.
     supabase
       .from("payment_submissions")
       .select("id,registration_id,fee_id,amount_cents,method,reference,status,created_at")
