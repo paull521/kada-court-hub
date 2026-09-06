@@ -100,7 +100,6 @@ export default async function Owner() {
         <OwnerConferenceSwitcher conferences={data.conferences} currentId={data.conferenceId} />
       </header>
       <main className="content owner-content owner-dashboard">
-        <p className="eyebrow">CONFERENCE: {data.conferenceName}</p>
         <h1 className="title">
           {greeting}, Mr. {lastName}!
         </h1>

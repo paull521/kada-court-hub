@@ -1,4 +1,4 @@
-import { CalendarDays, MapPin, Trophy } from "lucide-react";
+import { MapPin, Trophy } from "lucide-react";
 import AppShell from "@/components/AppShell";
 import SeasonTabs from "@/components/SeasonTabs";
 import { getPlayerPortalData } from "@/lib/kch-data";
@@ -16,19 +16,11 @@ export default async function ResultsPage() {
   return (
     <AppShell
       active="schedule"
-      contexts={data.contexts}
-      activeRegistrationId={data.activeRegistrationId}
       notifications={data.notifications}
       profileNeedsAttention={data.profileNeedsAttention}
       paymentNeedsAttention={data.paymentNeedsAttention}
       teamHasUnavailable={data.teamHasUnavailable}
-      conferenceName={data.context.conference}
     >
-      <h1 className="title">Results</h1>
-      <p className="subtitle">Final scores from your division.</p>
-      <p className="season-label">
-        <CalendarDays className="ui-icon" /> &nbsp; {data.context.season} · {data.context.division}
-      </p>
       <SeasonTabs active="results" />
       {data.seasonResults.length ? (
         <div className="season-result-list">

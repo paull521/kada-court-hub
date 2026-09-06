@@ -21,7 +21,6 @@ export default async function OwnerRosterOverridesPage({
       title={title}
       subtitle={subtitle}
       active="teams"
-      conferenceName={data.conferenceName}
       conferenceId={data.conferenceId}
       conferences={data.conferences}
     >

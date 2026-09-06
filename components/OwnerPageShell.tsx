@@ -8,7 +8,6 @@ export default function OwnerPageShell({
   title,
   subtitle,
   active,
-  conferenceName,
   conferenceId,
   conferences,
   children,
@@ -16,7 +15,6 @@ export default function OwnerPageShell({
   title: string;
   subtitle: string;
   active: OwnerNavKey;
-  conferenceName: string;
   conferenceId: string;
   conferences: OwnerConferenceOption[];
   children: ReactNode;
@@ -28,7 +26,6 @@ export default function OwnerPageShell({
         <OwnerConferenceSwitcher conferences={conferences} currentId={conferenceId} />
       </header>
       <main className="content owner-content">
-        <p className="eyebrow">CONFERENCE: {conferenceName}</p>
         <h1 className="title">{title}</h1>
         <p className="subtitle">{subtitle}</p>
         {children}

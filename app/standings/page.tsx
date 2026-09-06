@@ -1,4 +1,4 @@
-import { CalendarDays, Trophy } from "lucide-react";
+import { Trophy } from "lucide-react";
 import AppShell from "@/components/AppShell";
 import SeasonTabs from "@/components/SeasonTabs";
 import { getPlayerPortalData } from "@/lib/kch-data";
@@ -10,19 +10,11 @@ export default async function StandingsPage() {
   return (
     <AppShell
       active="schedule"
-      contexts={data.contexts}
-      activeRegistrationId={data.activeRegistrationId}
       notifications={data.notifications}
       profileNeedsAttention={data.profileNeedsAttention}
       paymentNeedsAttention={data.paymentNeedsAttention}
       teamHasUnavailable={data.teamHasUnavailable}
-      conferenceName={data.context.conference}
     >
-      <h1 className="title">Standings</h1>
-      <p className="subtitle">See where every team stands.</p>
-      <p className="season-label">
-        <CalendarDays className="ui-icon" /> &nbsp; {data.context.season} · {data.context.division}
-      </p>
       <SeasonTabs active="standings" />
       {data.standings.length ? (
         <section className="standings-list">
