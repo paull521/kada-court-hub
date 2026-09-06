@@ -8653,6 +8653,12 @@ body:has(.context-overlay-open) .bottom {
   .team-banner-caret {
     transition: none;
   }
+  /* Both sliding pills still land in the right place, they just stop
+     travelling to get there. */
+  .availability-thumb,
+  .role-switcher-thumb {
+    transition: none;
+  }
 }
 
 .sr-only {
