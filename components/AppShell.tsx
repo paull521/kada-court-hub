@@ -1,17 +1,19 @@
 import KchLogo from "@/components/KchLogo";
-import { CalendarDays, Home, User, Users, Wallet } from "lucide-react";
 import { ReactNode } from "react";
 import NotificationCenter from "@/components/NotificationCenter";
 import FastBottomNav from "@/components/FastBottomNav";
+import { captainNavLinks, ownerNavLinks, playerNavLinks } from "@/lib/nav-links";
 import type { PlayerNotification } from "@/lib/kch-data";
 
-const links = [
-  { href: "/home", key: "home", icon: <Home />, label: "Home" },
-  { href: "/my-team", key: "team", icon: <Users />, label: "Teams" },
-  { href: "/schedule", key: "schedule", icon: <CalendarDays />, label: "Schedule" },
-  { href: "/payments", key: "payments", icon: <Wallet />, label: "Payments" },
-  { href: "/profile", key: "profile", icon: <User />, label: "Profile" },
-];
+const nav = {
+  player: { links: playerNavLinks, className: "bottom", label: "Player navigation" },
+  captain: {
+    links: captainNavLinks,
+    className: "bottom captain-bottom",
+    label: "Captain navigation",
+  },
+  owner: { links: ownerNavLinks, className: "bottom owner-bottom", label: "Owner navigation" },
+};
 
 export default function AppShell({
   children,
@@ -20,7 +22,7 @@ export default function AppShell({
   profileNeedsAttention = false,
   paymentNeedsAttention = false,
   teamHasUnavailable = false,
-  homeHref = "/home",
+  role = "player",
   headerAction,
   headerNotification,
   title = "",
@@ -33,7 +35,9 @@ export default function AppShell({
   profileNeedsAttention?: boolean;
   paymentNeedsAttention?: boolean;
   teamHasUnavailable?: boolean;
-  homeHref?: string;
+  /** Which workspace the page is being viewed as. Profile is reachable as any
+      of the three, and the bottom nav has to lead back into that one. */
+  role?: "player" | "captain" | "owner";
   headerAction?: ReactNode;
   headerNotification?: ReactNode;
   /** Page heading. Names the team the page is showing, as the captain shell does. */
@@ -41,8 +45,9 @@ export default function AppShell({
   subtitle?: string;
   contentClass?: string;
 }) {
+  const { links, className: navClass, label: navLabel } = nav[role];
   const items = links.map(({ href, key, icon, label }) => ({
-    href: key === "home" ? homeHref : href,
+    href,
     key,
     icon,
     label,
@@ -65,7 +70,7 @@ export default function AppShell({
           {headerNotification ?? <NotificationCenter notifications={notifications} />}
         </div>
       </header>
-      <FastBottomNav items={items} active={active} label="Player navigation" />
+      <FastBottomNav items={items} active={active} className={navClass} label={navLabel} />
       <main className={`content ${contentClass}`.trim()}>
         {title && <h1 className="title">{title}</h1>}
         {subtitle && <p className="subtitle">{subtitle}</p>}
