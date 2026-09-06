@@ -1,4 +1,4 @@
-import Image from "next/image";
+import KchLogo from "@/components/KchLogo";
 import { CalendarDays, Home, User, Users, Wallet } from "lucide-react";
 import type { ReactNode } from "react";
 import CaptainContextSwitcher from "@/components/CaptainContextSwitcher";
@@ -40,14 +40,7 @@ export default function CaptainShell({
   return (
     <div className="shell captain-shell">
       <header className="topbar">
-        <Image
-          src="/kch-logo.png"
-          alt="KadaCourtHub"
-          width={340}
-          height={130}
-          className="logo"
-          priority
-        />
+        <KchLogo className="logo" />
         <CaptainContextSwitcher
           contexts={data.contexts}
           activeRegistrationId={data.activeRegistrationId}

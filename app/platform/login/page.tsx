@@ -1,4 +1,4 @@
-import Image from "next/image";
+import KchLogo from "@/components/KchLogo";
 import Link from "next/link";
 import { LoginForm } from "@/components/AuthForm";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -7,7 +7,7 @@ export default function PlatformLoginPage() {
   return (
     <div className="shell login-shell platform-login-shell">
       <header className="login-logo">
-        <Image src="/kch-logo.png" alt="KadaCourtHub" width={420} height={160} priority />
+        <KchLogo />
       </header>
       <main className="login">
         <p className="eyebrow">PRIVATE WORKSPACE</p>

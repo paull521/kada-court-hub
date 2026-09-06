@@ -1,0 +1,217 @@
+/* KadaCourtHub wordmark, drawn in CSS instead of shipped as kch-logo.png.
+
+   Everything derives from --kch-logo-size, which is the KADA font-size. The
+   proportions come from the original 290x175 artwork and are expressed against
+   the KADA cap height, so the whole mark scales as one piece. Colours were
+   sampled off the same file.
+
+   --kch-logo-cap and --kch-logo-baseline describe the *font*, not the artwork:
+   its cap height, and how far the baseline sits below the top of a
+   line-height:1 line box. They are what lets the sun, the wedges inside the K
+   and the stripe down the A land on the letters. Swap the font and these two
+   have to be re-measured. */
+.kch-logo {
+  --kch-logo-size: 48px;
+
+  --kch-logo-ink: #010c1a;
+  --kch-logo-gold: #dc9d46;
+  --kch-logo-steel: #a5a3a1;
+  --kch-logo-red: #b20c0f;
+
+  /* The stripe down the first A: apex, middle, base, and the crimson edge
+     where it meets the ink. */
+  --kch-logo-flame-top: #c4720e;
+  --kch-logo-flame-mid: #d5891d;
+  --kch-logo-flame-base: #bd0a10;
+  --kch-logo-flame-edge: #8c1114;
+
+  /* The sun's scrollwork is cut out of the gold, so it has to be painted in
+     whatever the mark is sitting on. */
+  --kch-logo-paper: #faf7f4;
+
+  /* Font metrics, in em. Measured from the stack this inherits. */
+  --kch-logo-cap: 0.7046em;
+  --kch-logo-baseline: 0.8765em;
+  --kch-logo-k-lsb: 0.052em;
+  --kch-logo-k-ink: 0.635em;
+  --kch-logo-a-lsb: 0.014em;
+  --kch-logo-a-ink: 0.702em;
+
+  /* Artwork proportions, in em. */
+  --kch-logo-tracking: 0.027em;
+  --kch-logo-sun-w: 0.543em;
+  --kch-logo-sun-h: 0.555em;
+  --kch-logo-sun-x: 0.607em; /* centre, from the left edge of the box */
+  --kch-logo-sun-gap: 0.035em;
+  --kch-logo-court-size: 0.393em;
+
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  font-family: inherit;
+  font-size: var(--kch-logo-size);
+  font-weight: 900;
+  font-style: normal;
+  line-height: 1;
+  color: var(--kch-logo-ink);
+  padding-top: calc(
+    var(--kch-logo-sun-h) + var(--kch-logo-sun-gap) - var(--kch-logo-baseline) + var(--kch-logo-cap)
+  );
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- sun ------------------------------------------------------------ */
+
+.kch-logo-sun {
+  position: absolute;
+  top: 0;
+  left: var(--kch-logo-sun-x);
+  width: var(--kch-logo-sun-w);
+  height: var(--kch-logo-sun-h);
+  transform: translateX(-50%);
+  background-color: var(--kch-logo-gold);
+  /* Eight scrolls, one per notch: a cut-out with a gold pip inside it. The
+     pips are listed first so they paint over the cut-outs. */
+  background-image:
+    radial-gradient(circle at 63.8% 16.7%, var(--kch-logo-gold) 0 3.2%, transparent 3.3%),
+    radial-gradient(circle at 83.3% 36.2%, var(--kch-logo-gold) 0 3.2%, transparent 3.3%),
+    radial-gradient(circle at 83.3% 63.8%, var(--kch-logo-gold) 0 3.2%, transparent 3.3%),
+    radial-gradient(circle at 63.8% 83.3%, var(--kch-logo-gold) 0 3.2%, transparent 3.3%),
+    radial-gradient(circle at 36.2% 83.3%, var(--kch-logo-gold) 0 3.2%, transparent 3.3%),
+    radial-gradient(circle at 16.7% 63.8%, var(--kch-logo-gold) 0 3.2%, transparent 3.3%),
+    radial-gradient(circle at 16.7% 36.2%, var(--kch-logo-gold) 0 3.2%, transparent 3.3%),
+    radial-gradient(circle at 36.2% 16.7%, var(--kch-logo-gold) 0 3.2%, transparent 3.3%),
+    radial-gradient(circle at 63.8% 16.7%, var(--kch-logo-paper) 0 11%, transparent 11.1%),
+    radial-gradient(circle at 83.3% 36.2%, var(--kch-logo-paper) 0 11%, transparent 11.1%),
+    radial-gradient(circle at 83.3% 63.8%, var(--kch-logo-paper) 0 11%, transparent 11.1%),
+    radial-gradient(circle at 63.8% 83.3%, var(--kch-logo-paper) 0 11%, transparent 11.1%),
+    radial-gradient(circle at 36.2% 83.3%, var(--kch-logo-paper) 0 11%, transparent 11.1%),
+    radial-gradient(circle at 16.7% 63.8%, var(--kch-logo-paper) 0 11%, transparent 11.1%),
+    radial-gradient(circle at 16.7% 36.2%, var(--kch-logo-paper) 0 11%, transparent 11.1%),
+    radial-gradient(circle at 36.2% 16.7%, var(--kch-logo-paper) 0 11%, transparent 11.1%);
+  clip-path: polygon(
+    38.4% 9.6%,
+    50% 0%,
+    61.6% 9.6%,
+    62.6% 19.5%,
+    70.4% 13.3%,
+    85.4% 14.6%,
+    86.7% 29.6%,
+    80.5% 37.4%,
+    90.4% 38.4%,
+    100% 50%,
+    90.4% 61.6%,
+    80.5% 62.6%,
+    86.7% 70.4%,
+    85.4% 85.4%,
+    70.4% 86.7%,
+    62.6% 80.5%,
+    61.6% 90.4%,
+    50% 100%,
+    38.4% 90.4%,
+    37.4% 80.5%,
+    29.6% 86.7%,
+    14.6% 85.4%,
+    13.3% 70.4%,
+    19.5% 62.6%,
+    9.6% 61.6%,
+    0% 50%,
+    9.6% 38.4%,
+    19.5% 37.4%,
+    13.3% 29.6%,
+    14.6% 14.6%,
+    29.6% 13.3%,
+    37.4% 19.5%
+  );
+}
+
+/* --- KADA ----------------------------------------------------------- */
+
+.kch-logo-kada {
+  display: block;
+  white-space: nowrap;
+  letter-spacing: var(--kch-logo-tracking);
+  /* letter-spacing also lands after the last A; take it back so the line below
+     stays flush. */
+  margin-right: calc(-1 * var(--kch-logo-tracking));
+}
+
+/* The K's arm is cut away from its stem in the original and the two wedges
+   that open up are filled: gold above, steel below. Both are laid out against
+   the letter's ink box, not its line box, and sit behind the glyph so the
+   letter itself trims whatever overshoots. */
+.kch-logo-k {
+  position: relative;
+  display: inline-block;
+}
+.kch-logo-k::before,
+.kch-logo-k::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: var(--kch-logo-k-lsb);
+  width: var(--kch-logo-k-ink);
+  top: calc(var(--kch-logo-baseline) - var(--kch-logo-cap));
+  height: var(--kch-logo-cap);
+}
+.kch-logo-k::before {
+  background: var(--kch-logo-gold);
+  clip-path: polygon(34% 0%, 68% 0%, 20% 55%, 20% 16%);
+}
+.kch-logo-k::after {
+  background: var(--kch-logo-steel);
+  clip-path: polygon(24% 60%, 62% 100%, 24% 100%);
+}
+
+/* The first A carries a stripe down its left leg. Three stacked gradients,
+   painted over the letter's ink box: the bottom one runs the colour from apex
+   to base, the middle one cuts it off at the leg's inner edge, and the top one
+   ends it at the crossbar. Everything they don't claim goes back to the ink. */
+.kch-logo-a {
+  background-color: var(--kch-logo-ink);
+  background-image:
+    linear-gradient(to bottom, transparent 0 78%, var(--kch-logo-ink) 78% 100%),
+    linear-gradient(
+      116deg,
+      transparent 0 40%,
+      var(--kch-logo-flame-edge) 40% 44%,
+      var(--kch-logo-ink) 44% 100%
+    ),
+    linear-gradient(
+      210deg,
+      var(--kch-logo-flame-top) 0 40%,
+      var(--kch-logo-flame-mid) 46%,
+      var(--kch-logo-flame-base) 68% 100%
+    );
+  background-repeat: no-repeat;
+  background-origin: border-box;
+  background-position: var(--kch-logo-a-lsb) calc(var(--kch-logo-baseline) - var(--kch-logo-cap));
+  background-size: var(--kch-logo-a-ink) var(--kch-logo-cap);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* --- COURTHUB ------------------------------------------------------- */
+
+/* Justified rather than letter-spaced, so the line stays flush with KADA
+   above it whatever font is resolved. */
+.kch-logo-court {
+  display: flex;
+  justify-content: space-between;
+  /* The container keeps the KADA font-size so its own margins stay in the same
+     em as every other measurement here; only the letters shrink. */
+  margin-top: -0.029em;
+  margin-left: var(--kch-logo-k-lsb);
+  margin-right: calc(var(--kch-logo-a-lsb) + var(--kch-logo-tracking));
+}
+.kch-logo-court span {
+  font-size: var(--kch-logo-court-size);
+}
+.kch-logo-court b {
+  display: contents;
+  font-weight: inherit;
+  color: var(--kch-logo-red);
+}

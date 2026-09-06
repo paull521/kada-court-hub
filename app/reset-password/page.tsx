@@ -1,11 +1,11 @@
-import Image from "next/image";
+import KchLogo from "@/components/KchLogo";
 import { ResetPasswordForm } from "@/components/AuthForm";
 
 export default function ResetPasswordPage() {
   return (
     <div className="shell login-shell">
       <header className="login-logo">
-        <Image src="/kch-logo.png" alt="KadaCourtHub" width={420} height={160} priority />
+        <KchLogo />
       </header>
       <main className="login signup">
         <h1>

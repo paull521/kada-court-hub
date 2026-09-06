@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight, ClipboardList } from "lucide-react";
-import Image from "next/image";
+import KchLogo from "@/components/KchLogo";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getPlatformDashboard } from "@/lib/platform-data";
@@ -92,14 +92,7 @@ export default async function PlatformSection({
   return (
     <div className="shell owner-shell guided-owner-shell platform-shell">
       <header className="topbar">
-        <Image
-          src="/kch-logo.png"
-          alt="KadaCourtHub"
-          width={340}
-          height={130}
-          className="logo"
-          priority
-        />
+        <KchLogo className="logo" />
         <Link href="/platform" className="muted platform-signout">
           <ChevronLeft className="go-caret" /> Dashboard
         </Link>

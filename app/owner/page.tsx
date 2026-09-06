@@ -1,5 +1,5 @@
 import { CalendarDays, ClipboardList, DollarSign, Plus, User, Wallet } from "lucide-react";
-import Image from "next/image";
+import KchLogo from "@/components/KchLogo";
 import Link from "next/link";
 import OwnerBottomNav from "@/components/OwnerBottomNav";
 import OwnerConferenceSwitcher from "@/components/OwnerConferenceSwitcher";
@@ -13,14 +13,7 @@ export default async function Owner() {
     return (
       <div className="shell owner-shell">
         <header className="topbar">
-          <Image
-            src="/kch-logo.png"
-            alt="KadaCourtHub"
-            width={340}
-            height={130}
-            className="logo"
-            priority
-          />
+          <KchLogo className="logo" />
           <Link href="/home" className="muted">
             Player View
           </Link>
@@ -103,14 +96,7 @@ export default async function Owner() {
   return (
     <div className="shell owner-shell guided-owner-shell">
       <header className="topbar">
-        <Image
-          src="/kch-logo.png"
-          alt="KadaCourtHub"
-          width={340}
-          height={130}
-          className="logo"
-          priority
-        />
+        <KchLogo className="logo" />
         <OwnerConferenceSwitcher conferences={data.conferences} currentId={data.conferenceId} />
       </header>
       <main className="content owner-content owner-dashboard">
