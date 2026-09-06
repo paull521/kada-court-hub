@@ -11,7 +11,6 @@ export default async function OwnerSetupPage() {
       title="Season Setup"
       subtitle={`${data.conferenceName} · Create seasons, divisions, and teams.`}
       active="home"
-      conferenceName={data.conferenceName}
       conferenceId={data.conferenceId}
       conferences={data.conferences}
     >

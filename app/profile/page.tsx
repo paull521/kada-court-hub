@@ -290,8 +290,6 @@ export default async function Profile({
   return (
     <AppShell
       active="profile"
-      contexts={data.contexts}
-      activeRegistrationId={data.activeRegistrationId}
       notifications={data.notifications}
       profileNeedsAttention={data.profileNeedsAttention}
       paymentNeedsAttention={data.paymentNeedsAttention}

@@ -11,7 +11,6 @@ export default async function OwnerUniformsPage() {
       title="Uniforms"
       subtitle="Dark and light reference photos, organized by season."
       active="more"
-      conferenceName={data.conferenceName}
       conferenceId={data.conferenceId}
       conferences={data.conferences}
     >

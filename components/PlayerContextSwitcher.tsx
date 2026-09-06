@@ -10,9 +10,11 @@ import type { PlayerContextOption } from "@/lib/kch-data";
 export default function PlayerContextSwitcher({
   contexts,
   activeRegistrationId,
+  variant = "control",
 }: {
   contexts: PlayerContextOption[];
   activeRegistrationId: string;
+  variant?: "control" | "banner";
 }) {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
@@ -52,17 +54,36 @@ export default function PlayerContextSwitcher({
   return (
     <>
       <button
-        className="context-switcher-trigger"
+        className={variant === "banner" ? "card team-banner" : "context-switcher-trigger"}
         type="button"
         onClick={() => hasContextChoices && setOpen(true)}
         aria-haspopup={hasContextChoices ? "dialog" : undefined}
         aria-expanded={hasContextChoices ? open : undefined}
         disabled={!hasContextChoices}
       >
-        <span>
-          <b>{active.team}</b>
-        </span>
-        {hasContextChoices && <ChevronDown className="context-switcher-caret" aria-hidden="true" />}
+        {variant === "banner" ? (
+          <>
+            <span className="team-mark small" aria-hidden="true">
+              K
+            </span>
+            <span className="team-banner-copy">
+              <b>{active.team}</b>
+              <small>
+                {active.division} &nbsp;•&nbsp; {active.season}
+              </small>
+            </span>
+            {hasContextChoices && <ChevronDown className="team-banner-caret" aria-hidden="true" />}
+          </>
+        ) : (
+          <>
+            <span>
+              <b>{active.team}</b>
+            </span>
+            {hasContextChoices && (
+              <ChevronDown className="context-switcher-caret" aria-hidden="true" />
+            )}
+          </>
+        )}
       </button>
       {open && (
         <div

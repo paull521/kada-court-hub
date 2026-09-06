@@ -11,7 +11,6 @@ export default async function OwnerConferencesPage() {
       title="Conferences"
       subtitle="Create an isolated test conference or switch owner workspaces."
       active="more"
-      conferenceName={data.conferenceName}
       conferenceId={data.conferenceId}
       conferences={data.conferences}
     >

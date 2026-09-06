@@ -373,11 +373,6 @@ body {
   height: 54px;
   font-size: 23px;
 }
-.team-mark.large {
-  width: 100px;
-  height: 115px;
-  font-size: 48px;
-}
 .team-mark.tiny {
   width: 35px;
   height: 35px;
@@ -489,29 +484,47 @@ body {
   height: 22px;
   stroke-width: 2;
 }
+/* The banner is the team switcher, so it is sized as a control rather than a
+   hero: the small mark and a single line of meta halve the height it had. */
 .team-banner {
   background: linear-gradient(125deg, #08243e, #0a3767);
   color: #fff;
-  padding: 22px;
+  padding: 13px 16px;
   display: grid;
-  grid-template-columns: 110px 1fr;
-  gap: 18px;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  gap: 14px;
   align-items: center;
-  margin: 26px 0 14px;
+  margin: 0 0 14px;
+  width: 100%;
+  text-align: left;
+  border-color: rgba(7, 31, 61, 0.22);
 }
-.team-banner h2 {
-  font-size: 29px;
+.team-banner .team-mark {
   margin: 0;
 }
-.team-banner p {
-  margin: 6px 0 18px;
+.team-banner-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+.team-banner-copy b {
+  font-size: 21px;
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.team-banner-copy small {
+  font-size: 13px;
   color: #d8e0e8;
 }
-.team-banner em {
-  font-style: italic;
+.team-banner-caret {
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 255, 255, 0.62);
 }
-.team-banner em b {
-  color: #f3a313;
+.team-banner:disabled {
+  cursor: default;
 }
 .panel {
   padding: 17px;
@@ -724,6 +737,30 @@ body {
   padding: 22px;
   margin-bottom: 14px;
   display: grid;
+  /* Three explicit rows for the label, amount and paid line, so the team badge
+     beside them can span the full height without inventing a fourth. */
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto;
+  column-gap: 16px;
+}
+.balance-card > p,
+.balance-card > strong,
+.balance-card > span {
+  grid-column: 1;
+}
+/* Sized to sit inside the height the amount already takes, so naming the team
+   costs the card nothing. */
+.balance-team {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  align-self: center;
+  width: 92px;
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.2;
 }
 .balance-card p {
   color: #f4a313;
@@ -3582,16 +3619,6 @@ body {
   color: var(--muted);
   margin: 0;
 }
-.season-label {
-  display: inline-block;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  padding: 10px 13px;
-  font-size: 14px;
-  font-weight: 750;
-  margin: 0 0 15px;
-}
 .schedule-empty {
   text-align: center;
   padding: 30px 20px;
@@ -5356,7 +5383,7 @@ button.account-link {
   padding: 4px;
   background: #efede9;
   border-radius: 14px;
-  margin: -4px 0 18px;
+  margin: 0 0 18px;
 }
 .season-tabs a {
   min-height: 45px;
@@ -8783,7 +8810,6 @@ body:has(.context-overlay-open) .bottom {
   .content.two-col > .eyebrow,
   .content.two-col > .title,
   .content.two-col > .subtitle,
-  .content.two-col > .season-label,
   .content.two-col > .season-tabs,
   .content.two-col > .family-banner {
     grid-column: 1 / -1;

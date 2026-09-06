@@ -1,10 +1,9 @@
 import KchLogo from "@/components/KchLogo";
 import { CalendarDays, Home, User, Users, Wallet } from "lucide-react";
 import { ReactNode } from "react";
-import PlayerContextSwitcher from "@/components/PlayerContextSwitcher";
 import NotificationCenter from "@/components/NotificationCenter";
 import FastBottomNav from "@/components/FastBottomNav";
-import type { PlayerContextOption, PlayerNotification } from "@/lib/kch-data";
+import type { PlayerNotification } from "@/lib/kch-data";
 
 const links = [
   { href: "/home", key: "home", icon: <Home />, label: "Home" },
@@ -17,30 +16,27 @@ const links = [
 export default function AppShell({
   children,
   active,
-  contexts = [],
-  activeRegistrationId = "",
   notifications = [],
   profileNeedsAttention = false,
   paymentNeedsAttention = false,
   teamHasUnavailable = false,
   homeHref = "/home",
-  conferenceName = "",
   headerAction,
   headerNotification,
+  heading,
   contentClass = "",
 }: {
   children: ReactNode;
   active: string;
-  contexts?: PlayerContextOption[];
-  activeRegistrationId?: string;
   notifications?: PlayerNotification[];
   profileNeedsAttention?: boolean;
   paymentNeedsAttention?: boolean;
   teamHasUnavailable?: boolean;
   homeHref?: string;
-  conferenceName?: string;
   headerAction?: ReactNode;
   headerNotification?: ReactNode;
+  /** Page heading, if any. Runs above the page content. */
+  heading?: ReactNode;
   contentClass?: string;
 }) {
   const items = links.map(({ href, key, icon, label }) => ({
@@ -63,18 +59,13 @@ export default function AppShell({
       <header className="topbar">
         <KchLogo className="logo" />
         <div className="topbar-actions">
-          {headerAction ?? (
-            <PlayerContextSwitcher
-              contexts={contexts}
-              activeRegistrationId={activeRegistrationId}
-            />
-          )}
+          {headerAction}
           {headerNotification ?? <NotificationCenter notifications={notifications} />}
         </div>
       </header>
       <FastBottomNav items={items} active={active} label="Player navigation" />
       <main className={`content ${contentClass}`.trim()}>
-        {conferenceName && <p className="eyebrow">CONFERENCE: {conferenceName}</p>}
+        {heading}
         {children}
       </main>
     </div>

@@ -1,4 +1,5 @@
 import AppShell from "@/components/AppShell";
+import PlayerContextSwitcher from "@/components/PlayerContextSwitcher";
 import { getPlayerPortalData } from "@/lib/kch-data";
 import { redirect } from "next/navigation";
 
@@ -9,29 +10,17 @@ export default async function Team() {
     <AppShell
       contentClass="two-col"
       active="team"
-      contexts={data.contexts}
-      activeRegistrationId={data.activeRegistrationId}
       notifications={data.notifications}
       profileNeedsAttention={data.profileNeedsAttention}
       paymentNeedsAttention={data.paymentNeedsAttention}
       teamHasUnavailable={data.teamHasUnavailable}
-      conferenceName={data.context.conference}
     >
-      <h1 className="title">My Team</h1>
-      <p className="subtitle">Team details &amp; roster</p>
       <div className="col-pane col-pane-a">
-        <section className="card team-banner">
-          <span className="team-mark large">K</span>
-          <div>
-            <h2>{data.context.team}</h2>
-            <p>
-              {data.context.division} &nbsp;•&nbsp; {data.context.season}
-            </p>
-            <em>
-              One Team. One Court. <b>One Family.</b>
-            </em>
-          </div>
-        </section>
+        <PlayerContextSwitcher
+          contexts={data.contexts}
+          activeRegistrationId={data.activeRegistrationId}
+          variant="banner"
+        />
       </div>
       <div className="col-pane col-pane-b">
         <TeamRoster

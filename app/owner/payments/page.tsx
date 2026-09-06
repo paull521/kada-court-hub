@@ -22,7 +22,6 @@ export default async function OwnerPaymentsPage() {
       title="Payments"
       subtitle="Track current-season collections and review past seasons separately."
       active="payments"
-      conferenceName={data.conferenceName}
       conferenceId={data.conferenceId}
       conferences={data.conferences}
     >

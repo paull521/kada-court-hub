@@ -17,7 +17,6 @@ export default async function OwnerMorePage() {
       title="More Tools"
       subtitle="Additional conference tasks and records."
       active="more"
-      conferenceName={data.conferenceName}
       conferenceId={data.conferenceId}
       conferences={data.conferences}
     >

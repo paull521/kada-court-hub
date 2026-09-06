@@ -11,7 +11,6 @@ export default async function OwnerFinancialsPage() {
       title="Financial Summary"
       subtitle="Track season income, expenses, and profit or loss."
       active="more"
-      conferenceName={data.conferenceName}
       conferenceId={data.conferenceId}
       conferences={data.conferences}
     >

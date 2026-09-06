@@ -11,7 +11,6 @@ export default async function OwnerScoresPage() {
       title="Scoresheets"
       subtitle="Post final scores without the schedule-management clutter."
       active="home"
-      conferenceName={data.conferenceName}
       conferenceId={data.conferenceId}
       conferences={data.conferences}
     >

@@ -23,8 +23,6 @@ export default async function Home() {
     return (
       <AppShell
         active="home"
-        contexts={data.contexts}
-        activeRegistrationId={data.activeRegistrationId}
         notifications={data.notifications}
         profileNeedsAttention={data.profileNeedsAttention}
         paymentNeedsAttention={data.paymentNeedsAttention}
@@ -50,16 +48,17 @@ export default async function Home() {
     <AppShell
       contentClass="two-col"
       active="home"
-      contexts={data.contexts}
-      activeRegistrationId={data.activeRegistrationId}
       notifications={data.notifications}
       profileNeedsAttention={data.profileNeedsAttention}
       paymentNeedsAttention={data.paymentNeedsAttention}
       teamHasUnavailable={data.teamHasUnavailable}
-      conferenceName={data.context.conference}
+      heading={
+        <>
+          <h1 className="title welcome">Hello, {firstName}!</h1>
+          <p className="subtitle">Ready for game day?</p>
+        </>
+      }
     >
-      <h1 className="title welcome">Hello, {firstName}!</h1>
-      <p className="subtitle">Ready for game day?</p>
       <div className="col-pane col-pane-a">
         {data.invitation && <SeasonInvitationCard invitation={data.invitation} />}
         {next ? (

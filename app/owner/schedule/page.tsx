@@ -11,7 +11,6 @@ export default async function OwnerSchedulePage() {
       title="Schedule"
       subtitle="Create, update, and finalize regular-season and playoff schedules."
       active="schedule"
-      conferenceName={data.conferenceName}
       conferenceId={data.conferenceId}
       conferences={data.conferences}
     >

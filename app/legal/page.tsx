@@ -4,12 +4,7 @@ import { getPlayerPortalData } from "@/lib/kch-data";
 export default async function LegalPage() {
   const data = await getPlayerPortalData();
   return (
-    <AppShell
-      active="profile"
-      contexts={data.contexts}
-      activeRegistrationId={data.activeRegistrationId}
-      notifications={data.notifications}
-    >
+    <AppShell active="profile" notifications={data.notifications}>
       <p className="eyebrow">ACCOUNT</p>
       <h1 className="title">Privacy &amp; Terms</h1>
       <p className="subtitle">A readable summary for the KCH working MVP.</p>
