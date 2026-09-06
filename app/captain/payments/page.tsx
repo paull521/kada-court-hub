@@ -9,7 +9,12 @@ export default async function CaptainPaymentsPage() {
   const data = await getCaptainPortalData();
   if (!data.authorized) redirect("/profile");
   return (
-    <CaptainShell data={data} active="payments" title="Payments" subtitle="Team payment status.">
+    <CaptainShell
+      data={data}
+      active="payments"
+      title={data.teamName}
+      subtitle={`${data.divisionName} · ${data.seasonName}`}
+    >
       <div className="captain-payment-list">
         {data.payments.map((player) => {
           const status =

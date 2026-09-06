@@ -737,30 +737,6 @@ body {
   padding: 22px;
   margin-bottom: 14px;
   display: grid;
-  /* Three explicit rows for the label, amount and paid line, so the team badge
-     beside them can span the full height without inventing a fourth. */
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-rows: auto auto auto;
-  column-gap: 16px;
-}
-.balance-card > p,
-.balance-card > strong,
-.balance-card > span {
-  grid-column: 1;
-}
-/* Sized to sit inside the height the amount already takes, so naming the team
-   costs the card nothing. */
-.balance-team {
-  grid-column: 2;
-  grid-row: 1 / -1;
-  align-self: center;
-  width: 92px;
-  display: grid;
-  gap: 6px;
-  justify-items: center;
-  text-align: center;
-  font-size: 12px;
-  line-height: 1.2;
 }
 .balance-card p {
   color: #f4a313;

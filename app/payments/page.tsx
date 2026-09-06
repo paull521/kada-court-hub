@@ -16,6 +16,8 @@ export default async function Payments() {
       profileNeedsAttention={data.profileNeedsAttention}
       paymentNeedsAttention={data.paymentNeedsAttention}
       teamHasUnavailable={data.teamHasUnavailable}
+      title={data.context.team}
+      subtitle={`${data.context.division} · ${data.context.season}`}
     >
       <div className="col-pane col-pane-a">
         <section className="card balance-card">
@@ -26,12 +28,6 @@ export default async function Payments() {
             {account.waived ? ` · $${account.waived.toFixed(2)} waived` : ""}
             {account.pending ? ` · $${account.pending.toFixed(2)} awaiting confirmation` : ""}
           </span>
-          <div className="balance-team">
-            <span className="team-mark small" aria-hidden="true">
-              K
-            </span>
-            <b>{data.context.team}</b>
-          </div>
         </section>
         <section className="card panel">
           <h2>FEE BREAKDOWN</h2>
