@@ -17,6 +17,7 @@
   background: #eef1f4;
   border-radius: 14px;
   padding: 4px;
+  position: relative;
 }
 .role-switcher a {
   text-align: center;
@@ -24,11 +25,27 @@
   border-radius: 11px;
   color: #526172;
   font-weight: 800;
+  position: relative;
+  transition: color 0.2s ease;
+}
+/* The navy pill slides between two or three roles rather than being redrawn on
+   whichever link is current. One column of the track, and one gap per column
+   it has already passed. --role-count and --role-index come from the component,
+   because the switcher shows two roles for some accounts and three for others. */
+.role-switcher-thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px - (var(--role-count) - 1) * 6px) / var(--role-count));
+  border-radius: 11px;
+  background: #08254a;
+  box-shadow: 0 3px 10px #08254a33;
+  transform: translateX(calc(var(--role-index) * (100% + 6px)));
+  transition: transform 0.24s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .role-switcher a.active {
-  background: #08254a;
   color: #fff;
-  box-shadow: 0 3px 10px #08254a33;
 }
 .captain-dashboard-grid {
   display: grid;
@@ -306,6 +323,7 @@
   background: #eef1f4;
   border-radius: 12px;
   padding: 4px;
+  position: relative;
 }
 .availability-control button {
   min-width: 64px;
@@ -315,13 +333,31 @@
   background: transparent;
   font-weight: 900;
   color: #5a6675;
+  position: relative;
+  transition: color 0.2s ease;
 }
-.availability-control button.active.yes {
+/* The moving pill. Half the track, less the 4px padding on either side, so it
+   lands exactly on a button. Both the slide and the green-to-red change are the
+   same transition, which is what makes it read as one movement. */
+.availability-thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px) / 2);
+  border-radius: 9px;
   background: #258b45;
-  color: #fff;
+  transition:
+    transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.22s ease;
 }
-.availability-control button.active.no {
+.availability-choice[data-choice="no"] .availability-thumb {
+  transform: translateX(100%);
   background: #cf2e2e;
+}
+/* The buttons keep only their text colour - the fill is the thumb's job now. */
+.availability-control button.active.yes,
+.availability-control button.active.no {
   color: #fff;
 }
 .availability-control p {
