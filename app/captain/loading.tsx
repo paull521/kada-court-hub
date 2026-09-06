@@ -1,18 +1,11 @@
 import KchLogo from "@/components/KchLogo";
-import { CalendarDays, Home, User, Users, Wallet } from "lucide-react";
 import FastBottomNav from "@/components/FastBottomNav";
+import { captainNavLinks } from "@/lib/nav-links";
 import { SkeletonChip, SkeletonTitle, SkeletonCard, SkeletonRow } from "@/components/Skeleton";
 
-// Mirrors the links in components/CaptainShell.tsx. Kept local because
-// CaptainShell requires a full CaptainPortalData, which this boundary
-// renders before there is any data to give it.
-const items = [
-  { href: "/captain", key: "home", icon: <Home />, label: "Home" },
-  { href: "/captain/team", key: "team", icon: <Users />, label: "Teams" },
-  { href: "/captain/schedule", key: "schedule", icon: <CalendarDays />, label: "Schedule" },
-  { href: "/captain/payments", key: "payments", icon: <Wallet />, label: "Payments" },
-  { href: "/profile", key: "profile", icon: <User />, label: "Profile" },
-];
+// CaptainShell requires a full CaptainPortalData, which this boundary renders
+// before there is any data to give it, so the nav is built from the same table.
+const items = captainNavLinks.map((link) => ({ ...link }));
 
 export default function Loading() {
   return (

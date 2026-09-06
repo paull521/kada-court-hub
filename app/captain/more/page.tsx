@@ -18,7 +18,7 @@ export default async function CaptainMorePage() {
     >
       <RoleSwitcher roles={roles} current="captain" />
       <nav className="owner-more-list">
-        <Link href="/profile">
+        <Link href="/profile?view=captain">
           <span>
             <User className="ui-icon" />
           </span>

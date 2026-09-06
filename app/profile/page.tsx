@@ -294,9 +294,7 @@ export default async function Profile({
       profileNeedsAttention={data.profileNeedsAttention}
       paymentNeedsAttention={data.paymentNeedsAttention}
       teamHasUnavailable={data.teamHasUnavailable}
-      homeHref={
-        currentRole === "owner" ? "/owner" : currentRole === "captain" ? "/captain" : "/home"
-      }
+      role={currentRole}
       headerAction={
         ownerData?.authorized ? (
           <OwnerConferenceSwitcher
