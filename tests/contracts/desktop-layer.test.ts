@@ -114,8 +114,12 @@ describe("two-column pages declare both panes", () => {
     readFileSync(path, "utf8").includes('contentClass="two-col"'),
   );
 
+  // A floor, not a target: it catches a walk that silently found nothing, which
+  // would make every assertion below vacuous. /my-team dropped out of the set
+  // when it went back to a single column - one pane held the team switcher and
+  // nothing else, so the second column was empty down the whole page.
   it("finds the opted-in pages", () => {
-    expect(pages.length).toBeGreaterThanOrEqual(5);
+    expect(pages.length).toBeGreaterThanOrEqual(4);
   });
 
   it.each(pages.map((path) => path.replace(`${root}/`, "")))(

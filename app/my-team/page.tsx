@@ -8,29 +8,24 @@ export default async function Team() {
   if (!data.contexts.length) redirect("/home");
   return (
     <AppShell
-      contentClass="two-col"
       active="team"
       notifications={data.notifications}
       profileNeedsAttention={data.profileNeedsAttention}
       paymentNeedsAttention={data.paymentNeedsAttention}
       teamHasUnavailable={data.teamHasUnavailable}
     >
-      <div className="col-pane col-pane-a">
-        <PlayerContextSwitcher
-          contexts={data.contexts}
-          activeRegistrationId={data.activeRegistrationId}
-        />
-      </div>
-      <div className="col-pane col-pane-b">
-        <TeamRoster
-          roster={
-            data.teamInfo.divisionRosters.find((team) => team.isMyTeam)?.players.length
-              ? data.teamInfo.divisionRosters.find((team) => team.isMyTeam)!.players
-              : data.roster
-          }
-          availability={data.availability}
-        />
-      </div>
+      <PlayerContextSwitcher
+        contexts={data.contexts}
+        activeRegistrationId={data.activeRegistrationId}
+      />
+      <TeamRoster
+        roster={
+          data.teamInfo.divisionRosters.find((team) => team.isMyTeam)?.players.length
+            ? data.teamInfo.divisionRosters.find((team) => team.isMyTeam)!.players
+            : data.roster
+        }
+        availability={data.availability}
+      />
     </AppShell>
   );
 }
