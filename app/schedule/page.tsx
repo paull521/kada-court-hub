@@ -1,7 +1,14 @@
+import { Suspense } from "react";
 import { CalendarDays, ChevronRight, MapPin } from "lucide-react";
 import AppShell from "@/components/AppShell";
+import { ContentPlaceholder } from "@/components/Skeleton";
 import SeasonTabs from "@/components/SeasonTabs";
-import { getPlayerPortalData, type DivisionScheduleGame } from "@/lib/kch-data";
+import {
+  getPlayerPortalData,
+  playerHasTeamContext,
+  type DivisionScheduleGame,
+  type PlayerPortalData,
+} from "@/lib/kch-data";
 import { redirect } from "next/navigation";
 import type { Game } from "@/lib/data";
 
@@ -125,18 +132,27 @@ function DivisionWeeklyView({ games }: { games: DivisionScheduleGame[] }) {
 }
 
 export default async function Schedule() {
-  const data = await getPlayerPortalData();
+  if (!(await playerHasTeamContext())) redirect("/home");
+  const data = getPlayerPortalData();
+  return (
+    <AppShell contentClass="two-col" active="schedule" chrome={data}>
+      <Suspense fallback={<ContentPlaceholder />}>
+        <ScheduleBody data={data} />
+      </Suspense>
+    </AppShell>
+  );
+}
+
+async function ScheduleBody({ data: portal }: { data: Promise<PlayerPortalData> }) {
+  const data = await portal;
+  // playerHasTeamContext() above is the looser test - it sees the registration
+  // but not whether its team still resolves. This is the authoritative one the
+  // page used to gate on. Reaching it means the two disagreed, which should not
+  // happen; the redirect is client-side from here, and correct either way.
   if (!data.contexts.length) redirect("/home");
   const [next, ...upcoming] = data.games;
   return (
-    <AppShell
-      contentClass="two-col"
-      active="schedule"
-      notifications={data.notifications}
-      profileNeedsAttention={data.profileNeedsAttention}
-      paymentNeedsAttention={data.paymentNeedsAttention}
-      teamHasUnavailable={data.teamHasUnavailable}
-    >
+    <>
       <div className="col-pane col-pane-a">
         {next ? (
           <section className="card feature-card schedule-feature">
@@ -198,6 +214,6 @@ export default async function Schedule() {
         </p>
         <p className="family-quote-author">— PL</p>
       </section>
-    </AppShell>
+    </>
   );
 }

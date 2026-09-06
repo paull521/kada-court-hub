@@ -1,22 +1,33 @@
+import { Suspense } from "react";
 import { CalendarDays, Check, ChevronRight, Clock } from "lucide-react";
 import AppShell from "@/components/AppShell";
+import { ContentPlaceholder } from "@/components/Skeleton";
 import PlayerPaymentForm from "@/components/PlayerPaymentForm";
-import { getPlayerPortalData } from "@/lib/kch-data";
+import { getPlayerPortalData, playerHasTeamContext, type PlayerPortalData } from "@/lib/kch-data";
 import { redirect } from "next/navigation";
 
 export default async function Payments() {
-  const data = await getPlayerPortalData("payments");
+  if (!(await playerHasTeamContext())) redirect("/home");
+  const data = getPlayerPortalData("payments");
+  return (
+    <AppShell contentClass="two-col" active="payments" chrome={data}>
+      <Suspense fallback={<ContentPlaceholder />}>
+        <PaymentsBody data={data} />
+      </Suspense>
+    </AppShell>
+  );
+}
+
+async function PaymentsBody({ data: portal }: { data: Promise<PlayerPortalData> }) {
+  const data = await portal;
+  // playerHasTeamContext() above is the looser test - it sees the registration
+  // but not whether its team still resolves. This is the authoritative one the
+  // page used to gate on. Reaching it means the two disagreed, which should not
+  // happen; the redirect is client-side from here, and correct either way.
   if (!data.contexts.length) redirect("/home");
   const account = data.paymentAccount;
   return (
-    <AppShell
-      contentClass="two-col"
-      active="payments"
-      notifications={data.notifications}
-      profileNeedsAttention={data.profileNeedsAttention}
-      paymentNeedsAttention={data.paymentNeedsAttention}
-      teamHasUnavailable={data.teamHasUnavailable}
-    >
+    <>
       <div className="col-pane col-pane-a">
         <section className="card balance-card">
           <p>TOTAL BALANCE DUE</p>
@@ -89,6 +100,6 @@ export default async function Payments() {
       <section className="family-banner">
         <p className="family-quote">“You cannot achieve greatness without sacrifice.”</p>
       </section>
-    </AppShell>
+    </>
   );
 }
