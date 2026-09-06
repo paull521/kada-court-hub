@@ -99,6 +99,7 @@ export default async function Owner() {
         <KchLogo className="logo" />
         <OwnerConferenceSwitcher conferences={data.conferences} currentId={data.conferenceId} />
       </header>
+      <OwnerBottomNav active="home" />
       <main className="content owner-content owner-dashboard">
         <h1 className="title">
           {greeting}, Mr. {lastName}!
@@ -198,7 +199,6 @@ export default async function Owner() {
           )}
         </nav>
       </main>
-      <OwnerBottomNav active="home" />
     </div>
   );
 }

@@ -25,12 +25,12 @@ export default function OwnerPageShell({
         <KchLogo className="logo" />
         <OwnerConferenceSwitcher conferences={conferences} currentId={conferenceId} />
       </header>
+      <OwnerBottomNav active={active} />
       <main className="content owner-content">
         <h1 className="title">{title}</h1>
         <p className="subtitle">{subtitle}</p>
         {children}
       </main>
-      <OwnerBottomNav active={active} />
     </div>
   );
 }

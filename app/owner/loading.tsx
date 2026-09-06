@@ -11,6 +11,7 @@ export default function Loading() {
           <SkeletonChip />
         </div>
       </header>
+      <OwnerBottomNav active="home" />
       <main className="content">
         <div role="status" aria-live="polite" aria-busy="true">
           <span className="sr-only">Loading</span>
@@ -19,7 +20,6 @@ export default function Loading() {
           <SkeletonRow count={4} />
         </div>
       </main>
-      <OwnerBottomNav active="home" />
     </div>
   );
 }

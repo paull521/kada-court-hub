@@ -16,6 +16,7 @@ export default function Loading() {
           <SkeletonChip />
         </div>
       </header>
+      <FastBottomNav items={items} active="home" label="Captain navigation" />
       <main className="content">
         <div role="status" aria-live="polite" aria-busy="true">
           <span className="sr-only">Loading</span>
@@ -24,7 +25,6 @@ export default function Loading() {
           <SkeletonRow count={4} />
         </div>
       </main>
-      <FastBottomNav items={items} active="home" label="Captain navigation" />
     </div>
   );
 }

@@ -39,17 +39,17 @@ export default function CaptainShell({
           activeRegistrationId={data.activeRegistrationId}
         />
       </header>
-      <main className={`content captain-content ${contentClass}`.trim()}>
-        <h1 className="title">{title}</h1>
-        <p className="subtitle">{subtitle}</p>
-        {children}
-      </main>
       <FastBottomNav
         items={items}
         active={selected}
         className="bottom captain-bottom"
         label="Captain navigation"
       />
+      <main className={`content captain-content ${contentClass}`.trim()}>
+        <h1 className="title">{title}</h1>
+        <p className="subtitle">{subtitle}</p>
+        {children}
+      </main>
     </div>
   );
 }

@@ -1085,13 +1085,7 @@ export async function getPlayerPortalData(
     const myAvailability =
       availability.find((item) => item.registrationId === registration.id)?.available ?? true;
     const teamHasUnavailable = availability.some((item) => !item.available);
-    const divisionSchedule: DivisionScheduleGame[] = publishedDivisionGames
-      .filter(
-        (row) =>
-          (row.home_score !== null && row.away_score !== null) ||
-          new Date(row.starts_at).getTime() >= now,
-      )
-      .map((row) => {
+    const divisionSchedule: DivisionScheduleGame[] = publishedDivisionGames.map((row) => {
         const date = new Date(row.starts_at),
           parts = new Intl.DateTimeFormat("en-US", {
             timeZone: timezone,

@@ -425,12 +425,22 @@ body {
   color: var(--blue) !important;
 }
 .family-banner {
-  /* No background and no fixed height: it is a sign-off line, not a panel, so
-     it hugs its own text. The size steps down on narrow phones so the three
-     sentences stay on one line instead of breaking mid-phrase. */
-  padding: 18px 12px 4px;
+  padding: 22px 12px 6px;
   text-align: center;
-  font-size: clamp(14px, 4.2vw, 18px);
+  color: var(--muted);
+}
+.family-quote {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(16px, 4.4vw, 20px);
+  font-style: italic;
+  line-height: 1.45;
+}
+.family-quote-author {
+  margin: 5px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
 }
 .family-banner span {
   color: var(--red);

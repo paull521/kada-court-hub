@@ -31,6 +31,10 @@ export default async function Team() {
           availability={data.availability}
         />
       </div>
+      <section className="family-banner">
+        <p className="family-quote">“Talent wins games, but teamwork and intelligence win championships.”</p>
+        <p className="family-quote-author">— MJ</p>
+      </section>
     </AppShell>
   );
 }
