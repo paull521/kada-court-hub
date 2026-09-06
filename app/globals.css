@@ -8592,10 +8592,6 @@ body:has(.context-overlay-open) .bottom {
 
 /* Lucide icons inside the notification chrome. The glyphs these replaced were
    sized by font-size, which has no effect on an SVG. */
-.notification svg {
-  width: 26px;
-  height: 26px;
-}
 .notification-item > i svg {
   width: 20px;
   height: 20px;

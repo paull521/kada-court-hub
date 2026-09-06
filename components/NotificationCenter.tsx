@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, CalendarDays, Check, ChevronRight, Sparkles, Users } from "lucide-react";
+import { CalendarDays, Check, ChevronRight, Sparkles, Users } from "lucide-react";
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -54,8 +54,7 @@ export default function NotificationCenter({
         aria-label={unread ? `${unread} unread notifications` : "Notifications"}
         onClick={() => setOpen(true)}
       >
-        <Bell aria-hidden="true" />
-        {unread > 0 && <span />}
+        🔔{unread > 0 && <span />}
       </button>
       {open && (
         <div
