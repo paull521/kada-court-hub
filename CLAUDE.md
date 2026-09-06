@@ -6,7 +6,7 @@
 
 No CI. Run after every change:
 
-`npm test` (135) · `npm run build` · `npx tsc --noEmit` · `npx prettier --check app components lib`
+`npm test` (137) · `npm run build` · `npx tsc --noEmit` · `npx prettier --check app components lib`
 
 ## Shape
 
@@ -18,8 +18,11 @@ No CI. Run after every change:
 
 ## CSS
 
-- `app/globals.css` is one 8,900-line file. Grep it whole before editing a selector — a later duplicate wins at equal specificity.
-- One breakpoint: `@media (min-width: 900px)`. Every desktop rule goes inside it.
+Seven stylesheets, imported in this order by `app/layout.tsx`: `globals.css`, `workspaces.css`, `patriotism.css`, `captain-refinement.css`, `owner-refinement.css`, `kch-logo.css`, `desktop.css`.
+
+- `app/globals.css` is one 8,700-line file. Grep it whole before editing a selector — a later duplicate wins at equal specificity. Then grep the six files after it, which win over all of it.
+- **Every desktop rule goes in `app/desktop.css`, never in `globals.css`.** It is imported last so it actually wins; a desktop rule in `globals.css` loses to the six files that load after it. That is not theoretical — the four-across captain dashboard sat there as dead CSS. `tests/contracts/desktop-layer.test.ts` enforces both the single `@media (min-width: 900px)` and the import position.
+- One measure per page, set on `.shell` and read by the header, the tab strip and the content so they share an edge. The shell picks it with `:has()`: `--page` (1180px) for two-column pages, tile grids and the owner workspace; `--page-stack` (880px) for single-column pages.
 
 ## How the author works
 

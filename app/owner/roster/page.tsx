@@ -13,9 +13,7 @@ export default async function OwnerRosterOverridesPage({
   const selectedView = view === "teams" ? "teams" : "directory";
   const title = selectedView === "directory" ? "Player Directory" : "Teams";
   const subtitle =
-    selectedView === "directory"
-      ? ""
-      : "Choose a season and view the teams in each division.";
+    selectedView === "directory" ? "" : "Choose a season and view the teams in each division.";
   return (
     <OwnerPageShell
       title={title}

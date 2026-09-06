@@ -1086,37 +1086,37 @@ export async function getPlayerPortalData(
       availability.find((item) => item.registrationId === registration.id)?.available ?? true;
     const teamHasUnavailable = availability.some((item) => !item.available);
     const divisionSchedule: DivisionScheduleGame[] = publishedDivisionGames.map((row) => {
-        const date = new Date(row.starts_at),
-          parts = new Intl.DateTimeFormat("en-US", {
-            timeZone: timezone,
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          }).formatToParts(date),
-          part = (type: Intl.DateTimeFormatPartTypes) =>
-            parts.find((item) => item.type === type)?.value ?? "";
-        return {
-          id: row.id,
-          dateKey: `${part("year")}-${part("month")}-${part("day")}`,
-          dateLabel: new Intl.DateTimeFormat("en-US", {
-            timeZone: timezone,
-            weekday: "short",
-            month: "short",
-            day: "numeric",
-          }).format(date),
-          time: new Intl.DateTimeFormat("en-US", {
-            timeZone: timezone,
-            hour: "numeric",
-            minute: "2-digit",
-          }).format(date),
-          homeTeam: teamNames.get(row.home_team_id) ?? "Home Team",
-          awayTeam: teamNames.get(row.away_team_id) ?? "Away Team",
-          venue: row.venue,
-          court: row.court ?? "",
-          homeScore: row.home_score,
-          awayScore: row.away_score,
-        };
-      });
+      const date = new Date(row.starts_at),
+        parts = new Intl.DateTimeFormat("en-US", {
+          timeZone: timezone,
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }).formatToParts(date),
+        part = (type: Intl.DateTimeFormatPartTypes) =>
+          parts.find((item) => item.type === type)?.value ?? "";
+      return {
+        id: row.id,
+        dateKey: `${part("year")}-${part("month")}-${part("day")}`,
+        dateLabel: new Intl.DateTimeFormat("en-US", {
+          timeZone: timezone,
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+        }).format(date),
+        time: new Intl.DateTimeFormat("en-US", {
+          timeZone: timezone,
+          hour: "numeric",
+          minute: "2-digit",
+        }).format(date),
+        homeTeam: teamNames.get(row.home_team_id) ?? "Home Team",
+        awayTeam: teamNames.get(row.away_team_id) ?? "Away Team",
+        venue: row.venue,
+        court: row.court ?? "",
+        homeScore: row.home_score,
+        awayScore: row.away_score,
+      };
+    });
     const liveResults: GameResult[] = mappedGames
       .filter((item) => item.teamScore !== null && item.opponentScore !== null)
       .sort((a, b) => b.startsAt - a.startsAt)

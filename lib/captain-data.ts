@@ -313,8 +313,8 @@ export async function getCaptainPortalData(
     .filter(
       (row) =>
         notificationEnabled(row.notification_type) &&
-        ["/home", "/payments", "/my-team", "/schedule", "/results", "/standings"].some(
-          (path) => (row.link_path ?? "/home").startsWith(path),
+        ["/home", "/payments", "/my-team", "/schedule", "/results", "/standings"].some((path) =>
+          (row.link_path ?? "/home").startsWith(path),
         ),
     )
     .map((row) => ({

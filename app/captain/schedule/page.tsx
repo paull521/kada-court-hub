@@ -121,6 +121,7 @@ export default async function CaptainSchedulePage() {
   const [next, ...upcoming] = data.games;
   return (
     <CaptainShell
+      contentClass="two-col"
       data={data}
       active="schedule"
       title={data.teamName}

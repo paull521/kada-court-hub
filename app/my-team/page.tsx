@@ -15,24 +15,22 @@ export default async function Team() {
       paymentNeedsAttention={data.paymentNeedsAttention}
       teamHasUnavailable={data.teamHasUnavailable}
     >
-      <div className="col-pane col-pane-a">
-        <PlayerContextSwitcher
-          contexts={data.contexts}
-          activeRegistrationId={data.activeRegistrationId}
-        />
-      </div>
-      <div className="col-pane col-pane-b">
-        <TeamRoster
-          roster={
-            data.teamInfo.divisionRosters.find((team) => team.isMyTeam)?.players.length
-              ? data.teamInfo.divisionRosters.find((team) => team.isMyTeam)!.players
-              : data.roster
-          }
-          availability={data.availability}
-        />
-      </div>
+      <PlayerContextSwitcher
+        contexts={data.contexts}
+        activeRegistrationId={data.activeRegistrationId}
+      />
+      <TeamRoster
+        roster={
+          data.teamInfo.divisionRosters.find((team) => team.isMyTeam)?.players.length
+            ? data.teamInfo.divisionRosters.find((team) => team.isMyTeam)!.players
+            : data.roster
+        }
+        availability={data.availability}
+      />
       <section className="family-banner">
-        <p className="family-quote">“Talent wins games, but teamwork and intelligence win championships.”</p>
+        <p className="family-quote">
+          “Talent wins games, but teamwork and intelligence win championships.”
+        </p>
         <p className="family-quote-author">— MJ</p>
       </section>
     </AppShell>

@@ -130,7 +130,7 @@ export default async function Schedule() {
   const [next, ...upcoming] = data.games;
   return (
     <AppShell
-      contentClass="player-workspace-content"
+      contentClass="two-col"
       active="schedule"
       notifications={data.notifications}
       profileNeedsAttention={data.profileNeedsAttention}
@@ -193,7 +193,9 @@ export default async function Schedule() {
         <DivisionWeeklyView games={data.divisionSchedule} />
       </div>
       <section className="family-banner">
-        <p className="family-quote">“Every game is a direct reflection of what you have prepared for.”</p>
+        <p className="family-quote">
+          “Every game is a direct reflection of what you have prepared for.”
+        </p>
         <p className="family-quote-author">— PL</p>
       </section>
     </AppShell>
