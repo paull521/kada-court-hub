@@ -14,8 +14,6 @@ export default async function Team() {
       profileNeedsAttention={data.profileNeedsAttention}
       paymentNeedsAttention={data.paymentNeedsAttention}
       teamHasUnavailable={data.teamHasUnavailable}
-      title={data.context.team}
-      subtitle={`${data.context.division} · ${data.context.season}`}
     >
       <div className="col-pane col-pane-a">
         <PlayerContextSwitcher
