@@ -22,13 +22,7 @@
    ========================================================================== */
 @media (min-width: 900px) {
   /* --- The measure ---------------------------------------------------------
-     One column width per workspace, and the page chrome is aligned to the same
-     number as the content under it. Player and captain pages are a reading
-     column of cards; owner pages are rosters, schedule builders and payment
-     tables, which are the one place in the app that wants more width, not
-     less. --stack is for single-column pages, where a card stretched to the
-     full measure puts its first and last word half a screen apart. */
-  /* Two measures, not one per page. 1180px is the app width: wide enough for
+     Two measures, not one per page. 1180px is the app width: wide enough for
      two panes of cards or a row of tiles, narrow enough that a card's first and
      last word stay in the same glance. 880px is for pages that are a single
      column of rows, where the full app width would put a label at one edge of
@@ -211,6 +205,24 @@
   }
   .col-pane-b {
     grid-column: 2;
+  }
+  /* A flex column does not collapse margins the way normal flow does, so every
+     card's own stacking margin was adding to the pane's gap rather than being
+     absorbed by it. Under the season tabs that came out as 14px of gap plus
+     18px of margin plus the label's own 18px - 50px, where the phone collapses
+     the same markup to 18. It also pushed a column out of alignment whenever
+     its first card carried a top margin, which is why the payment methods panel
+     started 16px lower than the balance card beside it.
+
+     The pane owns the vertical rhythm. Its children keep their horizontal
+     margins and give up their vertical ones. */
+  .col-pane > * {
+    margin-block: 0;
+  }
+  /* Except a list label, which belongs to the list under it rather than equally
+     to both of its neighbours. */
+  .col-pane > .list-label {
+    margin-top: 10px;
   }
 
   /* The sign-off line closes the page instead of floating in the gap under the
