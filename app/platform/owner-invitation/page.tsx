@@ -1,4 +1,4 @@
-import Image from "next/image";
+import KchLogo from "@/components/KchLogo";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { OwnerApplication } from "@/components/PlatformCreatorTools";
@@ -12,7 +12,7 @@ export default async function OwnerInvitationPage() {
   return (
     <div className="shell login-shell">
       <header className="login-logo">
-        <Image src="/kch-logo.png" alt="KadaCourtHub" width={420} height={160} priority />
+        <KchLogo />
       </header>
       <main className="login">
         <p className="eyebrow">KCH OWNER INVITATION</p>

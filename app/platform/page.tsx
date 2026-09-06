@@ -1,5 +1,5 @@
 import { CalendarDays, ClipboardList, Settings, User, Wallet } from "lucide-react";
-import Image from "next/image";
+import KchLogo from "@/components/KchLogo";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getPlatformDashboard } from "@/lib/platform-data";
@@ -10,14 +10,7 @@ export default async function PlatformCreatorPage() {
   return (
     <div className="shell owner-shell guided-owner-shell platform-shell">
       <header className="topbar">
-        <Image
-          src="/kch-logo.png"
-          alt="KadaCourtHub"
-          width={340}
-          height={130}
-          className="logo"
-          priority
-        />
+        <KchLogo className="logo" />
         <Link href="/login" className="muted platform-signout">
           Player sign in
         </Link>

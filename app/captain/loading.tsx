@@ -1,4 +1,4 @@
-import Image from "next/image";
+import KchLogo from "@/components/KchLogo";
 import { CalendarDays, Home, User, Users, Wallet } from "lucide-react";
 import FastBottomNav from "@/components/FastBottomNav";
 import { SkeletonChip, SkeletonTitle, SkeletonCard, SkeletonRow } from "@/components/Skeleton";
@@ -18,14 +18,7 @@ export default function Loading() {
   return (
     <div className="shell captain-shell">
       <header className="topbar">
-        <Image
-          src="/kch-logo.png"
-          alt="KadaCourtHub"
-          width={340}
-          height={130}
-          className="logo"
-          priority
-        />
+        <KchLogo className="logo" />
         <div className="topbar-actions">
           <SkeletonChip />
         </div>

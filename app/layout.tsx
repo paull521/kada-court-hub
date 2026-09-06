@@ -3,6 +3,7 @@ import "./workspaces.css";
 import "./patriotism.css";
 import "./captain-refinement.css";
 import "./owner-refinement.css";
+import "./kch-logo.css";
 import { ReactNode } from "react";
 export const metadata = {
   title: "KadaCourtHub",

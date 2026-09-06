@@ -1,4 +1,4 @@
-import Image from "next/image";
+import KchLogo from "@/components/KchLogo";
 import type { ReactNode } from "react";
 import OwnerBottomNav, { type OwnerNavKey } from "@/components/OwnerBottomNav";
 import OwnerConferenceSwitcher from "@/components/OwnerConferenceSwitcher";
@@ -24,14 +24,7 @@ export default function OwnerPageShell({
   return (
     <div className="shell owner-shell guided-owner-shell">
       <header className="topbar">
-        <Image
-          src="/kch-logo.png"
-          alt="KadaCourtHub"
-          width={340}
-          height={130}
-          className="logo"
-          priority
-        />
+        <KchLogo className="logo" />
         <OwnerConferenceSwitcher conferences={conferences} currentId={conferenceId} />
       </header>
       <main className="content owner-content">

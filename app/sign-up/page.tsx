@@ -1,4 +1,4 @@
-import Image from "next/image";
+import KchLogo from "@/components/KchLogo";
 import { redirect } from "next/navigation";
 import { SignUpForm } from "@/components/AuthForm";
 
@@ -12,7 +12,7 @@ export default async function SignUp({
   return (
     <div className="shell login-shell">
       <header className="login-logo">
-        <Image src="/kch-logo.png" alt="KadaCourtHub" width={420} height={160} priority />
+        <KchLogo />
       </header>
       <main className="login signup">
         <h1>

@@ -77,9 +77,8 @@ body {
   position: relative;
   z-index: 3;
 }
-.logo {
-  width: 145px;
-  height: auto;
+.topbar .logo {
+  --kch-logo-size: 42px;
   flex: none;
 }
 .topbar-actions {
@@ -881,9 +880,8 @@ body {
   position: relative;
   z-index: 2;
 }
-.login-logo img {
-  width: 180px;
-  height: auto;
+.login-logo .kch-logo {
+  --kch-logo-size: 52px;
 }
 .login {
   padding: 25px 30px 50px;
@@ -6192,8 +6190,8 @@ button.account-link {
     padding-left: 18px;
     padding-right: 18px;
   }
-  .logo {
-    width: 125px;
+  .topbar .logo {
+    --kch-logo-size: 36px;
   }
   .context-switcher-trigger {
     max-width: 137px;
@@ -8592,10 +8590,6 @@ body:has(.context-overlay-open) .bottom {
 
 /* Lucide icons inside the notification chrome. The glyphs these replaced were
    sized by font-size, which has no effect on an SVG. */
-.notification svg {
-  width: 26px;
-  height: 26px;
-}
 .notification-item > i svg {
   width: 20px;
   height: 20px;
@@ -8713,8 +8707,8 @@ body:has(.context-overlay-open) .bottom {
     height: auto;
     padding: 22px clamp(32px, 4vw, 72px) 14px;
   }
-  .logo {
-    width: 172px;
+  .topbar .logo {
+    --kch-logo-size: 50px;
   }
 
   /* The bottom bar becomes a tab strip under the header. Bottom nav is a
