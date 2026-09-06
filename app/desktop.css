@@ -1,0 +1,343 @@
+/* ============================================================================
+   The laptop layer.
+
+   Two facts about this file are load-bearing, and both are enforced by
+   tests/contracts/desktop-layer.test.ts:
+
+   1. Every rule sits inside one 900px media query, so nothing here can reach
+      the phone. The phone layout and the laptop layout share one component
+      tree and one set of class names; the query is the only thing keeping
+      them apart.
+
+   2. It is the last stylesheet app/layout.tsx imports. globals.css is the
+      first, and five files load between them, so a laptop rule written in
+      globals.css loses to any later file at equal specificity. That is not
+      hypothetical: the four-across captain dashboard was written in
+      globals.css and silently never applied, because workspaces.css redeclares
+      .captain-dashboard-grid unconditionally further down the cascade.
+
+   The breakpoint is a viewport question rather than a device question, so it
+   is a media query and not user-agent detection - that keeps resizing correct
+   and avoids a server/client hydration mismatch in Next.
+   ========================================================================== */
+@media (min-width: 900px) {
+  /* --- The measure ---------------------------------------------------------
+     One column width per workspace, and the page chrome is aligned to the same
+     number as the content under it. Player and captain pages are a reading
+     column of cards; owner pages are rosters, schedule builders and payment
+     tables, which are the one place in the app that wants more width, not
+     less. --stack is for single-column pages, where a card stretched to the
+     full measure puts its first and last word half a screen apart. */
+  /* Two measures, not one per page. 1180px is the app width: wide enough for
+     two panes of cards or a row of tiles, narrow enough that a card's first and
+     last word stay in the same glance. 880px is for pages that are a single
+     column of rows, where the full app width would put a label at one edge of
+     the window and its value at the other. */
+  :root {
+    --page: 1180px;
+    --page-stack: 880px;
+    --gutter: clamp(28px, 4vw, 64px);
+  }
+
+  /* The measure is set once on the shell and read by the header, the tab strip
+     and the content, so all three share a left and a right edge on every page.
+     :has() is what makes that possible without a prop: the shell asks what kind
+     of page it is wrapping instead of being told. A page that is a reading
+     column of cards gets the narrow measure; a two-column page or a grid of
+     tiles gets the wide one. */
+  .shell {
+    --measure: var(--page-stack);
+  }
+  .shell:has(.content.two-col),
+  .shell:has(.captain-dashboard-grid),
+  /* The owner workspace is rosters, schedule builders and payment tables
+     rather than a reading column, so it takes the app width throughout. */
+  .shell:has(.owner-content) {
+    --measure: var(--page);
+  }
+
+  /* Centres a full-bleed element's contents on --measure without wrapping it
+     in another div: the padding collapses to --gutter once the window is
+     narrower than the measure. */
+  .topbar,
+  .bottom,
+  .content {
+    padding-inline: max(var(--gutter), (100% - var(--measure)) / 2);
+  }
+
+  /* --- The frame -----------------------------------------------------------
+     The shell stops pretending to be a phone. The 50px drop shadow read as a
+     device mockup floating on a page; at this width it is simply the app. */
+  body {
+    background: #edeae4;
+  }
+  .shell {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    box-shadow: none;
+    /* Column order, not DOM order, decides where the nav sits. AppShell renders
+       it before <main> and the captain and owner shells render it after, which
+       is why those two workspaces dropped their tab strip to the foot of the
+       page. Ordering here fixes all three without touching the markup, so the
+       phone's DOM and focus order are exactly what they were. */
+    display: flex;
+    flex-direction: column;
+    /* clip rather than hidden: both crop the decorative wash, but hidden makes
+       the shell a scroll container, which would stop the tab strip below from
+       sticking. */
+    overflow: clip;
+  }
+  .topbar {
+    order: 1;
+  }
+  .bottom {
+    order: 2;
+  }
+  .content {
+    order: 3;
+    /* Short pages still paint the full window rather than ending in a band of
+       bare background halfway down. */
+    flex: 1;
+  }
+
+  /* Login has no navigation and one short form. Full-bleed suits an app screen,
+     not a sign-in box, so these keep a narrow centred column. The invitation
+     and join screens are the same shape: one decision, no navigation. */
+  .shell.login-shell,
+  .shell.invite-shell {
+    width: min(100%, 540px);
+    margin: 0 auto;
+    box-shadow: 0 0 0 1px rgba(7, 31, 61, 0.07);
+  }
+
+  /* --- Header and tab strip ------------------------------------------------
+     The bottom bar becomes a tab strip under the header. Bottom nav is a
+     thumb-reach convention; with a pointer and a keyboard the tabs belong at
+     the top, where the eye already is. */
+  .topbar {
+    height: auto;
+    padding-block: 24px 12px;
+  }
+  .topbar .logo {
+    --kch-logo-size: 50px;
+  }
+  .bottom {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    width: auto;
+    height: auto;
+    display: flex;
+    gap: 2px;
+    /* Owner tables run long. The strip stays reachable while they scroll, so it
+       needs a ground of its own rather than the transparent one it had. */
+    background: rgba(251, 248, 243, 0.88);
+    backdrop-filter: saturate(140%) blur(12px);
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .owner-bottom {
+    width: auto;
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 13px 16px 12px;
+    font-size: 14px;
+    font-weight: 700;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.12s ease;
+  }
+  .nav:hover {
+    color: var(--navy);
+  }
+  .nav.active {
+    border-bottom-color: var(--navy);
+  }
+  .nav b {
+    margin-bottom: 0;
+  }
+  .nav b svg {
+    width: 18px;
+    height: 18px;
+  }
+  /* The dots were positioned for a stacked, centred nav item. In a horizontal
+     one they belong on the icon, not at a percentage of a much wider box. */
+  .nav .nav-team-dot,
+  .nav .nav-alert-dot {
+    top: 9px;
+    right: auto;
+    left: 27px;
+  }
+
+  /* --- Content -------------------------------------------------------------
+     No fixed bar left to clear, so the 112px of bottom padding goes. */
+  .content {
+    padding-block: 30px 72px;
+  }
+  .title {
+    font-size: 42px;
+  }
+  /* Pages that opt in split into two independent stacks. */
+  .content.two-col {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    column-gap: 26px;
+    align-content: start;
+  }
+  /* Headings and anything that introduces the whole page run the full width. */
+  .content.two-col > .eyebrow,
+  .content.two-col > .title,
+  .content.two-col > .subtitle,
+  .content.two-col > .season-tabs,
+  .content.two-col > .family-banner {
+    grid-column: 1 / -1;
+  }
+  /* Each pane is its own flex stack. Placing cards directly in the grid with
+     only a column set made auto-placement advance the row cursor past the left
+     column, so the right column began below it and both ended up ragged. */
+  .col-pane {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .col-pane-a {
+    grid-column: 1;
+  }
+  .col-pane-b {
+    grid-column: 2;
+  }
+
+  /* The sign-off line closes the page instead of floating in the gap under the
+     last card. */
+  .content > .family-banner {
+    margin-top: 34px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+
+  /* --- Pointer feedback ----------------------------------------------------
+     Every card on these pages is a link, and a pointer gets no answer from the
+     phone layout because a finger never hovers. */
+  a.card,
+  .owner-action-card,
+  .captain-task-tile,
+  .owner-list-row {
+    transition:
+      border-color 0.12s ease,
+      box-shadow 0.12s ease;
+  }
+  a.card:hover,
+  .owner-action-card:hover,
+  .captain-task-tile:hover {
+    border-color: rgba(7, 31, 61, 0.2);
+    box-shadow: 0 12px 26px rgba(13, 38, 69, 0.13);
+  }
+
+  /* --- Captain -------------------------------------------------------------
+     The dashboard is a 2x3 stack of square tiles on a phone. With the width
+     available it reads as one row rather than a column of pairs. */
+  .captain-dashboard-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .captain-task-tile {
+    min-height: 132px;
+  }
+  /* Sized to finish the phone's two-up grid. In a four-up row a full-width
+     last tile is just a stretched one. */
+  .captain-task-tile:last-child:nth-child(odd) {
+    grid-column: auto;
+    min-height: 132px;
+  }
+
+  /* --- Owner ---------------------------------------------------------------
+     The task tiles are squares because a phone shows two per row and a square
+     is the shape that leaves. Four across at this width, a square is 320px tall
+     with its text pinned to the bottom edge and nothing in the middle. Laid on
+     their side they are a row of cards again. The selector matches
+     owner-refinement.css, which loads after globals.css and would otherwise
+     win. */
+  .owner-action-grid {
+    /* Three across, not four: six tiles divide evenly into two rows, and the
+       longest label - Create Season Tournament - stays on one line. */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .owner-dashboard .owner-action-card,
+  .owner-action-card {
+    aspect-ratio: auto;
+    min-height: 124px;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 14px;
+    padding: 18px;
+  }
+  .owner-dashboard .owner-action-card > div {
+    flex: 1;
+    min-width: 0;
+  }
+  .owner-more-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* Squares again, and squares four-up are 300px tall to hold a label and a
+     dollar amount. The figure is the content; the box should be the size of it. */
+  .financial-income-grid span {
+    aspect-ratio: auto;
+    min-height: 88px;
+    padding: 14px 12px;
+  }
+  .financial-income-grid small {
+    font-size: 11px;
+    line-height: 1.3;
+  }
+  .financial-income-grid b {
+    font-size: 21px;
+  }
+  /* A season is 37 scoresheets, and a scoresheet is two inputs and two buttons.
+     One per row made the page a 12,000px column of half-empty navy blocks. */
+  .scoreboard-list {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+  }
+  /* It introduces the whole division, not the scoresheet it happens to sit
+     next to. */
+  .score-reminder {
+    grid-column: 1 / -1;
+  }
+
+  /* A closed disclosure was drawing the rule that separates its heading from a
+     body that is not on screen, and parking its caret in the middle of the row
+     because the heading no longer fills the width. */
+  .owner-section-title > strong {
+    margin-left: auto;
+  }
+  details.owner-section:not([open]) > summary > .owner-section-title {
+    border-bottom: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  /* --- Shared ---------------------------------------------------------------
+     The invitation card is a utility, not a headline. Stretched to the measure
+     it became a 1,100px button beside a QR code; it wants to be the size of the
+     thing it holds. */
+  .conference-player-invitation {
+    max-width: 470px;
+    grid-template-columns: minmax(0, 1fr) 132px;
+    padding: 18px;
+  }
+  .conference-player-invitation img {
+    width: 132px;
+    height: 132px;
+  }
+  .captain-content > .conference-player-invitation {
+    max-width: 430px;
+  }
+}

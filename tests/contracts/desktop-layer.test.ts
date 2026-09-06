@@ -3,7 +3,9 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
-const css = readFileSync(join(root, "app/globals.css"), "utf8");
+const css = readFileSync(join(root, "app/desktop.css"), "utf8");
+const base = readFileSync(join(root, "app/globals.css"), "utf8");
+const layout = readFileSync(join(root, "app/layout.tsx"), "utf8");
 const BREAKPOINT = "@media (min-width: 900px) {";
 
 /** Every rule in the file, tagged with whether it sits inside the desktop layer. */
@@ -45,7 +47,7 @@ describe("the laptop layer stays inside its media query", () => {
   const all = rules();
 
   it("parsed the stylesheet", () => {
-    expect(all.length).toBeGreaterThan(200);
+    expect(all.length).toBeGreaterThan(25);
     expect(all.some((rule) => rule.desktop)).toBe(true);
   });
 
@@ -53,8 +55,27 @@ describe("the laptop layer stays inside its media query", () => {
     expect(css.split(BREAKPOINT).length - 1).toBe(1);
   });
 
-  // display:contents is the mechanism that makes the desktop column wrappers
-  // invisible to the phone, so it is the one rule that must live outside.
+  // The whole point of the file: nothing in it can reach a phone.
+  it("puts every rule in the file inside the layer", () => {
+    expect(all.filter((rule) => !rule.desktop).map((rule) => rule.selector)).toEqual([]);
+  });
+
+  it("keeps the breakpoint out of every other stylesheet", () => {
+    expect(base.includes(BREAKPOINT)).toBe(false);
+  });
+
+  /**
+   * A laptop rule only wins if it is read last. globals.css is imported first
+   * and five stylesheets follow it, so a rule written there loses to any later
+   * file at equal specificity - which is how the four-across captain dashboard
+   * came to be dead CSS. desktop.css has to stay at the bottom of the list.
+   */
+  it("is the last stylesheet the app imports", () => {
+    const imports = [...layout.matchAll(/^import "\.\/([\w-]+\.css)";$/gm)].map((m) => m[1]);
+    expect(imports.length).toBeGreaterThanOrEqual(2);
+    expect(imports.at(-1)).toBe("desktop.css");
+  });
+
   const ALLOWED_OUTSIDE = [".col-pane"];
 
   it.each(["two-col", "col-pane-a", "col-pane-b"])("keeps .%s inside the laptop layer", (token) => {
@@ -62,13 +83,15 @@ describe("the laptop layer stays inside its media query", () => {
     expect(leaked.map((rule) => rule.selector)).toEqual([]);
   });
 
-  it("only allows the documented wrapper rule outside the layer", () => {
-    const outside = all.filter((rule) => rule.selector.includes("col-pane") && !rule.desktop);
-    expect(outside.map((rule) => rule.selector)).toEqual(ALLOWED_OUTSIDE);
+  it("keeps the documented wrapper rule in the base stylesheet", () => {
+    // display:contents is the mechanism that makes the desktop column wrappers
+    // invisible to the phone, so it is the one rule that must live outside.
+    expect(ALLOWED_OUTSIDE).toEqual([".col-pane"]);
+    expect(base).toContain(".col-pane {");
   });
 
   it("neutralises the wrappers below the breakpoint", () => {
-    const bare = css.match(/\.col-pane\s*\{([^}]*)\}/);
+    const bare = base.match(/\.col-pane\s*\{([^}]*)\}/);
     expect(bare?.[1]).toContain("display: contents");
   });
 });
