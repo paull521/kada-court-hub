@@ -40,10 +40,14 @@ describe("route loading boundaries", () => {
     // directly until it was changed to await a Promise.all of three calls, and
     // this pattern quietly stopped matching it - the page kept its boundary,
     // but nothing was checking any more.
-    const fetchesData =
-      /\bawait\s+(get[A-Za-z]*(PortalData|Roles|Dashboard|Operations)|supabase|Promise\.all)/.test(
-        source,
-      );
+    //
+    // The name list this used to carry (PortalData|Roles|Dashboard|Operations)
+    // had the same failure a second time when /owner/conferences moved onto
+    // getOwnerConferenceContext(): a page dropped out of the checked set by
+    // being renamed, silently, and the suite got one test shorter rather than
+    // one test redder. Match any awaited get*() call instead, so a new data
+    // function is covered on the day it is written.
+    const fetchesData = /\bawait\s+(get[A-Z][A-Za-z]*\(|supabase|Promise\.all)/.test(source);
     return rendersShell && fetchesData;
   });
 

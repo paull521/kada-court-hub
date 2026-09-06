@@ -21,7 +21,7 @@ import { logoutAction } from "@/app/auth/actions";
 import { getPlayerPortalData } from "@/lib/kch-data";
 import { getAvailableRoles } from "@/lib/roles";
 import { createClient } from "@/lib/supabase/server";
-import { getOwnerPortalData } from "@/lib/owner-data";
+import { getOwnerProfileSummary } from "@/lib/owner-data";
 import { OwnerSupportRequest } from "@/components/PlatformOperations";
 import PlatformFeedback from "@/components/PlatformFeedback";
 import OwnerConferenceSwitcher from "@/components/OwnerConferenceSwitcher";
@@ -55,13 +55,13 @@ export default async function Profile({
   searchParams: Promise<{ view?: string }>;
 }) {
   const requestedView = (await searchParams).view;
-  // The owner portal used to be awaited only after getAvailableRoles() came
-  // back, which put its four round trips *after* the whole player portal had
-  // finished - the two never overlapped, and this was the slowest route in the
-  // app because of it. Starting it here costs nothing when the viewer turns out
-  // not to be an owner: getOwnerPortalData() returns the unauthorized empty
-  // record as soon as its membership read comes back.
-  const ownerDataPromise = requestedView === "owner" ? getOwnerPortalData() : null;
+  // The owner read used to be awaited only after getAvailableRoles() came back,
+  // which put its round trips *after* the whole player portal had finished -
+  // the two never overlapped, and this was the slowest route in the app because
+  // of it. Starting it here costs nothing when the viewer turns out not to be
+  // an owner: it returns the unauthorized empty record as soon as its
+  // membership read comes back.
+  const ownerDataPromise = requestedView === "owner" ? getOwnerProfileSummary() : null;
   const [data, roles, supabase] = await Promise.all([
     getPlayerPortalData("profile"),
     getAvailableRoles(),
@@ -156,13 +156,6 @@ export default async function Profile({
         </strong>
       </Link>
     ) : null;
-  const today = new Date().toISOString().slice(0, 10),
-    activeSeason =
-      ownerData?.seasons.find(
-        (season) => !season.canceledAt && season.startsOn <= today && season.endsOn >= today,
-      ) ??
-      ownerData?.seasons.find((season) => !season.canceledAt) ??
-      null;
   const ownerProfileContent = ownerData?.authorized ? (
     <>
       <section className="card profile-card">
@@ -189,13 +182,12 @@ export default async function Profile({
           [
             <Clock className="ui-icon" />,
             "Season Active",
-            activeSeason?.name ?? "No active season",
+            ownerData.activeSeasonName || "No active season",
           ],
           [
             <CalendarDays className="ui-icon" />,
             "Divisions Active",
-            activeSeason?.divisions.map((division) => division.name).join(", ") ||
-              "No active divisions",
+            ownerData.activeSeasonDivisions.join(", ") || "No active divisions",
           ],
         ]}
       />

@@ -1,20 +1,26 @@
 import { redirect } from "next/navigation";
 import OwnerConferenceManagement from "@/components/OwnerConferenceManagement";
 import OwnerPageShell from "@/components/OwnerPageShell";
-import { getOwnerPortalData } from "@/lib/owner-data";
+import { getOwnerConferenceContext } from "@/lib/owner-data";
 
 export default async function OwnerConferencesPage() {
-  const data = await getOwnerPortalData();
-  if (!data.authorized) redirect("/owner");
+  // This page renders the conference list and nothing else, so it reads the
+  // conference context rather than the whole owner portal - the portal's other
+  // eighteen requests were all discarded here.
+  const context = await getOwnerConferenceContext();
+  if (!context.authorized) redirect("/owner");
   return (
     <OwnerPageShell
       title="Conferences"
       subtitle="Create an isolated test conference or switch owner workspaces."
       active="more"
-      conferenceId={data.conferenceId}
-      conferences={data.conferences}
+      conferenceId={context.conferenceId}
+      conferences={context.conferences}
     >
-      <OwnerConferenceManagement currentId={data.conferenceId} conferences={data.conferences} />
+      <OwnerConferenceManagement
+        currentId={context.conferenceId}
+        conferences={context.conferences}
+      />
     </OwnerPageShell>
   );
 }

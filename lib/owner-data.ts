@@ -311,6 +311,54 @@ export async function getOwnerConferenceId(): Promise<string> {
   return (await getOwnerConferenceContext()).conferenceId;
 }
 
+/**
+ * What /profile?view=owner renders of the owner workspace: the conference
+ * header, and the name of the current season with its division names.
+ *
+ * It used to reach for getOwnerPortalData(), which reads every registration,
+ * fee, payment, game and invitation in the conference - about 19 requests - to
+ * render two lines of text. This is the same two lines in one request.
+ *
+ * Deliberately not a "scope" argument on getOwnerPortalData(). A scope that
+ * returns the full record with most of it left empty fails silently when a page
+ * later reads a field the scope never filled; a named function with only the
+ * fields it provides cannot.
+ */
+export type OwnerProfileSummary = {
+  authorized: boolean;
+  conferenceId: string;
+  conferenceName: string;
+  conferences: OwnerConferenceOption[];
+  ownerName: string;
+  activeSeasonName: string;
+  activeSeasonDivisions: string[];
+};
+
+export async function getOwnerProfileSummary(): Promise<OwnerProfileSummary> {
+  const context = await getOwnerConferenceContext();
+  if (!context.authorized)
+    return { ...emptyContext, activeSeasonName: "", activeSeasonDivisions: [] };
+  const supabase = await createClient();
+  const { data: seasonRows } = await supabase
+    .from("seasons")
+    .select("id,name,starts_on,ends_on,canceled_at,divisions(name)")
+    .eq("conference_id", context.conferenceId)
+    .is("archived_at", null)
+    .order("starts_on", { ascending: false })
+    .order("name", { referencedTable: "divisions" });
+  // The same choice getOwnerPortalData()'s consumers make: the season running
+  // today, else the most recent one that was not canceled.
+  const today = new Date().toISOString().slice(0, 10);
+  const live = (seasonRows ?? []).filter((season) => !season.canceled_at);
+  const active =
+    live.find((season) => season.starts_on <= today && season.ends_on >= today) ?? live[0] ?? null;
+  return {
+    ...context,
+    activeSeasonName: active?.name ?? "",
+    activeSeasonDivisions: (active?.divisions ?? []).map((division) => division.name),
+  };
+}
+
 export async function getOwnerPortalData(): Promise<OwnerPortalData> {
   const supabase = await createClient();
   const context = await getOwnerConferenceContext();
