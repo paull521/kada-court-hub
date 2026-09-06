@@ -10,7 +10,7 @@ export default async function Payments() {
   const account = data.paymentAccount;
   return (
     <AppShell
-      contentClass="two-col"
+      contentClass="player-workspace-content"
       active="payments"
       notifications={data.notifications}
       profileNeedsAttention={data.profileNeedsAttention}

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 type Item = { href: string; key: string; icon: ReactNode; label: string; dot?: string };
@@ -19,7 +19,10 @@ export default function FastBottomNav({
   label: string;
 }) {
   const [chosen, setChosen] = useState(active),
-    router = useRouter();
+    router = useRouter(),
+    pathname = usePathname(),
+    destination = items.find((item) => pathname === item.href.split("?")[0])?.key,
+    selected = destination ?? chosen;
   return (
     <nav className={className} aria-label={label}>
       {items.map((item) => (
@@ -28,13 +31,13 @@ export default function FastBottomNav({
           href={item.href}
           onPointerEnter={() => router.prefetch(item.href)}
           onClick={() => setChosen(item.key)}
-          className={`nav ${chosen === item.key ? "active" : ""}`}
+          className={`nav ${selected === item.key ? "active" : ""}`}
         >
           <b aria-hidden="true">{item.icon}</b>
           {item.label}
           {item.dot?.startsWith("team") && (
             <i className={`nav-team-dot ${item.dot === "team-no" ? "no" : "yes"}`} />
-          )}{" "}
+          )}
           {item.dot === "alert" && <i className="nav-alert-dot" aria-label="Action needed" />}
         </Link>
       ))}

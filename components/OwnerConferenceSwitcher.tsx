@@ -27,22 +27,21 @@ export default function OwnerConferenceSwitcher({
     return () => document.removeEventListener("keydown", close);
   }, [open]);
 
-  if (!current) return null;
+  if (!current || !hasChoices) return null;
 
   return (
     <>
       <button
         className="context-switcher-trigger owner-context-trigger"
         type="button"
-        onClick={() => hasChoices && setOpen(true)}
-        aria-haspopup={hasChoices ? "dialog" : undefined}
-        aria-expanded={hasChoices ? open : undefined}
-        disabled={!hasChoices}
+        onClick={() => setOpen(true)}
+        aria-haspopup="dialog"
+        aria-expanded={open}
       >
         <span>
           <b>{current.name}</b>
         </span>
-        {hasChoices && <ChevronDown className="context-switcher-caret" aria-hidden="true" />}
+        <ChevronDown className="context-switcher-caret" aria-hidden="true" />
       </button>
       {open && (
         <div

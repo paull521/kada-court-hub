@@ -18,10 +18,10 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import styles from "./OwnerTeams.module.css";
 import directoryStyles from "./OwnerDirectory.module.css";
 import {
-  addConferencePlayerAction,
   advanceSeasonSetupAction,
   assignDirectoryLeaderAction,
   assignDraftPlayerAction,
+  assignUnassignedPlayerAction,
   cancelSeasonAction,
   changeGameStatusAction,
   completePreseasonDetailsAction,
@@ -33,7 +33,6 @@ import {
   finalizeDivisionScheduleAction,
   generateDivisionScheduleAction,
   inviteDivisionPlayersAction,
-  moveExistingDivisionPlayerAction,
   publishDivisionFinalRosterAction,
   publishDivisionRosterAction,
   rescheduleGameAction,
@@ -43,7 +42,6 @@ import {
   reviewTeamRosterAction,
   saveDivisionGameDayAction,
   saveDivisionPreseasonAction,
-  sendLateTeamInvitationAction,
   setConferencePlayerStatusAction,
   setDivisionRosterReviewDeadlineAction,
   updateDivisionUniformImagesAction,
@@ -126,48 +124,6 @@ export function CreateSeasonForm({ conferenceId }: { conferenceId: string }) {
         {pending ? "Creating…" : "Create Season"}
       </button>
     </form>
-  );
-}
-
-export function ConferencePlayerDirectory({ conferenceId }: { conferenceId: string }) {
-  const [state, action, pending] = useActionState(addConferencePlayerAction, initialState);
-  return (
-    <details className="card owner-section conference-player-directory">
-      <summary>
-        <span className="owner-section-title">
-          <span className="owner-icon">
-            <Plus className="ui-icon" />
-          </span>
-          <span>
-            <h2>Add a confirmed player</h2>
-            <p>Only needed when someone new must be added to this conference.</p>
-          </span>
-          <strong aria-hidden="true">
-            <ChevronRight className="go-caret" />
-          </strong>
-        </span>
-      </summary>
-      <form action={action} className="owner-form">
-        <input type="hidden" name="conferenceId" value={conferenceId} />
-        <label>
-          Player account code
-          <input
-            name="publicPlayerId"
-            placeholder="KCH-XXXXXXXX"
-            autoCapitalize="characters"
-            required
-          />
-        </label>
-        <p className="field-help">
-          This code is only used to match the right confirmed account. It is not shown in the Teams
-          view.
-        </p>
-        <Feedback state={state} />
-        <button className="btn secondary" disabled={pending}>
-          {pending ? "Adding…" : "Add Player"}
-        </button>
-      </form>
-    </details>
   );
 }
 
@@ -1111,98 +1067,28 @@ export function OwnerRosterChangeReviews({ requests }: { requests: OwnerRosterRe
   );
 }
 
-function LateInvitationForm({
-  directory,
-  seasons,
-}: {
-  directory: OwnerDirectoryPlayer[];
-  seasons: OwnerSeason[];
-}) {
-  const [lateState, lateAction, latePending] = useActionState(
-    sendLateTeamInvitationAction,
+function UnassignedPlayerForm({ seasons }: { seasons: OwnerSeason[] }) {
+  const [assignState, assignAction, assignPending] = useActionState(
+    assignUnassignedPlayerAction,
     initialState,
   );
-  const [moveState, moveAction, movePending] = useActionState(
-    moveExistingDivisionPlayerAction,
-    initialState,
+  const [selectedDivisionId, setSelectedDivisionId] = useState(""),
+    [selectedInvitationId, setSelectedInvitationId] = useState(""),
+    [selectedAssignmentTeamId, setSelectedAssignmentTeamId] = useState("");
+  const assignmentDivisions = seasons
+    .filter((season) => !season.canceledAt)
+    .flatMap((season) =>
+      season.divisions.map((division) => ({
+        id: division.id,
+        label: `${season.name} — ${division.name}`,
+        teams: division.teams.filter((team) => team.active),
+        players: division.unassignedPlayers,
+      })),
+    );
+  const selectedAssignmentDivision = assignmentDivisions.find(
+    (division) => division.id === selectedDivisionId,
   );
-  const [isMove, setIsMove] = useState(false),
-    [query, setQuery] = useState(""),
-    [selected, setSelected] = useState<OwnerDirectoryPlayer | null>(null),
-    [selectedMove, setSelectedMove] = useState<{
-      registrationId: string;
-      name: string;
-      email: string;
-      teamId: string;
-    } | null>(null),
-    [targetTeamId, setTargetTeamId] = useState("");
-  const teams = seasons
-    .filter((season) => !season.canceledAt)
-    .flatMap((season) =>
-      season.divisions.flatMap((division) =>
-        division.teams
-          .filter((team) => team.active)
-          .map((team) => ({
-            id: team.id,
-            divisionId: division.id,
-            label: `${season.name} — ${division.name} — ${team.name}`,
-          })),
-      ),
-    );
-  const players = directory.filter((player) => player.claimed);
-  const rosterPlayers = seasons
-    .filter((season) => !season.canceledAt)
-    .flatMap((season) =>
-      season.divisions.flatMap((division) =>
-        division.teams.flatMap((team) =>
-          team.players
-            .filter((player) => player.status === "active" && player.role !== "Captain")
-            .map((player) => ({
-              registrationId: player.registrationId,
-              name: player.name,
-              email: player.email,
-              teamId: team.id,
-              divisionId: division.id,
-            })),
-        ),
-      ),
-    );
-  const normalized = query.trim().toLowerCase();
-  const lateMatches =
-    normalized.length < 2
-      ? []
-      : players
-          .filter(
-            (player) =>
-              player.name.toLowerCase().includes(normalized) ||
-              player.email.toLowerCase().includes(normalized),
-          )
-          .slice(0, 6);
-  const moveMatches =
-    normalized.length < 2
-      ? []
-      : rosterPlayers
-          .filter(
-            (player) =>
-              player.name.toLowerCase().includes(normalized) ||
-              player.email.toLowerCase().includes(normalized),
-          )
-          .slice(0, 6);
-  const availableTeams =
-    isMove && selectedMove
-      ? teams.filter(
-          (team) =>
-            team.divisionId ===
-              rosterPlayers.find((player) => player.registrationId === selectedMove.registrationId)
-                ?.divisionId && team.id !== selectedMove.teamId,
-        )
-      : teams;
-  const resetSelection = () => {
-    setQuery("");
-    setSelected(null);
-    setSelectedMove(null);
-  };
-  if (!players.length || !teams.length) return null;
+  if (!assignmentDivisions.some((division) => division.teams.length)) return null;
   return (
     <details className="card owner-section conference-player-directory">
       <summary>
@@ -1212,125 +1098,88 @@ function LateInvitationForm({
           </span>
           <span>
             <h2>Add late invitation or move players</h2>
-            <p>Only for last minute player addition.</p>
+            <p>Later registrants, un drafted players and players without team can be assigned here</p>
           </span>
           <strong aria-hidden="true">
             <ChevronRight className="go-caret" />
           </strong>
         </span>
       </summary>
-      <form action={isMove ? moveAction : lateAction} className="owner-form">
-        <input
-          type="hidden"
-          name={isMove ? "registrationId" : "playerId"}
-          value={isMove ? (selectedMove?.registrationId ?? "") : (selected?.id ?? "")}
-        />
-        <label className="check-row">
-          <input
-            type="checkbox"
-            checked={isMove}
-            onChange={(event) => {
-              setIsMove(event.target.checked);
-              setTargetTeamId("");
-              resetSelection();
-            }}
-          />{" "}
-          Move an existing player in this division
-        </label>
+      <form action={assignAction} className="owner-form">
         <label>
-          Search player name
-          <input
-            value={query}
-            onChange={(event) => {
-              setQuery(event.target.value);
-              setTargetTeamId("");
-              setSelected(null);
-              setSelectedMove(null);
-            }}
-            placeholder="Type at least 2 letters"
-            autoComplete="off"
-          />
-        </label>
-        {normalized.length >= 2 && (
-          <div className="leader-search-results">
-            {isMove ? (
-              moveMatches.length ? (
-                moveMatches.map((player) => (
-                  <button
-                    type="button"
-                    key={player.registrationId}
-                    onClick={() => {
-                      setSelectedMove(player);
-                      setQuery(player.name);
-                    }}
-                  >
-                    <b>{player.name}</b>
-                    <small>{player.email || "No email"}</small>
-                  </button>
-                ))
-              ) : (
-                <p>No player found.</p>
-              )
-            ) : lateMatches.length ? (
-              lateMatches.map((player) => (
-                <button
-                  type="button"
-                  key={player.id}
-                  onClick={() => {
-                    setSelected(player);
-                    setQuery(player.name);
-                  }}
-                >
-                  <b>{player.name}</b>
-                  <small>{player.email || "No email"}</small>
-                </button>
-              ))
-            ) : (
-              <p>No player found.</p>
-            )}
-          </div>
-        )}
-        {(isMove ? selectedMove : selected) && (
-          <p className="leader-selected">
-            <Check className="ui-icon" /> Selected:{" "}
-            <b>{isMove ? selectedMove?.name : selected?.name}</b>
-          </p>
-        )}
-        <label>
-          Team
+          Division
           <select
-            name="teamId"
-            value={targetTeamId}
-            onChange={(event) => setTargetTeamId(event.target.value)}
+            value={selectedDivisionId}
+            onChange={(event) => {
+              setSelectedDivisionId(event.target.value);
+              setSelectedInvitationId("");
+              setSelectedAssignmentTeamId("");
+            }}
             required
-            disabled={isMove && !selectedMove}
           >
             <option value="" disabled>
-              {isMove && !selectedMove ? "Select player first" : "Select team"}
+              Select division
             </option>
-            {availableTeams.map((team) => (
-              <option key={team.id} value={team.id}>
-                {team.label}
+            {assignmentDivisions.map((division) => (
+              <option key={division.id} value={division.id}>
+                {division.label}
               </option>
             ))}
           </select>
         </label>
-        <Feedback state={isMove ? moveState : lateState} />
+        <label>
+          Unassigned player
+          <select
+            name="registrationId"
+            value={selectedInvitationId}
+            onChange={(event) => setSelectedInvitationId(event.target.value)}
+            required
+            disabled={!selectedAssignmentDivision || !selectedAssignmentDivision.players.length}
+          >
+            <option value="" disabled>
+              {!selectedAssignmentDivision
+                ? "Select division first"
+                : selectedAssignmentDivision.players.length
+                  ? "Select player"
+                  : "No unassigned players"}
+            </option>
+            {selectedAssignmentDivision?.players.map((player) => (
+              <option key={player.registrationId} value={player.registrationId}>
+                {player.name} · {player.publicPlayerId}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Assign to team
+          <select
+            name="teamId"
+            value={selectedAssignmentTeamId}
+            onChange={(event) => setSelectedAssignmentTeamId(event.target.value)}
+            required
+            disabled={!selectedAssignmentDivision || !selectedAssignmentDivision.teams.length}
+          >
+            <option value="" disabled>
+              {!selectedAssignmentDivision ? "Select division first" : "Select team"}
+            </option>
+            {selectedAssignmentDivision?.teams.map((team) => (
+              <option key={team.id} value={team.id}>
+                {team.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <Feedback state={assignState} />
         <button
-          className="btn primary"
+          className="btn secondary"
           disabled={
-            isMove
-              ? movePending || !selectedMove || !targetTeamId
-              : latePending || !selected || !targetTeamId
+            assignPending ||
+            !selectedInvitationId ||
+            !selectedAssignmentTeamId ||
+            !selectedAssignmentDivision
           }
         >
-          {isMove
-            ? movePending
-              ? "Moving…"
-              : "Move Player"
-            : latePending
-              ? "Sending…"
-              : "Send Late Invitation"}
+          {assignPending ? "Assigning…" : "Assign Player to Team"}
         </button>
       </form>
     </details>
@@ -1492,8 +1341,6 @@ export function OwnerPlayerDirectoryManagement({
     return (
       <>
         <section className={styles.directoryHeading}>
-          <p className="eyebrow">PLAYER DIRECTORY</p>
-          <h2>Conference Players</h2>
           <p>
             {directory.length} player{directory.length === 1 ? "" : "s"} in this conference
             directory.
@@ -1517,11 +1364,7 @@ export function OwnerPlayerDirectoryManagement({
             <b>{directory.length - active}</b>
           </span>
         </div>
-        <LateInvitationForm
-          directory={directory.filter((player) => player.status === "active")}
-          seasons={seasons}
-        />
-        <ConferencePlayerDirectory conferenceId={conferenceId} />
+        <UnassignedPlayerForm seasons={seasons} />
         <section className="card owner-section player-directory-list">
           {directory.length ? (
             <div className={directoryStyles.list}>

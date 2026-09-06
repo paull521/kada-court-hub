@@ -102,7 +102,7 @@ export default async function Owner() {
       <OwnerBottomNav active="home" />
       <main className="content owner-content owner-dashboard">
         <h1 className="title">
-          {greeting}, Mr. {lastName}!
+          {greeting}, <span className="owner-greeting-name">Mr.&nbsp;{lastName}!</span>
         </h1>
         <p className="owner-dashboard-question">What would you like to do?</p>
         <nav className="owner-action-grid" aria-label="Conference commissioner actions">

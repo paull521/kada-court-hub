@@ -29,12 +29,15 @@ export async function switchCaptainContextAction(
     .eq("status", CAPTAIN_REGISTRATION_STATUS)
     .maybeSingle();
   if (!registration) return { error: "That captain team is no longer available." };
-  (await cookies()).set("kch_captain_registration", registration.id, {
+  const cookieStore = await cookies();
+  const options = {
     httpOnly: true,
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 365,
     secure: process.env.NODE_ENV === "production",
-  });
+  } as const;
+  cookieStore.set("kch_captain_registration", registration.id, options);
+  cookieStore.set("kch_active_registration", registration.id, options);
   return {};
 }

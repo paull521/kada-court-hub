@@ -28,7 +28,7 @@ export default function OwnerPageShell({
       <OwnerBottomNav active={active} />
       <main className="content owner-content">
         <h1 className="title">{title}</h1>
-        <p className="subtitle">{subtitle}</p>
+        {subtitle && <p className="subtitle">{subtitle}</p>}
         {children}
       </main>
     </div>

@@ -30,6 +30,11 @@ export type OwnerTeam = {
   draftStatus: "editing" | "submitted" | "approved" | "changes_requested";
   draftOwnerNote: string;
 };
+export type OwnerUnassignedPlayer = {
+  registrationId: string;
+  publicPlayerId: string;
+  name: string;
+};
 export type OwnerDivision = {
   id: string;
   name: string;
@@ -51,6 +56,7 @@ export type OwnerDivision = {
   rosterFinalPublished: boolean;
   scheduleMode: "" | "manual" | "kch";
   scheduleStatus: "not_started" | "draft" | "final";
+  unassignedPlayers: OwnerUnassignedPlayer[];
   teams: OwnerTeam[];
 };
 export type OwnerInvitee = {
@@ -559,6 +565,22 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
             : "",
       scheduleStatus:
         scheduleWorkflow?.status === "final" ? "final" : scheduleWorkflow ? "draft" : "not_started",
+      unassignedPlayers: (registrationRows ?? [])
+        .filter(
+          (registration) =>
+            registration.division_id === division.id &&
+            !registration.team_id &&
+            registration.role_label === "Player" &&
+            (registration.status === "active" || registration.status === "pending"),
+        )
+        .map((registration) => {
+          const player = playerDetails.get(registration.player_id);
+          return {
+            registrationId: registration.id,
+            publicPlayerId: player?.public_player_id ?? "",
+            name: player?.display_name ?? "Unnamed player",
+          };
+        }),
       teams: teams.filter(
         (team) => (teamRows ?? []).find((row) => row.id === team.id)?.division_id === division.id,
       ),

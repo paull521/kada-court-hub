@@ -8,7 +8,7 @@ export default async function Team() {
   if (!data.contexts.length) redirect("/home");
   return (
     <AppShell
-      contentClass="two-col"
+      contentClass="player-workspace-content"
       active="team"
       notifications={data.notifications}
       profileNeedsAttention={data.profileNeedsAttention}

@@ -1,5 +1,6 @@
 import { Clock } from "lucide-react";
 import { redirect } from "next/navigation";
+import CaptainContextSwitcher from "@/components/CaptainContextSwitcher";
 import CaptainShell from "@/components/CaptainShell";
 import { getCaptainPortalData } from "@/lib/captain-data";
 
@@ -13,6 +14,11 @@ export default async function CaptainTeamPage() {
       title={data.teamName}
       subtitle={`${data.divisionName} · ${data.seasonName}`}
     >
+      <CaptainContextSwitcher
+        variant="banner"
+        contexts={data.contexts}
+        activeRegistrationId={data.activeRegistrationId}
+      />
       {!data.finalPublished ? (
         <section className="card schedule-empty">
           <span>

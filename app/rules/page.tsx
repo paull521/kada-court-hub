@@ -4,6 +4,7 @@ import AppShell from "@/components/AppShell";
 import RulesAcknowledgmentForm from "./RulesAcknowledgmentForm";
 import { createClient } from "@/lib/supabase/server";
 import { getPlayerPortalData } from "@/lib/kch-data";
+import { getAvailableRoles } from "@/lib/roles";
 
 type RuleRecord = {
   invitation_id?: string;
@@ -42,10 +43,21 @@ export default async function RulesPage({
     acknowledgment?: string;
     required?: string;
     registration?: string;
+    view?: string;
   }>;
 }) {
   const params = await searchParams;
-  const [data, supabase] = await Promise.all([getPlayerPortalData(), createClient()]);
+  const [data, supabase, roles] = await Promise.all([
+    getPlayerPortalData(),
+    createClient(),
+    getAvailableRoles(),
+  ]);
+  const role =
+    params.view === "owner" && roles.owner
+      ? "owner"
+      : params.view === "captain" && roles.captain
+        ? "captain"
+        : "player";
   let record: RuleRecord | null = null;
   if (params.invitation) {
     const { data: row } = await supabase.rpc("get_invitation_rules", {
@@ -76,6 +88,8 @@ export default async function RulesPage({
         profileNeedsAttention={data.profileNeedsAttention}
         paymentNeedsAttention={data.paymentNeedsAttention}
         teamHasUnavailable={data.teamHasUnavailable}
+        contentClass="reading-content"
+        role={role}
       >
         <h1 className="title">Rules &amp; Discipline</h1>
         <section className="card rules-empty">
@@ -98,6 +112,8 @@ export default async function RulesPage({
       profileNeedsAttention={data.profileNeedsAttention}
       paymentNeedsAttention={data.paymentNeedsAttention}
       teamHasUnavailable={data.teamHasUnavailable}
+      contentClass="reading-content"
+      role={role}
     >
       <h1 className="title">Rules &amp; Discipline</h1>
       <p className="subtitle">

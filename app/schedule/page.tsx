@@ -130,7 +130,7 @@ export default async function Schedule() {
   const [next, ...upcoming] = data.games;
   return (
     <AppShell
-      contentClass="two-col"
+      contentClass="player-workspace-content"
       active="schedule"
       notifications={data.notifications}
       profileNeedsAttention={data.profileNeedsAttention}

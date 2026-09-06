@@ -1197,9 +1197,6 @@ body {
 .owner-content {
   padding-bottom: 112px;
 }
-.owner-bottom {
-  width: min(100%, 560px);
-}
 .player-view-link {
   color: var(--blue);
   font-weight: 700;
@@ -4097,6 +4094,14 @@ body {
   font-weight: 800;
   margin: 24px 0 12px;
 }
+.owner-greeting-name {
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .owner-greeting-name {
+    display: block;
+  }
+}
 .owner-action-grid {
   display: grid;
   gap: 10px;
@@ -4172,9 +4177,6 @@ body {
 }
 .owner-action-card > strong {
   font-size: 25px;
-}
-.owner-dashboard .title {
-  max-width: 470px;
 }
 .owner-action-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -6361,13 +6363,6 @@ button.account-link {
     top: 8px;
     padding: 4px 6px;
     font-size: 7px;
-  }
-  .owner-bottom .nav {
-    font-size: 10px;
-  }
-  .owner-bottom .nav b svg {
-    width: 20px;
-    height: 20px;
   }
 }
 .payment-submit-form .method-choice {
@@ -8812,9 +8807,6 @@ body:has(.context-overlay-open) .bottom {
     box-shadow: none;
     z-index: auto;
   }
-  .owner-bottom {
-    width: auto;
-  }
   .nav {
     display: flex;
     align-items: center;
@@ -8900,12 +8892,29 @@ body:has(.context-overlay-open) .bottom {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
-  /* The owner workspace is the one place that wants more width, not less: its
-     pages are rosters, schedule builders and payment tables rather than a
-     reading column. This sits after the cap above and beats it on source order
-     at equal specificity, so it is written to be read as the exception. */
+  /* Keep management workspaces broad enough for rosters and schedules without
+     allowing their cards and tables to stretch across an entire desktop. */
+  .content.captain-content:not(.two-col) {
+    max-width: 1120px;
+    margin-inline: auto;
+  }
+  .content.player-workspace-content,
+  .content.player-profile-content,
+  .content.role-profile-content,
+  .content.reading-content {
+    max-width: 1120px;
+    margin-inline: auto;
+  }
+  .content.player-profile-content .rules-account-link,
+  .content.role-profile-content .rules-account-link,
+  .content.player-profile-content .account-link[href="/legal"],
+  .content.role-profile-content .account-link[href="/legal"] {
+    width: 100%;
+    justify-self: center;
+  }
   .content.owner-content:not(.two-col) {
-    max-width: 1500px;
+    max-width: 1120px;
+    margin-inline: auto;
   }
   /* Owner home's task tiles, and the More menu, were paired columns sized for a
      thumb. */
