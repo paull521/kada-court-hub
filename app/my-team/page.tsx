@@ -8,6 +8,7 @@ export default async function Team() {
   if (!data.contexts.length) redirect("/home");
   return (
     <AppShell
+      contentClass="player-workspace-content"
       active="team"
       notifications={data.notifications}
       profileNeedsAttention={data.profileNeedsAttention}
@@ -26,6 +27,12 @@ export default async function Team() {
         }
         availability={data.availability}
       />
+      <section className="family-banner">
+        <p className="family-quote">
+          “Talent wins games, but teamwork and intelligence win championships.”
+        </p>
+        <p className="family-quote-author">— MJ</p>
+      </section>
     </AppShell>
   );
 }

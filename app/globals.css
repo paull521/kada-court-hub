@@ -425,12 +425,22 @@ body {
   color: var(--blue) !important;
 }
 .family-banner {
-  /* No background and no fixed height: it is a sign-off line, not a panel, so
-     it hugs its own text. The size steps down on narrow phones so the three
-     sentences stay on one line instead of breaking mid-phrase. */
-  padding: 18px 12px 4px;
+  padding: 22px 12px 6px;
   text-align: center;
-  font-size: clamp(14px, 4.2vw, 18px);
+  color: var(--muted);
+}
+.family-quote {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(16px, 4.4vw, 20px);
+  font-style: italic;
+  line-height: 1.45;
+}
+.family-quote-author {
+  margin: 5px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
 }
 .family-banner span {
   color: var(--red);
@@ -1186,9 +1196,6 @@ body {
 }
 .owner-content {
   padding-bottom: 112px;
-}
-.owner-bottom {
-  width: min(100%, 560px);
 }
 .player-view-link {
   color: var(--blue);
@@ -4087,6 +4094,14 @@ body {
   font-weight: 800;
   margin: 24px 0 12px;
 }
+.owner-greeting-name {
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .owner-greeting-name {
+    display: block;
+  }
+}
 .owner-action-grid {
   display: grid;
   gap: 10px;
@@ -4162,9 +4177,6 @@ body {
 }
 .owner-action-card > strong {
   font-size: 25px;
-}
-.owner-dashboard .title {
-  max-width: 470px;
 }
 .owner-action-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -6351,13 +6363,6 @@ button.account-link {
     top: 8px;
     padding: 4px 6px;
     font-size: 7px;
-  }
-  .owner-bottom .nav {
-    font-size: 10px;
-  }
-  .owner-bottom .nav b svg {
-    width: 20px;
-    height: 20px;
   }
 }
 .payment-submit-form .method-choice {

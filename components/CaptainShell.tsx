@@ -1,7 +1,7 @@
 import KchLogo from "@/components/KchLogo";
 import type { ReactNode } from "react";
-import CaptainContextSwitcher from "@/components/CaptainContextSwitcher";
 import FastBottomNav from "@/components/FastBottomNav";
+import NotificationCenter from "@/components/NotificationCenter";
 import { captainNavLinks } from "@/lib/nav-links";
 import type { CaptainPortalData } from "@/lib/captain-data";
 
@@ -34,22 +34,21 @@ export default function CaptainShell({
     <div className="shell captain-shell">
       <header className="topbar">
         <KchLogo className="logo" />
-        <CaptainContextSwitcher
-          contexts={data.contexts}
-          activeRegistrationId={data.activeRegistrationId}
-        />
+        <div className="topbar-actions">
+          <NotificationCenter notifications={data.notifications} />
+        </div>
       </header>
-      <main className={`content captain-content ${contentClass}`.trim()}>
-        <h1 className="title">{title}</h1>
-        <p className="subtitle">{subtitle}</p>
-        {children}
-      </main>
       <FastBottomNav
         items={items}
         active={selected}
         className="bottom captain-bottom"
         label="Captain navigation"
       />
+      <main className={`content captain-content ${contentClass}`.trim()}>
+        <h1 className="title">{title}</h1>
+        <p className="subtitle">{subtitle}</p>
+        {children}
+      </main>
     </div>
   );
 }

@@ -450,6 +450,21 @@ export async function assignDraftPlayerAction(
   );
 }
 
+export async function assignUnassignedPlayerAction(
+  _: OwnerActionState,
+  formData: FormData,
+): Promise<OwnerActionState> {
+  const registrationId = value(formData, "registrationId"),
+    teamId = value(formData, "teamId");
+  if (!uuidPattern.test(registrationId) || !uuidPattern.test(teamId))
+    return { error: "Choose an unassigned player and team." };
+  return ownerRpc(
+    "owner_assign_unassigned_player",
+    { p_registration_id: registrationId, p_team_id: teamId },
+    "Player assigned to the selected team.",
+  );
+}
+
 export async function returnPlayerToDraftPoolAction(
   _: OwnerActionState,
   formData: FormData,

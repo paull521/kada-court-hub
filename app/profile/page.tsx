@@ -113,7 +113,7 @@ export default async function Profile({
   const rulesLink =
     currentRule && !currentRule.acknowledged_at ? (
       <Link
-        href={`/rules?registration=${data.activeRegistrationId}`}
+        href={`/rules?registration=${data.activeRegistrationId}&view=${currentRole}`}
         className="card rules-account-link"
       >
         <span>
@@ -126,7 +126,7 @@ export default async function Profile({
       </Link>
     ) : acknowledgedRule ? (
       <Link
-        href={`/rules?acknowledgment=${acknowledgedRule.acknowledgment_id}`}
+        href={`/rules?acknowledgment=${acknowledgedRule.acknowledgment_id}&view=${currentRole}`}
         className="card rules-account-link"
       >
         <span>
@@ -185,7 +185,7 @@ export default async function Profile({
       <div className="profile-account-list">
         <PlatformFeedback conferenceId={ownerData.conferenceId} />
         <NotificationPreferencesForm preferences={data.notificationPreferences} />
-        <Link href="/legal" className="card account-link">
+        <Link href={`/legal?view=${currentRole}`} className="card account-link">
           <span>
             <BookOpen className="ui-icon" />
           </span>
@@ -252,7 +252,7 @@ export default async function Profile({
         ) : null}
         <NotificationPreferencesForm preferences={data.notificationPreferences} />
         {rulesLink}
-        <Link href="/legal" className="card account-link">
+        <Link href={`/legal?view=${currentRole}`} className="card account-link">
           <span>
             <BookOpen className="ui-icon" />
           </span>
@@ -295,6 +295,9 @@ export default async function Profile({
       paymentNeedsAttention={data.paymentNeedsAttention}
       teamHasUnavailable={data.teamHasUnavailable}
       role={currentRole}
+      contentClass={
+        currentRole === "player" ? "player-profile-content" : "role-profile-content"
+      }
       headerAction={
         ownerData?.authorized ? (
           <OwnerConferenceSwitcher

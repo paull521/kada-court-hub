@@ -9,9 +9,11 @@ import type { CaptainContextOption } from "@/lib/captain-data";
 export default function CaptainContextSwitcher({
   contexts,
   activeRegistrationId,
+  variant = "header",
 }: {
   contexts: CaptainContextOption[];
   activeRegistrationId: string;
+  variant?: "header" | "banner";
 }) {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
@@ -45,6 +47,77 @@ export default function CaptainContextSwitcher({
       }
       router.refresh();
     });
+  }
+
+  if (variant === "banner") {
+    return (
+      <div className={`team-switcher ${open ? "open" : ""}`.trim()}>
+        <button
+          className="card team-banner"
+          type="button"
+          onClick={() => contexts.length > 1 && setOpen(!open)}
+          aria-haspopup={contexts.length > 1 ? "menu" : undefined}
+          aria-expanded={contexts.length > 1 ? open : undefined}
+          disabled={contexts.length < 2}
+        >
+          <span className="team-mark small" aria-hidden="true">
+            K
+          </span>
+          <span className="team-banner-copy">
+            <b>{active.teamName}</b>
+            <small>
+              {active.divisionName} &nbsp;•&nbsp; {active.seasonName}
+            </small>
+          </span>
+          {contexts.length > 1 && <ChevronDown className="team-banner-caret" aria-hidden="true" />}
+        </button>
+        {open && (
+          <div
+            className="team-dropdown-scrim"
+            aria-hidden="true"
+            onMouseDown={() => setOpen(false)}
+          />
+        )}
+        {open && (
+          <div className="team-dropdown" role="menu" aria-label="Choose your team">
+            <div className="context-options">
+              {contexts.map((context) => (
+                <button
+                  className={`context-option ${context.registrationId === active.registrationId ? "selected" : ""}`}
+                  type="button"
+                  role="menuitem"
+                  disabled={pending}
+                  onClick={() => choose(context.registrationId)}
+                  key={context.registrationId}
+                >
+                  <span className="context-option-mark" aria-hidden="true">
+                    {context.registrationId === active.registrationId ? (
+                      <Check className="ui-icon" />
+                    ) : (
+                      "K"
+                    )}
+                  </span>
+                  <span>
+                    <b>{context.teamName}</b>
+                    <small>{context.divisionName}</small>
+                    <em>{context.seasonName}</em>
+                  </span>
+                  <strong aria-hidden="true">
+                    {context.registrationId === active.registrationId ? (
+                      "Current"
+                    ) : (
+                      <ChevronRight className="go-caret" />
+                    )}
+                  </strong>
+                </button>
+              ))}
+            </div>
+            {pending && <p className="context-status">Updating your captain view…</p>}
+            {error && <p className="form-error">{error}</p>}
+          </div>
+        )}
+      </div>
+    );
   }
 
   return (

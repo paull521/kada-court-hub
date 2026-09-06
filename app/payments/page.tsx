@@ -86,6 +86,9 @@ export default async function Payments() {
           </div>
         </details>
       </div>
+      <section className="family-banner">
+        <p className="family-quote">“You cannot achieve greatness without sacrifice.”</p>
+      </section>
     </AppShell>
   );
 }

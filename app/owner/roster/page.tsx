@@ -14,7 +14,7 @@ export default async function OwnerRosterOverridesPage({
   const title = selectedView === "directory" ? "Player Directory" : "Teams";
   const subtitle =
     selectedView === "directory"
-      ? "Find conference players and add confirmed KCH accounts."
+      ? ""
       : "Choose a season and view the teams in each division.";
   return (
     <OwnerPageShell

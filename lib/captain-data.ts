@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { getSessionPlayer, getSessionUserId } from "@/lib/session";
 import { CAPTAIN_ROLE_LABELS, CAPTAIN_REGISTRATION_STATUS } from "@/lib/roles";
+import type { PlayerNotification } from "@/lib/kch-data";
 
 export type CaptainRequest = {
   id: string;
@@ -97,6 +98,7 @@ export type CaptainPortalData = {
   availability: CaptainAvailabilityPlayer[];
   payments: CaptainPaymentBalance[];
   hasUnavailable: boolean;
+  notifications: PlayerNotification[];
 };
 
 const empty: CaptainPortalData = {
@@ -123,6 +125,7 @@ const empty: CaptainPortalData = {
   availability: [],
   payments: [],
   hasUnavailable: false,
+  notifications: [],
 };
 
 export async function getCaptainPortalData(
@@ -285,6 +288,50 @@ export async function getCaptainPortalData(
   const team = teamMap.get(context.teamId)!,
     division = divisionMap.get(team.division_id)!,
     season = seasonMap.get(division.season_id)!;
+  const [{ data: notificationRows }, { data: preferenceRow }] = await Promise.all([
+    supabase
+      .from("notifications")
+      .select("id,notification_type,title,body,link_path,read_at,created_at")
+      .eq("profile_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(20),
+    supabase
+      .from("notification_preferences")
+      .select("game_updates,team_updates,payment_updates,season_updates")
+      .eq("profile_id", userId)
+      .maybeSingle(),
+  ]);
+  const notificationEnabled = (type: string) =>
+    type.startsWith("game_")
+      ? (preferenceRow?.game_updates ?? true)
+      : type.startsWith("payment_")
+        ? (preferenceRow?.payment_updates ?? true)
+        : type.includes("roster") || type.startsWith("team_")
+          ? (preferenceRow?.team_updates ?? true)
+          : (preferenceRow?.season_updates ?? true);
+  const notifications: PlayerNotification[] = (notificationRows ?? [])
+    .filter(
+      (row) =>
+        notificationEnabled(row.notification_type) &&
+        ["/home", "/payments", "/my-team", "/schedule", "/results", "/standings"].some(
+          (path) => (row.link_path ?? "/home").startsWith(path),
+        ),
+    )
+    .map((row) => ({
+      id: row.id,
+      type: row.notification_type,
+      title: row.title,
+      body: row.body,
+      linkPath: row.link_path ?? "/home",
+      read: Boolean(row.read_at),
+      createdLabel: new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/Los_Angeles",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      }).format(new Date(row.created_at)),
+    }));
   if (scope === "home") {
     const [
       { data: draft },
@@ -476,6 +523,7 @@ export async function getCaptainPortalData(
         status: row.payment_status,
       })),
       hasUnavailable: availability.some((player) => !player.available),
+      notifications,
     };
   }
   const [
@@ -718,5 +766,6 @@ export async function getCaptainPortalData(
       status: row.payment_status,
     })),
     hasUnavailable: availability.some((player) => !player.available),
+    notifications,
   };
 }

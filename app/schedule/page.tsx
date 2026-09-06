@@ -192,6 +192,12 @@ export default async function Schedule() {
       <div className="col-pane col-pane-b">
         <DivisionWeeklyView games={data.divisionSchedule} />
       </div>
+      <section className="family-banner">
+        <p className="family-quote">
+          “Every game is a direct reflection of what you have prepared for.”
+        </p>
+        <p className="family-quote-author">— PL</p>
+      </section>
     </AppShell>
   );
 }

@@ -70,11 +70,11 @@
     max-width: none;
     margin: 0;
     box-shadow: none;
-    /* Column order, not DOM order, decides where the nav sits. AppShell renders
-       it before <main> and the captain and owner shells render it after, which
-       is why those two workspaces dropped their tab strip to the foot of the
-       page. Ordering here fixes all three without touching the markup, so the
-       phone's DOM and focus order are exactly what they were. */
+    /* A column so .content below can take the leftover height. The tab strip
+       sits above the content because every shell now renders it before <main>;
+       CaptainShell, OwnerPageShell and the owner dashboard used to render it
+       after, which dropped their tabs to the foot of the laptop page, and that
+       was fixed in the markup on main. */
     display: flex;
     flex-direction: column;
     /* clip rather than hidden: both crop the decorative wash, but hidden makes
@@ -82,14 +82,7 @@
        sticking. */
     overflow: clip;
   }
-  .topbar {
-    order: 1;
-  }
-  .bottom {
-    order: 2;
-  }
   .content {
-    order: 3;
     /* Short pages still paint the full window rather than ending in a band of
        bare background halfway down. */
     flex: 1;
@@ -103,6 +96,21 @@
     width: min(100%, 540px);
     margin: 0 auto;
     box-shadow: 0 0 0 1px rgba(7, 31, 61, 0.07);
+  }
+
+  /* The context sheet slides up from the bottom edge, which is where a thumb
+     is. A pointer is wherever the click was, so it becomes a centred dialog
+     and drops the drag handle that implies a swipe. */
+  .context-overlay {
+    align-items: center;
+  }
+  .context-sheet {
+    border-radius: 18px;
+    box-shadow: 0 24px 60px rgba(4, 18, 35, 0.28);
+    animation: none;
+  }
+  .context-sheet-handle {
+    display: none;
   }
 
   /* --- Header and tab strip ------------------------------------------------
@@ -132,9 +140,6 @@
     border-bottom: 1px solid var(--line);
     border-radius: 0;
     box-shadow: none;
-  }
-  .owner-bottom {
-    width: auto;
   }
   .nav {
     display: flex;
@@ -334,6 +339,17 @@
     border-bottom: 0;
     padding-bottom: 0;
     margin-bottom: 0;
+  }
+
+  /* Profile's two long account rows are laid out for a phone's single column;
+     given the measure they were sitting at their intrinsic width against the
+     left edge. Carried over from main. */
+  .content.player-profile-content .rules-account-link,
+  .content.role-profile-content .rules-account-link,
+  .content.player-profile-content .account-link[href="/legal"],
+  .content.role-profile-content .account-link[href="/legal"] {
+    width: 100%;
+    justify-self: center;
   }
 
   /* --- Shared ---------------------------------------------------------------
