@@ -295,9 +295,7 @@ export default async function Profile({
       paymentNeedsAttention={data.paymentNeedsAttention}
       teamHasUnavailable={data.teamHasUnavailable}
       role={currentRole}
-      contentClass={
-        currentRole === "player" ? "player-profile-content" : "role-profile-content"
-      }
+      contentClass={currentRole === "player" ? "player-profile-content" : "role-profile-content"}
       headerAction={
         ownerData?.authorized ? (
           <OwnerConferenceSwitcher

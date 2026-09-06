@@ -1098,7 +1098,9 @@ function UnassignedPlayerForm({ seasons }: { seasons: OwnerSeason[] }) {
           </span>
           <span>
             <h2>Add late invitation or move players</h2>
-            <p>Later registrants, un drafted players and players without team can be assigned here</p>
+            <p>
+              Later registrants, un drafted players and players without team can be assigned here
+            </p>
           </span>
           <strong aria-hidden="true">
             <ChevronRight className="go-caret" />
