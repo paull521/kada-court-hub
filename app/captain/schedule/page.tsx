@@ -1,7 +1,10 @@
+import { Suspense } from "react";
 import { CalendarDays, ChevronRight, MapPin } from "lucide-react";
 import { redirect } from "next/navigation";
 import CaptainShell from "@/components/CaptainShell";
-import { getCaptainPortalData, type CaptainGame } from "@/lib/captain-data";
+import { ContentPlaceholder } from "@/components/Skeleton";
+import { getCaptainPortalData, type CaptainGame, type CaptainPortalData } from "@/lib/captain-data";
+import { getAvailableRoles } from "@/lib/roles";
 
 function weekStart(dateKey: string) {
   const date = new Date(`${dateKey}T12:00:00Z`);
@@ -116,17 +119,23 @@ function WeeklyView({ games }: { games: CaptainGame[] }) {
 }
 
 export default async function CaptainSchedulePage() {
-  const data = await getCaptainPortalData();
-  if (!data.authorized) redirect("/profile");
+  const roles = await getAvailableRoles();
+  if (!roles.captain) redirect("/profile");
+  const data = getCaptainPortalData();
+  return (
+    <CaptainShell contentClass="two-col" data={data} active="schedule">
+      <Suspense fallback={<ContentPlaceholder />}>
+        <ScheduleBody data={data} />
+      </Suspense>
+    </CaptainShell>
+  );
+}
+
+async function ScheduleBody({ data: portal }: { data: Promise<CaptainPortalData> }) {
+  const data = await portal;
   const [next, ...upcoming] = data.games;
   return (
-    <CaptainShell
-      contentClass="two-col"
-      data={data}
-      active="schedule"
-      title={data.teamName}
-      subtitle={`${data.divisionName} · ${data.seasonName}`}
-    >
+    <>
       <div className="col-pane col-pane-a">
         {next ? (
           <>
@@ -185,6 +194,6 @@ export default async function CaptainSchedulePage() {
       <div className="col-pane col-pane-b">
         <WeeklyView games={data.divisionGames} />
       </div>
-    </CaptainShell>
+    </>
   );
 }

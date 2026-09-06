@@ -37,6 +37,21 @@ export function SkeletonBell() {
 }
 
 /**
+ * The body of a player or captain page while its data is still in flight. Same
+ * shape the matching loading.tsx uses, so the route skeleton and the in-page
+ * boundary do not disagree about the layout.
+ */
+export function ContentPlaceholder({ cards = 2, rows = 4 }: { cards?: number; rows?: number }) {
+  return (
+    <div role="status" aria-live="polite" aria-busy="true">
+      <span className="sr-only">Loading</span>
+      <SkeletonCard count={cards} />
+      <SkeletonRow count={rows} />
+    </div>
+  );
+}
+
+/**
  * The body of an owner page while its data is still in flight.
  *
  * Shared by app/owner/loading.tsx and by the <Suspense> boundary each owner

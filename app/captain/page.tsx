@@ -1,14 +1,35 @@
+import { Suspense } from "react";
 import { CalendarDays, Check, Users, Wallet } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import CaptainShell from "@/components/CaptainShell";
 import ConferencePlayerInvitation from "@/components/ConferencePlayerInvitation";
-import { getCaptainPortalData } from "@/lib/captain-data";
+import { ContentPlaceholder } from "@/components/Skeleton";
+import { getCaptainPortalData, type CaptainPortalData } from "@/lib/captain-data";
+import { getAvailableRoles } from "@/lib/roles";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function CaptainDashboard() {
-  const data = await getCaptainPortalData("home");
-  if (!data.authorized) redirect("/profile");
+  const roles = await getAvailableRoles();
+  if (!roles.captain) redirect("/profile");
+  const data = getCaptainPortalData("home");
+  return (
+    <CaptainShell data={data} active="dashboard">
+      <Suspense fallback={<ContentPlaceholder cards={4} rows={0} />}>
+        <DashboardTiles data={data} />
+      </Suspense>
+    </CaptainShell>
+  );
+}
+
+/**
+ * The tiles carry a status modifier in their own className (`attention`, the
+ * draft status), so unlike the owner dashboard they cannot paint before the
+ * numbers arrive without changing colour underneath the reader. They stream as
+ * one block instead; the tab bar above them is already live.
+ */
+async function DashboardTiles({ data: portal }: { data: Promise<CaptainPortalData> }) {
+  const data = await portal;
   const next = data.games[0],
     notPaid = data.payments.filter((player) => player.balance > 0).length,
     noCount = data.availability.filter((player) => !player.available).length;
@@ -27,12 +48,7 @@ export default async function CaptainDashboard() {
     { p_team_id: data.teamId },
   );
   return (
-    <CaptainShell
-      data={data}
-      active="dashboard"
-      title={data.teamName}
-      subtitle={`${data.divisionName} · ${data.seasonName}`}
-    >
+    <>
       <section className="captain-dashboard-grid">
         <Link href="/captain/schedule" className="card captain-task-tile featured">
           <span>
@@ -80,6 +96,6 @@ export default async function CaptainDashboard() {
       {typeof conferenceInvitationToken === "string" && (
         <ConferencePlayerInvitation token={conferenceInvitationToken} />
       )}
-    </CaptainShell>
+    </>
   );
 }
