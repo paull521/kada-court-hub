@@ -50,13 +50,21 @@
     --measure: var(--page);
   }
 
-  /* Centres a full-bleed element's contents on --measure without wrapping it
+  /* Centres a full-bleed element's contents on a measure without wrapping it
      in another div: the padding collapses to --gutter once the window is
      narrower than the measure. */
-  .topbar,
-  .bottom,
   .content {
     padding-inline: max(var(--gutter), (100% - var(--measure)) / 2);
+  }
+  /* The chrome takes the app width on every page rather than the page's own
+     measure. Sharing an edge with the content cost more than it bought: the
+     measure changes between tabs - Home, Schedule and Payments are two-column
+     pages and Teams and Profile are single-column ones - so the logo and the
+     whole tab strip slid 150px sideways on every press. The frame is the one
+     part of the app that should be in the same place on all five. */
+  .topbar,
+  .bottom {
+    padding-inline: max(var(--gutter), (100% - var(--page)) / 2);
   }
 
   /* --- The frame -----------------------------------------------------------

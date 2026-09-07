@@ -22,7 +22,7 @@ Seven stylesheets, imported in this order by `app/layout.tsx`: `globals.css`, `w
 
 - `app/globals.css` is one 8,700-line file. Grep it whole before editing a selector — a later duplicate wins at equal specificity. Then grep the six files after it, which win over all of it.
 - **Every desktop rule goes in `app/desktop.css`, never in `globals.css`.** It is imported last so it actually wins; a desktop rule in `globals.css` loses to the six files that load after it. That is not theoretical — the four-across captain dashboard sat there as dead CSS. `tests/contracts/desktop-layer.test.ts` enforces both the single `@media (min-width: 900px)` and the import position.
-- One measure per page, set on `.shell` and read by the header, the tab strip and the content so they share an edge. The shell picks it with `:has()`: `--page` (1180px) for two-column pages, tile grids and the owner workspace; `--page-stack` (880px) for single-column pages.
+- One measure per page, set on `.shell` with `:has()` and read by the content: `--page` (1180px) for two-column pages, tile grids and the owner workspace; `--page-stack` (880px) for single-column pages. The header and the tab strip do not read it - they hold `--page` everywhere, so the chrome stays put when the measure changes from one tab to the next.
 
 ## How the author works
 
