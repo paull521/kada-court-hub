@@ -8,7 +8,11 @@ export default async function SignUp({
   searchParams: Promise<{ next?: string }>;
 }) {
   const nextPath = (await searchParams).next ?? "";
-  if (!/^\/(?:invite|platform\/invite)\/[0-9a-f-]{36}$/i.test(nextPath)) redirect("/login");
+  if (
+    nextPath !== "/platform/owner-invitation" &&
+    !/^\/(?:invite|platform\/invite)\/[0-9a-f-]{36}$/i.test(nextPath)
+  )
+    redirect("/login");
   return (
     <div className="shell login-shell">
       <header className="login-logo">

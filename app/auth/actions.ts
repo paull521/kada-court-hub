@@ -52,13 +52,16 @@ export async function signUpAction(
     return { error: "Connect the Supabase project before creating real profiles." };
   const { email, password } = credentials(formData);
   const displayName = String(formData.get("displayName") ?? "").trim();
+  const mobile = String(formData.get("mobile") ?? "").trim();
   const nextPath = safeReturnPath(String(formData.get("nextPath") ?? ""));
   if (!displayName || !email || password.length < 8)
     return { error: "Enter your name, email, and a password of at least 8 characters." };
   const playerInvite = nextPath.match(/^\/invite\/([0-9a-f-]{36})$/i);
   const ownerInvite = nextPath.match(/^\/platform\/invite\/([0-9a-f-]{36})$/i);
-  if (!playerInvite && !ownerInvite)
+  const ownerApplication = nextPath === "/platform/owner-invitation";
+  if (!playerInvite && !ownerInvite && !ownerApplication)
     return { error: "Create your KCH profile from an invitation link." };
+  if (ownerApplication && !mobile) return { error: "Enter your mobile number." };
 
   if (nextPath)
     (await cookies()).set("kch_return_path", nextPath, {
@@ -82,7 +85,9 @@ export async function signUpAction(
     : "/auth/callback";
   const metadata = playerInvite
     ? { display_name: displayName, conference_invitation_token: playerInvite[1] }
-    : { display_name: displayName, platform_owner_invitation_token: ownerInvite?.[1] };
+    : ownerInvite
+      ? { display_name: displayName, platform_owner_invitation_token: ownerInvite[1] }
+      : { display_name: displayName, mobile, owner_application: true };
   const { data, error } = await supabase.auth.signUp({
     email,
     password,

@@ -195,6 +195,15 @@ export default async function Profile({
       <div className="profile-account-list">
         <PlatformFeedback conferenceId={ownerData.conferenceId} />
         <NotificationPreferencesForm preferences={data.notificationPreferences} />
+        <Link href="/documents" className="card account-link">
+          <span>
+            <BookOpen className="ui-icon" />
+          </span>
+          <b>Documents</b>
+          <strong aria-hidden="true">
+            <ChevronRight className="go-caret" />
+          </strong>
+        </Link>
         <Link href={`/legal?view=${currentRole}`} className="card account-link">
           <span>
             <BookOpen className="ui-icon" />

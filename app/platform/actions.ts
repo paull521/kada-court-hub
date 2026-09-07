@@ -92,22 +92,21 @@ export async function registerOwnerApplicantAction(
     token: typeof data === "string" ? data : undefined,
   };
 }
-export async function signOwnerApplicationContractAction(
+export async function acknowledgeOwnerDemoAction(
   _: PlatformActionState,
   formData: FormData,
 ): Promise<PlatformActionState> {
-  const signedName = String(formData.get("signedName") ?? "").trim(),
-    ownerId = String(formData.get("ownerId") ?? "");
-  if (!signedName) return { error: "Type your full name to sign." };
+  const ownerId = String(formData.get("ownerId") ?? "");
+  const conferenceName = String(formData.get("conferenceName") ?? "").trim();
+  if (!conferenceName) return { error: "Enter your proposed conference name." };
   const supabase = await createClient();
-  const { error } = await supabase.rpc("sign_owner_application_contract", {
+  const { error } = await supabase.rpc("acknowledge_owner_demo", {
     p_owner_id: ownerId,
-    p_signed_name: signedName,
+    p_conference_name: conferenceName,
   });
   if (error) return { error: error.message };
   return {
-    message:
-      "Agreement signed. Platform Creator will create your conference and activate your owner access.",
+    message: "Your application is waiting for KCH review.",
   };
 }
 export async function createOwnerConferenceAction(

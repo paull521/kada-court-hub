@@ -4,16 +4,19 @@ import { Check, ChevronRight, Landmark, Wallet } from "lucide-react";
 import { useActionState } from "react";
 import {
   acceptOwnerInvitationAction,
+  acknowledgeOwnerDemoAction,
   registerOwnerApplicantAction,
-  signOwnerApplicationContractAction,
   signOwnerContractAction,
   submitSubscriptionPaymentAction,
   type PlatformActionState,
 } from "@/app/platform/actions";
 import type { OwnerPaymentBilling } from "@/lib/owner-payment-ledger";
+import { OwnerDemoOverview } from "@/components/OwnerDemoOverview";
 
 const initial: PlatformActionState = {};
 const money = (amount: number) => `$${amount.toFixed(2)}`;
+const ownerContractPricingTerms =
+  "Selected pilot conferences may receive one complimentary regular season, excluding playoffs. After the pilot, each season includes a $50 Season Subscription plus $3 for each active player registered in a division. Owners set their own league fees and handle player collections.";
 const paymentTimestamp = (value: string) =>
   new Intl.DateTimeFormat("en-US", {
     month: "short",
@@ -228,14 +231,12 @@ export function AcceptOwnerInvitation({ token }: { token: string }) {
     </form>
   );
 }
-const ownerPricingTerms =
-  "Selected pilot conferences may receive one complimentary regular season, excluding playoffs. After the pilot, each season includes a $50 Season Subscription plus $3 for each active player registered in a division. Owners set their own league fees and handle player collections.";
 export function OwnerContractSignature({ token }: { token: string }) {
   const [s, a, p] = useActionState(signOwnerContractAction, initial);
   return (
     <form action={a} className="card loginbox">
       <input type="hidden" name="token" value={token} />
-      <p className="setup-note">{ownerPricingTerms}</p>
+      <p className="setup-note">{ownerContractPricingTerms}</p>
       <label>
         <input type="checkbox" required /> I agree to the KCH Owner Service Agreement.
       </label>
@@ -251,41 +252,54 @@ export function OwnerContractSignature({ token }: { token: string }) {
     </form>
   );
 }
-export function OwnerApplication() {
+export function OwnerApplication({
+  pendingApplication,
+}: {
+  pendingApplication: { conferenceName: string | null; acknowledgedAt: string } | null;
+}) {
   const [start, startAction, starting] = useActionState(registerOwnerApplicantAction, initial);
-  const [sign, signAction, signing] = useActionState(signOwnerApplicationContractAction, initial);
+  const [acknowledgment, acknowledgmentAction, acknowledging] = useActionState(
+    acknowledgeOwnerDemoAction,
+    initial,
+  );
   return (
-    <div className="card loginbox">
-      {!start.token ? (
-        <form action={startAction}>
+    <>
+      {pendingApplication ? (
+        <section className="card loginbox">
+          <p className="eyebrow">APPLICATION RECEIVED</p>
+          <h2>Waiting for KCH review</h2>
           <p className="setup-note">
-            This invitation gives your KCH profile the option to become an Owner. Your full access
-            begins after you complete the digital contract and Platform Creator creates your
-            conference.
+            Your application for {pendingApplication.conferenceName || "your conference"} was
+            received on {paymentTimestamp(pendingApplication.acknowledgedAt)}. KCH will create your
+            owner workspace after review.
+          </p>
+        </section>
+      ) : !start.token ? (
+        <form action={startAction} className="card loginbox">
+          <p className="setup-note">
+            Use KCH to apply to run your basketball conference. KCH will review your application
+            before creating your owner workspace.
           </p>
           <button className="btn primary" disabled={starting}>
-            {starting ? "Starting…" : "Apply to become an Owner"}
+            {starting ? "Starting…" : "Continue"}
           </button>
           {start.error && <p className="form-error">{start.error}</p>}
         </form>
       ) : (
-        <form action={signAction}>
+        <form action={acknowledgmentAction} className="loginbox">
+          <OwnerDemoOverview />
           <input type="hidden" name="ownerId" value={start.token} />
-          <p className="setup-note">{ownerPricingTerms}</p>
-          <label>
-            <input type="checkbox" required /> I agree to the KCH Owner Service Agreement.
-          </label>
-          <label>
-            Type your full legal name
-            <input name="signedName" required />
-          </label>
-          <button className="btn primary" disabled={signing}>
-            {signing ? "Signing…" : "Sign digital contract"}
+          <div className="owner-application-field">
+            <label htmlFor="proposedConferenceName">Proposed conference name</label>
+            <input id="proposedConferenceName" name="conferenceName" required />
+          </div>
+          <button className="btn primary" disabled={acknowledging}>
+            {acknowledging ? "Submitting…" : "I understand"}
           </button>
-          {sign.error && <p className="form-error">{sign.error}</p>}
-          {sign.message && <p className="form-success">{sign.message}</p>}
+          {acknowledgment.error && <p className="form-error">{acknowledgment.error}</p>}
+          {acknowledgment.message && <p className="form-success">{acknowledgment.message}</p>}
         </form>
       )}
-    </div>
+    </>
   );
 }

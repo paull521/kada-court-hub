@@ -5,9 +5,10 @@ import { getSupabaseConfig } from "@/lib/supabase/config";
 export async function GET(request: NextRequest) {
   const url = new URL(request.url),
     code = url.searchParams.get("code"),
-    next = url.searchParams.get("next");
+    next = url.searchParams.get("next") ?? request.cookies.get("kch_return_path")?.value;
   const destination = next && /^\/(?!\/)/.test(next) ? next : "/home";
   let response = NextResponse.redirect(new URL(destination, url.origin));
+  response.cookies.delete("kch_return_path");
   if (code) {
     const { url: supabaseUrl, publishableKey } = getSupabaseConfig();
     const supabase = createServerClient(supabaseUrl, publishableKey, {

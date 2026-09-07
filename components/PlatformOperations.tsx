@@ -15,6 +15,14 @@ import type { PlatformOperations } from "@/lib/platform-data";
 import type { PlatformOwnerPaymentBilling } from "@/lib/owner-payment-ledger";
 
 const initial: PlatformActionState = {};
+const timestamp = (value: string) =>
+  new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(value));
 
 export function OwnerManagement({
   owners,
@@ -71,11 +79,16 @@ function CandidateCard({ candidate }: { candidate: PlatformOperations["candidate
         <small>
           {candidate.email} · {candidate.phone}
         </small>
-        <small>Completed KCH login and digital contract</small>
+        <small>Proposed conference: {candidate.proposedConferenceName || "Not provided"}</small>
+        <small>Demo overview accepted: {timestamp(candidate.demoAcknowledgedAt)}</small>
       </div>
       <label>
         Conference name
-        <input name="conferenceName" required />
+        <input
+          name="conferenceName"
+          defaultValue={candidate.proposedConferenceName ?? ""}
+          required
+        />
       </label>
       <button className="btn primary" disabled={pending}>
         {pending ? "Creating…" : "Create owner & conference"}
@@ -111,6 +124,10 @@ function OwnerCard({ owner }: { owner: PlatformOperations["owners"][number] }) {
         <span>
           <small>SUBSCRIPTION DATE</small>
           {owner.subscriptionStartsOn ?? "—"}
+        </span>
+        <span>
+          <small>DEMO OVERVIEW ACCEPTED</small>
+          {owner.demoAcknowledgedAt ? timestamp(owner.demoAcknowledgedAt) : "—"}
         </span>
       </div>
       <form action={action} className="platform-status-actions">

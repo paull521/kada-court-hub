@@ -263,6 +263,7 @@ export function ResetPasswordForm() {
 
 export function SignUpForm({ nextPath = "" }: { nextPath?: string }) {
   const [state, action, pending] = useActionState(signUpAction, initialState);
+  const ownerApplication = nextPath === "/platform/owner-invitation";
   return (
     <form action={action} className="card loginbox">
       <input type="hidden" name="nextPath" value={nextPath} />
@@ -293,6 +294,24 @@ export function SignUpForm({ nextPath = "" }: { nextPath?: string }) {
           required
         />
       </div>
+      {ownerApplication && (
+        <>
+          <label htmlFor="signupMobile">Mobile Number</label>
+          <div className="input-wrap">
+            <span>
+              <User className="ui-icon" />
+            </span>
+            <input
+              id="signupMobile"
+              name="mobile"
+              type="tel"
+              autoComplete="tel"
+              placeholder="Enter your mobile number"
+              required
+            />
+          </div>
+        </>
+      )}
       <label htmlFor="signupPassword">Password</label>
       <div className="input-wrap">
         <span>

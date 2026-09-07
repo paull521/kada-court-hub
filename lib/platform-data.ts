@@ -80,13 +80,16 @@ export type PlatformOperations = {
     status: string;
     subscriptionStartsOn: string | null;
     subscriptionEndsOn: string | null;
+    proposedConferenceName: string | null;
+    demoAcknowledgedAt: string | null;
   }>;
   candidates: Array<{
     id: string;
     name: string;
     email: string;
     phone: string;
-    contractSignedAt: string;
+    proposedConferenceName: string | null;
+    demoAcknowledgedAt: string;
   }>;
   directory: Array<{
     conference: string;

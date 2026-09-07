@@ -1006,6 +1006,23 @@ body {
   font-weight: 800;
   font-size: 15px;
 }
+.owner-application-field {
+  display: grid;
+  gap: 8px;
+}
+.owner-application-field input {
+  width: 100%;
+  min-height: 50px;
+  border: 1px solid #d6dbe2;
+  border-radius: 14px;
+  padding: 0 14px;
+  outline: 0;
+  background: #fff;
+}
+.owner-application-field input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(23, 74, 165, 0.12);
+}
 .input-wrap {
   border: 1px solid #d6dbe2;
   border-radius: 14px;
