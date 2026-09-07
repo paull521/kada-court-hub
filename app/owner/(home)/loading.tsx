@@ -3,6 +3,11 @@ import OwnerBottomNav from "@/components/OwnerBottomNav";
 import { OwnerContentPlaceholder, SkeletonChip, SkeletonTitle } from "@/components/Skeleton";
 
 /**
+ * Unchanged, and now in a (home) route group so that it covers /owner alone. A
+ * loading.tsx at app/owner/ wraps that segment's whole children slot, so this
+ * dashboard skeleton was also what every other owner tab showed on the way in,
+ * ahead of that page's own boundary.
+ *
  * Covers the short wait for the conference header. Once that lands the real
  * shell takes over and each page's own <Suspense> keeps
  * OwnerContentPlaceholder on screen for the heavy read, so the body of the
