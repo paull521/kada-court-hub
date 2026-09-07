@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import OwnerPageShell from "@/components/OwnerPageShell";
 import OwnerScoresheets from "@/components/OwnerScoresheets";
-import { OwnerContentPlaceholder } from "@/components/Skeleton";
+import OwnerSectionFrame from "@/components/OwnerSectionFrame";
 import { getOwnerConferenceContext, getOwnerPortalData } from "@/lib/owner-data";
 
 export default async function OwnerScoresPage() {
@@ -16,7 +16,7 @@ export default async function OwnerScoresPage() {
       conferenceId={context.conferenceId}
       conferences={context.conferences}
     >
-      <Suspense fallback={<OwnerContentPlaceholder />}>
+      <Suspense fallback={<OwnerSectionFrame />}>
         <ScoresContent />
       </Suspense>
     </OwnerPageShell>

@@ -8679,6 +8679,12 @@ body:has(.context-overlay-open) .bottom {
   background: linear-gradient(90deg, #061b2f 25%, #0d3055 37%, #061b2f 63%);
   background-size: 400% 100%;
 }
+/* The card list an owner page draws before its seasons arrive. The real lists
+   each have their own class and their own gap; this is the one they share. */
+.owner-frame-list {
+  display: grid;
+  gap: 12px;
+}
 /* Stands in for one value inside a card that is already drawn, so it is sized
    in em against the text it replaces rather than in pixels. */
 .skeleton-text {

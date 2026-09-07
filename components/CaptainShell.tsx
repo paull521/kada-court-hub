@@ -3,7 +3,7 @@ import { Suspense, type ReactNode } from "react";
 import FastBottomNav from "@/components/FastBottomNav";
 import { captainNavLinks } from "@/lib/nav-links";
 import { BadgeSlot, NAV_ALERT, NotificationSlot, type ShellChrome } from "@/components/NavBadges";
-import { SkeletonChip, SkeletonTitle } from "@/components/Skeleton";
+import { SkeletonText } from "@/components/Skeleton";
 import type { CaptainPortalData } from "@/lib/captain-data";
 
 export type CaptainNavKey = (typeof captainNavLinks)[number]["key"] | "dashboard" | "more";
@@ -17,6 +17,10 @@ export type CaptainNavKey = (typeof captainNavLinks)[number]["key"] | "dashboard
  * which are portal fields. Rather than have each of them pass a streamed node,
  * omitting title/subtitle here means "use the team heading" and the shell
  * streams it once, in one place.
+ *
+ * Both of those placeholders are sized to the words they stand in for rather
+ * than to a generic bar and chip - the heading is 42px on a laptop, and a 26px
+ * block under it was neither the heading nor anything else.
  */
 export default function CaptainShell({
   data,
@@ -73,7 +77,7 @@ export default function CaptainShell({
       <main className={`content captain-content ${contentClass}`.trim()}>
         <h1 className="title">
           {title ?? (
-            <Suspense fallback={<SkeletonTitle />}>
+            <Suspense fallback={<SkeletonText width="7em" />}>
               <TeamName data={data} />
             </Suspense>
           )}
@@ -81,7 +85,7 @@ export default function CaptainShell({
         <p className="subtitle">
           {subtitle ??
             (title ? null : (
-              <Suspense fallback={<SkeletonChip />}>
+              <Suspense fallback={<SkeletonText width="13em" />}>
                 <TeamContext data={data} />
               </Suspense>
             ))}

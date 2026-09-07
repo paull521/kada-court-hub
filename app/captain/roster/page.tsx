@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import CaptainShell from "@/components/CaptainShell";
 import CaptainRequestForm from "@/components/CaptainRequestForm";
 import CaptainDraftRoster from "@/components/CaptainDraftRoster";
-import { ContentPlaceholder } from "@/components/Skeleton";
+import CaptainRosterFrame from "@/components/CaptainRosterFrame";
 import { getCaptainPortalData, type CaptainPortalData } from "@/lib/captain-data";
 import { getAvailableRoles } from "@/lib/roles";
 
@@ -26,7 +26,7 @@ export default async function CaptainRosterPage() {
       title="Team Roster"
       subtitle="Build, submit, and revise your team roster."
     >
-      <Suspense fallback={<ContentPlaceholder />}>
+      <Suspense fallback={<CaptainRosterFrame />}>
         <RosterBody data={data} />
       </Suspense>
     </CaptainShell>
