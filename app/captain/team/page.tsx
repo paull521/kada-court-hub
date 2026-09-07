@@ -1,19 +1,29 @@
+import { Suspense } from "react";
 import { Clock } from "lucide-react";
 import { redirect } from "next/navigation";
 import CaptainContextSwitcher from "@/components/CaptainContextSwitcher";
 import CaptainShell from "@/components/CaptainShell";
-import { getCaptainPortalData } from "@/lib/captain-data";
+import { ContentPlaceholder } from "@/components/Skeleton";
+import { getCaptainPortalData, type CaptainPortalData } from "@/lib/captain-data";
+import { getAvailableRoles } from "@/lib/roles";
 
 export default async function CaptainTeamPage() {
-  const data = await getCaptainPortalData();
-  if (!data.authorized) redirect("/profile");
+  const roles = await getAvailableRoles();
+  if (!roles.captain) redirect("/profile");
+  const data = getCaptainPortalData();
   return (
-    <CaptainShell
-      data={data}
-      active="team"
-      title={data.teamName}
-      subtitle={`${data.divisionName} · ${data.seasonName}`}
-    >
+    <CaptainShell data={data} active="team">
+      <Suspense fallback={<ContentPlaceholder />}>
+        <FinalRoster data={data} />
+      </Suspense>
+    </CaptainShell>
+  );
+}
+
+async function FinalRoster({ data: portal }: { data: Promise<CaptainPortalData> }) {
+  const data = await portal;
+  return (
+    <>
       <CaptainContextSwitcher
         variant="banner"
         contexts={data.contexts}
@@ -57,6 +67,6 @@ export default async function CaptainTeamPage() {
           })}
         </section>
       )}
-    </CaptainShell>
+    </>
   );
 }

@@ -10,7 +10,8 @@ export default function OwnerBottomNav({ active }: { active: OwnerNavKey }) {
   const pathname = usePathname();
   const destination = ownerNavLinks.find((item) => pathname === item.href.split("?")[0])?.key;
   const selected =
-    destination ?? (active === "season" || active === "scores" ? "home" : active === "more" ? "profile" : active);
+    destination ??
+    (active === "season" || active === "scores" ? "home" : active === "more" ? "profile" : active);
   return (
     <nav className="bottom owner-bottom" aria-label="Owner navigation">
       {ownerNavLinks.map(({ href, key, icon, label }) => (

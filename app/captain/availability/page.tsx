@@ -1,13 +1,15 @@
+import { Suspense } from "react";
 import { Check } from "lucide-react";
 import { redirect } from "next/navigation";
 import CaptainShell from "@/components/CaptainShell";
-import { getCaptainPortalData } from "@/lib/captain-data";
+import { ContentPlaceholder } from "@/components/Skeleton";
+import { getCaptainPortalData, type CaptainPortalData } from "@/lib/captain-data";
+import { getAvailableRoles } from "@/lib/roles";
 
 export default async function CaptainAvailabilityPage() {
-  const data = await getCaptainPortalData();
-  if (!data.authorized) redirect("/profile");
-  const game = data.games[0],
-    no = data.availability.filter((player) => !player.available).length;
+  const roles = await getAvailableRoles();
+  if (!roles.captain) redirect("/profile");
+  const data = getCaptainPortalData();
   return (
     <CaptainShell
       data={data}
@@ -15,6 +17,19 @@ export default async function CaptainAvailabilityPage() {
       title="Availability"
       subtitle="See who is playing in the next game."
     >
+      <Suspense fallback={<ContentPlaceholder />}>
+        <AvailabilityBody data={data} />
+      </Suspense>
+    </CaptainShell>
+  );
+}
+
+async function AvailabilityBody({ data: portal }: { data: Promise<CaptainPortalData> }) {
+  const data = await portal;
+  const game = data.games[0],
+    no = data.availability.filter((player) => !player.available).length;
+  return (
+    <>
       {game ? (
         <section className="card panel">
           <div className="section-heading">
@@ -45,6 +60,6 @@ export default async function CaptainAvailabilityPage() {
           <p>There is no upcoming game.</p>
         </section>
       )}
-    </CaptainShell>
+    </>
   );
 }

@@ -1,41 +1,50 @@
+import { Suspense } from "react";
 import AppShell from "@/components/AppShell";
+import { ContentPlaceholder } from "@/components/Skeleton";
 import PlayerContextSwitcher from "@/components/PlayerContextSwitcher";
-import { getPlayerPortalData } from "@/lib/kch-data";
+import { getPlayerPortalData, playerHasTeamContext, type PlayerPortalData } from "@/lib/kch-data";
 import { redirect } from "next/navigation";
 
 export default async function Team() {
-  const data = await getPlayerPortalData();
+  if (!(await playerHasTeamContext())) redirect("/home");
+  const data = getPlayerPortalData();
+  return (
+    <AppShell contentClass="player-workspace-content" active="team" chrome={data}>
+      <Suspense fallback={<ContentPlaceholder />}>
+        <TeamBody data={data} />
+      </Suspense>
+    </AppShell>
+  );
+}
+
+async function TeamBody({ data: portal }: { data: Promise<PlayerPortalData> }) {
+  const data = await portal;
+  // playerHasTeamContext() above is the looser test - it sees the registration
+  // but not whether its team still resolves. This is the authoritative one the
+  // page used to gate on. Reaching it means the two disagreed, which should not
+  // happen; the redirect is client-side from here, and correct either way.
   if (!data.contexts.length) redirect("/home");
   return (
-    <AppShell
-      contentClass="player-workspace-content"
-      active="team"
-      notifications={data.notifications}
-      profileNeedsAttention={data.profileNeedsAttention}
-      paymentNeedsAttention={data.paymentNeedsAttention}
-      teamHasUnavailable={data.teamHasUnavailable}
-    >
-      <div className="col-pane col-pane-a">
-        <PlayerContextSwitcher
-          contexts={data.contexts}
-          activeRegistrationId={data.activeRegistrationId}
-        />
-      </div>
-      <div className="col-pane col-pane-b">
-        <TeamRoster
-          roster={
-            data.teamInfo.divisionRosters.find((team) => team.isMyTeam)?.players.length
-              ? data.teamInfo.divisionRosters.find((team) => team.isMyTeam)!.players
-              : data.roster
-          }
-          availability={data.availability}
-        />
-      </div>
+    <>
+      <PlayerContextSwitcher
+        contexts={data.contexts}
+        activeRegistrationId={data.activeRegistrationId}
+      />
+      <TeamRoster
+        roster={
+          data.teamInfo.divisionRosters.find((team) => team.isMyTeam)?.players.length
+            ? data.teamInfo.divisionRosters.find((team) => team.isMyTeam)!.players
+            : data.roster
+        }
+        availability={data.availability}
+      />
       <section className="family-banner">
-        <p className="family-quote">“Talent wins games, but teamwork and intelligence win championships.”</p>
+        <p className="family-quote">
+          “Talent wins games, but teamwork and intelligence win championships.”
+        </p>
         <p className="family-quote-author">— MJ</p>
       </section>
-    </AppShell>
+    </>
   );
 }
 

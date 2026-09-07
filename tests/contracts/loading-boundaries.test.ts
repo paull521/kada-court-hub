@@ -36,8 +36,22 @@ describe("route loading boundaries", () => {
   const shellPages = pages.filter((page) => {
     const source = readFileSync(page, "utf8");
     const rendersShell = /\b(AppShell|CaptainShell|OwnerPageShell)\b/.test(source);
-    const fetchesData =
-      /\bawait\s+(get[A-Za-z]*(PortalData|Roles|Dashboard|Operations)|supabase)/.test(source);
+    // Promise.all counts too. app/legal/page.tsx awaited getPlayerPortalData
+    // directly until it was changed to await a Promise.all of three calls, and
+    // this pattern quietly stopped matching it - the page kept its boundary,
+    // but nothing was checking any more.
+    //
+    // This has now gone stale three times, each time by losing a test rather
+    // than failing one: first when app/legal moved to Promise.all, then when
+    // /owner/conferences moved to getOwnerConferenceContext(), then when the
+    // player pages moved to playerHasTeamContext(). Every fix widened a list of
+    // names, and the next rename slipped through the wider list.
+    //
+    // So stop matching names. A page that awaits any call before it renders is
+    // a page that blocks on something, and that is exactly the condition a
+    // boundary is for. app/more/page.tsx awaits nothing and stays exempt, which
+    // is the one case the name list was really protecting.
+    const fetchesData = /\bawait\s+[\w$.]+\s*\(/.test(source);
     return rendersShell && fetchesData;
   });
 

@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { connection } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
@@ -257,6 +258,39 @@ export const rosterOrder = (left: Player, right: Player) => {
     left.name.localeCompare(right.name)
   );
 };
+
+/**
+ * Whether this player is on a team at all, in two cheap reads.
+ *
+ * /my-team and /payments redirect a teamless player to /home. That gate used to
+ * cost the whole portal, because it read data.contexts - so the page could not
+ * paint anything until every portal query had landed. This answers the same
+ * question from the one registrations row it needs, which lets those pages
+ * redirect before they stream rather than after.
+ *
+ * It is deliberately the looser test of the two: a registration whose team no
+ * longer resolves counts as having a team here but produces no context in the
+ * portal. Pages keep the authoritative `contexts.length` check inside their
+ * streamed content, so that case still redirects - just client-side, and only
+ * for a state that should not occur.
+ *
+ * getSessionPlayer() is already memoised per request, so the portal read does
+ * not repeat it.
+ */
+export const playerHasTeamContext = cache(async (): Promise<boolean> => {
+  const player = await getSessionPlayer();
+  if (!player) return false;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("registrations")
+    .select("id")
+    .eq("player_id", player.id)
+    .not("team_id", "is", null)
+    .in("status", ["active", "pending"])
+    .limit(1)
+    .maybeSingle();
+  return Boolean(data);
+});
 
 export async function getPlayerPortalData(
   scope: "full" | "home" | "payments" | "profile" = "full",
@@ -1086,37 +1120,37 @@ export async function getPlayerPortalData(
       availability.find((item) => item.registrationId === registration.id)?.available ?? true;
     const teamHasUnavailable = availability.some((item) => !item.available);
     const divisionSchedule: DivisionScheduleGame[] = publishedDivisionGames.map((row) => {
-        const date = new Date(row.starts_at),
-          parts = new Intl.DateTimeFormat("en-US", {
-            timeZone: timezone,
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          }).formatToParts(date),
-          part = (type: Intl.DateTimeFormatPartTypes) =>
-            parts.find((item) => item.type === type)?.value ?? "";
-        return {
-          id: row.id,
-          dateKey: `${part("year")}-${part("month")}-${part("day")}`,
-          dateLabel: new Intl.DateTimeFormat("en-US", {
-            timeZone: timezone,
-            weekday: "short",
-            month: "short",
-            day: "numeric",
-          }).format(date),
-          time: new Intl.DateTimeFormat("en-US", {
-            timeZone: timezone,
-            hour: "numeric",
-            minute: "2-digit",
-          }).format(date),
-          homeTeam: teamNames.get(row.home_team_id) ?? "Home Team",
-          awayTeam: teamNames.get(row.away_team_id) ?? "Away Team",
-          venue: row.venue,
-          court: row.court ?? "",
-          homeScore: row.home_score,
-          awayScore: row.away_score,
-        };
-      });
+      const date = new Date(row.starts_at),
+        parts = new Intl.DateTimeFormat("en-US", {
+          timeZone: timezone,
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }).formatToParts(date),
+        part = (type: Intl.DateTimeFormatPartTypes) =>
+          parts.find((item) => item.type === type)?.value ?? "";
+      return {
+        id: row.id,
+        dateKey: `${part("year")}-${part("month")}-${part("day")}`,
+        dateLabel: new Intl.DateTimeFormat("en-US", {
+          timeZone: timezone,
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+        }).format(date),
+        time: new Intl.DateTimeFormat("en-US", {
+          timeZone: timezone,
+          hour: "numeric",
+          minute: "2-digit",
+        }).format(date),
+        homeTeam: teamNames.get(row.home_team_id) ?? "Home Team",
+        awayTeam: teamNames.get(row.away_team_id) ?? "Away Team",
+        venue: row.venue,
+        court: row.court ?? "",
+        homeScore: row.home_score,
+        awayScore: row.away_score,
+      };
+    });
     const liveResults: GameResult[] = mappedGames
       .filter((item) => item.teamScore !== null && item.opponentScore !== null)
       .sort((a, b) => b.startsAt - a.startsAt)

@@ -34,11 +34,16 @@ export default function AvailabilityControl({
       <span>
         <small>ARE YOU PLAYING?</small>
       </span>
-      <div>
+      {/* The filled pill is one element that slides between the two buttons and
+          recolours on the way, rather than a background that switches from one
+          button to the other. data-choice drives both. */}
+      <div className="availability-choice" data-choice={current ? "yes" : "no"}>
+        <i className="availability-thumb" aria-hidden="true" />
         <button
           type="button"
           onClick={() => choose(true)}
           className={current ? "active yes" : ""}
+          aria-pressed={current}
           disabled={pending}
         >
           Yes
@@ -47,6 +52,7 @@ export default function AvailabilityControl({
           type="button"
           onClick={() => choose(false)}
           className={!current ? "active no" : ""}
+          aria-pressed={!current}
           disabled={pending}
         >
           No

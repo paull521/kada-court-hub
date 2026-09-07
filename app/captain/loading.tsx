@@ -16,7 +16,14 @@ export default function Loading() {
           <SkeletonChip />
         </div>
       </header>
-      <FastBottomNav items={items} active="home" label="Captain navigation" />
+      {/* The captain-bottom class was missing here, so the nav restyled itself
+          the moment the real shell took over. */}
+      <FastBottomNav
+        items={items}
+        active="home"
+        className="bottom captain-bottom"
+        label="Captain navigation"
+      />
       <main className="content">
         <div role="status" aria-live="polite" aria-busy="true">
           <span className="sr-only">Loading</span>

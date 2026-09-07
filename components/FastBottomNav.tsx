@@ -5,7 +5,13 @@ import type { ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
-type Item = { href: string; key: string; icon: ReactNode; label: string; dot?: string };
+/**
+ * `dot` is a node rather than a string discriminator so the shells can hand in
+ * a <Suspense> boundary. The nav itself must never suspend - it would remount
+ * when it resolved, and the tab the viewer just pressed would snap back to the
+ * old one - so the streaming stops at the badge.
+ */
+type Item = { href: string; key: string; icon: ReactNode; label: string; dot?: ReactNode };
 
 export default function FastBottomNav({
   items,
@@ -35,10 +41,7 @@ export default function FastBottomNav({
         >
           <b aria-hidden="true">{item.icon}</b>
           {item.label}
-          {item.dot?.startsWith("team") && (
-            <i className={`nav-team-dot ${item.dot === "team-no" ? "no" : "yes"}`} />
-          )}
-          {item.dot === "alert" && <i className="nav-alert-dot" aria-label="Action needed" />}
+          {item.dot}
         </Link>
       ))}
     </nav>

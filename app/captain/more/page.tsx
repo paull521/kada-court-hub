@@ -6,9 +6,13 @@ import RoleSwitcher from "@/components/RoleSwitcher";
 import { getCaptainPortalData } from "@/lib/captain-data";
 import { getAvailableRoles } from "@/lib/roles";
 
+// Nothing in this page's body reads the portal - it is a role switcher and two
+// links - so once the cheap role check has run, all of it paints immediately
+// and only the shell's bell and badge wait on the portal read.
 export default async function CaptainMorePage() {
-  const [data, roles] = await Promise.all([getCaptainPortalData(), getAvailableRoles()]);
-  if (!data.authorized) redirect("/profile");
+  const roles = await getAvailableRoles();
+  if (!roles.captain) redirect("/profile");
+  const data = getCaptainPortalData();
   return (
     <CaptainShell
       data={data}
