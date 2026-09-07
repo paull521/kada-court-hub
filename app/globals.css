@@ -3878,6 +3878,16 @@ body {
 .schedule-week > summary::-webkit-details-marker {
   display: none;
 }
+/* The same row before the weeks are known. A plain div, not a summary: there
+   is nothing to open yet. */
+.schedule-week > .schedule-week-frame {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: #f8f5f0;
+}
 .schedule-week > summary span {
   font-size: 15px;
   font-weight: 800;
@@ -8657,13 +8667,25 @@ body:has(.context-overlay-open) .bottom {
   width: 104px;
   border-radius: 999px;
 }
-/* Matches the 26px bell icon in .topbar-actions so the header does not change
-   width or jump when the real notification button replaces it. */
-.skeleton-bell {
-  height: 26px;
-  width: 26px;
-  border-radius: 50%;
-  flex: none;
+/* The paper shimmer is for the cream page. On a navy surface it reads as a hole
+   cut out of the card, so there it is the card's own colour a shade darker -
+   present enough to be a missing value, quiet enough not to be the first thing
+   the eye lands on. All three surfaces carry the same gradient: the feature card
+   on Home and Schedule, the team banner that opens the team list, and the
+   balance card on Payments. */
+.feature-card .skeleton,
+.team-banner .skeleton,
+.balance-card .skeleton {
+  background: linear-gradient(90deg, #061b2f 25%, #0d3055 37%, #061b2f 63%);
+  background-size: 400% 100%;
+}
+/* Stands in for one value inside a card that is already drawn, so it is sized
+   in em against the text it replaces rather than in pixels. */
+.skeleton-text {
+  display: inline-block;
+  height: 0.85em;
+  border-radius: 5px;
+  vertical-align: baseline;
 }
 .skeleton-card {
   height: 108px;

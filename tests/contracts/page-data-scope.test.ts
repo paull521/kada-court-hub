@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const root = process.cwd();
@@ -34,6 +34,23 @@ const pages = (function walk(dir: string, found: string[] = []): string[] {
   return found;
 })(join(root, "app"));
 
+/**
+ * A page's body can live in a frame - the component it renders with its data,
+ * and its loading.tsx renders without any - so the fields it reads are not all
+ * in page.tsx any more. /home asks for the "home" scope and reads games,
+ * context and paymentAccount inside HomeFrame; if this only looked at the page
+ * it would have gone on passing while checking almost nothing. One component
+ * per file in components/ is what makes following the import enough.
+ */
+const withFrames = (page: string) => {
+  const source = readFileSync(page, "utf8");
+  const imported = [...source.matchAll(/from "@\/components\/([\w-]+)"/g)]
+    .map((match) => join(root, "components", `${match[1]}.tsx`))
+    .filter((file) => existsSync(file))
+    .map((file) => readFileSync(file, "utf8"));
+  return [source, ...imported].join("\n");
+};
+
 const scopedPages = pages.flatMap((page) => {
   const source = readFileSync(page, "utf8");
   const call = source.match(/getPlayerPortalData\(\s*"([a-z]+)"\s*\)/);
@@ -42,7 +59,11 @@ const scopedPages = pages.flatMap((page) => {
     {
       file: relative(root, page),
       scope: call[1],
-      reads: [...new Set([...source.matchAll(/\bdata\.([a-zA-Z]+)/g)].map((m) => m[1]))],
+      // data?.field as well as data.field: a frame reads through an optional
+      // chain, because it is one component either side of the wait.
+      reads: [
+        ...new Set([...withFrames(page).matchAll(/\bdata\??\.([a-zA-Z]+)/g)].map((m) => m[1])),
+      ],
     },
   ];
 });

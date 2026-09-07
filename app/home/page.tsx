@@ -1,9 +1,7 @@
-import { CalendarDays, ChevronRight, MapPin, Wallet } from "lucide-react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import AppShell from "@/components/AppShell";
+import HomeFrame from "@/components/HomeFrame";
 import SeasonInvitationCard from "@/components/SeasonInvitationCard";
-import AvailabilityControl from "@/components/AvailabilityControl";
 import { getPlayerPortalData } from "@/lib/kch-data";
 import { createClient } from "@/lib/supabase/server";
 
@@ -17,7 +15,6 @@ export default async function Home() {
   // Discipline only after the player has chosen to join.
   if (!data.invitation && requiredRules?.[0] && !requiredRules[0].acknowledged_at)
     redirect(`/rules?registration=${data.activeRegistrationId}`);
-  const next = data.games[0];
   const firstName = data.profile.name.split(" ")[0];
   if (!data.contexts.length)
     return (
@@ -53,108 +50,10 @@ export default async function Home() {
       paymentNeedsAttention={data.paymentNeedsAttention}
       teamHasUnavailable={data.teamHasUnavailable}
     >
-      <h1 className="title welcome">Hello, {firstName}!</h1>
-      <p className="subtitle">Ready for game day?</p>
-      <div className="col-pane col-pane-a">
-        {data.invitation && <SeasonInvitationCard invitation={data.invitation} />}
-        {next ? (
-          <>
-            <section className="card feature-card">
-              <div className="feature-copy">
-                <p className="eyebrow">NEXT GAME</p>
-                <p className="feature-date">{next.dateLabel}</p>
-                <strong className="feature-time">{next.time}</strong>
-              </div>
-              <div className="matchup-logos">
-                <div>
-                  <span className="team-mark">K</span>
-                  <b>{data.context.team}</b>
-                </div>
-                <strong className="versus">VS</strong>
-                <div>
-                  <span className="team-mark opponent">
-                    {next.opponent.slice(0, 2).toUpperCase()}
-                  </span>
-                  <b>{next.opponent}</b>
-                </div>
-              </div>
-              <p className="feature-venue">
-                <MapPin className="ui-icon" /> {next.venue}
-                {next.court ? ` · ${next.court}` : ""}
-              </p>
-              <div className="uniform-line">
-                <small>JERSEY COLOR</small>
-                <span
-                  className={`uniform-dot ${next.uniform.toLowerCase().includes("dark") ? "dark" : "white"}`}
-                />
-                <b>{next.uniform.toUpperCase()}</b>
-              </div>
-            </section>
-            <section className="card home-availability-card">
-              <AvailabilityControl gameId={next.id} available={data.myAvailability} />
-            </section>
-          </>
-        ) : (
-          <section className="card empty-feature">
-            <span>
-              <CalendarDays className="ui-icon" />
-            </span>
-            <div>
-              <p className="eyebrow">SCHEDULE</p>
-              <h2>No upcoming game yet</h2>
-              <p>Your conference owner will publish the next game here.</p>
-            </div>
-          </section>
-        )}
-      </div>
-      <div className="col-pane col-pane-b">
-        <Link className="card home-row" href="/my-team">
-          <span className="roundel team-mark small">K</span>
-          <span>
-            <small>MY TEAM</small>
-            <strong>{data.context.team}</strong>
-            <em>
-              {data.context.division} &nbsp;•&nbsp; {data.context.season}
-            </em>
-          </span>
-          <b aria-hidden="true">
-            <ChevronRight className="go-caret" />
-          </b>
-        </Link>
-        <Link className="card home-row season-home-row" href="/schedule">
-          <span className="roundel">
-            <CalendarDays className="ui-icon" />
-          </span>
-          <span>
-            <small>SCHEDULE</small>
-            <strong>{data.context.season}</strong>
-            <em>View schedule, standings, and results</em>
-          </span>
-          <b aria-hidden="true">
-            <ChevronRight className="go-caret" />
-          </b>
-        </Link>
-        {data.paymentAccount.balance > 0 && (
-          <Link className="card home-payment-reminder" href="/payments">
-            <span>
-              <Wallet className="ui-icon" />
-            </span>
-            <span>
-              <small>PAYMENT DUE</small>
-              <strong>${data.paymentAccount.balance.toFixed(2)} remaining</strong>
-              <em>Open Payments to submit or review your payment.</em>
-            </span>
-            <b aria-hidden="true">
-              <ChevronRight className="go-caret" />
-            </b>
-          </Link>
-        )}
-      </div>
-      <section className="family-banner">
-        <strong>
-          One Team. One Court. <span>One Family.</span>
-        </strong>
-      </section>
+      {/* The same component app/home/loading.tsx draws while this read is in
+          flight, so the wait is this page with its values missing rather than a
+          screen of grey blocks that gives way to something else. */}
+      <HomeFrame data={data} />
     </AppShell>
   );
 }

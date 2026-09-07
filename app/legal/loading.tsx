@@ -1,15 +1,18 @@
 import AppShell from "@/components/AppShell";
-import { SkeletonBell, SkeletonTitle, SkeletonCard, SkeletonRow } from "@/components/Skeleton";
+import LegalDocument from "@/components/LegalDocument";
 
+/**
+ * The whole page, because the whole page is fixed text. Nothing here was ever
+ * waiting on the portal read except the bell and the nav badges, and those
+ * stream into a shell that is already drawn.
+ */
 export default function Loading() {
   return (
-    <AppShell active="profile" headerNotification={<SkeletonBell />}>
-      <div role="status" aria-live="polite" aria-busy="true">
-        <span className="sr-only">Loading</span>
-        <SkeletonTitle />
-        <SkeletonCard count={1} />
-        <SkeletonRow count={4} />
-      </div>
+    <AppShell active="profile" contentClass="reading-content">
+      <p className="eyebrow">ACCOUNT</p>
+      <h1 className="title">Privacy &amp; Terms</h1>
+      <p className="subtitle">A readable summary for the KCH working MVP.</p>
+      <LegalDocument />
     </AppShell>
   );
 }

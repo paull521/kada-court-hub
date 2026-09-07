@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
@@ -114,6 +114,22 @@ describe("two-column pages declare both panes", () => {
     readFileSync(path, "utf8").includes('contentClass="two-col"'),
   );
 
+  /**
+   * A page's body can live in a frame - the component the page renders with its
+   * data and its loading.tsx renders without any - and the panes go with it. So
+   * the check reads the page together with the components it imports, which is
+   * where /home and /payments keep their two columns now. One component per
+   * file is what keeps the count meaningful.
+   */
+  const body = (page: string) => {
+    const source = readFileSync(page, "utf8");
+    const imported = [...source.matchAll(/from "@\/components\/([\w-]+)"/g)]
+      .map((match) => join(root, "components", `${match[1]}.tsx`))
+      .filter((file) => existsSync(file))
+      .map((file) => readFileSync(file, "utf8"));
+    return [source, ...imported].join("\n");
+  };
+
   // A floor, not a target: it catches a walk that silently found nothing, which
   // would make every assertion below vacuous. Pages leave the set when they go
   // back to a single column, and two have: /my-team, where one pane held the
@@ -126,7 +142,7 @@ describe("two-column pages declare both panes", () => {
   it.each(pages.map((path) => path.replace(`${root}/`, "")))(
     "%s has exactly one of each pane",
     (relative) => {
-      const source = readFileSync(join(root, relative), "utf8");
+      const source = body(join(root, relative));
       expect(source.match(/col-pane-a/g)?.length).toBe(1);
       expect(source.match(/col-pane-b/g)?.length).toBe(1);
     },
