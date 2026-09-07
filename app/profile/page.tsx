@@ -25,7 +25,7 @@ import { getOwnerProfileSummary } from "@/lib/owner-data";
 import { OwnerSupportRequest } from "@/components/PlatformOperations";
 import PlatformFeedback from "@/components/PlatformFeedback";
 import OwnerConferenceSwitcher from "@/components/OwnerConferenceSwitcher";
-import "@/components/ProfileCleanup.module.css";
+import "@/components/ProfileCleanup.css";
 
 function InfoPanel({
   title,

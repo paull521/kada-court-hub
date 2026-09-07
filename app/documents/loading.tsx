@@ -1,9 +1,9 @@
 import AppShell from "@/components/AppShell";
-import { SkeletonBell, SkeletonCard, SkeletonTitle } from "@/components/Skeleton";
+import { SkeletonCard, SkeletonTitle } from "@/components/Skeleton";
 
 export default function Loading() {
   return (
-    <AppShell active="profile" headerNotification={<SkeletonBell />}>
+    <AppShell active="profile">
       <div role="status" aria-live="polite" aria-busy="true">
         <span className="sr-only">Loading</span>
         <SkeletonTitle />

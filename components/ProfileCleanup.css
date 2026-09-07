@@ -1,0 +1,3 @@
+.profile-account-list a[href="/payments#payment-history"] {
+  display: none;
+}
