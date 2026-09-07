@@ -1,7 +1,6 @@
-import { BookOpen, Check, ChevronRight, User } from "lucide-react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import CaptainShell from "@/components/CaptainShell";
+import CaptainMoreLinks from "@/components/CaptainMoreLinks";
 import RoleSwitcher from "@/components/RoleSwitcher";
 import { getCaptainPortalData } from "@/lib/captain-data";
 import { getAvailableRoles } from "@/lib/roles";
@@ -21,43 +20,7 @@ export default async function CaptainMorePage() {
       subtitle="Captain settings and role tools."
     >
       <RoleSwitcher roles={roles} current="captain" />
-      <nav className="owner-more-list">
-        <Link href="/profile?view=captain">
-          <span>
-            <User className="ui-icon" />
-          </span>
-          <div>
-            <b>Player Profile</b>
-            <small>Personal details and uniform size</small>
-          </div>
-          <strong aria-hidden="true">
-            <ChevronRight className="go-caret" />
-          </strong>
-        </Link>
-        <Link href="/captain/availability">
-          <span>
-            <Check className="ui-icon" />
-          </span>
-          <div>
-            <b>Availability</b>
-            <small>Next-game team responses</small>
-          </div>
-          <strong aria-hidden="true">
-            <ChevronRight className="go-caret" />
-          </strong>
-        </Link>
-        <Link href="/legal">
-          <span>
-            <BookOpen className="ui-icon" />
-          </span>
-          <div>
-            <b>Privacy &amp; Terms</b>
-          </div>
-          <strong aria-hidden="true">
-            <ChevronRight className="go-caret" />
-          </strong>
-        </Link>
-      </nav>
+      <CaptainMoreLinks />
     </CaptainShell>
   );
 }
