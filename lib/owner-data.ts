@@ -462,6 +462,7 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
     ...withPlayer(invitationRows),
     ...withPlayer(poolRows),
   ]);
+  const poolDetails = new Map((poolRows ?? []).map((row) => [row.player_id, row]));
 
   const uniformSettings = new Map((uniformSettingRows ?? []).map((row) => [row.division_id, row]));
   const draftDetails = new Map((draftRows ?? []).map((row) => [row.team_id, row]));
@@ -571,6 +572,7 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
             registration.division_id === division.id &&
             !registration.team_id &&
             registration.role_label === "Player" &&
+            poolDetails.get(registration.player_id)?.status === "active" &&
             (registration.status === "active" || registration.status === "pending"),
         )
         .map((registration) => {
@@ -911,7 +913,6 @@ export async function getOwnerPortalData(): Promise<OwnerPortalData> {
     leagueCost: row.league_cost_cents / 100,
     notes: row.notes ?? "",
   }));
-  const poolDetails = new Map((poolRows ?? []).map((row) => [row.player_id, row]));
   const currentSeasonId = seasons.find((season) => !season.canceledAt)?.id ?? "";
   const directory: OwnerDirectoryPlayer[] = [...playerDetails.values()]
     .filter((row) => poolDetails.has(row.id))
