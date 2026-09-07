@@ -1,6 +1,20 @@
 import { MapPin } from "lucide-react";
 import { SkeletonText } from "@/components/Skeleton";
-import type { Game } from "@/lib/data";
+
+/**
+ * Only the fields the card draws, so a player Game and a captain's CaptainGame
+ * both satisfy it without either having to know about the other. `uniform` is
+ * widened to string because the captain's is: the swatch reads it with
+ * includes("dark"), which is why that check is the one worth keeping.
+ */
+type NextGame = {
+  dateLabel: string;
+  time: string;
+  opponent: string;
+  venue: string;
+  court: string;
+  uniform: string;
+};
 
 /**
  * The navy next-game card, drawn once for Home and Schedule.
@@ -20,7 +34,7 @@ export default function NextGameCard({
   teamName,
   className = "",
 }: {
-  game?: Game;
+  game?: NextGame;
   teamName?: string;
   /** Extra classes for a page that needs the card laid out differently. */
   className?: string;

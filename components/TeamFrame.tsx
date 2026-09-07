@@ -35,7 +35,7 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
             </span>
             <span className="team-banner-copy">
               <b>
-                <SkeletonText width="9em" />
+                <SkeletonText width="7.5em" />
               </b>
               <small>
                 <SkeletonText width="12em" />

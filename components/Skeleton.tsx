@@ -57,6 +57,20 @@ export function LoadingNote() {
  * and the space that string gets. max-width holds the floor if it is still too
  * wide, because an em length has nothing to wrap at and would otherwise run
  * out of its column and over whatever is beside it.
+ *
+ * The same em also keeps bars for the same value consistent across pages, which
+ * is the reason to reach for the number that is already in use rather than a
+ * fresh guess. em scales with the font, so one value gives a bar that is the
+ * same size relative to its text everywhere it appears - a team name is 7.5em
+ * on a line of its own, at 21px in the team banner and at 22px in the Home row
+ * alike. It had drifted to 8em and 9em in those two places and to 8em on the
+ * Payments balance card, where the column is 92px and 8em of a 12px font is
+ * 96px, so the bar filled the card while the same name on Home and Schedule was
+ * half that.
+ *
+ * Where a name wraps inside a narrow centred column under a badge - the matchup
+ * on the next-game card, the badge on the balance card - the bar stands for one
+ * line rather than the whole string, and that is 4.5em in both.
  */
 export function SkeletonText({ width = "7em" }: { width?: string }) {
   return <span className="skeleton skeleton-text" style={{ width }} aria-hidden="true" />;

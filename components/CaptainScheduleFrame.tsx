@@ -1,5 +1,6 @@
 import { CalendarDays, ChevronRight, MapPin } from "lucide-react";
 import { LoadingNote, SkeletonText } from "@/components/Skeleton";
+import NextGameCard from "@/components/NextGameCard";
 import type { CaptainGame, CaptainPortalData } from "@/lib/captain-data";
 
 function weekStart(dateKey: string) {
@@ -183,53 +184,7 @@ export default function CaptainScheduleFrame({ data }: { data?: CaptainPortalDat
           </section>
         ) : (
           <>
-            <section className="card feature-card schedule-feature">
-              <div className="feature-copy">
-                <p className="eyebrow">NEXT GAME</p>
-                <p className="feature-date">
-                  {next ? next.dateLabel : <SkeletonText width="9em" />}
-                </p>
-                <strong className="feature-time">
-                  {next ? next.time : <SkeletonText width="5em" />}
-                </strong>
-              </div>
-              <div className="matchup-logos">
-                <div>
-                  <span className="team-mark">K</span>
-                  <b>{data ? data.teamName : <SkeletonText width="7em" />}</b>
-                </div>
-                <strong className="versus">VS</strong>
-                <div>
-                  <span className="team-mark opponent">
-                    {next ? next.opponent.slice(0, 2).toUpperCase() : ""}
-                  </span>
-                  <b>{next ? next.opponent : <SkeletonText width="6em" />}</b>
-                </div>
-              </div>
-              <p className="feature-venue">
-                {next ? (
-                  <>
-                    <MapPin className="ui-icon" /> {next.venue}
-                    {next.court ? ` · ${next.court}` : ""}
-                  </>
-                ) : (
-                  <SkeletonText width="15em" />
-                )}
-              </p>
-              <div className="uniform-line">
-                <small>UNIFORM</small>
-                {next ? (
-                  <>
-                    <span
-                      className={`uniform-dot ${next.uniform.toLowerCase().includes("dark") ? "dark" : "white"}`}
-                    />
-                    <b>{next.uniform.toUpperCase()}</b>
-                  </>
-                ) : (
-                  <SkeletonText width="4em" />
-                )}
-              </div>
-            </section>
+            <NextGameCard game={next} teamName={data?.teamName} className="schedule-feature" />
             {(!data || upcoming.length > 0) && (
               <>
                 <h2 className="list-label">UPCOMING GAMES</h2>
