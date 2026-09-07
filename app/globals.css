@@ -8686,9 +8686,20 @@ body:has(.context-overlay-open) .bottom {
   gap: 12px;
 }
 /* Stands in for one value inside a card that is already drawn, so it is sized
-   in em against the text it replaces rather than in pixels. */
+   in em against the text it replaces rather than in pixels.
+
+   max-width is what keeps that safe in a narrow column. An em width is a fixed
+   length, and an inline-block has nothing to wrap at, so a placeholder wider
+   than its column does not shrink or break - it runs straight out of the track
+   and paints over whatever is beside it. On the Home feature card that is the
+   time, 5em of a 34px font, against a 42% column that is about 125px on a small
+   phone: the bar reached across into the matchup logos next to it. The real
+   text it stands in for never does this, because words wrap.
+
+   Clamping costs nothing anywhere it already fitted. */
 .skeleton-text {
   display: inline-block;
+  max-width: 100%;
   height: 0.85em;
   border-radius: 5px;
   vertical-align: baseline;

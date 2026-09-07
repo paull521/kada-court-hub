@@ -49,6 +49,14 @@ export function LoadingNote() {
  * it. Sized in em, so it is the height of whatever it is replacing and sits
  * where that text will sit - which is the point of it: the card, its heading
  * and its labels are already on screen, and only the value is missing.
+ *
+ * The unit invites one mistake, so it is worth saying: 1em is the font size,
+ * not a character, and a character averages about half of it. A bar for
+ * "8:00 PM" is near 3.8em, not 7em - and at 34px that difference is the width
+ * of the whole column it sits in. Size each bar against the string it replaces
+ * and the space that string gets. max-width holds the floor if it is still too
+ * wide, because an em length has nothing to wrap at and would otherwise run
+ * out of its column and over whatever is beside it.
  */
 export function SkeletonText({ width = "7em" }: { width?: string }) {
   return <span className="skeleton skeleton-text" style={{ width }} aria-hidden="true" />;

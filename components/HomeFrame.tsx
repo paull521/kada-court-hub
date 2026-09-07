@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { CalendarDays, ChevronRight, MapPin, Wallet } from "lucide-react";
+import { CalendarDays, ChevronRight, Wallet } from "lucide-react";
 import { LoadingNote, SkeletonText } from "@/components/Skeleton";
+import NextGameCard from "@/components/NextGameCard";
 import SeasonInvitationCard from "@/components/SeasonInvitationCard";
 import AvailabilityControl from "@/components/AvailabilityControl";
 import type { PlayerPortalData } from "@/lib/kch-data";
@@ -42,53 +43,7 @@ export default function HomeFrame({ data }: { data?: PlayerPortalData }) {
           </section>
         ) : (
           <>
-            <section className="card feature-card">
-              <div className="feature-copy">
-                <p className="eyebrow">NEXT GAME</p>
-                <p className="feature-date">
-                  {next ? next.dateLabel : <SkeletonText width="9em" />}
-                </p>
-                <strong className="feature-time">
-                  {next ? next.time : <SkeletonText width="5em" />}
-                </strong>
-              </div>
-              <div className="matchup-logos">
-                <div>
-                  <span className="team-mark">K</span>
-                  <b>{data ? data.context.team : <SkeletonText width="7em" />}</b>
-                </div>
-                <strong className="versus">VS</strong>
-                <div>
-                  <span className="team-mark opponent">
-                    {next ? next.opponent.slice(0, 2).toUpperCase() : ""}
-                  </span>
-                  <b>{next ? next.opponent : <SkeletonText width="6em" />}</b>
-                </div>
-              </div>
-              <p className="feature-venue">
-                {next ? (
-                  <>
-                    <MapPin className="ui-icon" /> {next.venue}
-                    {next.court ? ` · ${next.court}` : ""}
-                  </>
-                ) : (
-                  <SkeletonText width="15em" />
-                )}
-              </p>
-              <div className="uniform-line">
-                <small>JERSEY COLOR</small>
-                {next ? (
-                  <>
-                    <span
-                      className={`uniform-dot ${next.uniform.toLowerCase().includes("dark") ? "dark" : "white"}`}
-                    />
-                    <b>{next.uniform.toUpperCase()}</b>
-                  </>
-                ) : (
-                  <SkeletonText width="4em" />
-                )}
-              </div>
-            </section>
+            <NextGameCard game={next} teamName={data?.context.team} />
             <section className="card home-availability-card">
               {next && data ? (
                 <AvailabilityControl gameId={next.id} available={data.myAvailability} />
