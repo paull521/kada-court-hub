@@ -47,6 +47,18 @@
 .role-switcher a.active {
   color: #fff;
 }
+/* Held over the whole page from the moment a role is pressed until that
+   workspace is on screen. The pill moves on press, so until the navigation
+   lands the screen is showing one workspace and promising another, and a tap on
+   the tab strip underneath would run in the old one. Above 101, the highest
+   z-index in the app, so the tab strip and any open sheet are covered too.
+   Transparent: the wait is already described by the pill that moved. */
+.role-switch-lock {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  cursor: progress;
+}
 .captain-dashboard-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
