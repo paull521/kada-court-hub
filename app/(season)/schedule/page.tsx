@@ -1,8 +1,6 @@
 import { Suspense } from "react";
 import { CalendarDays, ChevronRight, MapPin } from "lucide-react";
-import AppShell from "@/components/AppShell";
 import { ContentPlaceholder } from "@/components/Skeleton";
-import SeasonTabs from "@/components/SeasonTabs";
 import {
   getPlayerPortalData,
   playerHasTeamContext,
@@ -135,11 +133,9 @@ export default async function Schedule() {
   if (!(await playerHasTeamContext())) redirect("/home");
   const data = getPlayerPortalData();
   return (
-    <AppShell contentClass="two-col" active="schedule" chrome={data}>
-      <Suspense fallback={<ContentPlaceholder />}>
-        <ScheduleBody data={data} />
-      </Suspense>
-    </AppShell>
+    <Suspense fallback={<ContentPlaceholder />}>
+      <ScheduleBody data={data} />
+    </Suspense>
   );
 }
 
@@ -153,61 +149,56 @@ async function ScheduleBody({ data: portal }: { data: Promise<PlayerPortalData> 
   const [next, ...upcoming] = data.games;
   return (
     <>
-      <div className="col-pane col-pane-a">
-        {next ? (
-          <section className="card feature-card schedule-feature">
-            <div className="feature-copy">
-              <p className="eyebrow">NEXT GAME</p>
-              <p className="feature-date">{next.dateLabel}</p>
-              <strong className="feature-time">{next.time}</strong>
+      {/* One column, in the order a player reads it: the next game, then the
+          rest of their own fixtures, then the division's week by week. */}
+      {next ? (
+        <section className="card feature-card schedule-feature">
+          <div className="feature-copy">
+            <p className="eyebrow">NEXT GAME</p>
+            <p className="feature-date">{next.dateLabel}</p>
+            <strong className="feature-time">{next.time}</strong>
+          </div>
+          <div className="matchup-logos">
+            <div>
+              <span className="team-mark">K</span>
+              <b>{data.context.team}</b>
             </div>
-            <div className="matchup-logos">
-              <div>
-                <span className="team-mark">K</span>
-                <b>{data.context.team}</b>
-              </div>
-              <strong className="versus">VS</strong>
-              <div>
-                <span className="team-mark opponent">
-                  {next.opponent.slice(0, 2).toUpperCase()}
-                </span>
-                <b>{next.opponent}</b>
-              </div>
+            <strong className="versus">VS</strong>
+            <div>
+              <span className="team-mark opponent">{next.opponent.slice(0, 2).toUpperCase()}</span>
+              <b>{next.opponent}</b>
             </div>
-            <p className="feature-venue">
-              <MapPin className="ui-icon" /> {next.venue}
-              {next.court ? ` · ${next.court}` : ""}
-            </p>
-            <div className="uniform-line">
-              <small>UNIFORM</small>
-              <span className={`uniform-dot ${next.uniform.toLowerCase()}`} />
-              <b>{next.uniform.toUpperCase()}</b>
-            </div>
-          </section>
-        ) : (
-          <section className="card schedule-empty">
-            <span>
-              <CalendarDays className="ui-icon" />
-            </span>
-            <h2>No games scheduled for your team</h2>
-            <p>New games will appear here as soon as the conference owner publishes them.</p>
-          </section>
-        )}
-        <SeasonTabs active="schedule" />
-        {upcoming.length > 0 && (
-          <>
-            <h2 className="list-label">UPCOMING GAMES</h2>
-            <div className="schedule-list">
-              {upcoming.map((game) => (
-                <GameRow game={game} teamName={data.context.team} key={game.id} />
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-      <div className="col-pane col-pane-b">
-        <DivisionWeeklyView games={data.divisionSchedule} />
-      </div>
+          </div>
+          <p className="feature-venue">
+            <MapPin className="ui-icon" /> {next.venue}
+            {next.court ? ` · ${next.court}` : ""}
+          </p>
+          <div className="uniform-line">
+            <small>UNIFORM</small>
+            <span className={`uniform-dot ${next.uniform.toLowerCase()}`} />
+            <b>{next.uniform.toUpperCase()}</b>
+          </div>
+        </section>
+      ) : (
+        <section className="card schedule-empty">
+          <span>
+            <CalendarDays className="ui-icon" />
+          </span>
+          <h2>No games scheduled for your team</h2>
+          <p>New games will appear here as soon as the conference owner publishes them.</p>
+        </section>
+      )}
+      {upcoming.length > 0 && (
+        <>
+          <h2 className="list-label">UPCOMING GAMES</h2>
+          <div className="schedule-list">
+            {upcoming.map((game) => (
+              <GameRow game={game} teamName={data.context.team} key={game.id} />
+            ))}
+          </div>
+        </>
+      )}
+      <DivisionWeeklyView games={data.divisionSchedule} />
       <section className="family-banner">
         <p className="family-quote">
           “Every game is a direct reflection of what you have prepared for.”

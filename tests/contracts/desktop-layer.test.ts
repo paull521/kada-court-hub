@@ -115,11 +115,12 @@ describe("two-column pages declare both panes", () => {
   );
 
   // A floor, not a target: it catches a walk that silently found nothing, which
-  // would make every assertion below vacuous. /my-team dropped out of the set
-  // when it went back to a single column - one pane held the team switcher and
-  // nothing else, so the second column was empty down the whole page.
+  // would make every assertion below vacuous. Pages leave the set when they go
+  // back to a single column, and two have: /my-team, where one pane held the
+  // team switcher and nothing else, and /schedule, where the week-by-week view
+  // beside the player's own fixtures read as two unrelated lists.
   it("finds the opted-in pages", () => {
-    expect(pages.length).toBeGreaterThanOrEqual(4);
+    expect(pages.length).toBeGreaterThanOrEqual(3);
   });
 
   it.each(pages.map((path) => path.replace(`${root}/`, "")))(

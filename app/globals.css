@@ -5440,6 +5440,7 @@ button.account-link {
   background: #efede9;
   border-radius: 14px;
   margin: 0 0 18px;
+  position: relative;
 }
 .season-tabs a {
   min-height: 45px;
@@ -5449,11 +5450,30 @@ button.account-link {
   font-size: 14px;
   font-weight: 800;
   color: var(--muted);
+  position: relative;
+  transition: color 0.2s ease;
 }
-.season-tabs a.active {
+/* The navy pill travels between the three views rather than being redrawn on
+   whichever one is current. One column of the track - the width less its 4px
+   padding on either side and the two 5px gaps - and one gap per column it has
+   already passed. --season-index comes from the component, which moves it on
+   press because each view is a separate route. It is positioned rather than
+   placed, so the grid still lays out three links and not four. */
+.season-tabs-thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px - 2 * 5px) / 3);
+  border-radius: 11px;
   background: var(--navy);
-  color: #fff;
   box-shadow: 0 3px 9px rgba(7, 31, 61, 0.18);
+  transform: translateX(calc(var(--season-index) * (100% + 5px)));
+  transition: transform 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+}
+/* The link keeps only its text colour - the fill is the thumb's job now. */
+.season-tabs a.active {
+  color: #fff;
 }
 .standings-list {
   display: grid;
@@ -8653,10 +8673,11 @@ body:has(.context-overlay-open) .bottom {
   .team-banner-caret {
     transition: none;
   }
-  /* Both sliding pills still land in the right place, they just stop
+  /* The sliding pills still land in the right place, they just stop
      travelling to get there. */
   .availability-thumb,
-  .role-switcher-thumb {
+  .role-switcher-thumb,
+  .season-tabs-thumb {
     transition: none;
   }
 }

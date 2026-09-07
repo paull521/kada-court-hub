@@ -201,7 +201,6 @@
   .content.two-col > .eyebrow,
   .content.two-col > .title,
   .content.two-col > .subtitle,
-  .content.two-col > .season-tabs,
   .content.two-col > .family-banner {
     grid-column: 1 / -1;
   }
@@ -236,6 +235,25 @@
      to both of its neighbours. */
   .col-pane > .list-label {
     margin-top: 10px;
+  }
+
+  /* The weekly view follows the player's own fixtures now instead of sitting in
+     a column beside them, so it needs the space that separates two sections
+     rather than none at all.
+
+     Its heading is an <h2> and the rule meant to size it - .weekly-schedule >
+     header h3 - names an <h3>, which is what the owner's copy of this block
+     renders. So the player's heading had been drawing at the browser's default
+     size with the browser's default 0.83em margins, which is the hole under
+     "All Teams". Same numbers as the rule it should have matched. Left scoped
+     to a direct child of .content: the captain's weekly view sits in a column
+     of its own and is not what was being looked at. */
+  .content > .player-weekly-schedule {
+    margin-top: 30px;
+  }
+  .content > .player-weekly-schedule > header h2 {
+    font-size: 21px;
+    margin: 3px 0;
   }
 
   /* The sign-off line closes the page instead of floating in the gap under the
