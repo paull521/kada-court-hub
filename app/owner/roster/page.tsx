@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { OwnerPlayerDirectoryManagement } from "@/components/OwnerManagement";
 import OwnerPageShell from "@/components/OwnerPageShell";
-import { OwnerContentPlaceholder } from "@/components/Skeleton";
+import OwnerSectionFrame from "@/components/OwnerSectionFrame";
 import { getOwnerConferenceContext, getOwnerPortalData } from "@/lib/owner-data";
 
 export default async function OwnerRosterOverridesPage({
@@ -24,7 +24,7 @@ export default async function OwnerRosterOverridesPage({
       conferenceId={context.conferenceId}
       conferences={context.conferences}
     >
-      <Suspense fallback={<OwnerContentPlaceholder />}>
+      <Suspense fallback={<OwnerSectionFrame rows={5} />}>
         <RosterContent conferenceId={context.conferenceId} view={selectedView} />
       </Suspense>
     </OwnerPageShell>

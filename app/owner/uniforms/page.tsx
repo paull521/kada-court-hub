@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { OwnerUniformManagement } from "@/components/OwnerManagement";
 import OwnerPageShell from "@/components/OwnerPageShell";
-import { OwnerContentPlaceholder } from "@/components/Skeleton";
+import OwnerSectionFrame from "@/components/OwnerSectionFrame";
 import { getOwnerConferenceContext, getOwnerPortalData } from "@/lib/owner-data";
 
 export default async function OwnerUniformsPage() {
@@ -16,7 +16,15 @@ export default async function OwnerUniformsPage() {
       conferenceId={context.conferenceId}
       conferences={context.conferences}
     >
-      <Suspense fallback={<OwnerContentPlaceholder />}>
+      <Suspense
+        fallback={
+          <OwnerSectionFrame
+            eyebrow="DIVISION DETAILS"
+            heading="Uniform Photos"
+            intro="Open one season, then one division. Upload one dark and one light reference photo for every team in that division."
+          />
+        }
+      >
         <UniformContent />
       </Suspense>
     </OwnerPageShell>

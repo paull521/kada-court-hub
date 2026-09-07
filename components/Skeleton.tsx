@@ -32,22 +32,44 @@ export function SkeletonRow({ count = 1 }: { count?: number }) {
   );
 }
 
-export function SkeletonBell() {
-  return <span className="skeleton skeleton-bell" aria-hidden="true" />;
+/**
+ * Announces a wait to a screen reader. Absolutely positioned by .sr-only, so it
+ * is not laid out and can sit inside a grid without taking a cell of it.
+ */
+export function LoadingNote() {
+  return (
+    <span className="sr-only" role="status" aria-live="polite">
+      Loading
+    </span>
+  );
 }
 
 /**
- * The body of a player or captain page while its data is still in flight. Same
- * shape the matching loading.tsx uses, so the route skeleton and the in-page
- * boundary do not disagree about the layout.
+ * A value that has not arrived yet, standing in the line of real text around
+ * it. Sized in em, so it is the height of whatever it is replacing and sits
+ * where that text will sit - which is the point of it: the card, its heading
+ * and its labels are already on screen, and only the value is missing.
  */
-export function ContentPlaceholder({ cards = 2, rows = 4 }: { cards?: number; rows?: number }) {
+export function SkeletonText({ width = "7em" }: { width?: string }) {
+  return <span className="skeleton skeleton-text" style={{ width }} aria-hidden="true" />;
+}
+
+/**
+ * The space a control takes while it is still on its way - a toggle, a form, a
+ * disclosure. Sized by the caller, because the point is to hold the shape of
+ * the particular thing that is coming.
+ */
+export function SkeletonBlock({
+  width = "100%",
+  height = "44px",
+  radius = "14px",
+}: {
+  width?: string;
+  height?: string;
+  radius?: string;
+}) {
   return (
-    <div role="status" aria-live="polite" aria-busy="true">
-      <span className="sr-only">Loading</span>
-      <SkeletonCard count={cards} />
-      <SkeletonRow count={rows} />
-    </div>
+    <span className="skeleton" style={{ width, height, borderRadius: radius }} aria-hidden="true" />
   );
 }
 

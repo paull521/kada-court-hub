@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { OwnerGameManagement } from "@/components/OwnerManagement";
 import OwnerPageShell from "@/components/OwnerPageShell";
-import { OwnerContentPlaceholder } from "@/components/Skeleton";
+import OwnerSectionFrame from "@/components/OwnerSectionFrame";
 import { getOwnerConferenceContext, getOwnerPortalData } from "@/lib/owner-data";
 
 /**
@@ -22,7 +22,11 @@ export default async function OwnerSchedulePage() {
       conferenceId={context.conferenceId}
       conferences={context.conferences}
     >
-      <Suspense fallback={<OwnerContentPlaceholder />}>
+      <Suspense
+        fallback={
+          <OwnerSectionFrame intro="Choose a season, then a division. Each division keeps its own schedule, teams, and results." />
+        }
+      >
         <ScheduleContent />
       </Suspense>
     </OwnerPageShell>

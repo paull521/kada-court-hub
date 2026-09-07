@@ -2,7 +2,8 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { OwnerPastPaymentsArchive, OwnerPaymentManagement } from "@/components/OwnerManagement";
 import OwnerPageShell from "@/components/OwnerPageShell";
-import { OwnerContentPlaceholder, SkeletonCard } from "@/components/Skeleton";
+import OwnerSectionFrame from "@/components/OwnerSectionFrame";
+import { SkeletonCard } from "@/components/Skeleton";
 import { getOwnerConferenceContext, getOwnerPortalData } from "@/lib/owner-data";
 import { getOwnerPaymentBilling } from "@/lib/owner-payment-ledger";
 import { OwnerSubscriptionPayment } from "@/components/PlatformCreatorTools";
@@ -27,14 +28,22 @@ export default async function OwnerPaymentsPage() {
       <section className="owner-operations owner-page-section monthly-subscription-section">
         <h2>Season Subscription</h2>
         <p className="operations-intro">Season payment for KCH Platform Creator confirmation.</p>
-        {/* A plain block rather than OwnerContentPlaceholder: the collections
-            boundary below already carries this page's live region, and two of
-            them would announce "Loading" twice. */}
+        {/* A plain block rather than a frame of its own: the heading and the
+            line above it are already drawn, this boundary covers one card, and
+            the collections boundary below carries the page's live region -
+            two of them would announce "Loading" twice. */}
         <Suspense fallback={<SkeletonCard />}>
           <SubscriptionSection conferenceId={context.conferenceId} />
         </Suspense>
       </section>
-      <Suspense fallback={<OwnerContentPlaceholder />}>
+      <Suspense
+        fallback={
+          <OwnerSectionFrame
+            heading="Season Tracking"
+            intro="Each card contains one season and division. Open it for player-level details."
+          />
+        }
+      >
         <CollectionsSection />
       </Suspense>
     </OwnerPageShell>

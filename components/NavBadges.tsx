@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { SkeletonBell } from "@/components/Skeleton";
 import NotificationCenter from "@/components/NotificationCenter";
 import type { PlayerNotification } from "@/lib/kch-data";
 
@@ -48,10 +47,16 @@ export async function ChromeNotifications({ chrome }: { chrome: Promise<ShellChr
   return <NotificationCenter notifications={notifications} />;
 }
 
-/** The bell, with the skeleton the loading.tsx files already use for it. */
+/**
+ * The bell. Its fallback is the bell itself with nothing in it, not a grey
+ * circle: the button, its icon and the sheet it opens are markup, and the only
+ * thing in there that needs the portal is the unread count. So the header is
+ * live from the first paint and never changes shape - the dot is the only thing
+ * that arrives late.
+ */
 export function NotificationSlot({ chrome }: { chrome: Promise<ShellChrome> }) {
   return (
-    <Suspense fallback={<SkeletonBell />}>
+    <Suspense fallback={<NotificationCenter notifications={[]} />}>
       <ChromeNotifications chrome={chrome} />
     </Suspense>
   );

@@ -1,21 +1,17 @@
 import AppShell from "@/components/AppShell";
-import { SkeletonBell, SkeletonCard, SkeletonRow } from "@/components/Skeleton";
+import PaymentsFrame from "@/components/PaymentsFrame";
 
 /**
- * Rendered instantly while /payments resolves its server data. The real bottom nav
- * is kept so the tapped tab highlights straight away. The bell is replaced by a
- * placeholder - it needs notifications, which this boundary does not have - so
- * the header greys out with the rest of the page instead of staying live above
- * a skeleton.
+ * The page itself, without its numbers. The bell is live here rather than a
+ * grey circle - it needs no data to be drawn - and the balance card, the fee
+ * panel, the payment panel and the history row are the real ones, so nothing
+ * on this screen is replaced by something of a different shape when the read
+ * lands.
  */
 export default function Loading() {
   return (
-    <AppShell active="payments" headerNotification={<SkeletonBell />}>
-      <div role="status" aria-live="polite" aria-busy="true">
-        <span className="sr-only">Loading</span>
-        <SkeletonCard count={1} />
-        <SkeletonRow count={4} />
-      </div>
+    <AppShell contentClass="two-col" active="payments">
+      <PaymentsFrame />
     </AppShell>
   );
 }
