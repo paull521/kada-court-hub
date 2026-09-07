@@ -394,4 +394,137 @@
   .captain-content > .conference-player-invitation {
     max-width: 430px;
   }
+  /* --- Owner's Guide --------------------------------------------------------
+     A reading page in a workspace that takes the full app width. Left as one
+     column it would be a 1,180px line of body text, so the section index steps
+     out of the flow, becomes a rail, and sticks - which is also the only way a
+     six-section handbook stays navigable once it is longer than the window.
+     The body keeps a reading measure of its own inside the leftover space. */
+  .owner-guide {
+    grid-template-columns: 210px minmax(0, 1fr);
+    gap: 44px;
+    align-items: start;
+  }
+  .owner-guide-index {
+    position: sticky;
+    top: 20px;
+    display: grid;
+    gap: 1px;
+    border-left: 2px solid var(--line);
+  }
+  .owner-guide-index a {
+    padding: 8px 0 8px 14px;
+    margin-left: -2px;
+    border: 0;
+    border-left: 2px solid transparent;
+    border-radius: 0;
+    background: none;
+    font-size: 13px;
+    line-height: 1.3;
+  }
+  .owner-guide-index a:hover {
+    border-left-color: var(--gold);
+    color: var(--navy);
+  }
+  .owner-guide-body {
+    max-width: 760px;
+    gap: 44px;
+  }
+  .owner-guide-section {
+    scroll-margin-top: 24px;
+  }
+  .owner-guide-section > h2 {
+    font-size: 29px;
+  }
+  .guide-opening {
+    padding: 30px 32px;
+  }
+  .guide-opening p {
+    font-size: 22px;
+    max-width: 40ch;
+  }
+
+  /* Three columns, so the tab name is a column of its own and the five
+     descriptions start on one edge instead of five. */
+  .guide-map > a {
+    grid-template-columns: 38px 132px minmax(0, 1fr);
+    gap: 16px;
+    padding: 16px 2px;
+    align-items: center;
+  }
+  .guide-map-icon {
+    grid-row: auto;
+    width: 38px;
+    height: 38px;
+  }
+  /* Four now, so they are one row that mirrors the four tiles on Home rather
+     than a row of three and an orphan. */
+  .guide-doors {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .season-guide-step {
+    padding-left: 56px;
+    padding-bottom: 28px;
+  }
+  .season-guide-step > b {
+    width: 38px;
+    height: 38px;
+    border-radius: 13px;
+    font-size: 15px;
+  }
+  .season-guide-step:before {
+    left: 18px;
+    top: 44px;
+  }
+  .season-guide-step h3 {
+    margin-top: 8px;
+    font-size: 19px;
+  }
+  .season-guide-step p {
+    font-size: 15px;
+  }
+
+  .guide-page {
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 16px;
+    padding: 22px 2px;
+  }
+  .guide-page-icon {
+    width: 42px;
+    height: 42px;
+  }
+  .guide-ability-list li {
+    font-size: 14px;
+  }
+
+  /* Eleven short definitions read as a glossary two-up and as a long ladder in
+     one column. */
+  .guide-terms {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 32px;
+  }
+  .guide-faq summary {
+    font-size: 15px;
+  }
+  .guide-faq p {
+    font-size: 14px;
+  }
+
+  /* The dashboard strip has a whole row of a three-column grid, so it can hold
+     its title and its line on one line each rather than wrapping. */
+  .owner-action-grid .owner-guide-link {
+    grid-template-columns: 48px minmax(0, 1fr) 18px;
+    padding: 16px 18px;
+  }
+  .owner-guide-link > span {
+    width: 48px;
+    height: 48px;
+  }
+  .owner-guide-link b {
+    font-size: 16px;
+  }
+  .owner-guide-link p {
+    font-size: 13px;
+  }
 }
