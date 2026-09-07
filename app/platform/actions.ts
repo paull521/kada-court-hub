@@ -105,9 +105,8 @@ export async function acknowledgeOwnerDemoAction(
     p_conference_name: conferenceName,
   });
   if (error) return { error: error.message };
-  return {
-    message: "Your application is waiting for KCH review.",
-  };
+  revalidatePath("/platform/owner-invitation");
+  redirect("/platform/owner-invitation");
 }
 export async function createOwnerConferenceAction(
   _: PlatformActionState,

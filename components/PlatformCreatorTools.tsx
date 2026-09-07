@@ -276,10 +276,6 @@ export function OwnerApplication({
         </section>
       ) : !start.token ? (
         <form action={startAction} className="card loginbox">
-          <p className="setup-note">
-            Use KCH to apply to run your basketball conference. KCH will review your application
-            before creating your owner workspace.
-          </p>
           <button className="btn primary" disabled={starting}>
             {starting ? "Starting…" : "Continue"}
           </button>
