@@ -78,8 +78,7 @@
     display: flex;
     flex-direction: column;
     /* clip rather than hidden: both crop the decorative wash, but hidden makes
-       the shell a scroll container, which would stop the tab strip below from
-       sticking. */
+       the shell a scroll container, and nothing in the app wants a second one. */
     overflow: clip;
   }
   .content {
@@ -125,21 +124,22 @@
     --kch-logo-size: 50px;
   }
   .bottom {
-    position: sticky;
-    top: 0;
-    z-index: 4;
+    /* Transparent, so the strip sits on the page's own wash instead of laying a
+       cream ground over it. That means static rather than sticky: a strip with
+       nothing behind it has the page scrolling through its labels, so the two
+       belong together - and they were together before the strip was made to
+       stick for the owner's long tables. */
+    position: static;
     width: auto;
     height: auto;
     display: flex;
     gap: 2px;
-    /* Owner tables run long. The strip stays reachable while they scroll, so it
-       needs a ground of its own rather than the transparent one it had. */
-    background: rgba(251, 248, 243, 0.94);
-    backdrop-filter: saturate(140%) blur(12px);
+    background: transparent;
     border: 0;
     border-bottom: 1px solid var(--line);
     border-radius: 0;
     box-shadow: none;
+    z-index: auto;
   }
   .nav {
     display: flex;
