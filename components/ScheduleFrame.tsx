@@ -1,5 +1,6 @@
 import { CalendarDays, ChevronRight, MapPin } from "lucide-react";
 import { LoadingNote, SkeletonText } from "@/components/Skeleton";
+import NextGameCard from "@/components/NextGameCard";
 import type { DivisionScheduleGame, PlayerPortalData } from "@/lib/kch-data";
 import type { Game } from "@/lib/data";
 
@@ -199,49 +200,7 @@ export default function ScheduleFrame({ data }: { data?: PlayerPortalData }) {
           <p>New games will appear here as soon as the conference owner publishes them.</p>
         </section>
       ) : (
-        <section className="card feature-card schedule-feature">
-          <div className="feature-copy">
-            <p className="eyebrow">NEXT GAME</p>
-            <p className="feature-date">{next ? next.dateLabel : <SkeletonText width="9em" />}</p>
-            <strong className="feature-time">
-              {next ? next.time : <SkeletonText width="5em" />}
-            </strong>
-          </div>
-          <div className="matchup-logos">
-            <div>
-              <span className="team-mark">K</span>
-              <b>{data ? data.context.team : <SkeletonText width="7em" />}</b>
-            </div>
-            <strong className="versus">VS</strong>
-            <div>
-              <span className="team-mark opponent">
-                {next ? next.opponent.slice(0, 2).toUpperCase() : ""}
-              </span>
-              <b>{next ? next.opponent : <SkeletonText width="6em" />}</b>
-            </div>
-          </div>
-          <p className="feature-venue">
-            {next ? (
-              <>
-                <MapPin className="ui-icon" /> {next.venue}
-                {next.court ? ` · ${next.court}` : ""}
-              </>
-            ) : (
-              <SkeletonText width="15em" />
-            )}
-          </p>
-          <div className="uniform-line">
-            <small>UNIFORM</small>
-            {next ? (
-              <>
-                <span className={`uniform-dot ${next.uniform.toLowerCase()}`} />
-                <b>{next.uniform.toUpperCase()}</b>
-              </>
-            ) : (
-              <SkeletonText width="4em" />
-            )}
-          </div>
-        </section>
+        <NextGameCard game={next} teamName={data?.context.team} className="schedule-feature" />
       )}
       {(!data || upcoming.length > 0) && (
         <>
