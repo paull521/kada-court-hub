@@ -38,7 +38,7 @@ export default function CaptainShellFrame({
   return (
     <div className="shell captain-shell">
       <header className="topbar">
-        <KchLogo className="logo" />
+        <KchLogo className="logo" href="/captain" />
         <div className="topbar-actions">
           <NotificationCenter notifications={[]} />
         </div>

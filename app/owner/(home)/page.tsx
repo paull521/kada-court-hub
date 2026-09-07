@@ -22,6 +22,9 @@ export default async function Owner() {
     return (
       <div className="shell owner-shell">
         <header className="topbar">
+          {/* Not a link: this viewer is not a commissioner, so /owner would
+              only return them to this same screen. The header already offers
+              the way out. */}
           <KchLogo className="logo" />
           <Link href="/home" className="muted">
             Player View
@@ -57,7 +60,7 @@ export default async function Owner() {
   return (
     <div className="shell owner-shell guided-owner-shell">
       <header className="topbar">
-        <KchLogo className="logo" />
+        <KchLogo className="logo" href="/owner" />
         <OwnerConferenceSwitcher
           conferences={context.conferences}
           currentId={context.conferenceId}

@@ -63,7 +63,7 @@ export default function CaptainShell({
   return (
     <div className="shell captain-shell">
       <header className="topbar">
-        <KchLogo className="logo" />
+        <KchLogo className="logo" href="/captain" />
         <div className="topbar-actions">
           <NotificationSlot chrome={chrome} />
         </div>
