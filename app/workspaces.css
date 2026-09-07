@@ -79,6 +79,9 @@
 .captain-task-tile.attention {
   border: 1px solid #e3a323;
 }
+/* Finishes the two-up grid when there is an odd number of tiles. Counts every
+   element in the grid, not just tiles, so anything else placed inside it shifts
+   the parity - keep sr-only notes and the like outside. */
 .captain-task-tile:last-child:nth-child(odd) {
   grid-column: 1/-1;
   min-height: 125px;

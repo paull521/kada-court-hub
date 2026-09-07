@@ -35,6 +35,13 @@ export function SkeletonRow({ count = 1 }: { count?: number }) {
 /**
  * Announces a wait to a screen reader. Absolutely positioned by .sr-only, so it
  * is not laid out and can sit inside a grid without taking a cell of it.
+ *
+ * It is still an element, though, and :nth-child counts elements whether they
+ * are laid out or not. Put it outside any container whose CSS counts children:
+ * inside .captain-dashboard-grid it shifted every tile along by one, which made
+ * the last tile odd-numbered and tripped the rule that spans a lone final tile
+ * across both columns - so Payments went full width while the page loaded and
+ * snapped back when it finished.
  */
 export function LoadingNote() {
   return (
