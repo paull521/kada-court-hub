@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CalendarDays, Check, Users, Wallet } from "lucide-react";
-import { LoadingNote, SkeletonText } from "@/components/Skeleton";
+import { LoadingNote } from "@/components/Skeleton";
 import type { CaptainPortalData } from "@/lib/captain-data";
 
 /**
@@ -9,13 +9,14 @@ import type { CaptainPortalData } from "@/lib/captain-data";
  *
  * The tile is a link, an icon and a fixed label - SCHEDULE, AVAILABILITY, TEAM
  * ROSTER, PAYMENTS - and none of that ever needed the read. Only the two lines
- * of numbers under each label do.
+ * under each label do, and while they are on their way they are words rather
+ * than grey bars, the way /owner does it: "Loading schedule…" reads as a tile
+ * that is working, where a grey bar reads as a tile that is broken. The second
+ * line says what the tile is about, which is true before the read and after it.
  *
- * They used to stream as one block because a tile carries a status modifier in
- * its own className, so a tile drawn before its numbers arrive starts neutral
- * and can turn amber underneath the reader. That is the trade: four tiles that
- * are already the tiles, one of which may gain a colour, against four grey
- * squares that are not tiles at all.
+ * The four values arrive together rather than one at a time as the owner's do,
+ * because a tile carries a status modifier in its own className - the colour of
+ * the tile is one of the things being read.
  */
 export default function CaptainDashboardFrame({ data }: { data?: CaptainPortalData }) {
   const next = data?.games[0];
@@ -40,17 +41,13 @@ export default function CaptainDashboardFrame({ data }: { data?: CaptainPortalDa
           <CalendarDays className="ui-icon" />
         </span>
         <small>SCHEDULE</small>
-        <b>{data ? next ? next.dateLabel : "No game" : <SkeletonText width="7em" />}</b>
+        <b>{data ? (next ? next.dateLabel : "No game") : "Loading schedule…"}</b>
         <em>
-          {data ? (
-            next ? (
-              `${next.time} · ${next.uniform}`
-            ) : (
-              "Waiting for schedule"
-            )
-          ) : (
-            <SkeletonText width="9em" />
-          )}
+          {data
+            ? next
+              ? `${next.time} · ${next.uniform}`
+              : "Waiting for schedule"
+            : "Next game and uniform"}
         </em>
       </Link>
       <Link
@@ -62,15 +59,11 @@ export default function CaptainDashboardFrame({ data }: { data?: CaptainPortalDa
         </span>
         <small>AVAILABILITY</small>
         <b>
-          {data ? (
-            `${data.availability.length - noCount} Yes · ${noCount} No`
-          ) : (
-            <SkeletonText width="6em" />
-          )}
+          {data
+            ? `${data.availability.length - noCount} Yes · ${noCount} No`
+            : "Counting responses…"}
         </b>
-        <em>
-          {data ? next ? `For ${next.opponent}` : "No upcoming game" : <SkeletonText width="8em" />}
-        </em>
+        <em>{data ? (next ? `For ${next.opponent}` : "No upcoming game") : "Who is playing"}</em>
       </Link>
       <Link
         href="/captain/roster"
@@ -80,8 +73,8 @@ export default function CaptainDashboardFrame({ data }: { data?: CaptainPortalDa
           <Users className="ui-icon" />
         </span>
         <small>TEAM ROSTER</small>
-        <b>{rosterStatus ?? <SkeletonText width="5em" />}</b>
-        <em>{data ? `${data.roster.length} players` : <SkeletonText width="5em" />}</em>
+        <b>{rosterStatus ?? "Checking roster…"}</b>
+        <em>{data ? `${data.roster.length} players` : "Draft and publication status"}</em>
       </Link>
       <Link
         href="/captain/payments"
@@ -91,13 +84,7 @@ export default function CaptainDashboardFrame({ data }: { data?: CaptainPortalDa
           <Wallet className="ui-icon" />
         </span>
         <small>PAYMENTS</small>
-        <b>
-          {data ? (
-            `${notPaid} balance${notPaid === 1 ? "" : "s"} due`
-          ) : (
-            <SkeletonText width="7em" />
-          )}
-        </b>
+        <b>{data ? `${notPaid} balance${notPaid === 1 ? "" : "s"} due` : "Checking balances…"}</b>
         {/* Fixed - it says what the tile is, not what is in it. */}
         <em>Team payment status</em>
       </Link>
