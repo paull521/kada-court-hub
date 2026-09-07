@@ -54,18 +54,14 @@ export default function ProfileFrame() {
           <SkeletonBlock width="5.5em" height="26px" radius="18px" />
         </div>
       </section>
-      {/* VIEW AS is a label and three fixed words. All the read decides is which
-          one is filled, so the switcher is drawn straight away with no pill on
-          it and nothing to press - anchors with no href, which are text rather
-          than links until the real one takes over. */}
-      <section className="card role-switcher">
-        <small>VIEW AS</small>
-        <div>
-          <a>Player</a>
-          <a>Captain</a>
-          <a>Owner</a>
-        </div>
-      </section>
+      {/* No VIEW AS switcher here on purpose.
+          It used to be drawn as three fixed words, on the reasoning that the
+          read only decides which one is filled. That is not what the read
+          decides: it decides which of them exist. A player with no conference
+          was shown an Owner tab they do not have and never had, and then the
+          whole card vanished, because RoleSwitcher renders nothing for an
+          account with a single role. Naming roles before they are known is the
+          one thing this frame cannot do, so it waits for them. */}
       {/* Edit My Profile: a disclosure, so one row high and closed. */}
       <SkeletonBlock height="58px" radius="18px" />
       <InfoPanelFrame

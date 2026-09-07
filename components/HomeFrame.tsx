@@ -75,7 +75,7 @@ export default function HomeFrame({ data }: { data?: PlayerPortalData }) {
           <span className="roundel team-mark small">K</span>
           <span>
             <small>MY TEAM</small>
-            <strong>{data ? data.context.team : <SkeletonText width="8em" />}</strong>
+            <strong>{data ? data.context.team : <SkeletonText width="7.5em" />}</strong>
             <em>
               {data ? (
                 <>

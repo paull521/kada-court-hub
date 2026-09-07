@@ -40,7 +40,7 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
             <span className="team-mark small" aria-hidden="true">
               K
             </span>
-            <b>{data ? data.context.team : <SkeletonText width="8em" />}</b>
+            <b>{data ? data.context.team : <SkeletonText width="4.5em" />}</b>
           </div>
         </section>
         <section className="card panel">

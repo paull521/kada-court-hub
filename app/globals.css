@@ -606,10 +606,19 @@ body {
 .roster-row:last-child {
   border: 0;
 }
+/* min-width is what keeps the names beside these in a straight line.
+   .roster-row reserves a fixed 52px for the number, but the variants that add
+   an availability dot re-declare their columns as auto, and an auto track is as
+   wide as its content - so a 1 made the badge narrower than a 21 and the name
+   after it started further left. Jersey numbers are constrained to 0-99, so a
+   floor wide enough for two digits makes every badge the same width and every
+   name begin at the same place, without any of the four roster grids having to
+   agree on a track size. */
 .jersey {
   background: #f0efed;
   border-radius: 15px;
   padding: 5px;
+  min-width: 30px;
   text-align: center;
 }
 .roster-row > span {

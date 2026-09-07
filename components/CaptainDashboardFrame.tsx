@@ -34,60 +34,67 @@ export default function CaptainDashboardFrame({ data }: { data?: CaptainPortalDa
             ? "Approved"
             : "Editing";
   return (
-    <section className="captain-dashboard-grid">
+    // The announcement sits outside the grid. It is .sr-only so it takes no
+    // space, but it is still an element, and .captain-task-tile:last-child:
+    // nth-child(odd) counts elements: inside the grid it made Payments the
+    // fifth child instead of the fourth, so the tile spanned both columns and
+    // took the taller min-height until the read landed, then snapped back.
+    <>
       {!data && <LoadingNote />}
-      <Link href="/captain/schedule" className="card captain-task-tile featured">
-        <span>
-          <CalendarDays className="ui-icon" />
-        </span>
-        <small>SCHEDULE</small>
-        <b>{data ? (next ? next.dateLabel : "No game") : "Loading schedule…"}</b>
-        <em>
-          {data
-            ? next
-              ? `${next.time} · ${next.uniform}`
-              : "Waiting for schedule"
-            : "Next game and uniform"}
-        </em>
-      </Link>
-      <Link
-        href="/captain/availability"
-        className={`card captain-task-tile ${noCount ? "attention" : ""}`}
-      >
-        <span>
-          <Check className="ui-icon" />
-        </span>
-        <small>AVAILABILITY</small>
-        <b>
-          {data
-            ? `${data.availability.length - noCount} Yes · ${noCount} No`
-            : "Counting responses…"}
-        </b>
-        <em>{data ? (next ? `For ${next.opponent}` : "No upcoming game") : "Who is playing"}</em>
-      </Link>
-      <Link
-        href="/captain/roster"
-        className={`card captain-task-tile ${data ? data.draftStatus : ""}`.trim()}
-      >
-        <span>
-          <Users className="ui-icon" />
-        </span>
-        <small>TEAM ROSTER</small>
-        <b>{rosterStatus ?? "Checking roster…"}</b>
-        <em>{data ? `${data.roster.length} players` : "Draft and publication status"}</em>
-      </Link>
-      <Link
-        href="/captain/payments"
-        className={`card captain-task-tile featured ${notPaid ? "attention" : ""}`}
-      >
-        <span>
-          <Wallet className="ui-icon" />
-        </span>
-        <small>PAYMENTS</small>
-        <b>{data ? `${notPaid} balance${notPaid === 1 ? "" : "s"} due` : "Checking balances…"}</b>
-        {/* Fixed - it says what the tile is, not what is in it. */}
-        <em>Team payment status</em>
-      </Link>
-    </section>
+      <section className="captain-dashboard-grid">
+        <Link href="/captain/schedule" className="card captain-task-tile featured">
+          <span>
+            <CalendarDays className="ui-icon" />
+          </span>
+          <small>SCHEDULE</small>
+          <b>{data ? (next ? next.dateLabel : "No game") : "Loading schedule…"}</b>
+          <em>
+            {data
+              ? next
+                ? `${next.time} · ${next.uniform}`
+                : "Waiting for schedule"
+              : "Next game and uniform"}
+          </em>
+        </Link>
+        <Link
+          href="/captain/availability"
+          className={`card captain-task-tile ${noCount ? "attention" : ""}`}
+        >
+          <span>
+            <Check className="ui-icon" />
+          </span>
+          <small>AVAILABILITY</small>
+          <b>
+            {data
+              ? `${data.availability.length - noCount} Yes · ${noCount} No`
+              : "Counting responses…"}
+          </b>
+          <em>{data ? (next ? `For ${next.opponent}` : "No upcoming game") : "Who is playing"}</em>
+        </Link>
+        <Link
+          href="/captain/roster"
+          className={`card captain-task-tile ${data ? data.draftStatus : ""}`.trim()}
+        >
+          <span>
+            <Users className="ui-icon" />
+          </span>
+          <small>TEAM ROSTER</small>
+          <b>{rosterStatus ?? "Checking roster…"}</b>
+          <em>{data ? `${data.roster.length} players` : "Draft and publication status"}</em>
+        </Link>
+        <Link
+          href="/captain/payments"
+          className={`card captain-task-tile featured ${notPaid ? "attention" : ""}`}
+        >
+          <span>
+            <Wallet className="ui-icon" />
+          </span>
+          <small>PAYMENTS</small>
+          <b>{data ? `${notPaid} balance${notPaid === 1 ? "" : "s"} due` : "Checking balances…"}</b>
+          {/* Fixed - it says what the tile is, not what is in it. */}
+          <em>Team payment status</em>
+        </Link>
+      </section>
+    </>
   );
 }
