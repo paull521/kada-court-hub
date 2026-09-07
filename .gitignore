@@ -5,6 +5,7 @@ out/
 tsconfig.tsbuildinfo
 
 # Private local settings
+.claude/settings.local.json
 .env
 .env.local
 .env.*.local

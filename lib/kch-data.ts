@@ -292,7 +292,13 @@ export const playerHasTeamContext = cache(async (): Promise<boolean> => {
   return Boolean(data);
 });
 
-export async function getPlayerPortalData(
+/**
+ * Memoised per request. The season layout reads the portal for the bell and
+ * the nav badges, and the page under it reads the same portal for its body;
+ * two full reads of the same rows in one render is a round trip nobody asked
+ * for. cache() lasts exactly one request, so nothing is held between them.
+ */
+export const getPlayerPortalData = cache(async function getPlayerPortalData(
   scope: "full" | "home" | "payments" | "profile" = "full",
 ): Promise<PlayerPortalData> {
   await connection();
@@ -1469,4 +1475,4 @@ export async function getPlayerPortalData(
     console.error("KCH live data fallback", error);
     return fallback;
   }
-}
+});

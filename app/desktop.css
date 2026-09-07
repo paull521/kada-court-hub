@@ -50,13 +50,21 @@
     --measure: var(--page);
   }
 
-  /* Centres a full-bleed element's contents on --measure without wrapping it
+  /* Centres a full-bleed element's contents on a measure without wrapping it
      in another div: the padding collapses to --gutter once the window is
      narrower than the measure. */
-  .topbar,
-  .bottom,
   .content {
     padding-inline: max(var(--gutter), (100% - var(--measure)) / 2);
+  }
+  /* The chrome takes the app width on every page rather than the page's own
+     measure. Sharing an edge with the content cost more than it bought: the
+     measure changes between tabs - Home, Schedule and Payments are two-column
+     pages and Teams and Profile are single-column ones - so the logo and the
+     whole tab strip slid 150px sideways on every press. The frame is the one
+     part of the app that should be in the same place on all five. */
+  .topbar,
+  .bottom {
+    padding-inline: max(var(--gutter), (100% - var(--page)) / 2);
   }
 
   /* --- The frame -----------------------------------------------------------
@@ -78,8 +86,7 @@
     display: flex;
     flex-direction: column;
     /* clip rather than hidden: both crop the decorative wash, but hidden makes
-       the shell a scroll container, which would stop the tab strip below from
-       sticking. */
+       the shell a scroll container, and nothing in the app wants a second one. */
     overflow: clip;
   }
   .content {
@@ -125,21 +132,22 @@
     --kch-logo-size: 50px;
   }
   .bottom {
-    position: sticky;
-    top: 0;
-    z-index: 4;
+    /* Transparent, so the strip sits on the page's own wash instead of laying a
+       cream ground over it. That means static rather than sticky: a strip with
+       nothing behind it has the page scrolling through its labels, so the two
+       belong together - and they were together before the strip was made to
+       stick for the owner's long tables. */
+    position: static;
     width: auto;
     height: auto;
     display: flex;
     gap: 2px;
-    /* Owner tables run long. The strip stays reachable while they scroll, so it
-       needs a ground of its own rather than the transparent one it had. */
-    background: rgba(251, 248, 243, 0.94);
-    backdrop-filter: saturate(140%) blur(12px);
+    background: transparent;
     border: 0;
     border-bottom: 1px solid var(--line);
     border-radius: 0;
     box-shadow: none;
+    z-index: auto;
   }
   .nav {
     display: flex;
@@ -193,7 +201,6 @@
   .content.two-col > .eyebrow,
   .content.two-col > .title,
   .content.two-col > .subtitle,
-  .content.two-col > .season-tabs,
   .content.two-col > .family-banner {
     grid-column: 1 / -1;
   }
@@ -228,6 +235,25 @@
      to both of its neighbours. */
   .col-pane > .list-label {
     margin-top: 10px;
+  }
+
+  /* The weekly view follows the player's own fixtures now instead of sitting in
+     a column beside them, so it needs the space that separates two sections
+     rather than none at all.
+
+     Its heading is an <h2> and the rule meant to size it - .weekly-schedule >
+     header h3 - names an <h3>, which is what the owner's copy of this block
+     renders. So the player's heading had been drawing at the browser's default
+     size with the browser's default 0.83em margins, which is the hole under
+     "All Teams". Same numbers as the rule it should have matched. Left scoped
+     to a direct child of .content: the captain's weekly view sits in a column
+     of its own and is not what was being looked at. */
+  .content > .player-weekly-schedule {
+    margin-top: 30px;
+  }
+  .content > .player-weekly-schedule > header h2 {
+    font-size: 21px;
+    margin: 3px 0;
   }
 
   /* The sign-off line closes the page instead of floating in the gap under the

@@ -23,11 +23,32 @@ const hasBoundary = (pagePath: string) => {
   return false;
 };
 
+const SHELL = /\b(AppShell|CaptainShell|OwnerPageShell)\b/;
+
+/**
+ * A page can inherit its shell instead of rendering one. The season routes -
+ * /schedule, /standings and /results - share a layout that builds the shell and
+ * the switcher once, so that the switcher survives a navigation between them;
+ * their pages are bodies. They are still navigation destinations, and a page
+ * that stopped naming AppShell would otherwise have dropped out of this check
+ * without a single test going red, which is how this contract has gone stale
+ * three times already.
+ */
+const wrappedInAShell = (pagePath: string) => {
+  let dir = dirname(pagePath);
+  while (dir.startsWith(APP)) {
+    const layout = join(dir, "layout.tsx");
+    if (existsSync(layout) && SHELL.test(readFileSync(layout, "utf8"))) return true;
+    dir = dirname(dir);
+  }
+  return false;
+};
+
 /**
  * Without a loading.tsx the App Router paints nothing until the whole server
  * payload is ready, so tapping a nav item leaves the previous screen frozen.
- * Any page that renders one of the app shells is a navigation destination and
- * needs a boundary above it.
+ * Any page that renders one of the app shells, or sits under a layout that
+ * does, is a navigation destination and needs a boundary above it.
  */
 describe("route loading boundaries", () => {
   // Only pages that render a shell *and* await server data need a boundary.
@@ -35,7 +56,7 @@ describe("route loading boundaries", () => {
   // would flash for no reason.
   const shellPages = pages.filter((page) => {
     const source = readFileSync(page, "utf8");
-    const rendersShell = /\b(AppShell|CaptainShell|OwnerPageShell)\b/.test(source);
+    const rendersShell = SHELL.test(source) || wrappedInAShell(page);
     // Promise.all counts too. app/legal/page.tsx awaited getPlayerPortalData
     // directly until it was changed to await a Promise.all of three calls, and
     // this pattern quietly stopped matching it - the page kept its boundary,
