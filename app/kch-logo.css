@@ -10,6 +10,15 @@
    line-height:1 line box. They are what lets the sun, the wedges inside the K
    and the stripe down the A land on the letters. Swap the font and these two
    have to be re-measured. */
+/* Inside a shell the mark is wrapped in a link back to that workspace's home.
+   inline-flex so the anchor hugs the mark rather than sitting on a text
+   baseline, which keeps the topbar exactly the height it had when the logo was
+   a bare span. The global `a` reset already takes care of colour and
+   underline. */
+.kch-logo-home {
+  display: inline-flex;
+}
+
 .kch-logo {
   --kch-logo-size: 48px;
 

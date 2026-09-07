@@ -17,7 +17,7 @@ export default function Loading() {
   return (
     <div className="shell owner-shell guided-owner-shell">
       <header className="topbar">
-        <KchLogo className="logo" />
+        <KchLogo className="logo" href="/owner" />
         <div className="topbar-actions">
           <SkeletonChip />
         </div>

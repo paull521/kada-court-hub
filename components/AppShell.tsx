@@ -59,6 +59,10 @@ export default function AppShell({
   contentClass?: string;
 }) {
   const { links, className: navClass, label: navLabel } = nav[role];
+  // The logo leads to the home of whichever workspace is being viewed, taken
+  // from the same nav table the tab strip is built from rather than a second
+  // list of the three destinations.
+  const home = links.find((link) => link.key === "home")?.href ?? "/home";
   const items = links.map(({ href, key, icon, label }) => ({
     href,
     key,
@@ -87,7 +91,7 @@ export default function AppShell({
   return (
     <div className="shell">
       <header className="topbar">
-        <KchLogo className="logo" />
+        <KchLogo className="logo" href={home} />
         <div className="topbar-actions">
           {headerAction}
           {headerNotification ??

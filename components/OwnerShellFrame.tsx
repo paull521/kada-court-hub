@@ -32,7 +32,7 @@ export default function OwnerShellFrame({
   return (
     <div className="shell owner-shell guided-owner-shell">
       <header className="topbar">
-        <KchLogo className="logo" />
+        <KchLogo className="logo" href="/owner" />
         {/* The switcher names the conference, which is the read this is waiting
             on, so it is the one thing here that cannot be drawn. */}
         <SkeletonChip />

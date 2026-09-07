@@ -22,7 +22,7 @@ export default function OwnerPageShell({
   return (
     <div className="shell owner-shell guided-owner-shell">
       <header className="topbar">
-        <KchLogo className="logo" />
+        <KchLogo className="logo" href="/owner" />
         <OwnerConferenceSwitcher conferences={conferences} currentId={conferenceId} />
       </header>
       <OwnerBottomNav active={active} />
