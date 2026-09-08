@@ -58,78 +58,86 @@ Per component, in this order. Do not skip step 2.
 
 ## Done
 
-| Step                                  | Result                             |
-| ------------------------------------- | ---------------------------------- |
-| Tailwind installed, no Preflight      | 73/73 visual, zero pixels moved    |
-| `components/ui/` primitives           | additive, unused at first          |
-| `OwnerFinancialSummary` converted     | 41 rules, 186 lines                |
-| `score-sheet-*` dead rules deleted    | 14 rules, nothing referenced them  |
-| A screenshot of a season with results | unblocked the scoresheets          |
-| `OwnerScoresheets` converted          | 71 rules, the largest deletion yet |
-| `scripts/css-usage.mjs`               | scoping and dead-class analysis    |
+| Component / step                 | Rules deleted                  |
+| -------------------------------- | ------------------------------ |
+| Tailwind installed, no Preflight | 0 - zero pixels moved          |
+| `components/ui/` primitives      | 0 - additive                   |
+| `OwnerFinancialSummary`          | 41                             |
+| `OwnerScoresheets`               | 71                             |
+| Owner dashboard `ActionCard`     | 43                             |
+| `ResultsFrame`                   | 13                             |
+| `StandingsFrame`                 | 12                             |
+| `PlatformFeedback`               | 19 (14 of them never rendered) |
+| Support requests                 | 30 (11 never rendered)         |
+| Owner-invitation box             | 24 (22 never rendered)         |
+| `score-sheet-*` dead rules       | 14                             |
 
-`globals.css` 8,837 → 8,438 · `desktop.css` 530 → 505 ·
-`owner-refinement.css` 897 → 700. **621 lines of CSS gone, zero pixels moved.**
+`globals.css` 8,837 → 7,789 · `owner-refinement.css` 897 → 612 ·
+`desktop.css` 530 → 476. **1,387 lines of CSS gone, zero pixels moved.**
 
-## What the layer order keeps teaching
+## Coverage
+
+94 checks. Beyond one shot per route, the suite now carries the states the
+routes never reach on their own:
+
+- a season **with results**, which is what unblocked the scoresheets
+- the **platform workspace**, eight routes on its own session
+- **disclosures opened** on the owner profile and on platform support, by
+  setting the DOM property rather than clicking
+
+Each of those asserts it found what it came for, so a data change makes them
+fail rather than quietly turn into a second copy of a page they already had.
+
+## The rule that keeps biting
 
 Utilities live in `@layer`, and **layered rules lose to unlayered ones whatever
-their specificity**. Every hand-written rule in this app is unlayered, so a
-utility silently loses wherever an old rule still targets the same element.
+their specificity**. Every hand-written rule here is unlayered. It has cost
+four fixes so far:
 
-It has bitten twice, both times caught by a screenshot rather than by reading:
+| The unlayered rule                                        | What it beat                          |
+| --------------------------------------------------------- | ------------------------------------- |
+| `.secondary { background: #fff }`                         | `bg-white/[0.14]` on a dark button    |
+| `button, input { color: inherit }`                        | `text-navy` on the score inputs       |
+| `button, input { font: inherit }`                         | `text-[12px]` on two platform buttons |
+| `.card`, `.platform-operation`, `.btn` padding and radius | their utility replacements            |
 
-- `.secondary` sets its own background, so a `bg-white/[0.14]` utility on a
-  `btn secondary` did nothing and the button came out white.
-- `button, input { color: inherit }` in `globals.css` beats `text-navy`, which
-  is why the score inputs need `text-navy!`.
+**Where the old CSS carried `!important`, or won a fight on specificity or
+source order, expect to need Tailwind's `!`.** And where a primitive drags in a
+class that fights you - `.card` behind a navy gradient - stop asking for the
+class rather than out-shouting it.
 
-Where the old CSS carried `!important`, expect to need Tailwind's `!`. And
-where a primitive brings a class that fights you - `.card` behind a navy
-gradient - the fix is to stop asking for the class, not to out-shout it.
+The font-size one was invisible in a pixel diff. Reading computed styles off
+the live page found it in one pass:
 
-## Next: `owner-action`, and why it is not quick
+```ts
+await page.evaluate(() => getComputedStyle(el).fontSize);
+```
 
-54 rules over three stylesheets, and the biggest single target left. It is not
-a simple one:
+Worth reaching for early when a diff is small and uniform.
 
-- `.owner-action-card` is defined **three times at top level** in `globals.css`
-  - once as a four-column grid, then again as a flex column with
-    `aspect-ratio: 1`. The later wins; the first is dead.
-- `owner-refinement.css` re-styles all of it again under `.owner-dashboard`,
-  and `desktop.css` overrides it a third time at 900px.
-- `desktop.css` groups `.owner-action-card` with `a.card`,
-  `.captain-task-tile` and `.owner-list-row` in one hover rule. That selector
-  must be **edited**, not deleted, or three unrelated components lose their
-  hover.
-- `.owner-action-icon` is shared with `.financial-action`, which survived the
-  financial-summary conversion.
+## Dead CSS keeps turning up on its own
 
-It appears on two pages - the owner home and the platform dashboard - so run
-the whole suite, not one route.
+Nine of the rules deleted so far were for markup nothing renders, and every one
+surfaced from converting its neighbours rather than from a sweep.
+`node scripts/css-usage.mjs --dead` still lists 100+ candidates; they are still
+not safe to bulk delete, because the screenshots cover default states only.
+Take them a component at a time, as above.
 
-## Dead CSS
+## Next
 
-`node scripts/css-usage.mjs --dead` reports 137 classes no `.ts` or `.tsx`
-names, split into 93 that no runtime template could produce and 44 that one
-could - `status-${x}`, `game-${phase}`, `division-schedule-${status}`.
+`OwnerManagement` in `components/PlatformOperations.tsx` (`platform-owner`, 21
+rules) and the owner workspace's own `OwnerManagement.tsx` (67 primitive uses,
+the largest file in the app). `guided-step` is 28 rules in that file and worth
+knowing about first: it renders as **both** `<details><summary>` and
+`<section><header>` depending on state, and both shapes are live.
 
-**Do not bulk delete either list.** The screenshots cover default states only,
-so a class styling an error, a canceled game or a suspended owner is in no
-picture and its deletion cannot be verified by running the tests. The 93 are
-worth reading through by hand; the 44 need the call site checked first.
+`NextGameCard` is small but entangled - its skeleton rule is shared with
+`.team-banner` and `.balance-card`, so that selector must be edited rather than
+deleted.
 
 ## Known flake
 
 `captain-roster` failed once on a full run and passed on re-run and in
 isolation. Not diagnosed. If it recurs, suspect the `settle()` wait in
-`routes.spec.ts` - `networkidle` plus "no `.skeleton` left" is not a guarantee
-that a streamed frame has finished swapping in its values.
-
-## Not yet started
-
-`OwnerManagement` (67 primitive uses, the largest file), `PlatformOperations`,
-`PlatformCreatorTools`, `AuthForm`, and the captain and player workspaces.
-`owner-refinement.css` and `captain-refinement.css` are the scoreboard -
-they exist only to outrank `globals.css`, and they should end at zero.
-`owner-refinement.css` is down from 897 to 700.
+`tests/visual/settle.ts` - `networkidle` plus "no `.skeleton` left" is not a
+guarantee that a streamed frame has finished swapping in its values.
