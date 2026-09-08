@@ -117,8 +117,10 @@ test.describe("states", () => {
     expect(response?.status()).toBeLessThan(400);
     await settle(page);
     // The point of the shot: if this is zero the conference no longer has
-    // results and the screenshot below proves nothing.
-    await expect(page.locator(".scoreboard-match").first()).toBeVisible();
+    // results and the screenshot below proves nothing. The hook is a data
+    // attribute, not a class, so restyling the component cannot quietly
+    // disarm the assertion that guards it.
+    await expect(page.locator("[data-finalized]").first()).toBeVisible();
     await expect(page).toHaveScreenshot("owner-scores-finalized.png", { fullPage: true });
   });
 });
