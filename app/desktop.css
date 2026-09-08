@@ -329,20 +329,7 @@
   .owner-more-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  /* Squares again, and squares four-up are 300px tall to hold a label and a
-     dollar amount. The figure is the content; the box should be the size of it. */
-  .financial-income-grid span {
-    aspect-ratio: auto;
-    min-height: 88px;
-    padding: 14px 12px;
-  }
-  .financial-income-grid small {
-    font-size: 11px;
-    line-height: 1.3;
-  }
-  .financial-income-grid b {
-    font-size: 21px;
-  }
+
   /* A season is 37 scoresheets, and a scoresheet is two inputs and two buttons.
      One per row made the page a 12,000px column of half-empty navy blocks. */
   .scoreboard-list {

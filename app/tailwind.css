@@ -34,3 +34,12 @@
   --color-line: var(--line);
   --color-green: var(--green);
 }
+
+/* The app's two real breakpoints, named so a component can say what it means.
+ * 900px is the line app/desktop.css is built around; 410px is the small-phone
+ * adjustment globals.css makes in a handful of places. Tailwind's own sm/md/lg
+ * remain available but this app has never used them. */
+@theme {
+  --breakpoint-tiny: 411px;
+  --breakpoint-desk: 900px;
+}
