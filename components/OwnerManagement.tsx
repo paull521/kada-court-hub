@@ -14,7 +14,7 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState, type ReactNode } from "react";
 import styles from "./OwnerTeams.module.css";
 import directoryStyles from "./OwnerDirectory.module.css";
 import {
@@ -155,7 +155,7 @@ function DivisionSetupStep({ season }: { season: OwnerSeason }) {
   const [divisionCount, setDivisionCount] = useState(1);
   const remaining = Math.max(0, 10 - season.divisions.length);
   return (
-    <div className="guided-step-body">
+    <div className="grid gap-[13px] border-t border-line p-[15px]">
       <p className="guided-instruction">
         Create every division for <b>{season.name}</b> together. A season can have up to 10
         divisions, and another division can be added later.
@@ -277,7 +277,7 @@ function DivisionTeamBuilder({ division }: { division: OwnerSeason["divisions"][
 
 function TeamsSetupStep({ season }: { season: OwnerSeason }) {
   return (
-    <div className="guided-step-body">
+    <div className="grid gap-[13px] border-t border-line p-[15px]">
       <p className="guided-instruction">
         Choose the team count for each division, enter every team name, then save the group
         together.
@@ -398,7 +398,7 @@ function CaptainsSetupStep({
     "Nathan Santos",
   ];
   return (
-    <div className="guided-step-body">
+    <div className="grid gap-[13px] border-t border-line p-[15px]">
       <p className="guided-instruction">
         Search the conference player directory to assign each captain and co-captain. Leaders
         register like every other player and cannot lead two teams in the same season.
@@ -607,7 +607,7 @@ function PreseasonSetupStep({
   const [state, action, pending] = useActionState(completePreseasonDetailsAction, initialState);
   const ready = season.divisions.every((division) => division.preseasonConfigured);
   return (
-    <div className="guided-step-body">
+    <div className="grid gap-[13px] border-t border-line p-[15px]">
       <p className="guided-instruction">
         Before inviting players, save each division&apos;s league and optional uniform cost. You may
         reuse prior uniform photos or add new ones later.
@@ -856,7 +856,7 @@ function InvitePlayersSetupStep({
   const firstUnsent = season.divisions.findIndex((division) => !division.invitationSent);
   const sent = season.divisions.filter((division) => division.invitationSent).length;
   return (
-    <div className="guided-step-body">
+    <div className="grid gap-[13px] border-t border-line p-[15px]">
       <p className="guided-instruction">
         Choose exactly who receives each division invitation. This workspace stays open during
         drafting, so you can add a new KCH player later without disturbing earlier responses.
@@ -1662,7 +1662,7 @@ function DivisionRosterPublish({
 
 function DraftSetupStep({ season }: { season: OwnerSeason }) {
   return (
-    <div className="guided-step-body">
+    <div className="grid gap-[13px] border-t border-line p-[15px]">
       <p className="guided-instruction">
         Each division completes roster review and final publication independently. A pending team in
         one division will not block another division.
@@ -1741,7 +1741,7 @@ function DraftSetupStep({ season }: { season: OwnerSeason }) {
 
 function ScheduleSetupStep({ season }: { season: OwnerSeason }) {
   return (
-    <div className="guided-step-body">
+    <div className="grid gap-[13px] border-t border-line p-[15px]">
       <p className="guided-instruction">
         Open one division at a time. Choose manual scheduling or let KCH create a draft on the
         Schedule page.
@@ -1889,6 +1889,111 @@ const setupLabels = [
   "Draft Rosters",
   "Build Schedule",
 ];
+/**
+ * One step in the season setup wizard.
+ *
+ * It was four render sites: a details for the current step, a section for each
+ * locked one, and the same pair again further down. All four wrote the same
+ * grid, the same number bubble and the same status pill, and differed only in
+ * whether the body could be opened.
+ *
+ * The two shapes are not interchangeable - a locked step has nothing to open,
+ * so it stays a <section> with a <header> rather than a <details> nothing can
+ * use. That distinction was already in the old markup; this keeps it.
+ *
+ * NOTE: `completed` and `available` are faithful translations of the old rules
+ * but are NOT covered by a screenshot - no conference in the data reaches
+ * either state, so nothing can diff them. Worth an eye if a season ever gets
+ * partway through setup.
+ */
+const stepTone = {
+  completed: {
+    card: "border-line bg-[#fafafa]",
+    number: "bg-[#dff3df] text-green",
+    pill: "bg-[#e8f4e8] text-green",
+  },
+  current: {
+    card: "border-[#e6b35c] bg-white/[0.94] shadow-[0_8px_22px_rgba(209,132,8,0.12)]",
+    number: "bg-navy text-white",
+    pill: "bg-[#fff4da] text-[#795009]",
+  },
+  available: {
+    card: "border-line bg-white/[0.94]",
+    number: "bg-[#e9eef4] text-navy",
+    pill: "bg-[#eef3f8] text-[#486177]",
+  },
+  locked: {
+    card: "border-line bg-white/[0.94] opacity-[0.58]",
+    number: "bg-[#f0efed] text-muted",
+    pill: "bg-[#eee] text-[#666]",
+  },
+} as const;
+
+type StepTone = keyof typeof stepTone;
+
+const stepRow = "grid grid-cols-[38px_1fr_auto] items-center gap-[11px] p-[13px_15px]";
+const stepNumber = "grid h-[35px] w-[35px] place-items-center rounded-full";
+const stepPill = "rounded-[9px] px-[7px] py-[5px] text-[9px] uppercase not-italic";
+
+function GuidedStep({
+  tone,
+  step,
+  label,
+  status,
+  badge,
+  open,
+  children,
+}: {
+  tone: StepTone;
+  step: number;
+  label: ReactNode;
+  status: string;
+  /** The number, or a tick once the step is done. */
+  badge?: ReactNode;
+  open?: boolean;
+  children?: ReactNode;
+}) {
+  const t = stepTone[tone];
+  const heading = (
+    <>
+      <b className={`${stepNumber} ${t.number}`}>{badge ?? step}</b>
+      <span className="grid gap-[2px]">
+        <small className="text-[9px] font-[800] text-muted">STEP {step} OF 8</small>
+        <h2 className="m-0 text-[16px]">{label}</h2>
+      </span>
+      <span className="flex items-center gap-[7px]">
+        <em className={`${stepPill} ${t.pill}`}>{status}</em>
+        {tone !== "locked" && (
+          <strong
+            aria-hidden="true"
+            className="text-[22px] transition-transform group-open:rotate-90"
+          >
+            <ChevronRight className="go-caret" />
+          </strong>
+        )}
+      </span>
+    </>
+  );
+  const shell = `overflow-hidden rounded-[17px] border ${t.card}`;
+
+  // A locked step has no body, so it stays a section rather than a disclosure
+  // nothing can open.
+  if (tone === "locked")
+    return (
+      <section className={shell}>
+        <header className={stepRow}>{heading}</header>
+      </section>
+    );
+  return (
+    <details className={`group ${shell}`} open={open}>
+      <summary className={`${stepRow} cursor-pointer list-none [&::-webkit-details-marker]:hidden`}>
+        {heading}
+      </summary>
+      {children}
+    </details>
+  );
+}
+
 export function OwnerSetupWizard({
   conferenceId,
   conferenceName,
@@ -1906,21 +2011,8 @@ export function OwnerSetupWizard({
       published = seasons.filter((season) => season.setupStage === 7 || season.canceledAt);
     return (
       <div className="setup-wizard">
-        <details className="guided-step current" open>
-          <summary>
-            <b className="step-number">1</b>
-            <span>
-              <small>STEP 1 OF 8</small>
-              <h2>Season</h2>
-            </span>
-            <span className="step-state">
-              <em>Choose a path</em>
-              <strong aria-hidden="true">
-                <ChevronRight className="go-caret" />
-              </strong>
-            </span>
-          </summary>
-          <div className="guided-step-body">
+        <GuidedStep tone="current" step={1} label="Season" status="Choose a path" open>
+          <div className="grid gap-[13px] border-t border-line p-[15px]">
             <section className="season-path">
               <h3>Create a New Season</h3>
               <p className="guided-instruction">Start a separate season inside {conferenceName}.</p>
@@ -1939,20 +2031,9 @@ export function OwnerSetupWizard({
               </section>
             )}
           </div>
-        </details>
+        </GuidedStep>
         {setupLabels.slice(1).map((label, index) => (
-          <section className="guided-step locked" key={label}>
-            <header>
-              <b className="step-number">{index + 2}</b>
-              <span>
-                <small>STEP {index + 2} OF 8</small>
-                <h2>{label}</h2>
-              </span>
-              <span className="step-state">
-                <em>Locked</em>
-              </span>
-            </header>
-          </section>
+          <GuidedStep tone="locked" step={index + 2} label={label} status="Locked" key={label} />
         ))}
         <div className="completed-seasons">
           {published.map((season) => (
@@ -1981,30 +2062,36 @@ export function OwnerSetupWizard({
           : 8;
   const reviewFor = (step: number) =>
     step === 1 ? (
-      <p className="step-summary">
+      <p className="m-0 border-t border-line p-[13px_15px_13px_64px] text-[11px] text-muted">
         {activeSeason.name} · {activeSeason.startsOn} to {activeSeason.endsOn}
       </p>
     ) : step === 2 ? (
-      <p className="step-summary">
+      <p className="m-0 border-t border-line p-[13px_15px_13px_64px] text-[11px] text-muted">
         {activeSeason.divisions.length} division{activeSeason.divisions.length === 1 ? "" : "s"}{" "}
         added
       </p>
     ) : step === 3 ? (
-      <p className="step-summary">
+      <p className="m-0 border-t border-line p-[13px_15px_13px_64px] text-[11px] text-muted">
         {activeSeason.divisions.reduce((sum, division) => sum + division.teams.length, 0)} teams
         added
       </p>
     ) : step === 4 ? (
-      <p className="step-summary">Captains and co-captains established</p>
+      <p className="m-0 border-t border-line p-[13px_15px_13px_64px] text-[11px] text-muted">
+        Captains and co-captains established
+      </p>
     ) : step === 5 ? (
-      <p className="step-summary">Division fees and dark/light uniforms prepared</p>
+      <p className="m-0 border-t border-line p-[13px_15px_13px_64px] text-[11px] text-muted">
+        Division fees and dark/light uniforms prepared
+      </p>
     ) : step === 6 ? (
-      <p className="step-summary">
+      <p className="m-0 border-t border-line p-[13px_15px_13px_64px] text-[11px] text-muted">
         {activeSeason.invitees.length} players invited ·{" "}
         {activeSeason.invitees.filter((invitee) => invitee.response === "joining").length} joining
       </p>
     ) : step === 7 ? (
-      <p className="step-summary">Roster draft published to players and captains</p>
+      <p className="m-0 border-t border-line p-[13px_15px_13px_64px] text-[11px] text-muted">
+        Roster draft published to players and captains
+      </p>
     ) : null;
   const previousDivisions = seasons
     .filter((season) => season.id !== activeSeason.id)
@@ -2054,36 +2141,23 @@ export function OwnerSetupWizard({
               : current
                 ? "In progress"
                 : "Locked";
-        const heading = (
-          <>
-            <b className="step-number">
-              {completed && !invitationWorkspace ? <Check className="ui-icon" /> : visualStep}
-            </b>
-            <span>
-              <small>STEP {visualStep} OF 8</small>
-              <h2>{label}</h2>
-            </span>
-            <span className="step-state">
-              <em>{status}</em>
-              {!locked && (
-                <strong aria-hidden="true">
-                  <ChevronRight className="go-caret" />
-                </strong>
-              )}
-            </span>
-          </>
-        );
-        return locked ? (
-          <section key={label} className="guided-step locked">
-            <header>{heading}</header>
-          </section>
-        ) : (
-          <details
+        const tone = locked
+          ? "locked"
+          : completed
+            ? "completed"
+            : current
+              ? "current"
+              : "available";
+        return (
+          <GuidedStep
             key={label}
-            className={`guided-step ${completed ? "completed" : current ? "current" : "available"}`}
+            tone={tone}
+            step={visualStep}
+            label={label}
+            status={status}
+            badge={completed && !invitationWorkspace ? <Check className="ui-icon" /> : undefined}
             open={current || invitationWorkspace}
           >
-            <summary>{heading}</summary>
             {completed ? (
               <>
                 {reviewFor(visualStep)}
@@ -2092,7 +2166,7 @@ export function OwnerSetupWizard({
             ) : (
               bodyFor(visualStep)
             )}
-          </details>
+          </GuidedStep>
         );
       })}
     </div>
