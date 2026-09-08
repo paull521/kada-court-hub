@@ -1,5 +1,14 @@
 import { Suspense } from "react";
-import { CalendarDays, ClipboardList, DollarSign, Plus, User, Wallet } from "lucide-react";
+import {
+  BookOpen,
+  CalendarDays,
+  ChevronRight,
+  ClipboardList,
+  DollarSign,
+  Plus,
+  User,
+  Wallet,
+} from "lucide-react";
 import KchLogo from "@/components/KchLogo";
 import Link from "next/link";
 import OwnerBottomNav from "@/components/OwnerBottomNav";
@@ -163,6 +172,18 @@ export default async function Owner() {
               <b>Track profit and loss</b>
               <p>Income and expense report.</p>
             </div>
+          </Link>
+          <Link href="/owner/guide" className="owner-guide-link">
+            <span>
+              <BookOpen className="ui-icon" />
+            </span>
+            <div>
+              <b>Owner&apos;s Guide</b>
+              <p>Where each task lives and what it waits on.</p>
+            </div>
+            <strong aria-hidden="true">
+              <ChevronRight className="go-caret" />
+            </strong>
           </Link>
           <Suspense fallback={null}>
             <ConferenceInvitation conferenceId={context.conferenceId} />

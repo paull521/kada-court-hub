@@ -6,7 +6,7 @@
 
 No CI. Run after every change:
 
-`npm test` (137) · `npm run build` · `npx tsc --noEmit` · `npx prettier --check app components lib`
+`npm test` (162) · `npm run build` · `npx tsc --noEmit` · `npx prettier --check app components lib`
 
 ## Shape
 
