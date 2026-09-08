@@ -47,12 +47,17 @@ export default defineConfig({
 
   projects: [
     { name: "setup", testMatch: /auth\.setup\.ts/ },
+    // The platform workspace signs in separately at /platform/login and its
+    // access is granted separately, so it carries its own session rather than
+    // a second role on the owner's.
+    { name: "platform-setup", testMatch: /platform\.setup\.ts/ },
     {
       // Below the 900px breakpoint: the phone layout in globals.css.
       // iPhone 13 for the viewport, but pinned to Chromium - the two projects
       // should differ by width alone, so a diff means the CSS moved and never
       // that WebKit and Chromium disagree.
       name: "mobile",
+      testMatch: /routes\.spec\.ts/,
       use: {
         ...devices["iPhone 13"],
         browserName: "chromium",
@@ -66,12 +71,34 @@ export default defineConfig({
     {
       // Above it: everything app/desktop.css adds.
       name: "desktop",
+      testMatch: /routes\.spec\.ts/,
       use: {
         ...devices["Desktop Chrome"],
         viewport: { width: 1280, height: 900 },
         storageState: "tests/visual/.auth/user.json",
       },
       dependencies: ["setup"],
+    },
+    {
+      name: "platform-mobile",
+      testMatch: /platform\.spec\.ts/,
+      use: {
+        ...devices["iPhone 13"],
+        browserName: "chromium",
+        deviceScaleFactor: 1,
+        storageState: "tests/visual/.auth/platform.json",
+      },
+      dependencies: ["platform-setup"],
+    },
+    {
+      name: "platform-desktop",
+      testMatch: /platform\.spec\.ts/,
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1280, height: 900 },
+        storageState: "tests/visual/.auth/platform.json",
+      },
+      dependencies: ["platform-setup"],
     },
   ],
 

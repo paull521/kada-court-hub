@@ -1,4 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import { settle } from "./settle";
 
 /**
  * One screenshot per route per viewport, compared against a committed
@@ -58,19 +59,6 @@ const ownerRoutes: Route[] = [
   { path: "/owner/more", name: "owner-more" },
   { path: "/profile?view=owner", name: "owner-profile" },
 ];
-
-/**
- * Settles the page before the shutter: fonts loaded, no pending network, and
- * the loading frames resolved into their real values. Without this the shot
- * can catch a placeholder bar mid-swap and fail for no reason.
- */
-async function settle(page: Page) {
-  await page.waitForLoadState("networkidle");
-  await page.evaluate(() => document.fonts.ready);
-  // The frames paint immediately with grey bars where values will land.
-  // Shooting before those resolve captures a placeholder, not the page.
-  await expect(page.locator(".skeleton")).toHaveCount(0, { timeout: 20_000 });
-}
 
 function shoot(routes: Route[], label: string) {
   test.describe(label, () => {
