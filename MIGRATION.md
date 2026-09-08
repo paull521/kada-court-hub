@@ -123,17 +123,48 @@ surfaced from converting its neighbours rather than from a sweep.
 not safe to bulk delete, because the screenshots cover default states only.
 Take them a component at a time, as above.
 
-## Next
+## Next, and what is blocked by coverage
 
-`OwnerManagement` in `components/PlatformOperations.tsx` (`platform-owner`, 21
-rules) and the owner workspace's own `OwnerManagement.tsx` (67 primitive uses,
-the largest file in the app). `guided-step` is 28 rules in that file and worth
-knowing about first: it renders as **both** `<details><summary>` and
-`<section><header>` depending on state, and both shapes are live.
+Two targets were scoped and **deliberately not converted**, because part of
+each renders only in a data state nothing currently produces. Probing for that
+is now step 2 of the loop, and it is cheap:
 
-`NextGameCard` is small but entangled - its skeleton rule is shared with
-`.team-banner` and `.balance-card`, so that selector must be edited rather than
-deleted.
+```ts
+await page.evaluate(() => document.querySelectorAll("form").length);
+```
+
+**`owner-platform` in `PlatformCreatorTools`** - 37 rules over
+`-balance`, `-breakdown` and `-table-wrap`. The balance header, breakdown and
+table all render, but the payment form inside `.owner-platform-balance` is
+gated on `!pendingSubmission && balance > 0`, and `/owner/payments` currently
+renders **zero forms and zero radios**. A third of those rules style markup no
+screenshot contains.
+
+To unblock: a conference with an unpaid balance and no pending submission.
+
+**`guided-step` in `OwnerManagement`** - 28 rules, and the gateway to the
+largest file in the app. `/owner/setup` renders 8 steps, one as
+`<details>` and seven as `<section>`, so **both markup shapes are covered** -
+that part is fine. But the component emits four variants and only two are
+reachable: every one of the four conferences shows `current` and `locked` only.
+`.guided-step.completed` and `.guided-step.available` are styled and
+unphotographable.
+
+To unblock: a conference whose season setup is partly finished.
+
+Also waiting: `NextGameCard` is small but entangled - its skeleton rule is
+shared with `.team-banner` and `.balance-card`, so that selector must be edited
+rather than deleted.
+
+## Carried by hand, not by screenshot
+
+One rule so far was copied across with no shot able to confirm it:
+`.platform-owner-payment .btn { width: 100% }` applied to
+`PaymentConfirmation`'s button, which renders only while a submission is
+pending. It is `w-full` now, with the reason in a comment beside it.
+
+That is the pattern when a single declaration is unreachable. It does not scale
+to a whole variant - which is why the two above were left alone instead.
 
 ## Known flake
 
