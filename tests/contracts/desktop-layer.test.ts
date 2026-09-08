@@ -69,11 +69,36 @@ describe("the laptop layer stays inside its media query", () => {
    * and five stylesheets follow it, so a rule written there loses to any later
    * file at equal specificity - which is how the four-across captain dashboard
    * came to be dead CSS. desktop.css has to stay at the bottom of the list.
+   *
+   * tailwind.css is imported after it and is deliberately not counted here.
+   * Everything it emits sits in @layer, and layered rules lose to unlayered
+   * ones no matter which file came last - so it cannot outrank a single line
+   * of the six hand-written stylesheets. It adds vocabulary, not weight.
    */
-  it("is the last stylesheet the app imports", () => {
-    const imports = [...layout.matchAll(/^import "\.\/([\w-]+\.css)";$/gm)].map((m) => m[1]);
+  const handWritten = () =>
+    [...layout.matchAll(/^import "\.\/([\w-]+\.css)";$/gm)]
+      .map((m) => m[1])
+      .filter((file) => file !== "tailwind.css");
+
+  it("is the last hand-written stylesheet the app imports", () => {
+    const imports = handWritten();
     expect(imports.length).toBeGreaterThanOrEqual(2);
     expect(imports.at(-1)).toBe("desktop.css");
+  });
+
+  /**
+   * Preflight is Tailwind's reset. Importing it would strip the margins, list
+   * styles and heading sizes globals.css is written against, moving every page
+   * at once. The migration adopts utilities first and can consider the reset
+   * at the end, when nothing depends on the old defaults.
+   */
+  it("takes Tailwind's utilities without its reset", () => {
+    if (!existsSync(join(root, "app/tailwind.css"))) return;
+    const tw = readFileSync(join(root, "app/tailwind.css"), "utf8");
+    expect(tw).toContain('@import "tailwindcss/utilities.css" layer(utilities)');
+    expect(tw).not.toContain("preflight");
+    // The bare "tailwindcss" entrypoint pulls preflight in with everything else.
+    expect(tw).not.toMatch(/@import\s+"tailwindcss"\s*;/);
   });
 
   const ALLOWED_OUTSIDE = [".col-pane"];
