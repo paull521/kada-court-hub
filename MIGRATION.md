@@ -4,6 +4,9 @@ Converting 11,000 lines of hand-written CSS to utilities plus a small primitive
 layer, one component at a time, with a screenshot diff proving each step did not
 break the page.
 
+**Done: 10,981 lines to 1,019.** What is left is base tokens, the app frame and
+two design primitives - read "What is deliberately left" before adding to it.
+
 **The bar is close enough, not pixel perfect.** That changed partway through -
 read "What counts as a match" before chasing a diff.
 
@@ -128,29 +131,35 @@ tolerance, is what absorbs those.
 
 ## Done
 
-Twenty-eight components and two dead-CSS sweeps.
-**4,092 lines of CSS gone, zero pixels moved.**
+**9,962 lines of CSS gone. 10,981 → 1,019.**
 
-`globals.css` 8,837 → 5,697 · `owner-refinement.css` 897 → 408 ·
-`workspaces.css` 606 → 347 · `captain-refinement.css` 111 → 15 ·
-`desktop.css` 530 → 422.
+| Stylesheet               | Before |  After |
+| ------------------------ | -----: | -----: |
+| `globals.css`            |  8,837 |    438 |
+| `desktop.css`            |    530 |    274 |
+| `kch-logo.css`           |    226 |    226 |
+| `workspaces.css`         |    606 |     27 |
+| `patriotism.css`         |      7 |      7 |
+| `owner-refinement.css`   |    897 | _gone_ |
+| `captain-refinement.css` |    111 | _gone_ |
 
-Owner: scoresheets (71 rules), dashboard `ActionCard` (43), financial summary
-(41), setup `GuidedStep` (33), subscription panel (33), guide (31),
-`operations-season` + `game-action-card` (28), subscription dropdown (24),
-division schedule (15), `roster-player-editor` (13), `owner-team` (8).
-Platform: support requests (30), invitation box (24), directory + ledger (20),
-feedback (19), support request (12).
-Player: payment form (19), `rules-document` (12), results (13), standings
-(12), profile's `rules-account-link` (5).
-Captain: `captain-roster-disclosure` + the roster list it re-scoped (26),
-roster requests (30), dashboard tiles (14), draft status (6).
-Dead sweeps: 192 rules for 65 classes, 40 for seven captain classes, 14 for
-`score-sheet-*`.
+Two stylesheets deleted outright and removed from `app/layout.tsx`. Of the 459
+class names that still carried rules midway through, 48 remain, and every one
+is accounted for under "What is deliberately left".
+
+Six modules in `components/ui/` hold the runs more than one component draws -
+`schedule-classes`, `account-classes`, `context-classes`, `auth-classes`,
+`guide-classes`, and `shared-classes` for what did not group. `RulesDocument`
+is the one real component primitive the migration added.
+
+`OwnerManagement.tsx` was the largest single job: 163 rules across 91 class
+names, in six passes. Three dead sweeps removed 345 rules for 113 class names
+nothing rendered - the last two of those were only provable once a DOM map of
+every class on all 45 routes existed to go with the source grep.
 
 ## Coverage
 
-110 checks. Beyond one shot per route, the suite now carries the states the
+126 checks. Beyond one shot per route, the suite now carries the states the
 routes never reach on their own:
 
 - a season **with results**, which is what unblocked the scoresheets and,
@@ -234,54 +243,65 @@ notification message, not a class. It reported `captain-final-team` as live in
 a file that had just stopped rendering it, because the comment explaining the
 removal named it. It greps source text - that is all it can do.
 
-## Next
+## What is deliberately left
 
-Nothing is scouted past this point. Four candidates, cheapest first, and
-**every one of them needs step 2 run before it is started** - twice today a
-target that looked covered was not.
+Not everything in a stylesheet is a component's styling, and the last 1,019
+lines are the part that never was. Emptying these files would make the app
+worse rather than better:
 
-| Prefix                 | Rules | Owner                    | The catch                                                   |
-| ---------------------- | ----: | ------------------------ | ----------------------------------------------------------- |
-| `notification-item`    |    11 | `NotificationCenter.tsx` | Opens from the header; probably in no baseline shut or open |
-| `schedule-method-card` |    11 | `OwnerManagement.tsx`    | Renders only for a division with no games yet - probe first |
-| `payment-count-grid`   |    12 | `OwnerManagement.tsx`    | `payment-${...}` is built at runtime; read the call site    |
-| `team-draft-review`    |    20 | `OwnerManagement.tsx`    | `team-${...}` at runtime, and `team-draft` renders nowhere  |
+- **The base layer** in `globals.css` - `:root`'s tokens, the reset, `html`,
+  `body`, `a`, `button`, `input`. Every utility in the app is written against
+  these, and Preflight is still deliberately not loaded.
+- **The frame** - `.shell`, `.topbar`, `.content`, `.bottom`, `.nav`,
+  `.col-pane`, and all of `desktop.css`. Twenty-five files render a shell, and
+  the laptop layer works through a `--measure` custom property that the shell
+  sets with `:has()` and the header, tab strip and content read. That is a
+  protocol between elements rather than a component's appearance, and
+  `tests/contracts/desktop-layer.test.ts` is built around it. Turning it into
+  one class string repeated in twenty-five files is the thing this migration
+  exists to undo.
+- **The two design primitives** - `.card` at 53 call sites, and `.btn` with
+  `.primary` / `.secondary` at 23. They behave like tokens. `components/ui/`
+  already has a `Card` and a `Button`; adopting them everywhere is a separate
+  mechanical change with its own risk, worth doing on its own terms.
+- **The skeleton system** and its keyframes. `.skeleton` is also the hook
+  `settle()` waits on, so the visual suite depends on the name.
+- **`.sr-only`, `.go-caret`, `.ui-icon`** - three global helpers.
+- **`kch-logo.css`** - 226 lines of clip-paths and gradients that draw the
+  wordmark. Already scoped to one component, and it deletes with it.
+- **`.game-postponed` / `.game-canceled`** - they render in no conference the
+  suite can reach, and being unlayered they still beat the utilities beside
+  them, which is exactly what they did before.
+- **`patriotism.css`** - seven lines that swap the shell's background.
 
-`btn` (21 rules) is the largest name left and is deliberately last: it is a
-primitive with call sites in every workspace, and `.btn` beat its own utility
-replacement once already.
+### Where a class name survives on purpose
 
-`components/OwnerServiceAgreement.tsx` renders `RulesDocument` and **is
-imported by nothing**. Left alone deliberately rather than deleted - it is
-converted and correct, it simply has no route.
+Six names carry no rules of their own and are still in the markup, because
+something other than styling reads them: `division-operation`,
+`captain-dashboard-grid`, `owner-content` and `content.two-col` (the shell's
+`:has()` measure protocol), `context-sheet` and `context-option-mark` (an
+overlay's z-index, and a selected row recolouring its own mark), and
+`skeleton` (the test harness).
 
-**Renders nowhere in the current data.** Probed and confirmed absent, so
-conversion is unverifiable: `team-leadership`, `payment-division`,
-`team-draft`, `payment-review`, `roster-change`, `mobile-draft-list`.
+Taking `captain-dashboard-grid` off its section narrowed the captain's
+dashboard from 1180px to 880px, silently. Only the screenshots noticed.
 
-**Entangled:** `conference-player-invitation` (sized differently inside
-`.owner-action-grid` than `.captain-content`; wants a variant prop),
-`NextGameCard` (skeleton rule shared with `.team-banner` and
-`.balance-card`), `owner-subscription-history`.
+## If you pick this up again
 
-Three names have come off that list and not one of them by finding a seam in
-the component. Two went because the pair that shared their rules was taken in
-a single commit: where two components hold each other up, that is cheaper than
-keeping either as a hook, and it is the only way the shared rule actually
-leaves the file.
+In rough order of value:
 
-The third is the one that generalises. `captain-final-team` was entangled
-because a disclosure re-scoped it _and_ the `.roster-row`, `.jersey`
-and `.roster-player-name` it is built from, while `CaptainTeamFrame` used the
-same names at other sizes. Nothing needed a seam - **the denser of the two
-instances simply stopped using the shared names** and stated its own
-measurements. Twelve rules went, the names stayed for the instance that was
-never the one being overridden, and `captain-final-team` is down to one rule.
-When a class exists mainly to be overridden somewhere, the override site is
-the one that should stop asking for it.
-
-**The safe dead sweep is exhausted.** `--dead` now reports 0 safe and 46 that a
-runtime template could reach. Those need the call site read one at a time.
+1. **Adopt `Card` and `Button` at every call site**, then convert inside them.
+   That is the two-step `RulesDocument` demonstrates, and it is the only thing
+   standing between `globals.css` and about 60 more lines.
+2. **Adopt Preflight**, which `app/tailwind.css` has always described as the
+   last step. Far less of the app depends on the old defaults than did.
+3. **Decide about the visual suite.** `tests/visual/README.md` calls it
+   scaffolding to be deleted when the migration is done. It is now 126 checks
+   that catch real layout breaks; if it is worth keeping, keep it somewhere
+   that stores baselines off-repo.
+4. **`statusTone` and `payTone` in `PlatformOperations.tsx`** never reached the
+   screen - an unlayered rule beat both maps at every call site. The pills are
+   green whatever the status says. That is a product decision, not a CSS one.
 
 ## Carried by hand, not by screenshot
 
