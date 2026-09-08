@@ -350,7 +350,7 @@ function DirectoryLeaderPicker({
           />
         </label>
         {normalized.length >= 2 && (
-          <div className="leader-search-results">
+          <div className="grid gap-[6px] rounded-xl border border-line bg-white p-[6px] [&>button]:grid [&>button]:w-full [&>button]:cursor-pointer [&>button]:gap-[2px] [&>button]:rounded-[9px] [&>button]:border-0 [&>button]:bg-[#f7f8fa] [&>button]:p-[10px_12px] [&>button]:text-left [&>button]:text-navy [&>button:hover]:bg-[#edf3fa] [&_small]:text-[11px] [&_small]:text-muted [&>p]:m-[6px] [&>p]:text-[13px] [&>p]:text-muted">
             {matches.length ? (
               matches.map((player) => (
                 <button
@@ -376,7 +376,7 @@ function DirectoryLeaderPicker({
           </div>
         )}
         {selected && (
-          <p className="leader-selected">
+          <p className="m-0 rounded-[10px] bg-[#eef8ef] p-[10px_12px] text-[#176a31]">
             <Check className="ui-icon" /> Selected: <b>{selected.name}</b>
           </p>
         )}
@@ -415,7 +415,7 @@ function CaptainsSetupStep({
         Search the conference player directory to assign each captain and co-captain. Leaders
         register like every other player and cannot lead two teams in the same season.
       </p>
-      <aside className="leader-suggestions">
+      <aside className="rounded-[13px] border border-[#edd7ae] bg-[#fffaf0] p-3 [&>small]:font-[800] [&>small]:text-[#a96500] [&>div]:flex [&>div]:gap-[6px] [&>div]:overflow-x-auto [&>div]:pt-2 [&_span]:flex-none [&_span]:rounded-full [&_span]:border [&_span]:border-[#edd7ae] [&_span]:bg-white [&_span]:p-[7px_9px] [&_span]:text-xs">
         <small>FAKE PLAYERS TO TRY</small>
         <div>
           {suggestions.map((name) => (
@@ -839,7 +839,11 @@ function DivisionInvitationForm({
           />
         </label>
         {customized && (
-          <button type="button" className="restore-message" onClick={() => setCustomized(false)}>
+          <button
+            type="button"
+            className="cursor-pointer justify-self-start border-0 bg-none p-0 font-[750] text-blue"
+            onClick={() => setCustomized(false)}
+          >
             Restore suggested message
           </button>
         )}
@@ -933,6 +937,20 @@ function downloadDivisionDraftSheet(season: OwnerSeason, division: OwnerDivision
   URL.revokeObjectURL(url);
 }
 
+/* Draft review and the responded-player list. Both render only part-way
+   through season setup, in data no conference in the suite has, so these are
+   transcribed rather than photographed - see "Carried by hand" in
+   MIGRATION.md. */
+const draftReview =
+  "block overflow-hidden rounded-xl border border-line bg-[#fafafa] [&>summary]:grid [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:grid-cols-[minmax(0,1fr)_auto_12px] [&>summary]:items-center [&>summary]:gap-[7px] [&>summary]:p-[11px] [&>summary::-webkit-details-marker]:hidden [&>summary>span]:grid [&>summary>span]:gap-[3px] [&_small]:text-[10px] [&_small]:text-muted [&>summary>em]:self-center [&>summary>em]:rounded-[9px] [&>summary>em]:p-[5px_7px] [&>summary>em]:text-[8px] [&>summary>em]:font-[850] [&>summary>em]:uppercase [&>summary>em]:not-italic [&>summary>strong]:transition-transform group-open:[&>summary>strong]:rotate-90";
+const draftReviewTone: Record<string, string> = {
+  approved: "[&>summary>em]:bg-[#dff3df] [&>summary>em]:text-green",
+  changes_requested: "[&>summary>em]:bg-[#f7e6e6] [&>summary>em]:text-[#a62424]",
+  editing: "[&>summary>em]:bg-[#edf0f3] [&>summary>em]:text-muted",
+};
+const draftReviewPending = "[&>summary>em]:bg-[#fff4da] [&>summary>em]:text-[#795009]";
+const handoffNote = "m-0 rounded-[9px] bg-[#fff4da] p-[9px] text-[10px] leading-[1.45]";
+
 function TeamDraftReview({
   team,
   allowChanges = false,
@@ -952,7 +970,9 @@ function TeamDraftReview({
           : "Captain update pending";
   const roster = team.players.filter((player) => player.status !== "inactive");
   return (
-    <details className={`team-draft-review ${team.draftStatus}`}>
+    <details
+      className={`group ${draftReview} ${draftReviewTone[team.draftStatus] ?? draftReviewPending}`}
+    >
       <summary>
         <span>
           <b>{team.name}</b>
@@ -1018,7 +1038,7 @@ function TeamDraftReview({
 function RosterRequestReview({ request }: { request: OwnerRosterRequest }) {
   const [state, action, pending] = useActionState(reviewRosterChangeRequestAction, initialState);
   return (
-    <article className="roster-change-review">
+    <article className="rounded-xl border border-line p-[11px] [&>header]:grid [&>header]:grid-cols-[1fr_auto] [&>header]:gap-2 [&>header_span]:grid [&>header_span]:gap-[3px] [&_small]:text-[10px] [&_small]:text-muted [&_em]:text-[9px] [&_em]:uppercase [&_em]:not-italic [&_em]:text-gold [&>p]:text-[11px] [&>p]:leading-[1.45]">
       <header>
         <span>
           <b>{request.teamName}</b>
@@ -1029,7 +1049,9 @@ function RosterRequestReview({ request }: { request: OwnerRosterRequest }) {
         <em>{request.status}</em>
       </header>
       <p>{request.details}</p>
-      {request.ownerNote && <p className="owner-review-note">Owner: {request.ownerNote}</p>}
+      {request.ownerNote && (
+        <p className="rounded-lg bg-[#fff4da] p-2">Owner: {request.ownerNote}</p>
+      )}
       {request.status === "pending" && (
         <form action={action} className="owner-form">
           <input type="hidden" name="requestId" value={request.id} />
@@ -1060,7 +1082,10 @@ export function OwnerRosterChangeReviews({ requests }: { requests: OwnerRosterRe
   if (!requests.length) return null;
   const pending = requests.filter((request) => request.status === "pending");
   return (
-    <details className="card owner-section roster-change-panel" open={pending.length > 0}>
+    <details
+      className="card owner-section group overflow-hidden p-0 [&>summary]:grid [&>summary]:min-h-[64px] [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:grid-cols-[minmax(0,1fr)_auto_24px] [&>summary]:items-center [&>summary]:gap-3 [&>summary]:p-[18px] [&>summary::-webkit-details-marker]:hidden [&>summary_span]:grid [&>summary_span]:gap-[5px] [&>summary_b]:text-lg [&>summary_small]:text-[13px] [&>summary_small]:text-muted [&>summary>strong]:grid [&>summary>strong]:place-items-center [&>summary>strong]:transition-transform group-open:[&>summary>strong]:rotate-90 [&>div]:grid [&>div]:gap-2 [&>div]:p-[0_14px_14px]"
+      open={pending.length > 0}
+    >
       <summary>
         <span>
           <b>Captain Change Requests</b>
@@ -1434,7 +1459,7 @@ function DivisionRespondedPlayers({ players }: { players: OwnerSeason["invitees"
         ? players.filter((player) => player.selectionStatus === "waitlisted")
         : players;
   return (
-    <details className="mobile-draft-list">
+    <details className="group overflow-hidden rounded-[13px] border border-line bg-white [&>summary]:grid [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:grid-cols-[1fr_auto] [&>summary]:items-center [&>summary]:bg-[#f7f7f6] [&>summary]:p-3 [&>summary::-webkit-details-marker]:hidden [&>summary>span]:grid [&>summary>span]:gap-[3px] [&>summary_small]:text-[10px] [&>summary_small]:text-muted [&>summary>strong]:transition-transform group-open:[&>summary>strong]:rotate-90 [&_article]:grid [&_article]:grid-cols-[28px_minmax(0,1fr)_auto] [&_article]:items-center [&_article]:gap-2 [&_article]:border-t [&_article]:border-line [&_article]:p-[10px_11px] [&_article>b]:grid [&_article>b]:h-[25px] [&_article>b]:w-[25px] [&_article>b]:place-items-center [&_article>b]:rounded-lg [&_article>b]:bg-[#fff4da] [&_article>b]:text-[10px] [&_article>b]:text-[#9a6100] [&_article>span]:grid [&_article>span]:min-w-0 [&_article>span]:gap-[2px] [&_article_strong]:truncate [&_article_strong]:text-[13px] [&_article_small]:text-[9px] [&_article_small]:text-muted [&_article_em]:rounded-lg [&_article_em]:bg-[#dff3df] [&_article_em]:p-[5px_6px] [&_article_em]:text-[8px] [&_article_em]:font-[800] [&_article_em]:uppercase [&_article_em]:not-italic [&_article_em]:text-green [&_article_em.waitlisted]:bg-[#fff4da] [&_article_em.waitlisted]:text-[#795009] [&_article_em.declined]:bg-[#f7e6e6] [&_article_em.declined]:text-[#a62424]">
       <summary>
         <span>
           <b>Responded Players</b>
@@ -1444,7 +1469,7 @@ function DivisionRespondedPlayers({ players }: { players: OwnerSeason["invitees"
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <div className="draft-list-filters">
+      <div className="grid grid-cols-3 gap-[6px] p-[10px_11px] [&>button]:min-h-[34px] [&>button]:rounded-[10px] [&>button]:border [&>button]:border-[#d6dbe2] [&>button]:bg-white [&>button]:font-[inherit] [&>button]:text-[10px] [&>button]:font-[750] [&>button]:text-muted [&>button.active]:border-navy [&>button.active]:bg-navy [&>button.active]:text-white [&>button_b]:ml-[3px] [&>button_b]:text-[inherit]">
         <button
           type="button"
           className={filter === "all" ? "active" : ""}
@@ -1511,7 +1536,7 @@ function OwnerDraftOverride({
   );
   if (division.rosterFinalPublished) return null;
   return (
-    <details className="owner-draft-override">
+    <details className="my-3 overflow-hidden rounded-[14px] border border-[#e4bd78] bg-[#fffaf2] [&>summary]:grid [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:grid-cols-[minmax(0,1fr)_auto] [&>summary]:items-center [&>summary]:gap-[10px] [&>summary]:p-3 [&>summary::-webkit-details-marker]:hidden [&>summary_span]:grid [&>summary_span]:gap-1 [&>summary_b]:text-sm [&>summary_b]:text-[#8a5900] [&>summary_small]:text-[10px] [&>summary_small]:leading-[1.35] [&>summary_small]:text-muted [&>summary_strong]:text-[22px] [&>form]:border-t [&>form]:border-[#edd5a9] [&>form]:p-3">
       <summary>
         <span>
           <b>Owner override: assign a player</b>
@@ -1574,6 +1599,19 @@ function OwnerDraftOverride({
   );
 }
 
+/* Roster review and publishing. The banner has three tones and the publish
+   form is shared by three steps of the wizard. */
+const rosterShared =
+  "grid gap-1 rounded-xl border p-3 [&_small]:text-[9px] [&_small]:leading-[1.4]";
+const rosterSharedTone = {
+  shared: "border-[#cce6d0] bg-[#f3faf4] text-green [&_small]:text-[#47734c]",
+  review: "border-[#efd18e] bg-[#fff9e9] text-[#a76700] [&_small]:text-[#47734c]",
+  final: "border-[#cce6d0] bg-[#edf8ef] text-green [&_small]:text-[#47734c]",
+};
+const publishForm =
+  "rounded-xl border border-[#f0cf91] bg-[#fffaf0] p-3 [&>small]:text-center [&>small]:text-[9px] [&>small]:leading-[1.4] [&>small]:text-muted";
+const reviewForm = "[&_h4]:m-0 [&_p]:m-0 [&_p]:text-[11px] [&_p]:leading-[1.45] [&_p]:text-muted";
+
 function DivisionRosterPublish({
   season,
   division,
@@ -1598,7 +1636,7 @@ function DivisionRosterPublish({
     );
   if (division.rosterFinalPublished)
     return (
-      <section className="division-roster-shared final">
+      <section className={`${rosterShared} ${rosterSharedTone.final}`}>
         <b>
           <Check className="ui-icon" /> Final roster published for {division.name}
         </b>
@@ -1607,10 +1645,7 @@ function DivisionRosterPublish({
     );
   if (division.rosterPublished && !division.rosterReviewDeadline)
     return (
-      <form
-        action={deadlineAction}
-        className="owner-form division-publish-form roster-review-form compact"
-      >
+      <form action={deadlineAction} className={`owner-form compact ${publishForm} ${reviewForm}`}>
         <input type="hidden" name="divisionId" value={division.id} />
         <label>
           Review deadline
@@ -1624,8 +1659,8 @@ function DivisionRosterPublish({
     );
   if (division.rosterPublished)
     return (
-      <section className="division-final-publish">
-        <div className="division-roster-shared review">
+      <section className="grid gap-[10px]">
+        <div className={`${rosterShared} ${rosterSharedTone.review}`}>
           <b>Roster review is open</b>
           <small>
             Players can review all {division.name} team assignments through{" "}
@@ -1636,12 +1671,12 @@ function DivisionRosterPublish({
           </small>
         </div>
         {!ready && (
-          <p className="roster-final-note">
+          <p className="text-[11px] leading-[1.45] text-muted">
             {division.teams.length - approved} updated team roster
             {division.teams.length - approved === 1 ? " is" : "s are"} waiting for approval.
           </p>
         )}
-        <form action={finalAction} className="owner-form division-publish-form">
+        <form action={finalAction} className={`owner-form ${publishForm}`}>
           <input type="hidden" name="divisionId" value={division.id} />
           <label>
             Final roster message
@@ -1671,7 +1706,7 @@ function DivisionRosterPublish({
       </section>
     );
   return (
-    <form action={action} className="owner-form division-publish-form">
+    <form action={action} className={`owner-form ${publishForm}`}>
       <input type="hidden" name="divisionId" value={division.id} />
       <label>
         Message to {division.name} players
@@ -1723,7 +1758,7 @@ function DraftSetupStep({ season }: { season: OwnerSeason }) {
                 : `${divisionInvitees.length} invited · ${responded.length} responded · ${joining.length} joining · ${waitlisted.length} waitlisted`;
         return (
           <details
-            className="division-draft-pool"
+            className="overflow-hidden rounded-[14px] border border-line bg-white [&>summary]:grid [&>summary]:cursor-pointer [&>summary]:grid-cols-[1fr_auto] [&>summary]:items-center [&>summary]:gap-[10px] [&>summary]:p-[13px] [&>summary_span]:grid [&>summary_span]:gap-1 [&>summary_small]:text-[10px] [&>summary_small]:leading-[1.35] [&>summary_small]:text-muted [&>div]:grid [&>div]:gap-[9px] [&>div]:border-t [&>div]:border-line [&>div]:p-[13px] [&_h3]:m-[4px_0_0] [&_h3]:text-[13px] [&_h3]:text-gold"
             key={division.id}
             open={index === 0 || !division.rosterFinalPublished}
           >
@@ -1739,24 +1774,24 @@ function DraftSetupStep({ season }: { season: OwnerSeason }) {
             <div>
               <button
                 type="button"
-                className="btn primary draft-sheet-download"
+                className="btn primary min-h-[46px] w-full"
                 onClick={() => downloadDivisionDraftSheet(season, division)}
               >
                 <Download className="ui-icon" /> Download {division.name} Draft Sheet
               </button>
-              <p className="draft-file-note">
+              <p className="m-0 text-center text-[10px] leading-[1.45] text-muted">
                 The download remains available for owners who want a printed or computer-based
                 draft.
               </p>
               <DivisionRespondedPlayers players={responded} />
               {notJoining.length > 0 && (
-                <p className="division-response-note">
+                <p className="m-0 text-[10px] leading-[1.45] text-muted">
                   Players marked “Not joining” remain visible under All so the owner has a complete
                   response record.
                 </p>
               )}
               <OwnerDraftOverride division={division} players={divisionInvitees} />
-              <div className="team-draft-review-list">
+              <div className="grid gap-2">
                 {division.teams.map((team) => (
                   <TeamDraftReview
                     key={team.id}
@@ -1770,7 +1805,7 @@ function DraftSetupStep({ season }: { season: OwnerSeason }) {
           </details>
         );
       })}
-      <p className="captain-handoff-note">
+      <p className={handoffNote}>
         Players review every team assignment during the deadline window. Final rosters are then
         published separately for each division.
       </p>
@@ -1829,7 +1864,7 @@ function ScheduleSetupStep({ season }: { season: OwnerSeason }) {
           );
         })}
       </div>
-      <p className="captain-handoff-note">
+      <p className={handoffNote}>
         Every division creates and finalizes its own schedule. One division never waits for another.
       </p>
     </div>
@@ -2231,6 +2266,14 @@ type ManualGameRow = {
   time: string;
   court: string;
 };
+/* The schedule builder: the two method cards, the manual day form and the
+   finalize panel. Most of these render only while a division's schedule is
+   still a draft. */
+const scheduleChoiceCard =
+  "flex min-h-[150px] flex-col gap-2 rounded-[17px] border border-line bg-white p-[16px_13px] text-navy shadow-[0_5px_14px_rgba(13,38,69,0.06)] [&>span]:grid [&>span]:h-[38px] [&>span]:w-[38px] [&>span]:place-items-center [&>span]:rounded-xl [&>span]:bg-[#f2efeb] [&>span]:text-[21px] [&>span]:text-gold [&>b]:text-[15px] [&>b]:leading-[1.25] [&>small]:text-[11px] [&>small]:leading-[1.45] [&>small]:text-muted";
+const scheduleMethodCard =
+  "group mb-[9px] overflow-hidden rounded-[14px] border border-line bg-white [&>summary]:grid [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:grid-cols-[36px_1fr_18px] [&>summary]:items-center [&>summary]:gap-[9px] [&>summary]:p-[13px] [&>summary::-webkit-details-marker]:hidden [&>summary>span:first-child]:grid [&>summary>span:first-child]:h-9 [&>summary>span:first-child]:w-9 [&>summary>span:first-child]:place-items-center [&>summary>span:first-child]:rounded-[11px] [&>summary>span:first-child]:bg-[#f2efeb] [&>summary>span:first-child]:text-[19px] [&>summary>span:first-child]:text-gold [&>summary>span:nth-child(2)]:grid [&>summary>span:nth-child(2)]:gap-[3px] [&>summary_b]:text-[14px] [&>summary_small]:text-[11px] [&>summary_small]:leading-[1.4] [&>summary_small]:text-muted [&>summary>strong]:text-[20px] [&>summary>strong]:transition-transform group-open:[&>summary>strong]:rotate-90 [&>form]:border-t [&>form]:border-line [&>form]:p-[13px]";
+
 function ManualGameDayBuilder({
   season,
   division,
@@ -2263,7 +2306,7 @@ function ManualGameDayBuilder({
     setNextId((value) => value + 1);
   };
   return (
-    <form action={action} className="owner-form manual-game-day">
+    <form action={action} className="owner-form border-t border-line p-[13px]">
       <input type="hidden" name="divisionId" value={division.id} />
       <input
         type="hidden"
@@ -2292,7 +2335,7 @@ function ManualGameDayBuilder({
         <input name="venue" defaultValue="Kada Court Center" maxLength={120} required />
       </label>
       <p className="field-help">Each team can play only once on this game day.</p>
-      <div className="manual-game-rows">
+      <div className="grid gap-[9px] [&_fieldset]:relative [&_fieldset]:grid [&_fieldset]:grid-cols-2 [&_fieldset]:gap-[9px] [&_fieldset]:rounded-xl [&_fieldset]:border [&_fieldset]:border-line [&_fieldset]:p-3 [&_legend]:px-[5px] [&_legend]:text-xs [&_legend]:font-[900] [&_legend]:text-gold [&_label:nth-of-type(n+3)]:col-span-full">
         {rows.map((row, index) => (
           <fieldset key={row.id}>
             <legend>Game {index + 1}</legend>
@@ -2347,7 +2390,7 @@ function ManualGameDayBuilder({
             {rows.length > 1 && (
               <button
                 type="button"
-                className="remove-game-row"
+                className="col-span-full min-h-[34px] border-0 bg-transparent font-[800] text-[#a51118]"
                 onClick={() => setRows((current) => current.filter((item) => item.id !== row.id))}
               >
                 Remove
@@ -2356,7 +2399,7 @@ function ManualGameDayBuilder({
           </fieldset>
         ))}
       </div>
-      <button type="button" className="btn secondary add-game-row" onClick={add}>
+      <button type="button" className="btn secondary w-full" onClick={add}>
         + Add Another Game
       </button>
       <Feedback state={state} />
@@ -2381,7 +2424,7 @@ function KchDivisionScheduleBuilder({
     Math.floor(division.teams.filter((team) => team.active).length / 2),
   );
   return (
-    <form action={action} className="owner-form schedule-builder-form">
+    <form action={action} className="owner-form [&_textarea]:min-h-[80px]">
       <input type="hidden" name="divisionId" value={division.id} />
       <div className="compact-fields">
         <label>
@@ -2448,7 +2491,7 @@ function KchDivisionScheduleBuilder({
       <label className="check-row">
         <input name="doubleRoundRobin" type="checkbox" /> Home and away double round-robin
       </label>
-      <div className="schedule-build-summary">
+      <div className="grid grid-cols-3 gap-[7px] [&>span]:grid [&>span]:min-h-[64px] [&>span]:place-items-center [&>span]:rounded-xl [&>span]:border [&>span]:border-line [&>span]:bg-white [&>span]:p-[9px_6px] [&>span]:text-center [&>span]:text-[10px] [&>span]:text-muted [&_b]:text-sm [&_b]:text-navy">
         <span>
           <b>{matchupCount}</b> Matchups
         </span>
@@ -2543,7 +2586,10 @@ function FinalizeDivisionSchedule({
       </section>
     );
   return (
-    <form action={action} className="schedule-finalize-panel">
+    <form
+      action={action}
+      className="mb-[15px] grid gap-3 rounded-[15px] border border-[#e4bd78] bg-[#fffbf3] p-[14px] [&>span]:grid [&>span]:gap-[5px] [&>span>b]:text-base [&>span>b]:text-[#8a5900] [&>span>small]:text-xs [&>span>small]:leading-[1.45] [&>span>small]:text-muted [&_form]:grid [&_form]:gap-2 [&_.btn]:w-full"
+    >
       <input type="hidden" name="divisionId" value={division.id} />
       <span>
         <b>Draft Schedule</b>
@@ -2897,7 +2943,10 @@ function WeeklyScheduleTable({ season }: { season: OwnerSeason }) {
                             <em className={`schedule-status ${game.status}`}>{game.status}</em>
                           </td>
                           <td>
-                            <a className="schedule-update" href={`/owner/scores#score-${game.id}`}>
+                            <a
+                              className="min-h-[34px] cursor-pointer rounded-[9px] border border-[#d5a54f] bg-[#fffaf2] p-[6px_9px] text-[11px] font-[850] whitespace-nowrap text-[#7b5207]"
+                              href={`/owner/scores#score-${game.id}`}
+                            >
                               {played ? "Edit result" : "Add score"}
                             </a>
                           </td>
@@ -2926,8 +2975,8 @@ function ScheduleMethodPicker({
   const choose = (next: "manual" | "automate") =>
     setMethod((current) => (current === next ? null : next));
   return (
-    <section className="schedule-method-picker">
-      <div className="schedule-choice-grid">
+    <section className="grid gap-[9px] [&>p]:m-[0_2px_5px] [&>p]:text-[13px] [&>p]:text-muted">
+      <div className="my-[15px] grid grid-cols-2 gap-[9px]">
         <button
           type="button"
           style={{
@@ -2937,7 +2986,7 @@ function ScheduleMethodPicker({
             borderColor: method === "manual" ? "#d18408" : undefined,
             background: method === "manual" ? "#fffbf3" : undefined,
           }}
-          className="schedule-choice-card"
+          className={scheduleChoiceCard}
           onClick={() => choose("manual")}
           aria-expanded={method === "manual"}
         >
@@ -2956,7 +3005,7 @@ function ScheduleMethodPicker({
             borderColor: method === "automate" ? "#d18408" : undefined,
             background: method === "automate" ? "#fffbf3" : undefined,
           }}
-          className="schedule-choice-card kch-choice"
+          className={`${scheduleChoiceCard} border-[#e4bd78]! bg-[#fffbf3]!`}
           onClick={() => choose("automate")}
           aria-expanded={method === "automate"}
         >
@@ -3056,7 +3105,7 @@ function DivisionScheduleOperation({
                 <DivisionMatchupProgress division={division} games={divisionGames} />
                 <FinalizeDivisionSchedule division={division} missingCount={missingCount} />
                 {division.scheduleStatus !== "final" && division.scheduleMode !== "kch" && (
-                  <details className="schedule-method-card continue-manual">
+                  <details className={`my-[10px] ${scheduleMethodCard}`}>
                     <summary>
                       <span>
                         <Plus className="ui-icon" />
