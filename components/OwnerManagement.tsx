@@ -1265,7 +1265,7 @@ function OwnerTeamsWorkspace({
                       </strong>
                     </summary>
                     <div className="game-form">
-                      <div className="owner-team-list grid gap-[8px]">
+                      <div className="grid gap-[8px]">
                         {division.teams.length ? (
                           division.teams.map((team) => <TeamEditor key={team.id} team={team} />)
                         ) : (
@@ -3781,19 +3781,19 @@ function TeamEditor({ team }: { team: OwnerTeam }) {
 function TeamPlayerRow({ player }: { player: OwnerRosterPlayer }) {
   const [state, action, pending] = useActionState(returnPlayerToDraftPoolAction, initialState);
   return (
-    <details className="roster-player-editor">
-      <summary>
-        <span>
-          <b>{player.name}</b>
-          <small>
+    <details className="overflow-hidden rounded-[10px] border border-line">
+      <summary className="grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_auto] items-center gap-[10px] p-[11px_12px] [&::-webkit-details-marker]:hidden">
+        <span className="grid min-w-0 gap-[3px]">
+          <b className="text-[14px] leading-[1.2]">{player.name}</b>
+          <small className="text-[11px] leading-[1.25] whitespace-normal text-muted">
             #{player.jerseyNumber ?? "—"} · {player.position || "Position not set"} · {player.role}
           </small>
         </span>
-        <strong aria-hidden="true">
+        <strong aria-hidden="true" className="text-[18px]">
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <form action={action} className="owner-form">
+      <form action={action} className="owner-form border-t border-line p-[12px]">
         <input type="hidden" name="registrationId" value={player.registrationId} />
         <label>
           Reason for returning to the draft pool

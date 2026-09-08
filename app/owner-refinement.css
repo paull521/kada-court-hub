@@ -123,36 +123,6 @@
     justify-items: start;
   }
 }
-.owner-team-list .roster-player-editor {
-  margin: 0;
-  border-radius: 10px;
-}
-.owner-team-list .roster-player-editor > summary {
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 10px;
-  padding: 11px 12px;
-}
-.owner-team-list .roster-player-editor > summary > span:first-child {
-  display: grid;
-  gap: 3px;
-  min-width: 0;
-}
-.owner-team-list .roster-player-editor > summary b {
-  font-size: 14px;
-  line-height: 1.2;
-}
-.owner-team-list .roster-player-editor > summary small {
-  font-size: 11px;
-  line-height: 1.25;
-  white-space: normal;
-}
-.owner-team-list .roster-player-editor > summary > strong {
-  font-size: 18px;
-}
-.owner-team-list .roster-player-editor > form {
-  padding: 12px;
-}
-
 .game-editor-summary {
   display: grid;
   gap: 4px;

@@ -1262,31 +1262,6 @@ body {
   display: grid;
   gap: 7px;
 }
-.roster-player-editor {
-  border: 1px solid var(--line);
-  border-radius: 11px;
-  overflow: hidden;
-}
-.roster-player-editor > summary {
-  list-style: none;
-  display: grid;
-  grid-template-columns: 36px 1fr auto auto;
-  gap: 9px;
-  align-items: center;
-  padding: 9px;
-  cursor: pointer;
-}
-.roster-player-editor > summary::-webkit-details-marker {
-  display: none;
-}
-.roster-player-editor > summary > span:nth-child(2) {
-  display: grid;
-  gap: 2px;
-}
-.roster-player-editor > summary small {
-  font-size: 10px;
-  color: var(--muted);
-}
 .roster-number {
   width: 34px;
   height: 29px;
@@ -1315,10 +1290,6 @@ body {
 .roster-status.inactive {
   background: #eee;
   color: #666;
-}
-.roster-player-editor > form {
-  border-top: 1px solid var(--line);
-  padding: 12px;
 }
 .roster-identity {
   display: flex;
