@@ -31,6 +31,11 @@ const playerRoutes: Route[] = [
   { path: "/profile", name: "player-profile" },
   { path: "/more", name: "player-more" },
   { path: "/documents", name: "player-documents" },
+  // /rules reads a record chosen by query string and renders its empty state
+  // without one, so it takes two lines rather than one. ?required=1 resolves
+  // the account's own active registration.
+  { path: "/rules?required=1", name: "player-rules" },
+  { path: "/rules", name: "player-rules-empty" },
 ];
 
 const captainRoutes: Route[] = [
