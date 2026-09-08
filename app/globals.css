@@ -4019,142 +4019,7 @@ body {
     display: block;
   }
 }
-.owner-action-grid {
-  display: grid;
-  gap: 10px;
-}
-.owner-action-card {
-  display: grid;
-  grid-template-columns: 52px minmax(0, 1fr) auto auto;
-  gap: 11px;
-  align-items: center;
-  min-height: 92px;
-  padding: 14px;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 7px 18px rgba(13, 38, 69, 0.07);
-  text-decoration: none;
-}
-.owner-action-card.season-action {
-  background: linear-gradient(125deg, #08243e, #0a3767);
-  border-color: #123d68;
-  color: #fff;
-}
-.owner-action-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 15px;
-  display: grid;
-  place-items: center;
-  background: #f7f0e4;
-  color: var(--gold);
-  font-size: 25px;
-}
-.season-action .owner-action-icon {
-  background: rgba(255, 255, 255, 0.13);
-  color: #f5a313;
-}
-.owner-action-card > div {
-  display: grid;
-  gap: 3px;
-  min-width: 0;
-}
-.owner-action-card small {
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 0.06em;
-  color: var(--gold);
-}
-.owner-action-card b {
-  font-size: 16px;
-  line-height: 1.25;
-}
-.owner-action-card p {
-  font-size: 12px;
-  line-height: 1.35;
-  color: var(--muted);
-  margin: 0;
-}
-.season-action p {
-  color: #d7e0e9;
-}
-.owner-action-card > em {
-  min-width: 26px;
-  height: 26px;
-  padding: 0 7px;
-  border-radius: 14px;
-  background: var(--red);
-  color: #fff;
-  display: grid;
-  place-items: center;
-  font-size: 11px;
-  font-style: normal;
-  font-weight: 900;
-}
-.owner-action-card > strong {
-  font-size: 25px;
-}
-.owner-action-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 11px;
-}
-.owner-action-card {
-  aspect-ratio: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 15px;
-  position: relative;
-}
-.owner-action-card.action-needed {
-  border-color: #dda43f;
-  box-shadow: 0 7px 19px rgba(209, 132, 8, 0.13);
-}
-.owner-action-card > div {
-  width: 100%;
-  display: grid;
-  align-content: end;
-  gap: 4px;
-}
-.owner-action-card b {
-  font-size: 15px;
-  line-height: 1.2;
-}
-.owner-action-card p {
-  font-size: 11px;
-  line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.owner-action-card .action-flag {
-  position: absolute;
-  right: 11px;
-  top: 11px;
-  max-width: calc(100% - 72px);
-  border-radius: 999px;
-  background: #fff0d7;
-  color: #8a5700;
-  padding: 5px 7px;
-  font-size: 8px;
-  font-weight: 950;
-  letter-spacing: 0.05em;
-  white-space: nowrap;
-}
-.season-action .action-flag {
-  background: #f5a313;
-  color: #071f3d;
-}
-.owner-action-icon {
-  width: 48px;
-  height: 48px;
-  flex: none;
-}
+
 .owner-more-list {
   display: grid;
   gap: 10px;
@@ -6280,28 +6145,7 @@ button.account-link {
     padding: 16px;
   }
 }
-@media (max-width: 410px) {
-  .owner-action-card {
-    padding: 12px;
-  }
-  .owner-action-icon {
-    width: 42px;
-    height: 42px;
-    font-size: 22px;
-  }
-  .owner-action-card b {
-    font-size: 14px;
-  }
-  .owner-action-card p {
-    font-size: 10px;
-  }
-  .owner-action-card .action-flag {
-    right: 8px;
-    top: 8px;
-    padding: 4px 6px;
-    font-size: 7px;
-  }
-}
+
 .payment-submit-form .method-choice {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -6332,10 +6176,6 @@ button.account-link {
   .payment-submit-form .method-choice span b {
     font-size: 18px;
   }
-}
-.financial-action .owner-action-icon {
-  background: #eaf6ec;
-  color: var(--green);
 }
 
 .step-eight-division-list {

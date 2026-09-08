@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, type ReactNode } from "react";
 import {
   BookOpen,
   CalendarDays,
@@ -16,6 +16,109 @@ import OwnerConferenceSwitcher from "@/components/OwnerConferenceSwitcher";
 import ConferencePlayerInvitation from "@/components/ConferencePlayerInvitation";
 import { getOwnerConferenceContext, getOwnerPortalData } from "@/lib/owner-data";
 import { createClient } from "@/lib/supabase/server";
+import { cx } from "@/components/ui/cx";
+
+/**
+ * One tile in the commissioner's grid.
+ *
+ * Seven of these differed only in icon, wording, destination and colour, and
+ * carried six copies of the same class list between them. The variants are the
+ * three the design actually has: a dark gradient for the two things a
+ * commissioner does most, green for the money, plain for the rest.
+ *
+ * A square on the phone, a row on the laptop - which is the whole reason the
+ * old rule needed `aspect-ratio: 1` in one file and `aspect-ratio: auto` in
+ * another.
+ */
+const cardTone = {
+  season: "border-[#123d68] bg-[linear-gradient(145deg,#082b50,#0e477c)] text-white",
+  featured: "border-[#0b3966] bg-[linear-gradient(145deg,#082b50,#0e477c)] text-white",
+  financial: "border-line bg-white/[0.94]",
+  plain: "border-line bg-white/[0.94]",
+} as const;
+
+const iconTone = {
+  season: "bg-white/[0.13] text-[#f5a313]",
+  featured: "bg-white/[0.14] text-[#ffbd36]",
+  financial: "bg-[#eaf6ec] text-green",
+  plain: "bg-[#f7f0e4] text-gold",
+} as const;
+
+type Tone = keyof typeof cardTone;
+const onDark = (tone: Tone) => tone === "season" || tone === "featured";
+
+/** The red badge in a card's corner. Its ring matches the card behind it. */
+function AttentionDot({ tone, label }: { tone: Tone; label: string }) {
+  return (
+    <i
+      aria-label={label}
+      className={cx(
+        "absolute top-[13px] right-[13px] h-[10px] w-[10px] rounded-full border-2 bg-red shadow-[0_1px_5px_rgba(89,10,16,0.3)]",
+        onDark(tone) ? "border-[#0d3d69]" : "border-white",
+      )}
+    />
+  );
+}
+
+function ActionCard({
+  href,
+  icon,
+  label,
+  title,
+  detail,
+  dot,
+  tone = "plain",
+}: {
+  href: string;
+  icon: ReactNode;
+  label: string;
+  title: ReactNode;
+  detail: ReactNode;
+  dot?: ReactNode;
+  tone?: Tone;
+}) {
+  return (
+    <Link
+      href={href}
+      className={cx(
+        "relative flex aspect-square min-h-0 flex-col items-start justify-between gap-[10px] rounded-[20px] border p-[15px] no-underline shadow-[0_8px_22px_rgba(13,38,69,0.08)] max-tiny:p-[12px]",
+        "desk:aspect-auto desk:min-h-[124px] desk:flex-row desk:items-start desk:justify-start desk:gap-[14px] desk:p-[18px]",
+        cardTone[tone],
+      )}
+    >
+      <span
+        className={cx(
+          "mb-[2px] grid h-[48px] w-[48px] flex-none place-items-center rounded-[15px] text-[25px] max-tiny:h-[42px] max-tiny:w-[42px] max-tiny:text-[22px]",
+          iconTone[tone],
+        )}
+      >
+        {icon}
+      </span>
+      {dot}
+      <div className="flex w-full flex-col items-start gap-[5px] desk:min-w-0 desk:flex-1">
+        <small
+          className={cx(
+            "text-[12px] leading-[1.1] font-[800] tracking-normal max-tiny:text-[11px]",
+            onDark(tone) ? "text-[#f6b33d]" : "text-[#b76b00]",
+          )}
+        >
+          {label}
+        </small>
+        <b className="text-[18px] leading-[1.18] tracking-[-0.02em] max-tiny:text-[16px]">
+          {title}
+        </b>
+        <p
+          className={cx(
+            "m-0 line-clamp-2 text-[13px] leading-[1.35] max-tiny:text-[12px]",
+            onDark(tone) ? "text-[#d7e1ec]" : "text-[#637083]",
+          )}
+        >
+          {detail}
+        </p>
+      </div>
+    </Link>
+  );
+}
 
 /**
  * The landing page after a role switch, and the slowest thing about becoming an
@@ -81,98 +184,102 @@ export default async function Owner() {
           {greeting}, <span className="owner-greeting-name">Mr.&nbsp;{lastName}!</span>
         </h1>
         <p className="owner-dashboard-question">What would you like to do?</p>
-        <nav className="owner-action-grid" aria-label="Conference commissioner actions">
-          <Link href="/owner/setup" className="owner-action-card season-action">
-            <span className="owner-action-icon">
-              <Plus className="ui-icon" />
-            </span>
-            <Suspense fallback={null}>
-              <SeasonDot />
-            </Suspense>
-            <div>
-              <small>SEASON</small>
-              <b>Create Season Tournament</b>
-              <p>
-                <Suspense fallback={context.conferenceName}>
-                  <SeasonDetail conferenceName={context.conferenceName} />
-                </Suspense>
-              </p>
-            </div>
-          </Link>
-          <Link href="/owner/roster" className="owner-action-card">
-            <span className="owner-action-icon">
-              <User className="ui-icon" />
-            </span>
-            <Suspense fallback={null}>
-              <RosterRequestDot />
-            </Suspense>
-            <div>
-              <small>PLAYER DIRECTORY</small>
-              <b>Manage conference players</b>
-              <p>Invite, assign and change roster.</p>
-            </div>
-          </Link>
-          <Link href="/owner/schedule" className="owner-action-card">
-            <span className="owner-action-icon">
-              <CalendarDays className="ui-icon" />
-            </span>
-            <Suspense fallback={null}>
-              <ScheduleDot />
-            </Suspense>
-            <div>
-              <small>SCHEDULE</small>
-              <b>View or update schedule</b>
-              <p>
-                <Suspense fallback="Loading schedule…">
-                  <ScheduleDetail />
-                </Suspense>
-              </p>
-            </div>
-          </Link>
-          <Link href="/owner/scores" className="owner-action-card owner-featured-action">
-            <span className="owner-action-icon">
-              <ClipboardList className="ui-icon" />
-            </span>
-            <Suspense fallback={null}>
-              <ScoresDot />
-            </Suspense>
-            <div>
-              <small>SCORES</small>
-              <b>Update game results</b>
-              <p>
-                <Suspense fallback="Checking completed games…">
-                  <ScoresDetail />
-                </Suspense>
-              </p>
-            </div>
-          </Link>
-          <Link href="/owner/payments" className="owner-action-card owner-featured-action">
-            <span className="owner-action-icon">
-              <Wallet className="ui-icon" />
-            </span>
-            <Suspense fallback={null}>
-              <PaymentsDot />
-            </Suspense>
-            <div>
-              <small>PAYMENTS</small>
-              <b>
-                <Suspense fallback="Balances due">
-                  <BalancesDue />
-                </Suspense>
-              </b>
-              <p>Review payments and balances.</p>
-            </div>
-          </Link>
-          <Link href="/owner/financials" className="owner-action-card financial-action">
-            <span className="owner-action-icon">
-              <DollarSign className="ui-icon" />
-            </span>
-            <div>
-              <small>FINANCIAL SUMMARY</small>
-              <b>Track profit and loss</b>
-              <p>Income and expense report.</p>
-            </div>
-          </Link>
+        {/* owner-action-grid carries no layout of its own any more - the two
+            utilities below replaced it. It stays as the hook two children still
+            reach for: the guide link and the invitation both take
+            `grid-column: 1/-1` from a descendant rule on it, and lose their
+            full width the moment it goes. It leaves when they are migrated. */}
+        <nav
+          className="owner-action-grid grid grid-cols-2 gap-[11px] desk:grid-cols-3 desk:gap-[16px]"
+          aria-label="Conference commissioner actions"
+        >
+          <ActionCard
+            href="/owner/setup"
+            tone="season"
+            icon={<Plus className="ui-icon" />}
+            label="SEASON"
+            title="Create Season Tournament"
+            detail={
+              <Suspense fallback={context.conferenceName}>
+                <SeasonDetail conferenceName={context.conferenceName} />
+              </Suspense>
+            }
+            dot={
+              <Suspense fallback={null}>
+                <SeasonDot />
+              </Suspense>
+            }
+          />
+          <ActionCard
+            href="/owner/roster"
+            icon={<User className="ui-icon" />}
+            label="PLAYER DIRECTORY"
+            title="Manage conference players"
+            detail="Invite, assign and change roster."
+            dot={
+              <Suspense fallback={null}>
+                <RosterRequestDot />
+              </Suspense>
+            }
+          />
+          <ActionCard
+            href="/owner/schedule"
+            icon={<CalendarDays className="ui-icon" />}
+            label="SCHEDULE"
+            title="View or update schedule"
+            detail={
+              <Suspense fallback="Loading schedule…">
+                <ScheduleDetail />
+              </Suspense>
+            }
+            dot={
+              <Suspense fallback={null}>
+                <ScheduleDot />
+              </Suspense>
+            }
+          />
+          <ActionCard
+            href="/owner/scores"
+            tone="featured"
+            icon={<ClipboardList className="ui-icon" />}
+            label="SCORES"
+            title="Update game results"
+            detail={
+              <Suspense fallback="Checking completed games…">
+                <ScoresDetail />
+              </Suspense>
+            }
+            dot={
+              <Suspense fallback={null}>
+                <ScoresDot />
+              </Suspense>
+            }
+          />
+          <ActionCard
+            href="/owner/payments"
+            tone="featured"
+            icon={<Wallet className="ui-icon" />}
+            label="PAYMENTS"
+            title={
+              <Suspense fallback="Balances due">
+                <BalancesDue />
+              </Suspense>
+            }
+            detail="Review payments and balances."
+            dot={
+              <Suspense fallback={null}>
+                <PaymentsDot />
+              </Suspense>
+            }
+          />
+          <ActionCard
+            href="/owner/financials"
+            tone="financial"
+            icon={<DollarSign className="ui-icon" />}
+            label="FINANCIAL SUMMARY"
+            title="Track profit and loss"
+            detail="Income and expense report."
+          />
           <Link href="/owner/guide" className="owner-guide-link">
             <span>
               <BookOpen className="ui-icon" />
@@ -216,7 +323,7 @@ const setupStepNames = [
 
 async function SeasonDot() {
   return (await activeSetupSeason()) ? (
-    <i className="owner-action-dot" aria-label="Season setup needs attention" />
+    <AttentionDot tone="season" label="Season setup needs attention" />
   ) : null;
 }
 
@@ -240,13 +347,13 @@ async function RosterRequestDot() {
   const data = await getOwnerPortalData();
   const pending = data.rosterRequests.filter((request) => request.status === "pending").length;
   return pending > 0 ? (
-    <i className="owner-action-dot" aria-label="Player Directory has roster requests waiting" />
+    <AttentionDot tone="plain" label="Player Directory has roster requests waiting" />
   ) : null;
 }
 
 async function ScheduleDot() {
   return (await activeSetupSeason()) ? (
-    <i className="owner-action-dot" aria-label="Schedule setup needs attention" />
+    <AttentionDot tone="plain" label="Schedule setup needs attention" />
   ) : null;
 }
 
@@ -275,7 +382,7 @@ const missingScoreCount = async () => {
 
 async function ScoresDot() {
   return (await missingScoreCount()) > 0 ? (
-    <i className="owner-action-dot" aria-label="Scores need attention" />
+    <AttentionDot tone="featured" label="Scores need attention" />
   ) : null;
 }
 
@@ -291,9 +398,7 @@ async function PaymentsDot() {
   const pending = data.paymentSubmissions.filter(
     (submission) => submission.status === "pending",
   ).length;
-  return pending > 0 ? (
-    <i className="owner-action-dot" aria-label="Payments need attention" />
-  ) : null;
+  return pending > 0 ? <AttentionDot tone="featured" label="Payments need attention" /> : null;
 }
 
 async function BalancesDue() {

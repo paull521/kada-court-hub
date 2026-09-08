@@ -268,7 +268,6 @@
      Every card on these pages is a link, and a pointer gets no answer from the
      phone layout because a finger never hovers. */
   a.card,
-  .owner-action-card,
   .captain-task-tile,
   .owner-list-row {
     transition:
@@ -276,7 +275,6 @@
       box-shadow 0.12s ease;
   }
   a.card:hover,
-  .owner-action-card:hover,
   .captain-task-tile:hover {
     border-color: rgba(7, 31, 61, 0.2);
     box-shadow: 0 12px 26px rgba(13, 38, 69, 0.13);
@@ -299,33 +297,6 @@
     min-height: 132px;
   }
 
-  /* --- Owner ---------------------------------------------------------------
-     The task tiles are squares because a phone shows two per row and a square
-     is the shape that leaves. Four across at this width, a square is 320px tall
-     with its text pinned to the bottom edge and nothing in the middle. Laid on
-     their side they are a row of cards again. The selector matches
-     owner-refinement.css, which loads after globals.css and would otherwise
-     win. */
-  .owner-action-grid {
-    /* Three across, not four: six tiles divide evenly into two rows, and the
-       longest label - Create Season Tournament - stays on one line. */
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
-  }
-  .owner-dashboard .owner-action-card,
-  .owner-action-card {
-    aspect-ratio: auto;
-    min-height: 124px;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 14px;
-    padding: 18px;
-  }
-  .owner-dashboard .owner-action-card > div {
-    flex: 1;
-    min-width: 0;
-  }
   .owner-more-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
