@@ -197,17 +197,17 @@ test.describe("states", () => {
       .locator("details.division-operation")
       .evaluateAll((nodes) => nodes.forEach((n) => ((n as HTMLDetailsElement).open = true)));
     await settle(page);
-    const cards = page.locator("details.game-action-card");
     // A closed division renders none of these, which is the state this shot
     // exists to escape. If it ever counts zero it has become owner-schedule.
+    const cards = page.locator("[data-game-card]");
     expect(await cards.count(), "expected game cards on /owner/schedule").toBeGreaterThan(1);
-    // Two of them: the first is the create-game card, which is laid out with
-    // an icon column, and an existing game is laid out without one.
-    await cards.first().evaluate((node) => ((node as HTMLDetailsElement).open = true));
-    await cards
-      .filter({ has: page.locator("css=.update-schedule-panel") })
-      .first()
-      .evaluate((node) => ((node as HTMLDetailsElement).open = true));
+    // Two of them: the create-game card is laid out with an icon column and an
+    // existing game is laid out without one.
+    for (const kind of ["new", "edit"])
+      await page
+        .locator(`[data-game-card="${kind}"]`)
+        .first()
+        .evaluate((node) => ((node as HTMLDetailsElement).open = true));
     await settle(page);
     await expect(page).toHaveScreenshot("owner-schedule-games.png", { fullPage: true });
   });
@@ -233,7 +233,7 @@ test.describe("states", () => {
     // Zero of these means the conference no longer has finished games and the
     // shot below proves nothing.
     expect(
-      await page.locator("article.game-action-card").count(),
+      await page.locator('[data-game-card="final"]').count(),
       "expected finalized games on /owner/schedule",
     ).toBeGreaterThan(0);
     await expect(page).toHaveScreenshot("owner-schedule-finalized.png", { fullPage: true });

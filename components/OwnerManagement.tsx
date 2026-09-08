@@ -1188,6 +1188,29 @@ function UnassignedPlayerForm({ seasons }: { seasons: OwnerSeason[] }) {
   );
 }
 
+/* The season disclosure - four call sites across the teams, schedule and
+   uniform workspaces - and the card nested inside it, which has five. Both
+   were laid out from globals.css by child position; the values live here once
+   rather than being restated at each site.
+
+   The season kept no class of its own: owner-refinement re-scoped it from two
+   ancestors to change one margin, and the margin is now stated where it
+   differs. actionCard leaves its grid columns to the call site, which is the
+   only thing the five disagree about.
+
+   seasonSummary's third column is empty on purpose. globals.css declared three
+   and every one of the four call sites has two children, so a season summary
+   carries 24px and a gap of dead space after its caret. Reproduced rather than
+   tidied: dropping it moves the caret, which is a visual change and not this
+   one's to make. */
+const seasonSummary =
+  "grid min-h-[64px] cursor-pointer list-none grid-cols-[minmax(0,1fr)_auto_24px] items-center gap-[12px] p-[18px] [&::-webkit-details-marker]:hidden";
+const seasonPanel = "border-t border-line p-[14px] max-tiny:p-[11px]";
+const actionCard = "group mb-[10px] overflow-hidden rounded-[15px] border border-line bg-white";
+const actionSummary =
+  "grid min-h-[70px] cursor-pointer list-none items-center gap-[12px] p-[13px] [&::-webkit-details-marker]:hidden";
+const caret = "text-[25px] transition-transform group-open:rotate-90";
+
 function OwnerTeamsWorkspace({
   seasons,
   requests,
@@ -1206,34 +1229,38 @@ function OwnerTeamsWorkspace({
       {available.length ? (
         <div className="uniform-season-list">
           {available.map((season, index) => (
-            <details className="operations-season card" key={season.id} open={index === 0}>
-              <summary>
-                <span>
-                  <b>{season.name}</b>
-                  <small>
+            <details
+              className="card group mb-[12px] overflow-hidden"
+              key={season.id}
+              open={index === 0}
+            >
+              <summary className={seasonSummary}>
+                <span className="grid gap-[5px]">
+                  <b className="text-[18px]">{season.name}</b>
+                  <small className="text-[13px] text-muted">
                     {season.divisions.reduce((total, division) => total + division.teams.length, 0)}{" "}
                     teams · {season.divisions.length} division
                     {season.divisions.length === 1 ? "" : "s"}
                   </small>
                 </span>
-                <strong aria-hidden="true">
+                <strong aria-hidden="true" className={caret}>
                   <ChevronRight className="go-caret" />
                 </strong>
               </summary>
-              <div>
+              <div className={seasonPanel}>
                 {season.divisions.map((division) => (
-                  <details className="game-action-card" key={division.id}>
-                    <summary>
+                  <details className={actionCard} key={division.id}>
+                    <summary className={`${actionSummary} grid-cols-[44px_1fr_auto]`}>
                       <span className="owner-icon">
                         <Users className="ui-icon" />
                       </span>
-                      <span>
-                        <b>{division.name}</b>
-                        <small>
+                      <span className="grid gap-[4px]">
+                        <b className="text-[15px]">{division.name}</b>
+                        <small className="text-[13px] leading-[1.35] text-muted">
                           {division.teams.length} team{division.teams.length === 1 ? "" : "s"}
                         </small>
                       </span>
-                      <strong aria-hidden="true">
+                      <strong aria-hidden="true" className={caret}>
                         <ChevronRight className="go-caret" />
                       </strong>
                     </summary>
@@ -2518,20 +2545,22 @@ function CreateGameForm({
   const [state, action, pending] = useActionState(createGameAction, initialState);
   const teams = division.teams.filter((team) => team.active);
   return (
-    <details className="game-action-card">
-      <summary>
+    <details className={actionCard} data-game-card="new">
+      <summary className={`${actionSummary} grid-cols-[44px_1fr_auto]`}>
         <span className="owner-icon">
           <Plus className="ui-icon" />
         </span>
-        <span>
-          <b>{playoffAvailable ? "Add Regular or Playoff Game" : "Add a Regular-Season Game"}</b>
-          <small>
+        <span className="grid gap-[4px]">
+          <b className="text-[15px]">
+            {playoffAvailable ? "Add Regular or Playoff Game" : "Add a Regular-Season Game"}
+          </b>
+          <small className="text-[13px] leading-[1.35] text-muted">
             {playoffAvailable
               ? "Round robin complete · Playoffs unlocked"
               : `${regularGamesRemaining} round-robin result${regularGamesRemaining === 1 ? "" : "s"} remaining before playoffs`}
           </small>
         </span>
-        <strong aria-hidden="true">
+        <strong aria-hidden="true" className={caret}>
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
@@ -2651,18 +2680,33 @@ function GameEditor({ game }: { game: OwnerSeason["games"][number] }) {
   );
   if (game.finalized)
     return (
-      <article id={`game-${game.id}`} className="game-action-card existing-game">
+      <article
+        id={`game-${game.id}`}
+        className={`${actionCard} scroll-mt-[16px]`}
+        data-game-card="final"
+      >
         <div className="game-editor-summary">{summary}</div>
       </article>
     );
   return (
     <details
       id={`game-${game.id}`}
-      className={`game-action-card existing-game game-${game.status}`}
+      // game-postponed and game-canceled recolour the card and its summary and
+      // render in no conference the screenshots can reach, so they are left in
+      // globals.css unconverted. Both are unlayered and still outrank the
+      // border and background utilities beside them.
+      className={`${actionCard} scroll-mt-[16px] game-${game.status}`}
+      data-game-card="edit"
     >
-      <summary>
-        <span>{summary}</span>
-        <strong aria-hidden="true">
+      <summary className={`${actionSummary} grid-cols-[minmax(0,1fr)_auto]`}>
+        {/* The same fragment renders in the finalized card below, where
+            game-editor-summary sizes it differently. These reach b and small
+            from here rather than from the fragment, which cannot carry two
+            sets at once. */}
+        <span className="grid gap-[4px] [&>b]:text-[15px] [&>small]:text-[12px] [&>small]:leading-[1.35] [&>small]:text-muted">
+          {summary}
+        </span>
+        <strong aria-hidden="true" className={caret}>
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
@@ -3017,20 +3061,20 @@ function ScheduleSeasonOperations({ season, index }: { season: OwnerSeason; inde
     (division) => division.scheduleStatus === "final",
   ).length;
   return (
-    <details className="operations-season card" open={index === 0}>
-      <summary>
-        <span>
-          <b>{season.name}</b>
-          <small>
+    <details className="card group overflow-hidden" open={index === 0}>
+      <summary className={seasonSummary}>
+        <span className="grid gap-[5px]">
+          <b className="text-[18px]">{season.name}</b>
+          <small className="text-[13px] text-muted">
             {season.games.length} total games · {finalized} of {season.divisions.length} division
             schedules final
           </small>
         </span>
-        <strong aria-hidden="true">
+        <strong aria-hidden="true" className={caret}>
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <div>
+      <div className={seasonPanel}>
         <div className="grid gap-[9px]">
           {season.divisions.map((division) => (
             <DivisionScheduleOperation season={season} division={division} key={division.id} />
@@ -3088,19 +3132,22 @@ export function OwnerGameManagement({ seasons }: { seasons: OwnerSeason[] }) {
             </strong>
           </summary>
           {completed.map((season) => (
-            <details className="operations-season card" key={season.id}>
-              <summary>
-                <span>
-                  <b>{season.name}</b>
-                  <small>
+            // mb-[10px] is carried across by hand from an owner-refinement
+            // rule: the archive renders only for a season that has ended, and
+            // there is none in any conference a screenshot can reach.
+            <details className="card group mb-[10px] overflow-hidden" key={season.id}>
+              <summary className={seasonSummary}>
+                <span className="grid gap-[5px]">
+                  <b className="text-[18px]">{season.name}</b>
+                  <small className="text-[13px] text-muted">
                     {season.games.length} game{season.games.length === 1 ? "" : "s"} · completed
                   </small>
                 </span>
-                <strong aria-hidden="true">
+                <strong aria-hidden="true" className={caret}>
                   <ChevronRight className="go-caret" />
                 </strong>
               </summary>
-              <div>
+              <div className={seasonPanel}>
                 <WeeklyScheduleTable season={season} />
                 <p className="empty-note">Completed schedules are kept here as a record.</p>
               </div>
@@ -3552,19 +3599,23 @@ export function OwnerUniformManagement({ seasons }: { seasons: OwnerSeason[] }) 
       </p>
       <div className="uniform-season-list">
         {available.map((season, index) => (
-          <details className="operations-season card" key={season.id} open={index === 0}>
-            <summary>
-              <span>
-                <b>{season.name}</b>
-                <small>
+          <details
+            className="card group mb-[12px] overflow-hidden"
+            key={season.id}
+            open={index === 0}
+          >
+            <summary className={seasonSummary}>
+              <span className="grid gap-[5px]">
+                <b className="text-[18px]">{season.name}</b>
+                <small className="text-[13px] text-muted">
                   {season.divisions.length} division{season.divisions.length === 1 ? "" : "s"}
                 </small>
               </span>
-              <strong aria-hidden="true">
+              <strong aria-hidden="true" className={caret}>
                 <ChevronRight className="go-caret" />
               </strong>
             </summary>
-            <div className="uniform-settings-list">
+            <div className={`uniform-settings-list ${seasonPanel}`}>
               {season.divisions.map((division) => (
                 <DivisionUniformForm
                   key={division.id}
@@ -3700,18 +3751,18 @@ function TeamLeadershipEditor({ team }: { team: OwnerTeam }) {
 function TeamEditor({ team }: { team: OwnerTeam }) {
   const players = team.players.filter((player) => player.status !== "inactive");
   return (
-    <details className="game-action-card">
-      <summary>
+    <details className={actionCard}>
+      <summary className={`${actionSummary} grid-cols-[44px_1fr_auto]`}>
         <span className="grid h-[36px] w-[36px] place-items-center rounded-[11px] bg-navy font-[900] text-[#f5a313]">
           {team.name.slice(0, 2).toUpperCase()}
         </span>
-        <span>
-          <b>{team.name}</b>
-          <small>
+        <span className="grid gap-[4px]">
+          <b className="text-[15px]">{team.name}</b>
+          <small className="text-[13px] leading-[1.35] text-muted">
             {players.length} player{players.length === 1 ? "" : "s"}
           </small>
         </span>
-        <strong aria-hidden="true">
+        <strong aria-hidden="true" className={caret}>
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
