@@ -107,10 +107,24 @@ tolerance, is what absorbs those.
   roster disclosures overrode its radius and its background with `!important`
   - they were never cards - so they carry their own border, shadow, radius and
     ground now. Out-shouting a primitive is the sign you should not be using it.
-- **Arbitrary values are expected.** This design has no spacing scale - 7px,
-  9px, 11px, 13px, 15px all appear. A faithful conversion produces
-  `p-[14px_15px]`, and that is correct. Normalising to a scale changes pixels
-  and is a separate, deliberate pass with a human looking at the diffs.
+- **Prefer the tidier result over the exact one.** This design has no spacing
+  scale - 7px, 9px, 11px, 13px, 15px all appear - and the early half of this
+  migration reproduced every one of them as `p-[14px_15px]`. That was the right
+  call under the old bar and is the wrong one under this bar. Where rounding a
+  value to Tailwind's scale, collapsing two near-identical variants into one, or
+  pulling a repeated run into a named `const` makes the component easier to
+  read, **do that and re-baseline**, rather than preserving a 1px difference
+  nobody chose on purpose.
+
+  The limits are the same as everywhere else: it still has to be a _small_
+  difference, and it still has to survive the two lists above. Rounding 13px to
+  `p-3` is tidying. Rounding 48px to `p-12` because it is nearby is not - a
+  control's tap target is a decision, and so is anything a person picked to line
+  two things up.
+
+  Arbitrary values remain correct wherever the exact number is the point:
+  brand colours, gradients, a grid template, a `min-height` a row was sized
+  against.
 
 ## Done
 
