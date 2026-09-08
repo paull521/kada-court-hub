@@ -346,107 +346,12 @@
   padding: 0;
   list-style: none;
 }
-.season-guide-step {
-  position: relative;
-  padding: 0 0 24px 46px;
-}
-.season-guide-step:before {
-  content: "";
-  position: absolute;
-  left: 15px;
-  top: 36px;
-  bottom: 2px;
-  width: 2px;
-  border-radius: 2px;
-  background: linear-gradient(180deg, rgba(209, 132, 8, 0.5), rgba(209, 132, 8, 0.14));
-}
-.season-guide-step:last-child {
-  padding-bottom: 0;
-}
-.season-guide-step:last-child:before {
-  display: none;
-}
-.season-guide-step > b {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 32px;
-  height: 32px;
-  border-radius: 11px;
-  display: grid;
-  place-items: center;
-  font-size: 13px;
-  font-weight: 900;
-  color: #fff;
-  background: linear-gradient(145deg, #082b50, #0e477c);
-  box-shadow: 0 4px 12px rgba(13, 38, 69, 0.24);
-}
-.season-guide-step h3 {
-  margin: 5px 0 5px;
-  font-size: 17px;
-  letter-spacing: -0.3px;
-}
-.season-guide-step p {
-  margin: 0;
-  max-width: 60ch;
-  font-size: 14px;
-  line-height: 1.55;
-  color: #3f4e61;
-}
-/* Only four steps carry one, so its presence is the information: this is a
-   step that will hold you up. */
-.season-guide-step em {
-  display: inline-block;
-  margin-top: 9px;
-  padding: 6px 11px;
-  border-radius: 9px;
-  background: #fdf3e0;
-  color: #8a5c05;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 1.4;
-}
+
 .guide-jump {
   margin-top: 20px;
   display: inline-block;
 }
 
-/* Page blocks: flush, with the icon hanging in the left gutter. */
-.guide-pages {
-  display: grid;
-  border-top: 1px solid var(--line);
-}
-.guide-page {
-  display: grid;
-  grid-template-columns: 36px minmax(0, 1fr);
-  gap: 12px;
-  padding: 18px 2px;
-  border-bottom: 1px solid var(--line);
-}
-.guide-page-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  background: #f2f5f9;
-  color: #4d6d95;
-}
-.guide-page h3 {
-  margin: 0;
-  font-size: 17px;
-  letter-spacing: -0.3px;
-}
-.guide-page h3 a {
-  border-bottom: 2px solid rgba(209, 132, 8, 0.35);
-}
-.guide-page > div > small {
-  display: block;
-  margin-top: 3px;
-  font-size: 12px;
-  color: var(--muted);
-}
 .guide-ability-list {
   margin: 11px 0 0;
   padding: 0;
@@ -511,47 +416,6 @@
   font-size: 13.5px;
   line-height: 1.5;
   color: #4c5a6c;
-}
-
-.guide-faq {
-  display: grid;
-  gap: 8px;
-}
-.guide-faq details {
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.86);
-}
-.guide-faq summary {
-  padding: 13px 15px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  list-style: none;
-}
-.guide-faq summary::-webkit-details-marker {
-  display: none;
-}
-.guide-faq summary:after {
-  content: "+";
-  float: right;
-  margin-left: 12px;
-  color: var(--gold);
-  font-weight: 800;
-}
-.guide-faq details[open] summary:after {
-  content: "–";
-}
-.guide-faq details[open] summary {
-  padding-bottom: 4px;
-}
-.guide-faq p {
-  margin: 0;
-  padding: 0 15px 14px;
-  max-width: 66ch;
-  font-size: 13.5px;
-  line-height: 1.55;
-  color: #435162;
 }
 
 .guide-closing {

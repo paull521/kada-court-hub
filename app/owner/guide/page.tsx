@@ -353,11 +353,24 @@ export default async function OwnerGuidePage() {
             </p>
             <ol className="guide-rail">
               {steps.map((step, index) => (
-                <li className="season-guide-step" key={step.name}>
-                  <b>{index + 1}</b>
-                  <h3>{step.name}</h3>
-                  <p>{step.body}</p>
-                  {step.gate && <em>{step.gate}</em>}
+                <li
+                  className="relative pb-[24px] pl-[46px] before:absolute before:top-[36px] before:bottom-[2px] before:left-[15px] before:w-[2px] before:rounded-[2px] before:bg-[linear-gradient(180deg,rgba(209,132,8,0.5),rgba(209,132,8,0.14))] before:content-[''] last:pb-0 last:before:hidden desk:pb-[28px] desk:pl-[56px] desk:before:top-[44px] desk:before:left-[18px]"
+                  key={step.name}
+                >
+                  <b className="absolute top-0 left-0 grid h-[32px] w-[32px] place-items-center rounded-[11px] bg-[linear-gradient(145deg,#082b50,#0e477c)] text-[13px] font-[900] text-white shadow-[0_4px_12px_rgba(13,38,69,0.24)] desk:h-[38px] desk:w-[38px] desk:rounded-[13px] desk:text-[15px]">
+                    {index + 1}
+                  </b>
+                  <h3 className="m-[5px_0] text-[17px] tracking-[-0.3px] desk:mt-[8px] desk:text-[19px]">
+                    {step.name}
+                  </h3>
+                  <p className="m-0 max-w-[60ch] text-[14px] leading-[1.55] text-[#3f4e61] desk:text-[15px]">
+                    {step.body}
+                  </p>
+                  {step.gate && (
+                    <em className="mt-[9px] inline-block rounded-[9px] bg-[#fdf3e0] px-[11px] py-[6px] text-[12px] leading-[1.4] font-[700] text-[#8a5c05] not-italic">
+                      {step.gate}
+                    </em>
+                  )}
                 </li>
               ))}
             </ol>
@@ -372,15 +385,20 @@ export default async function OwnerGuidePage() {
               Every ability in the owner workspace, page by page. Each heading opens the page it
               describes.
             </p>
-            <div className="guide-pages">
+            <div className="grid border-t border-line">
               {pages.map((page) => (
-                <article className="guide-page" key={page.name}>
-                  <span className="guide-page-icon">{page.icon}</span>
+                <article
+                  className="grid grid-cols-[36px_minmax(0,1fr)] gap-[12px] border-b border-line p-[18px_2px] desk:grid-cols-[42px_minmax(0,1fr)] desk:gap-[16px] desk:p-[22px_2px]"
+                  key={page.name}
+                >
+                  <span className="grid h-[36px] w-[36px] place-items-center rounded-[12px] bg-[#f2f5f9] text-[#4d6d95] desk:h-[42px] desk:w-[42px]">
+                    {page.icon}
+                  </span>
                   <div>
-                    <h3>
+                    <h3 className="m-0 text-[17px] tracking-[-0.3px] [&_a]:border-b-2 [&_a]:border-[rgba(209,132,8,0.35)]">
                       <Link href={page.href}>{page.name}</Link>
                     </h3>
-                    <small>{page.where}</small>
+                    <small className="mt-[3px] block text-[12px] text-muted">{page.where}</small>
                     <ul className="guide-ability-list">
                       {page.can.map((ability) => (
                         <li key={ability}>{ability}</li>
@@ -426,11 +444,18 @@ export default async function OwnerGuidePage() {
           <section className="owner-guide-section" id="questions">
             <h2>Questions</h2>
             <p className="guide-lead">The seven that come up most often.</p>
-            <div className="guide-faq">
+            <div className="grid gap-[8px]">
               {questions.map(([question, answer]) => (
-                <details key={question}>
-                  <summary>{question}</summary>
-                  <p>{answer}</p>
+                <details
+                  key={question}
+                  className="group rounded-[14px] border border-line bg-white/[0.86]"
+                >
+                  <summary className="cursor-pointer list-none p-[13px_15px] text-[14px] font-[700] after:float-right after:ml-[12px] after:font-[800] after:text-gold after:content-['+'] group-open:pb-[4px] group-open:after:content-['–'] desk:text-[15px] [&::-webkit-details-marker]:hidden">
+                    {question}
+                  </summary>
+                  <p className="m-0 max-w-[66ch] px-[15px] pb-[14px] text-[13.5px] leading-[1.55] text-[#435162] desk:text-[14px]">
+                    {answer}
+                  </p>
                 </details>
               ))}
             </div>

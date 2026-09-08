@@ -98,6 +98,24 @@ const CONFERENCE_WITH_RESULTS = "c559f3c2-447d-4b3c-8006-265c5ed377ef";
 
 test.describe("states", () => {
   /**
+   * The guide's FAQ is seven closed disclosures, and the summary swaps its +
+   * for a – when one opens. Neither the open padding nor the swapped glyph is
+   * in the owner-guide baseline.
+   */
+  test("owner-guide-faq-open", async ({ page }) => {
+    const response = await page.goto("/owner/guide", { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBeLessThan(400);
+    await settle(page);
+    const count = await page.locator("details").evaluateAll((nodes) => {
+      nodes.forEach((node) => ((node as HTMLDetailsElement).open = true));
+      return nodes.length;
+    });
+    expect(count, "expected disclosures on /owner/guide").toBeGreaterThan(0);
+    await settle(page);
+    await expect(page).toHaveScreenshot("owner-guide-faq-open.png", { fullPage: true });
+  });
+
+  /**
    * Disclosures are closed on arrival, so everything inside one - the whole of
    * PlatformFeedback's form, and the account panels beside it - is absent from
    * the profile baselines. Opening them is a DOM property, not a click: the
