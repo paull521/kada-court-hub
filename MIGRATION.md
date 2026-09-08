@@ -58,33 +58,55 @@ Per component, in this order. Do not skip step 2.
 
 ## Done
 
-| Step                               | Result                            |
-| ---------------------------------- | --------------------------------- |
-| Tailwind installed, no Preflight   | 71/71 visual, zero pixels moved   |
-| `components/ui/` primitives        | additive, unused at first         |
-| `OwnerFinancialSummary` converted  | 41 rules deleted, 186 lines       |
-| `score-sheet-*` dead rules deleted | 14 rules, nothing referenced them |
-| `scripts/css-usage.mjs`            | scoping and dead-class analysis   |
+| Step                                  | Result                             |
+| ------------------------------------- | ---------------------------------- |
+| Tailwind installed, no Preflight      | 73/73 visual, zero pixels moved    |
+| `components/ui/` primitives           | additive, unused at first          |
+| `OwnerFinancialSummary` converted     | 41 rules, 186 lines                |
+| `score-sheet-*` dead rules deleted    | 14 rules, nothing referenced them  |
+| A screenshot of a season with results | unblocked the scoresheets          |
+| `OwnerScoresheets` converted          | 71 rules, the largest deletion yet |
+| `scripts/css-usage.mjs`               | scoping and dead-class analysis    |
 
-`globals.css` 8,837 → 8,613. `desktop.css` 530 → 517.
-`owner-refinement.css` 897 → 876. 258 lines of CSS gone.
+`globals.css` 8,837 → 8,438 · `desktop.css` 530 → 505 ·
+`owner-refinement.css` 897 → 700. **621 lines of CSS gone, zero pixels moved.**
 
-## Blocked, and why
+## What the layer order keeps teaching
 
-**`OwnerScoresheets`** is the largest contained target left - it is the sole
-owner of 87 rules across `scoresheet-`, `scoreboard-` and `score-entry-`. It is
-not converted because `.scoreboard-match`, the finalized-game display, renders
-only when `game.finalized` is true and no baseline contains a finalized game.
-Six rules would be rewritten with nothing able to check them.
+Utilities live in `@layer`, and **layered rules lose to unlayered ones whatever
+their specificity**. Every hand-written rule in this app is unlayered, so a
+utility silently loses wherever an old rule still targets the same element.
 
-To unblock: capture a route showing a finalized game - either seed one in the
-demo conference, or add a screenshot of a season whose games are complete -
-then convert.
+It has bitten twice, both times caught by a screenshot rather than by reading:
 
-It also has the worst override warfare in the codebase: `.scoreboard-card` is
-defined in both `globals.css` and `owner-refinement.css`, the second winning
-through `!important`, and `.scoreboard-meta` takes its padding from one file
-and its padding-top from the other. Read the effective style, not either rule.
+- `.secondary` sets its own background, so a `bg-white/[0.14]` utility on a
+  `btn secondary` did nothing and the button came out white.
+- `button, input { color: inherit }` in `globals.css` beats `text-navy`, which
+  is why the score inputs need `text-navy!`.
+
+Where the old CSS carried `!important`, expect to need Tailwind's `!`. And
+where a primitive brings a class that fights you - `.card` behind a navy
+gradient - the fix is to stop asking for the class, not to out-shout it.
+
+## Next: `owner-action`, and why it is not quick
+
+54 rules over three stylesheets, and the biggest single target left. It is not
+a simple one:
+
+- `.owner-action-card` is defined **three times at top level** in `globals.css`
+  - once as a four-column grid, then again as a flex column with
+    `aspect-ratio: 1`. The later wins; the first is dead.
+- `owner-refinement.css` re-styles all of it again under `.owner-dashboard`,
+  and `desktop.css` overrides it a third time at 900px.
+- `desktop.css` groups `.owner-action-card` with `a.card`,
+  `.captain-task-tile` and `.owner-list-row` in one hover rule. That selector
+  must be **edited**, not deleted, or three unrelated components lose their
+  hover.
+- `.owner-action-icon` is shared with `.financial-action`, which survived the
+  financial-summary conversion.
+
+It appears on two pages - the owner home and the platform dashboard - so run
+the whole suite, not one route.
 
 ## Dead CSS
 
@@ -97,10 +119,17 @@ so a class styling an error, a canceled game or a suspended owner is in no
 picture and its deletion cannot be verified by running the tests. The 93 are
 worth reading through by hand; the 44 need the call site checked first.
 
+## Known flake
+
+`captain-roster` failed once on a full run and passed on re-run and in
+isolation. Not diagnosed. If it recurs, suspect the `settle()` wait in
+`routes.spec.ts` - `networkidle` plus "no `.skeleton` left" is not a guarantee
+that a streamed frame has finished swapping in its values.
+
 ## Not yet started
 
 `OwnerManagement` (67 primitive uses, the largest file), `PlatformOperations`,
 `PlatformCreatorTools`, `AuthForm`, and the captain and player workspaces.
-`owner-refinement.css` and `captain-refinement.css` are the files to watch -
-1,008 lines that exist only to outrank `globals.css`, and they should end at
-zero.
+`owner-refinement.css` and `captain-refinement.css` are the scoreboard -
+they exist only to outrank `globals.css`, and they should end at zero.
+`owner-refinement.css` is down from 897 to 700.
