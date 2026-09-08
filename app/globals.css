@@ -3291,68 +3291,7 @@ body {
   color: var(--blue);
   font-size: 14px;
 }
-.payment-submit-form {
-  display: grid;
-  gap: 14px;
-  padding: 16px;
-  border-top: 1px solid var(--line);
-}
-.payment-submit-form fieldset {
-  border: 0;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 9px;
-}
-.payment-submit-form legend {
-  font-size: 14px;
-  font-weight: 800;
-  margin-bottom: 9px;
-}
-.payment-submit-form fieldset label {
-  position: relative;
-}
-.payment-submit-form fieldset input {
-  position: absolute;
-  opacity: 0;
-}
-.payment-submit-form fieldset span {
-  min-height: 54px;
-  border: 1px solid #d6dbe2;
-  border-radius: 13px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-size: 15px;
-  font-weight: 750;
-}
-.payment-submit-form fieldset input:checked + span {
-  border: 2px solid var(--navy);
-  background: #eef3f8;
-}
-.payment-submit-form fieldset span b {
-  font-size: 22px;
-  color: var(--blue);
-}
-.payment-submit-form > label {
-  display: grid;
-  gap: 7px;
-  font-size: 14px;
-  font-weight: 800;
-}
-.payment-submit-form > label small {
-  color: var(--muted);
-  font-weight: 500;
-}
-.payment-submit-form > label input {
-  min-height: 48px;
-  border: 1px solid #d6dbe2;
-  border-radius: 11px;
-  padding: 11px;
-  font-size: 16px;
-}
+
 .payment-safety-note {
   font-size: 13px;
   line-height: 1.5;
@@ -3583,20 +3522,7 @@ body {
   color: var(--gold);
   margin: 0 0 12px;
 }
-.payment-submit-form.always-visible {
-  border-top: 0;
-  padding: 0;
-}
 
-.payment-submit-form fieldset input:disabled + span {
-  background: #f1f1f1;
-  color: #9aa0a8;
-  border-color: #e0e0e0;
-  cursor: not-allowed;
-}
-.payment-submit-form fieldset input:disabled + span b {
-  color: #9aa0a8;
-}
 .payment-history-panel {
   overflow: hidden;
 }
@@ -4803,41 +4729,14 @@ button.account-link {
   .payment-review-actions {
     grid-template-columns: 1fr;
   }
-  .payment-submit-form fieldset {
-    grid-template-columns: 1fr;
-  }
 }
 
-.payment-submit-form .method-choice {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-.payment-submit-form .method-choice span {
-  padding: 6px;
-  font-size: 13px;
-  text-align: center;
-}
-.payment-submit-form .method-choice input[value="waiver"] + span b {
-  color: var(--gold);
-}
 .waiver-review-card {
   border-color: #e8c98f;
 }
 .waiver-review-card .payment-review-icon {
   background: #fff4da;
   color: #8a5900;
-}
-@media (max-width: 410px) {
-  .payment-submit-form .method-choice {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .payment-submit-form .method-choice span {
-    min-height: 58px;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .payment-submit-form .method-choice span b {
-    font-size: 18px;
-  }
 }
 
 .step-eight-division-list {

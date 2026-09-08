@@ -40,7 +40,10 @@ export default function PlayerPaymentForm({
           </div>
         </div>
       ))}
-      <form action={action} className="payment-submit-form always-visible">
+      <form
+        action={action}
+        className="grid gap-[14px] [&>label]:grid [&>label]:gap-[7px]! [&>label]:text-[14px] [&>label]:font-[800] [&>label_input]:min-h-[48px] [&>label_input]:rounded-[11px] [&>label_input]:border [&>label_input]:border-[#d6dbe2] [&>label_input]:p-[11px] [&>label_input]:text-[16px] [&>label_small]:font-[500] [&>label_small]:text-muted"
+      >
         <input type="hidden" name="registrationId" value={registrationId} />
         <label className="payment-amount-label">
           How much will you pay?
@@ -60,7 +63,7 @@ export default function PlayerPaymentForm({
           </div>
           <small>Remaining balance: ${balance.toFixed(2)}</small>
         </label>
-        <fieldset className="method-choice">
+        <fieldset className="m-0 grid grid-cols-3 gap-[9px] border-0 p-0 [&_input:checked+span]:border-2 [&_input:checked+span]:border-navy [&_input:checked+span]:bg-[#eef3f8] [&_input:disabled+span]:cursor-not-allowed [&_input:disabled+span]:border-[#e0e0e0] [&_input:disabled+span]:bg-[#f1f1f1] [&_input:disabled+span]:text-[#9aa0a8] [&_input:disabled+span_b]:text-[#9aa0a8] [&_input[value=waiver]+span_b]:text-gold [&_input]:absolute [&_input]:opacity-0 [&_label]:relative [&_legend]:mb-[9px] [&_legend]:text-[14px] [&_legend]:font-[800] [&_span_b]:text-[22px] [&_span_b]:text-blue [&_span]:flex [&_span]:min-h-[54px] [&_span]:items-center [&_span]:justify-center [&_span]:gap-[10px] [&_span]:rounded-[13px] [&_span]:border [&_span]:border-[#d6dbe2] [&_span]:p-[6px] [&_span]:text-center [&_span]:text-[13px] [&_span]:font-[750] max-tiny:[&_span_b]:text-[18px] max-tiny:[&_span]:min-h-[58px] max-tiny:[&_span]:flex-col max-tiny:[&_span]:gap-[2px]">
           <legend>Choose Zelle, Cash, or Waiver</legend>
           <label>
             <input
