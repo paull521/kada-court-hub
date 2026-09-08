@@ -12,3 +12,11 @@ tsconfig.tsbuildinfo
 
 # System files
 .DS_Store
+
+# Playwright: the auth state holds a live session, the rest is run output
+tests/visual/.auth/
+test-results/
+playwright-report/
+
+# Visual baselines are local scaffolding for the CSS migration, not repo cargo
+tests/visual/__screenshots__/
