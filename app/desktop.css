@@ -297,11 +297,10 @@
     margin-bottom: 0;
   }
 
-  /* Profile's two long account rows are laid out for a phone's single column;
-     given the measure they were sitting at their intrinsic width against the
-     left edge. Carried over from main. */
-  .content.player-profile-content .rules-account-link,
-  .content.role-profile-content .rules-account-link,
+  /* The legal row is laid out for a phone's single column; given the measure
+     it sat at its intrinsic width against the left edge. Carried over from
+     main. The rules row beside it says the same thing in desk: utilities now,
+     and this rule kept only its half. */
   .content.player-profile-content .account-link[href="/legal"],
   .content.role-profile-content .account-link[href="/legal"] {
     width: 100%;

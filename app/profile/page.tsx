@@ -128,34 +128,30 @@ export default async function Profile({
   const acknowledgedRule =
     acknowledgments.find((ack) => ack.rules_document_id === currentRule?.rules_document_id) ??
     acknowledgments[0];
-  const rulesLink =
-    currentRule && !currentRule.acknowledged_at ? (
-      <Link
-        href={`/rules?registration=${data.activeRegistrationId}&view=${currentRole}`}
-        className="card rules-account-link"
-      >
-        <span>
-          <BookOpen className="ui-icon" />
-        </span>
-        <b>Rules &amp; Discipline</b>
-        <strong aria-hidden="true">
-          <ChevronRight className="go-caret" />
-        </strong>
-      </Link>
-    ) : acknowledgedRule ? (
-      <Link
-        href={`/rules?acknowledgment=${acknowledgedRule.acknowledgment_id}&view=${currentRole}`}
-        className="card rules-account-link"
-      >
-        <span>
-          <BookOpen className="ui-icon" />
-        </span>
-        <b>Rules &amp; Discipline</b>
-        <strong aria-hidden="true">
-          <ChevronRight className="go-caret" />
-        </strong>
-      </Link>
-    ) : null;
+  // The unsigned record and the signed one differed by their query string and
+  // by nothing else, so the row is written once and the branch picks the href.
+  const rulesHref =
+    currentRule && !currentRule.acknowledged_at
+      ? `/rules?registration=${data.activeRegistrationId}&view=${currentRole}`
+      : acknowledgedRule
+        ? `/rules?acknowledgment=${acknowledgedRule.acknowledgment_id}&view=${currentRole}`
+        : null;
+  const rulesLink = rulesHref ? (
+    <Link
+      href={rulesHref}
+      // desk: replaces two ancestor-scoped rules in desktop.css. This row
+      // renders only on /profile, which is the one place either could reach.
+      className="card grid grid-cols-[38px_minmax(0,1fr)_20px] items-center gap-[12px] p-[14px_15px] desk:w-full desk:justify-self-center"
+    >
+      <span className="grid h-[38px] w-[38px] place-items-center rounded-[12px] bg-[#fff2d7] text-[19px] font-[900] text-gold">
+        <BookOpen className="ui-icon" />
+      </span>
+      <b className="text-[15px]">Rules &amp; Discipline</b>
+      <strong aria-hidden="true" className="text-right text-[24px]">
+        <ChevronRight className="go-caret" />
+      </strong>
+    </Link>
+  ) : null;
   const ownerProfileContent = ownerData?.authorized ? (
     <>
       <section className="card profile-card">
