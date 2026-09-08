@@ -140,189 +140,15 @@
 
 /* The opening panel is the page's one filled shape, and it carries the single
    fact the rest of the guide assumes: which conference you are looking at. */
-.guide-opening {
-  padding: 22px;
-  border-radius: 22px;
-  background: linear-gradient(145deg, #082b50, #0e477c);
-  color: #fff;
-  display: grid;
-  gap: 12px;
-}
-.guide-opening p {
-  margin: 0;
-  font-size: 19px;
-  line-height: 1.42;
-  letter-spacing: -0.2px;
-}
-.guide-opening b {
-  color: #f6b33d;
-}
-.guide-opening small {
-  font-size: 13px;
-  line-height: 1.55;
-  color: #cfdcea;
-}
-
-.owner-guide-section {
-  scroll-margin-top: 14px;
-}
-.owner-guide-section > h2 {
-  margin: 0 0 6px;
-  font-size: 25px;
-  line-height: 1.1;
-  letter-spacing: -0.7px;
-}
-.guide-lead {
-  margin: 0 0 16px;
-  max-width: 62ch;
-  font-size: 14px;
-  line-height: 1.55;
-  color: var(--muted);
-}
-.guide-lead-spaced {
-  margin-top: 26px;
-}
 
 /* The five tabs. Rows rather than cards: they are one list of five equal
    things, and the rules between them say so more quietly than five boxes. */
-.guide-map {
-  display: grid;
-  border-top: 1px solid var(--line);
-}
-.guide-map > a {
-  display: grid;
-  grid-template-columns: 34px minmax(0, 1fr);
-  gap: 4px 12px;
-  padding: 14px 2px;
-  border-bottom: 1px solid var(--line);
-  align-items: start;
-}
-.guide-map-icon {
-  grid-row: span 2;
-  width: 34px;
-  height: 34px;
-  border-radius: 11px;
-  display: grid;
-  place-items: center;
-  background: #f7f0e4;
-  color: var(--gold);
-}
-.guide-map > a > b {
-  font-size: 15px;
-  letter-spacing: -0.2px;
-}
-.guide-map > a > span:last-child {
-  font-size: 13px;
-  line-height: 1.5;
-  color: #4d5a6b;
-}
-.guide-doors {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-.guide-doors > a {
-  display: grid;
-  gap: 2px;
-  padding: 11px 12px;
-  border: 1px solid #ecd9b4;
-  border-radius: 13px;
-  background: linear-gradient(135deg, #fffaf1, #fffefb);
-}
-.guide-doors b {
-  font-size: 13.5px;
-}
-.guide-doors small {
-  font-size: 11px;
-  color: #8a7550;
-}
 
 /* The eight steps really are a sequence, which is what earns the numbers and
    the rail. The rail is drawn from each node down to the next, so the last
    step ends the line rather than trailing off it. */
-.guide-rail {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.guide-jump {
-  margin-top: 20px;
-  display: inline-block;
-}
-
-.guide-ability-list {
-  margin: 11px 0 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 8px;
-}
-.guide-ability-list li {
-  position: relative;
-  padding-left: 17px;
-  max-width: 68ch;
-  font-size: 13.5px;
-  line-height: 1.55;
-  color: #3f4e61;
-}
-.guide-ability-list li:before {
-  content: "";
-  position: absolute;
-  left: 1px;
-  top: 8px;
-  width: 6px;
-  height: 6px;
-  border-radius: 2px;
-  background: var(--gold);
-  opacity: 0.55;
-}
 
 /* Conditions, not cards: a hanging rule marks each one as a rule. */
-.guide-gates {
-  display: grid;
-  gap: 13px;
-}
-.guide-gate {
-  margin: 0;
-  padding: 1px 0 1px 14px;
-  border-left: 3px solid rgba(209, 132, 8, 0.5);
-  max-width: 62ch;
-}
-.guide-gate b {
-  display: block;
-  font-size: 14px;
-}
-.guide-gate span {
-  font-size: 13.5px;
-  line-height: 1.5;
-  color: var(--muted);
-}
-
-.guide-terms {
-  margin: 0;
-  display: grid;
-  gap: 14px;
-}
-.guide-terms dt {
-  font-size: 14px;
-  font-weight: 800;
-  letter-spacing: -0.1px;
-}
-.guide-terms dd {
-  margin: 3px 0 0;
-  max-width: 62ch;
-  font-size: 13.5px;
-  line-height: 1.5;
-  color: #4c5a6c;
-}
-
-.guide-closing {
-  margin: 0;
-  padding-top: 4px;
-  font-size: 13px;
-  color: var(--muted);
-}
 
 /* The entry on the dashboard. It spans the tile grid rather than joining it:
    a handbook is not a seventh task, and a square that looks like the six would
@@ -364,12 +190,4 @@
 }
 .owner-guide-link > strong {
   color: #b98a2e;
-}
-@media (max-width: 410px) {
-  .guide-doors {
-    grid-template-columns: 1fr;
-  }
-  .guide-opening p {
-    font-size: 17px;
-  }
 }

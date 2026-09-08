@@ -359,49 +359,15 @@
     max-width: 760px;
     gap: 44px;
   }
-  .owner-guide-section {
-    scroll-margin-top: 24px;
-  }
-  .owner-guide-section > h2 {
-    font-size: 29px;
-  }
-  .guide-opening {
-    padding: 30px 32px;
-  }
-  .guide-opening p {
-    font-size: 22px;
-    max-width: 40ch;
-  }
 
   /* Three columns, so the tab name is a column of its own and the five
      descriptions start on one edge instead of five. */
-  .guide-map > a {
-    grid-template-columns: 38px 132px minmax(0, 1fr);
-    gap: 16px;
-    padding: 16px 2px;
-    align-items: center;
-  }
-  .guide-map-icon {
-    grid-row: auto;
-    width: 38px;
-    height: 38px;
-  }
+
   /* Four now, so they are one row that mirrors the four tiles on Home rather
      than a row of three and an orphan. */
-  .guide-doors {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .guide-ability-list li {
-    font-size: 14px;
-  }
 
   /* Eleven short definitions read as a glossary two-up and as a long ladder in
      one column. */
-  .guide-terms {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px 32px;
-  }
 
   /* The dashboard strip has a whole row of a three-column grid, so it can hold
      its title and its line on one line each rather than wrapping. */
