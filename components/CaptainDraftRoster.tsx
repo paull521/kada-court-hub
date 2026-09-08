@@ -120,6 +120,12 @@ function DraftedPlayer({
   );
 }
 
+/** Two statuses recolour the panel; anything else keeps the amber default. */
+const draftTone: Record<string, string> = {
+  approved: "bg-[#dff3df]",
+  submitted: "bg-[#e7efff]",
+};
+
 export default function CaptainDraftRoster({
   data,
   detailsOnly = false,
@@ -154,7 +160,7 @@ export default function CaptainDraftRoster({
     (candidate) => candidate.invitationId === selected,
   );
   return (
-    <section className="card owner-section captain-draft-entry">
+    <section className="card owner-section captain-draft-entry grid gap-[13px]">
       {!detailsOnly && (
         <div className="owner-section-title">
           <span className="owner-icon">🏀</span>
@@ -167,7 +173,9 @@ export default function CaptainDraftRoster({
         </div>
       )}
       {!detailsOnly && (
-        <div className={`captain-draft-status ${data.draftStatus}`}>
+        <div
+          className={`grid gap-[3px] rounded-xl p-[11px] [&_b]:capitalize [&_span]:text-[10px] [&_span]:leading-[1.45] [&_span]:text-muted ${draftTone[data.draftStatus] ?? "bg-[#fff4da]"}`}
+        >
           <b>{data.draftStatus.replace("_", " ")}</b>
           <span>
             {data.draftStatus === "submitted"

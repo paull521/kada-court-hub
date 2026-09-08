@@ -12,7 +12,7 @@ import { LoadingNote, SkeletonBlock, SkeletonText } from "@/components/Skeleton"
  */
 export default function CaptainRosterFrame() {
   return (
-    <section className="card owner-section captain-draft-entry">
+    <section className="card owner-section captain-draft-entry grid gap-[13px]">
       <LoadingNote />
       <div className="owner-section-title">
         <span className="owner-icon">🏀</span>

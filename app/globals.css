@@ -2203,31 +2203,7 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 8px;
 }
-.captain-draft-entry {
-  display: grid;
-  gap: 13px;
-}
-.captain-draft-status {
-  display: grid;
-  gap: 3px;
-  padding: 11px;
-  border-radius: 12px;
-  background: #fff4da;
-}
-.captain-draft-status b {
-  text-transform: capitalize;
-}
-.captain-draft-status span {
-  font-size: 10px;
-  line-height: 1.45;
-  color: var(--muted);
-}
-.captain-draft-status.approved {
-  background: #dff3df;
-}
-.captain-draft-status.submitted {
-  background: #e7efff;
-}
+
 .captain-player-search {
   padding: 12px;
   border: 1px solid var(--line);
