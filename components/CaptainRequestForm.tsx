@@ -14,7 +14,12 @@ export default function CaptainRequestForm({
 }) {
   const [state, action, pending] = useActionState(createRosterRequestAction, initialState);
   return (
-    <form action={action} className="owner-form captain-request-form">
+    <form
+      action={action}
+      // gap and the stretch need `!`: .owner-form is unlayered and sets its own
+      // grid gap, which is why the old rule carried !important too.
+      className="owner-form grid grid-cols-1 items-stretch! gap-[12px]! [&_.btn]:min-h-[48px] [&_.btn]:w-full [&_label]:grid [&_label]:w-full [&_label]:gap-[6px] [&_label]:text-[12px] [&_label]:font-[800] [&_textarea]:min-h-[86px]! [&_textarea]:w-full [&_textarea]:resize-y"
+    >
       <input type="hidden" name="teamId" value={data.teamId} />
       <label>
         Request type

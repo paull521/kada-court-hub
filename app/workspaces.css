@@ -65,28 +65,6 @@
   gap: 12px;
 }
 
-.captain-request-list article {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 4px;
-  padding: 12px 0;
-  border-bottom: 1px solid #e3e6ea;
-}
-.captain-request-list article p {
-  grid-column: 1/-1;
-  margin: 4px 0;
-}
-.captain-request-list span {
-  display: grid;
-}
-.captain-request-list small {
-  color: #6d7886;
-}
-.captain-request-list em {
-  text-transform: capitalize;
-  font-style: normal;
-  font-weight: 800;
-}
 .availability-dot {
   display: inline-block;
   width: 11px;
@@ -419,51 +397,7 @@
   font-style: normal;
   color: #b76b00;
 }
-.captain-request-form {
-  display: grid;
-  grid-template-columns: 150px minmax(0, 1fr) auto;
-  gap: 10px;
-  align-items: end;
-}
-.captain-request-form label {
-  display: grid;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 800;
-}
-.captain-request-form textarea {
-  min-height: 72px;
-  resize: vertical;
-}
-.captain-request-form .form-error,
-.captain-request-form .form-success {
-  grid-column: 1/-1;
-}
-.captain-request-form .btn {
-  min-height: 46px;
-}
-.captain-request-list {
-  gap: 0;
-}
-.captain-request-list article {
-  padding: 12px 2px;
-  align-items: start;
-}
-.captain-request-list article em {
-  border-radius: 999px;
-  padding: 5px 8px;
-  background: #eef1f4;
-  color: #556170;
-  font-size: 9px;
-}
-.captain-request-list article em.approved {
-  background: #eaf6ec;
-  color: #18753a;
-}
-.captain-request-list article em.declined {
-  background: #fff1f1;
-  color: #a51118;
-}
+
 .captain-payment-player summary .payment-flag {
   border-radius: 999px;
   padding: 5px 8px;
@@ -477,12 +411,4 @@
 .captain-payment-player summary .payment-flag.paid {
   background: #eaf6ec;
   color: #18753a;
-}
-@media (max-width: 620px) {
-  .captain-request-form {
-    grid-template-columns: 1fr;
-  }
-  .captain-request-form .btn {
-    width: 100%;
-  }
 }

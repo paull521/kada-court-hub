@@ -59,41 +59,6 @@
 .home-availability-card {
   margin-bottom: 14px;
 }
-.captain-request-form {
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  gap: 12px !important;
-  align-items: stretch !important;
-}
-.captain-request-form label {
-  width: 100%;
-}
-.captain-request-form textarea {
-  width: 100%;
-  min-height: 86px !important;
-}
-.captain-request-form .btn {
-  width: 100%;
-  min-height: 48px;
-}
-.captain-request-list {
-  display: grid;
-  gap: 0 !important;
-}
-.captain-request-list article {
-  border: 0 !important;
-  border-bottom: 1px solid var(--line) !important;
-  border-radius: 0 !important;
-  padding: 13px 0 !important;
-  background: transparent !important;
-}
-.captain-request-list article:last-child {
-  border-bottom: 0 !important;
-}
-.captain-request-list article > p {
-  font-size: 12px;
-  line-height: 1.45;
-}
 
 .captain-player-details-disclosure .captain-draft-entry {
   border: 0;

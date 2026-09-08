@@ -8,6 +8,11 @@ import CaptainRosterFrame from "@/components/CaptainRosterFrame";
 import { getCaptainPortalData, type CaptainPortalData } from "@/lib/captain-data";
 import { getAvailableRoles } from "@/lib/roles";
 
+/** Only two statuses colour the pill; anything else keeps the grey default. */
+const requestTone: Record<string, string> = {
+  approved: "bg-[#eaf6ec] text-[#18753a]",
+  declined: "bg-[#fff1f1] text-[#a51118]",
+};
 const labels: Record<string, string> = {
   trade: "Trade",
   add_player: "Add Player",
@@ -132,7 +137,7 @@ async function RosterBody({ data: portal }: { data: Promise<CaptainPortalData> }
         </summary>
         <div>
           {data.requests.length ? (
-            <div className="captain-request-list">
+            <div className="grid gap-0 [&_article:last-child]:border-b-0 [&_article>p]:col-span-full [&_article>p]:m-[4px_0] [&_article>p]:text-[12px] [&_article>p]:leading-[1.45] [&_article>p]:text-muted [&_article>span]:grid [&_article>span]:gap-[3px] [&_article]:grid [&_article]:grid-cols-[1fr_auto] [&_article]:items-start [&_article]:gap-[4px] [&_article]:rounded-none [&_article]:border-0 [&_article]:border-b [&_article]:border-line [&_article]:bg-transparent [&_article]:p-[13px_0] [&_small]:text-[10px] [&_small]:text-[#6d7886]">
               {data.requests.map((request) => (
                 <article key={request.id}>
                   <span>
@@ -143,7 +148,11 @@ async function RosterBody({ data: portal }: { data: Promise<CaptainPortalData> }
                       )}
                     </small>
                   </span>
-                  <em className={request.status}>{request.status}</em>
+                  <em
+                    className={`rounded-full px-[8px] py-[5px] text-[9px] font-[800] capitalize not-italic ${requestTone[request.status] ?? "bg-[#eef1f4] text-[#556170]"}`}
+                  >
+                    {request.status}
+                  </em>
                   <p>{request.details}</p>
                 </article>
               ))}

@@ -1956,39 +1956,6 @@ body {
   color: var(--muted);
 }
 
-.captain-request-list {
-  display: grid;
-  gap: 8px;
-}
-.captain-request-list article {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 7px;
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-}
-.captain-request-list article > span {
-  display: grid;
-  gap: 3px;
-}
-.captain-request-list small {
-  font-size: 10px;
-  color: var(--muted);
-}
-.captain-request-list em {
-  font-size: 9px;
-  font-style: normal;
-  text-transform: uppercase;
-}
-.captain-request-list article > p {
-  grid-column: 1/-1;
-  margin: 0;
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.4;
-}
-
 .home-payment-reminder {
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr) auto;
