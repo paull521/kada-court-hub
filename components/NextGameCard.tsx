@@ -39,29 +39,39 @@ export default function NextGameCard({
   /** Extra classes for a page that needs the card laid out differently. */
   className?: string;
 }) {
+  // The schedule pages pass schedule-feature, which used to re-scope the
+  // uniform line to a wider gap and a lighter rule. Read here rather than left
+  // in CSS: the class still carries the card's own row template.
+  const onSchedule = className.split(/\s+/).includes("schedule-feature");
   return (
-    <section className={`card feature-card ${className}`.trim()}>
+    // bg- shouts: .card sets a background unlayered. The .skeleton pair is
+    // carried across by hand - the loading state is what settle() waits out.
+    <section
+      className={`card grid min-h-[205px] grid-cols-[42%_58%] mb-[16px] overflow-hidden bg-[radial-gradient(circle_at_88%_45%,rgba(76,113,150,0.23),transparent_38%),linear-gradient(125deg,#08243e,#0a3767)]! p-[22px] text-white [&_.skeleton]:bg-[linear-gradient(90deg,#061b2f_25%,#0d3055_37%,#061b2f_63%)] [&_.skeleton]:bg-[length:400%_100%] max-tiny:grid-cols-[45%_55%] max-tiny:p-[17px] ${className}`.trim()}
+    >
       <div className="feature-copy">
         <p className="eyebrow">NEXT GAME</p>
-        <p className="feature-date">{game ? game.dateLabel : <SkeletonText width="7em" />}</p>
-        <strong className="feature-time">
-          {game ? game.time : <SkeletonText width="3.8em" />}
-        </strong>
+        <p className="m-[0_0_5px] text-[18px]">
+          {game ? game.dateLabel : <SkeletonText width="7em" />}
+        </p>
+        <strong className="text-[34px]">{game ? game.time : <SkeletonText width="3.8em" />}</strong>
       </div>
-      <div className="matchup-logos">
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-[8px] text-center [&>div]:grid [&>div]:gap-[8px] [&>div]:text-[11px]">
         <div>
           <span className="team-mark">K</span>
           <b>{teamName ?? <SkeletonText width="4.5em" />}</b>
         </div>
-        <strong className="versus">VS</strong>
+        <strong className="text-[18px]">VS</strong>
         <div>
-          <span className="team-mark opponent">
+          {/* All four shout: .team-mark.opponent outranked a bare .team-mark,
+              and a layered utility outranks neither. */}
+          <span className="team-mark border-[#e2ca8f]! text-[17px] text-white! outline-[#111]!">
             {game ? game.opponent.slice(0, 2).toUpperCase() : ""}
           </span>
           <b>{game ? game.opponent : <SkeletonText width="4.5em" />}</b>
         </div>
       </div>
-      <p className="feature-venue">
+      <p className="col-span-full m-[10px_0_0] overflow-hidden text-center text-[12px] leading-[1.2] text-ellipsis whitespace-nowrap text-white">
         {game ? (
           <>
             <MapPin className="ui-icon" /> {game.venue}
@@ -71,7 +81,13 @@ export default function NextGameCard({
           <SkeletonText width="15em" />
         )}
       </p>
-      <div className="uniform-line">
+      <div
+        className={`col-span-full mt-[8px] flex items-center justify-center border-t pt-[10px] ${
+          onSchedule
+            ? "gap-[12px] border-t-[rgba(255,255,255,0.35)]"
+            : "gap-[10px] border-t-[#ffffff40]"
+        }`}
+      >
         <small>JERSEY COLOR</small>
         {game ? (
           <>

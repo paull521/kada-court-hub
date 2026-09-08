@@ -306,41 +306,7 @@ body {
     opacity: 1;
   }
 }
-.feature-card {
-  background:
-    radial-gradient(circle at 88% 45%, rgba(76, 113, 150, 0.23), transparent 38%),
-    linear-gradient(125deg, #08243e, #0a3767);
-  color: #fff;
-  padding: 22px;
-  display: grid;
-  grid-template-columns: 42% 58%;
-  min-height: 205px;
-  margin-bottom: 16px;
-  overflow: hidden;
-}
-.feature-date {
-  font-size: 18px;
-  margin: 0 0 5px;
-}
-.feature-time {
-  font-size: 34px;
-}
 
-.matchup-logos {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: 8px;
-  align-items: center;
-  text-align: center;
-}
-.matchup-logos div {
-  display: grid;
-  gap: 8px;
-  font-size: 11px;
-}
-.versus {
-  font-size: 18px;
-}
 .team-mark {
   width: 68px;
   height: 68px;
@@ -355,12 +321,7 @@ body {
   font-weight: 900;
   font-size: 31px;
 }
-.team-mark.opponent {
-  border-color: #e2ca8f;
-  outline-color: #111;
-  color: #fff;
-  font-size: 17px;
-}
+
 .team-mark.small {
   width: 54px;
   height: 54px;
@@ -630,16 +591,7 @@ body {
 .schedule-feature {
   grid-template-rows: auto 38px;
 }
-.schedule-feature .uniform-line {
-  grid-column: 1/-1;
-  border-top: 1px solid rgba(255, 255, 255, 0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 10px;
-  padding-top: 10px;
-}
+
 .uniform-dot {
   display: inline-block;
   width: 18px;
@@ -3815,10 +3767,7 @@ button.account-link {
     padding-left: 7px;
     padding-right: 7px;
   }
-  .feature-card {
-    grid-template-columns: 45% 55%;
-    padding: 17px;
-  }
+
   .game-row {
     grid-template-columns: 40px 1fr 70px 12px;
   }
@@ -4557,22 +4506,7 @@ body:has(.context-overlay-open) .bottom {
 .schedule-feature {
   grid-template-rows: auto auto auto;
 }
-.feature-card .feature-venue {
-  grid-column: 1/-1;
-  overflow: hidden;
-  margin: 10px 0 0;
-  color: #fff;
-  font-size: 12px;
-  line-height: 1.2;
-  text-align: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.feature-card .uniform-line {
-  grid-column: 1/-1;
-  margin-top: 8px;
-  padding-top: 10px;
-}
+
 .compact-upcoming-game {
   display: grid;
   grid-template-columns: 46px minmax(0, 1fr) auto;
@@ -4701,7 +4635,6 @@ body:has(.context-overlay-open) .bottom {
    the eye lands on. All three surfaces carry the same gradient: the feature card
    on Home and Schedule, the team banner that opens the team list, and the
    balance card on Payments. */
-.feature-card .skeleton,
 .team-banner .skeleton {
   background: linear-gradient(90deg, #061b2f 25%, #0d3055 37%, #061b2f 63%);
   background-size: 400% 100%;
