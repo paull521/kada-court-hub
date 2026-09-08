@@ -1,0 +1,53 @@
+name: Visual
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: visual-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  visual:
+    name: screenshots
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    # The same image the linux baselines are generated in, so the fonts that
+    # render the screenshots here are the fonts that rendered the baselines.
+    # npm run test:visual:linux uses this image too - keep the tags in step.
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+      options: --user 1001
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # Unlike the Checks workflow, this one needs a real Supabase and a real
+      # account: it signs in and photographs the pages behind the login.
+      - name: Screenshots
+        run: npm run test:visual
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+          KCH_TEST_EMAIL: ${{ secrets.KCH_TEST_EMAIL }}
+          KCH_TEST_PASSWORD: ${{ secrets.KCH_TEST_PASSWORD }}
+
+      # On failure these hold expected/actual/diff for every route that moved.
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diff
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14

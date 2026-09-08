@@ -12,3 +12,8 @@ tsconfig.tsbuildinfo
 
 # System files
 .DS_Store
+
+# Playwright: the auth state holds a live session, the rest is run output
+tests/visual/.auth/
+test-results/
+playwright-report/
