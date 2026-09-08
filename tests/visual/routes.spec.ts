@@ -89,3 +89,36 @@ shoot(publicRoutes, "public");
 shoot(playerRoutes, "player");
 shoot(captainRoutes, "captain");
 shoot(ownerRoutes, "owner");
+
+/**
+ * States the default pages never reach.
+ *
+ * Every route above photographs whichever conference the account happens to
+ * have selected, and in that one no game is finished - so the finalized
+ * scoreboard, half of OwnerScoresheets, appears in no baseline. A migration
+ * cannot verify what it cannot see, which is a good reason to make it visible
+ * rather than to convert the component blind.
+ *
+ * The conference is chosen by a cookie the app already uses, so this switches
+ * by setting it rather than by pressing anything. Nothing here writes.
+ */
+
+// KCH Pilot - AAPBA test: 15 finished games and 20 still awaiting a score, so
+// one screenshot covers both halves of the component. If the demo data is ever
+// rebuilt this id changes and the test fails loudly - update it here.
+const CONFERENCE_WITH_RESULTS = "c559f3c2-447d-4b3c-8006-265c5ed377ef";
+
+test.describe("states", () => {
+  test("owner-scores-finalized", async ({ page, context, baseURL }) => {
+    await context.addCookies([
+      { name: "kch_owner_conference", value: CONFERENCE_WITH_RESULTS, url: baseURL! },
+    ]);
+    const response = await page.goto("/owner/scores", { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBeLessThan(400);
+    await settle(page);
+    // The point of the shot: if this is zero the conference no longer has
+    // results and the screenshot below proves nothing.
+    await expect(page.locator(".scoreboard-match").first()).toBeVisible();
+    await expect(page).toHaveScreenshot("owner-scores-finalized.png", { fullPage: true });
+  });
+});
