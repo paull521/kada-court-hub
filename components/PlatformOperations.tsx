@@ -41,9 +41,16 @@ export function OwnerManagement({
   };
   return (
     <>
-      <section className="card platform-operation platform-invite-owner">
+      {/* p-[...]! and the button's padding both have to shout: .platform-operation
+          sets padding: 16px and .btn sets 15px, both unlayered, and a layered
+          utility loses to either. The old rules won on source order alone. */}
+      <section className="card platform-operation grid gap-[12px] p-[18px_20px]!">
         <p className="eyebrow">INVITE NEW OWNER</p>
-        <button type="button" className="btn secondary" onClick={copy}>
+        <button
+          type="button"
+          className="btn secondary w-[calc(100%_-_24px)] justify-self-center px-[14px]! py-[12px]! text-[12px]!"
+          onClick={copy}
+        >
           {copied ? "Copied!" : "Owner Invitation Link"}
         </button>
       </section>
@@ -350,7 +357,7 @@ function SupportRequestRow({ request }: { request: PlatformOperations["support"]
           <form action={confirmAction} className="grid gap-[8px]">
             <input type="hidden" name="requestId" value={request.id} />
             <button
-              className="btn secondary px-[13px]! py-[9px]! text-[12px] justify-self-start"
+              className="btn secondary px-[13px]! py-[9px]! text-[12px]! justify-self-start"
               disabled={confirming}
             >
               {confirming ? "Confirming…" : "Confirm received"}
@@ -362,7 +369,7 @@ function SupportRequestRow({ request }: { request: PlatformOperations["support"]
           <form action={fixedAction} className="grid gap-[8px]">
             <input type="hidden" name="requestId" value={request.id} />
             <button
-              className="btn primary px-[13px]! py-[9px]! text-[12px] justify-self-start"
+              className="btn primary px-[13px]! py-[9px]! text-[12px]! justify-self-start"
               disabled={fixing}
             >
               {fixing ? "Marking…" : "Mark fixed"}

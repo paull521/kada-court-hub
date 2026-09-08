@@ -6604,32 +6604,7 @@ body:has(.context-overlay-open) .bottom {
   margin: 2px 0 0;
   font-size: 10px;
 }
-.platform-invite {
-  grid-column: 1/-1;
-  background: linear-gradient(135deg, #08243e, #0a3767);
-  color: #fff;
-}
-.platform-invite:after {
-  content: "";
-  position: absolute;
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  right: -72px;
-  top: -78px;
-  border: 28px solid rgba(255, 255, 255, 0.06);
-}
-.platform-invite .platform-icon {
-  background: rgba(245, 163, 19, 0.18);
-  color: #f6bf55;
-}
-.platform-invite .eyebrow {
-  color: #f6bf55;
-}
-.platform-invite > p:not(.eyebrow) {
-  color: #d6e2ed;
-  max-width: 370px;
-}
+
 .platform-form {
   display: grid;
   gap: 8px;
@@ -6645,39 +6620,7 @@ body:has(.context-overlay-open) .bottom {
   font-size: 12px;
   color: var(--navy);
 }
-.platform-invite .platform-form {
-  grid-template-columns: 1fr 1fr auto;
-}
-.platform-invite .platform-form .btn {
-  padding: 10px 14px;
-  background: #f5a313;
-  color: var(--navy);
-}
-.platform-invite-result {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 1fr auto 80px;
-  gap: 8px;
-  align-items: center;
-  padding-top: 5px;
-}
-.platform-invite-result input {
-  min-width: 0;
-  border: 0;
-  border-radius: 9px;
-  padding: 9px;
-  font-size: 10px;
-}
-.platform-invite-result img {
-  width: 80px;
-  height: 80px;
-  border-radius: 8px;
-}
-.platform-invite-result .btn {
-  padding: 9px;
-  font-size: 11px;
-}
+
 .platform-payments {
   min-height: 198px;
 }
@@ -6796,19 +6739,7 @@ body:has(.context-overlay-open) .bottom {
   .platform-action-grid {
     grid-template-columns: 1fr;
   }
-  .platform-invite {
-    grid-column: auto;
-  }
-  .platform-invite .platform-form {
-    grid-template-columns: 1fr;
-  }
-  .platform-invite-result {
-    grid-template-columns: 1fr auto;
-  }
-  .platform-invite-result img {
-    grid-column: 1/-1;
-    justify-self: center;
-  }
+
   .platform-metrics b {
     font-size: 21px;
   }
@@ -6848,34 +6779,7 @@ body:has(.context-overlay-open) .bottom {
   font-size: 13px;
   color: var(--gold);
 }
-.platform-invite {
-  display: block;
-}
-.platform-invite > summary {
-  list-style: none;
-  display: grid;
-  grid-template-columns: 39px minmax(0, 1fr) 18px;
-  gap: 11px;
-  align-items: center;
-  cursor: pointer;
-}
-.platform-invite > summary::-webkit-details-marker {
-  display: none;
-}
-.platform-invite > summary > span:nth-child(2) {
-  display: grid;
-  gap: 5px;
-}
-.platform-invite > summary > strong {
-  font-size: 22px;
-  transition: transform 0.15s;
-}
-.platform-invite[open] > summary > strong {
-  transform: rotate(90deg);
-}
-.platform-invite[open] > .platform-form {
-  margin-top: 16px;
-}
+
 .platform-attention {
   display: inline-flex;
   width: max-content;
@@ -7066,17 +6970,7 @@ body:has(.context-overlay-open) .bottom {
     grid-column: 1/-1;
   }
 }
-.platform-invite-owner {
-  display: grid;
-  gap: 12px;
-  padding: 18px 20px;
-}
-.platform-invite-owner .btn {
-  width: calc(100% - 24px);
-  justify-self: center;
-  padding: 12px 14px;
-  font-size: 12px;
-}
+
 .platform-local-status {
   font-size: 10px;
   color: var(--muted);
