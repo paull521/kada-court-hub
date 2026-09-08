@@ -58,22 +58,31 @@ Per component, in this order. Do not skip step 2.
 
 ## Done
 
-| Component / step                 | Rules deleted                  |
-| -------------------------------- | ------------------------------ |
-| Tailwind installed, no Preflight | 0 - zero pixels moved          |
-| `components/ui/` primitives      | 0 - additive                   |
-| `OwnerFinancialSummary`          | 41                             |
-| `OwnerScoresheets`               | 71                             |
-| Owner dashboard `ActionCard`     | 43                             |
-| `ResultsFrame`                   | 13                             |
-| `StandingsFrame`                 | 12                             |
-| `PlatformFeedback`               | 19 (14 of them never rendered) |
-| Support requests                 | 30 (11 never rendered)         |
-| Owner-invitation box             | 24 (22 never rendered)         |
-| `score-sheet-*` dead rules       | 14                             |
+Fifteen components. **2,186 lines of CSS gone, zero pixels moved.**
 
-`globals.css` 8,837 → 7,789 · `owner-refinement.css` 897 → 612 ·
-`desktop.css` 530 → 476. **1,387 lines of CSS gone, zero pixels moved.**
+| Component / step                 | Rules |
+| -------------------------------- | ----- |
+| Tailwind installed, no Preflight | 0     |
+| `components/ui/` primitives      | 0     |
+| `OwnerScoresheets`               | 71    |
+| Owner dashboard `ActionCard`     | 43    |
+| `OwnerFinancialSummary`          | 41    |
+| Setup wizard `GuidedStep`        | 33    |
+| Owner subscription panel         | 33    |
+| Owner's guide                    | 31    |
+| Support requests                 | 30    |
+| Season subscription dropdown     | 24    |
+| Owner-invitation box             | 24    |
+| Owner directory + payment ledger | 20    |
+| `PlatformFeedback`               | 19    |
+| `score-sheet-*` (dead)           | 14    |
+| `ResultsFrame`                   | 13    |
+| `StandingsFrame`                 | 12    |
+| Owner support request            | 12    |
+| `owner-team` (mostly dead)       | 8     |
+
+`globals.css` 8,837 → 7,168 · `owner-refinement.css` 897 → 476 ·
+`desktop.css` 530 → 439.
 
 ## Coverage
 
@@ -123,38 +132,42 @@ surfaced from converting its neighbours rather than from a sweep.
 not safe to bulk delete, because the screenshots cover default states only.
 Take them a component at a time, as above.
 
-## Next, and what is blocked by coverage
+## Next
 
-Two targets were scoped and **deliberately not converted**, because part of
-each renders only in a data state nothing currently produces. Probing for that
-is now step 2 of the loop, and it is cheap:
+Probing what a route actually renders is step 2 of the loop and keeps paying:
 
 ```ts
-await page.evaluate(() => document.querySelectorAll("form").length);
+await page.evaluate(() => document.querySelectorAll(".thing").length);
 ```
 
-**`owner-platform` in `PlatformCreatorTools`** - 37 rules over
-`-balance`, `-breakdown` and `-table-wrap`. The balance header, breakdown and
-table all render, but the payment form inside `.owner-platform-balance` is
-gated on `!pendingSubmission && balance > 0`, and `/owner/payments` currently
-renders **zero forms and zero radios**. A third of those rules style markup no
-screenshot contains.
+**Renders nowhere in the current data** - converting these is unverifiable, and
+they may be dead in practice rather than only in theory:
 
-To unblock: a conference with an unpaid balance and no pending submission.
+- `mobile-draft-list` (15 rules) - zero on `/owner/roster`, `/owner/setup` and
+  the teams view. Referenced at `OwnerManagement.tsx:1398`, so it is reachable
+  code, just not reachable data.
 
-**`guided-step` in `OwnerManagement`** - 28 rules, and the gateway to the
-largest file in the app. `/owner/setup` renders 8 steps, one as
-`<details>` and seven as `<section>`, so **both markup shapes are covered** -
-that part is fine. But the component emits four variants and only two are
-reachable: every one of the four conferences shows `current` and `locked` only.
-`.guided-step.completed` and `.guided-step.available` are styled and
-unphotographable.
+**Entangled, needs its neighbours first:**
 
-To unblock: a conference whose season setup is partly finished.
+- `operations-season` (13) shares its summary rules with `.game-action-card`
+  and is re-scoped by `.owner-schedule-archive` and `.owner-schedule-current`.
+- `conference-player-invitation` (16) is sized differently inside
+  `.owner-action-grid` than inside `.captain-content`. It needs a variant prop
+  rather than an ancestor selector - a real improvement, but it changes two
+  call sites.
+- `NextGameCard` - its skeleton rule is shared with `.team-banner` and
+  `.balance-card`, so that selector must be edited rather than deleted.
+- `owner-subscription-history` - summary grid entangled with
+  `.payment-history-panel`.
 
-Also waiting: `NextGameCard` is small but entangled - its skeleton rule is
-shared with `.team-banner` and `.balance-card`, so that selector must be edited
-rather than deleted.
+**Clean and waiting:** `schedule-method` (13), `captain-task` (16),
+`captain-draft` (23) and most of the captain workspace. Several build class
+names at runtime, so read the call site before trusting `--dead`.
+
+**Hooks left in place on purpose.** Three classes now carry no styles of their
+own and stay only because a descendant rule still reaches through them:
+`owner-action-grid`, `owner-team-list`, and `.platform-operation` on the invite
+box. Each has a comment saying what it is waiting for.
 
 ## Carried by hand, not by screenshot
 
