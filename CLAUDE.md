@@ -4,9 +4,10 @@
 
 ## Checks
 
-No CI. Run after every change:
-
 `npm test` (162) · `npm run build` · `npx tsc --noEmit` · `npx prettier --check app components lib`
+
+Run them before pushing. `.github/workflows/checks.yml` runs the same four on
+every pull request and on push to `main`, so a miss is caught rather than shipped.
 
 ## Shape
 
@@ -14,7 +15,7 @@ No CI. Run after every change:
 - Bottom-nav tables live in `lib/nav-links.tsx`, one per workspace. Never hand-copy one.
 - `/profile` renders by `?view=captain|owner`. Links to it must carry the role.
 - Data per role, no ORM: `lib/{kch,captain,owner,platform}-data.ts`.
-- Migrations are applied by hand in the Supabase SQL editor. Next is `0109`; `0046` and `0104` are duplicated.
+- Migrations are applied by hand in the Supabase SQL editor. Next is `0117`. Log every one you run in `supabase/APPLIED.md`, which also lists the gaps and duplicates in `0001`-`0116`.
 
 ## CSS
 

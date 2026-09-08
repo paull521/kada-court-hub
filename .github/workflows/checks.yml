@@ -1,0 +1,46 @@
+name: Checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A new push to the same branch cancels the run still going for the old one.
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: format, types, tests, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # ci, not install: it installs exactly the lockfile and fails if
+      # package.json has drifted away from it.
+      - name: Install
+        run: npm ci
+
+      # Ordered cheapest first, so a formatting slip reports in seconds
+      # instead of behind a three-minute build.
+      - name: Format
+        run: npx prettier --check app components lib
+
+      - name: Types
+        run: npx tsc --noEmit
+
+      - name: Tests
+        run: npm test
+
+      # The app builds with no Supabase keys - it falls back to demo mode -
+      # so this step needs no secrets.
+      - name: Build
+        run: npm run build
