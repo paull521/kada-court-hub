@@ -19,6 +19,10 @@ every pull request and on push to `main`, so a miss is caught rather than shippe
 
 ## CSS
 
+Migrating to Tailwind. Read `MIGRATION.md` before touching a stylesheet - it
+carries the loop, the conventions and what is deliberately blocked.
+`node scripts/css-usage.mjs <prefix>` scopes a component before you convert it.
+
 Seven stylesheets, imported in this order by `app/layout.tsx`: `globals.css`, `workspaces.css`, `patriotism.css`, `captain-refinement.css`, `owner-refinement.css`, `kch-logo.css`, `desktop.css`.
 
 - `app/globals.css` is one 8,700-line file. Grep it whole before editing a selector — a later duplicate wins at equal specificity. Then grep the six files after it, which win over all of it.
