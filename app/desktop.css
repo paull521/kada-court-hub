@@ -371,18 +371,4 @@
 
   /* The dashboard strip has a whole row of a three-column grid, so it can hold
      its title and its line on one line each rather than wrapping. */
-  .owner-action-grid .owner-guide-link {
-    grid-template-columns: 48px minmax(0, 1fr) 18px;
-    padding: 16px 18px;
-  }
-  .owner-guide-link > span {
-    width: 48px;
-    height: 48px;
-  }
-  .owner-guide-link b {
-    font-size: 16px;
-  }
-  .owner-guide-link p {
-    font-size: 13px;
-  }
 }

@@ -181,7 +181,8 @@ export default async function Owner() {
       <OwnerBottomNav active="home" />
       <main className="content owner-content owner-dashboard">
         <h1 className="title">
-          {greeting}, <span className="owner-greeting-name">Mr.&nbsp;{lastName}!</span>
+          {greeting},{" "}
+          <span className="whitespace-nowrap max-[600px]:block">Mr.&nbsp;{lastName}!</span>
         </h1>
         <p className="owner-dashboard-question">What would you like to do?</p>
         {/* owner-action-grid carries no layout of its own any more - the two
@@ -280,15 +281,20 @@ export default async function Owner() {
             title="Track profit and loss"
             detail="Income and expense report."
           />
-          <Link href="/owner/guide" className="owner-guide-link">
-            <span>
+          <Link
+            href="/owner/guide"
+            className="col-span-full grid grid-cols-[42px_minmax(0,1fr)_18px] items-center gap-[12px] rounded-[16px] border border-[#ecd9b4] bg-[linear-gradient(135deg,#fff6e6,#fffdf8)] p-[13px_14px] desk:grid-cols-[48px_minmax(0,1fr)_18px] desk:p-[16px_18px]"
+          >
+            <span className="grid h-[42px] w-[42px] place-items-center rounded-[13px] bg-[rgba(209,132,8,0.13)] text-[#a76b06] desk:h-[48px] desk:w-[48px]">
               <BookOpen className="ui-icon" />
             </span>
-            <div>
-              <b>Owner&apos;s Guide</b>
-              <p>Where each task lives and what it waits on.</p>
+            <div className="grid min-w-0 gap-[2px]">
+              <b className="text-[15px] tracking-[-0.2px] desk:text-[16px]">Owner&apos;s Guide</b>
+              <p className="m-0 text-[12px] leading-[1.35] text-[#7d6a48] desk:text-[13px]">
+                Where each task lives and what it waits on.
+              </p>
             </div>
-            <strong aria-hidden="true">
+            <strong aria-hidden="true" className="text-[#b98a2e]">
               <ChevronRight className="go-caret" />
             </strong>
           </Link>
