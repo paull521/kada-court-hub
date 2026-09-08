@@ -98,11 +98,15 @@ export default async function PlatformSection({
     <div className="shell owner-shell guided-owner-shell platform-shell">
       <header className="topbar">
         <KchLogo className="logo" />
-        <Link href="/platform" className="muted platform-signout">
+        <Link href="/platform" className="muted text-xs">
           <ChevronLeft className="go-caret" /> Dashboard
         </Link>
       </header>
-      <main className="content owner-content platform-content">
+      <main // Below the breakpoint only, and shouting: .content sets 112px
+        // unlayered here and desktop.css sets 72px above 900px, and
+        // .platform-content only ever beat the first of those on source order.
+        className="content owner-content max-desk:pb-12! [&>form]:m-0"
+      >
         <p className="eyebrow">{item.eyebrow}</p>
         <h1 className="title">{item.title}</h1>
         <p className="subtitle">{item.subtitle}</p>

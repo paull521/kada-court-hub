@@ -12,6 +12,14 @@ import {
   contextOptionMark,
   contextOptionSelected,
 } from "@/components/ui/context-classes";
+import {
+  contextOptions,
+  contextStatus,
+  teamBannerCaret,
+  teamDropdown,
+  teamDropdownScrim,
+  teamSwitcher,
+} from "@/components/ui/shared-classes";
 
 export default function PlayerContextSwitcher({
   contexts,
@@ -66,7 +74,7 @@ export default function PlayerContextSwitcher({
   }
 
   return (
-    <div className={`team-switcher ${open ? "open" : ""}`.trim()} ref={wrapper}>
+    <div className={`group ${teamSwitcher} ${open ? "open" : ""}`.trim()} ref={wrapper}>
       <button
         className={`card ${teamBanner}`}
         type="button"
@@ -84,18 +92,14 @@ export default function PlayerContextSwitcher({
             {active.division} &nbsp;•&nbsp; {active.season}
           </small>
         </span>
-        {hasContextChoices && <ChevronDown className="team-banner-caret" aria-hidden="true" />}
+        {hasContextChoices && <ChevronDown className={teamBannerCaret} aria-hidden="true" />}
       </button>
       {open && (
-        <div
-          className="team-dropdown-scrim"
-          aria-hidden="true"
-          onMouseDown={() => setOpen(false)}
-        />
+        <div className={teamDropdownScrim} aria-hidden="true" onMouseDown={() => setOpen(false)} />
       )}
       {open && (
-        <div className="team-dropdown" role="menu" aria-label="Choose your team">
-          <div className="context-options">
+        <div className={teamDropdown} role="menu" aria-label="Choose your team">
+          <div className={contextOptions}>
             {contexts.map((context) => (
               <button
                 className={`${contextOption} ${context.registrationId === active.registrationId ? contextOptionSelected : ""}`}
@@ -129,7 +133,7 @@ export default function PlayerContextSwitcher({
               </button>
             ))}
           </div>
-          {pending && <p className="context-status">Updating your player view…</p>}
+          {pending && <p className={contextStatus}>Updating your player view…</p>}
           {error && <p className="form-error">{error}</p>}
         </div>
       )}

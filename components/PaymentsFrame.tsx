@@ -3,7 +3,7 @@ import { LoadingNote, SkeletonBlock, SkeletonText } from "@/components/Skeleton"
 import PlayerPaymentForm from "@/components/PlayerPaymentForm";
 import type { PlayerPortalData } from "@/lib/kch-data";
 import { historyPanel, historyRow } from "@/components/ui/account-classes";
-import { familyBanner } from "@/components/ui/shared-classes";
+import { familyBanner, familyQuote, panel } from "@/components/ui/shared-classes";
 
 /**
  * Payments, written once and drawn twice: with the portal data, and without it.
@@ -51,7 +51,7 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
             <b>{data ? data.context.team : <SkeletonText width="4.5em" />}</b>
           </div>
         </section>
-        <section className="card panel">
+        <section className={`card ${panel}`}>
           <h2>FEE BREAKDOWN</h2>
           {data ? (
             data.fees.length ? (
@@ -88,7 +88,7 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
             submissions={data.paymentSubmissions}
           />
         ) : (
-          <section className="card panel payment-method-panel">
+          <section className={`card payment-method-panel ${panel}`}>
             <h2>PAYMENT METHODS</h2>
             <SkeletonBlock height="148px" />
           </section>
@@ -128,7 +128,7 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
         </details>
       </div>
       <section className={familyBanner}>
-        <p className="family-quote">“You cannot achieve greatness without sacrifice.”</p>
+        <p className={familyQuote}>“You cannot achieve greatness without sacrifice.”</p>
       </section>
     </>
   );

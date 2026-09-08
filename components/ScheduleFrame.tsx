@@ -14,7 +14,12 @@ import {
   weeklySchedule,
   weeklyScheduleList,
 } from "@/components/ui/schedule-classes";
-import { familyBanner } from "@/components/ui/shared-classes";
+import {
+  familyBanner,
+  familyQuote,
+  familyQuoteAuthor,
+  listLabel,
+} from "@/components/ui/shared-classes";
 
 function GameRow({ game, teamName }: { game: Game; teamName: string }) {
   return (
@@ -216,7 +221,7 @@ export default function ScheduleFrame({ data }: { data?: PlayerPortalData }) {
       )}
       {(!data || upcoming.length > 0) && (
         <>
-          <h2 className="list-label">UPCOMING GAMES</h2>
+          <h2 className={listLabel}>UPCOMING GAMES</h2>
           <div className="grid gap-2">
             {data
               ? upcoming.map((game) => (
@@ -228,10 +233,10 @@ export default function ScheduleFrame({ data }: { data?: PlayerPortalData }) {
       )}
       <DivisionWeeklyView games={data?.divisionSchedule} />
       <section className={familyBanner}>
-        <p className="family-quote">
+        <p className={familyQuote}>
           “Every game is a direct reflection of what you have prepared for.”
         </p>
-        <p className="family-quote-author">— PL</p>
+        <p className={familyQuoteAuthor}>— PL</p>
       </section>
     </>
   );

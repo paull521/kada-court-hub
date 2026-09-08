@@ -2,6 +2,7 @@ import { Star } from "lucide-react";
 import KchLogo from "@/components/KchLogo";
 import { LoginForm, PasswordResetRequestForm } from "@/components/AuthForm";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { loginColumn, loginLogo, loginTagline } from "@/components/ui/auth-classes";
 
 export default async function Login({
   searchParams,
@@ -14,10 +15,10 @@ export default async function Login({
     confirmationError = params.confirmationError === "1";
   return (
     <div className="shell login-shell">
-      <header className="login-logo">
+      <header className={loginLogo}>
         <KchLogo />
       </header>
-      <main className="login">
+      <main className={loginColumn}>
         <h1>
           {forgot ? (
             <>
@@ -55,7 +56,7 @@ export default async function Login({
               </p>
             )}
             <LoginForm demoMode={!isSupabaseConfigured()} nextPath={nextPath} allowSignUp={false} />
-            <p className="login-tagline">
+            <p className={loginTagline}>
               <Star className="ui-icon" />
               <br />
               <b>

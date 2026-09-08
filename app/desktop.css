@@ -112,10 +112,6 @@
     align-items: center;
   }
 
-  .context-sheet-handle {
-    display: none;
-  }
-
   /* --- Header and tab strip ------------------------------------------------
      The bottom bar becomes a tab strip under the header. Bottom nav is a
      thumb-reach convention; with a pointer and a keyboard the tabs belong at
@@ -228,9 +224,6 @@
   }
   /* Except a list label, which belongs to the list under it rather than equally
      to both of its neighbours. */
-  .col-pane > .list-label {
-    margin-top: 10px;
-  }
 
   /* The weekly view follows the player's own fixtures now instead of sitting in
      a column beside them, so it needs the space that separates two sections

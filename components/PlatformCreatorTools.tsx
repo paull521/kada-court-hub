@@ -13,6 +13,7 @@ import {
 import type { OwnerPaymentBilling } from "@/lib/owner-payment-ledger";
 import { OwnerDemoOverview } from "@/components/OwnerDemoOverview";
 import { historyPanel, historyRow } from "@/components/ui/account-classes";
+import { amountField, loginBox, platformForm, tallField } from "@/components/ui/auth-classes";
 
 const initial: PlatformActionState = {};
 const money = (amount: number) => `$${amount.toFixed(2)}`;
@@ -149,9 +150,11 @@ export function OwnerSubscriptionPayment({
                 classes below are a faithful translation of the old rules but
                 no screenshot covers them. */}
             {!pendingSubmission && balance > 0 && (
-              <form action={action} className="platform-form mt-[15px] grid gap-[13px]">
+              <form action={action} className={`${platformForm} mt-[15px] gap-[13px]`}>
                 <input type="hidden" name="conferenceId" value={conferenceId} />
-                <label className="owner-payment-amount [&>span]:text-[10px] [&>span]:font-[850] [&>span]:tracking-[0.04em] [&>span]:text-muted">
+                <label
+                  className={`${amountField} [&>span]:text-[10px] [&>span]:font-[850] [&>span]:tracking-[0.04em] [&>span]:text-muted`}
+                >
                   <span>Amount sent</span>
                   <input
                     name="amount"
@@ -231,7 +234,7 @@ export function OwnerSubscriptionPayment({
 export function AcceptOwnerInvitation({ token }: { token: string }) {
   const [state, action, pending] = useActionState(acceptOwnerInvitationAction, initial);
   return (
-    <form action={action} className="card loginbox">
+    <form action={action} className={`card ${loginBox}`}>
       <input type="hidden" name="token" value={token} />
       <p className="setup-note">
         This creates your private owner workspace. Your conference details remain visible only to
@@ -247,7 +250,7 @@ export function AcceptOwnerInvitation({ token }: { token: string }) {
 export function OwnerContractSignature({ token }: { token: string }) {
   const [s, a, p] = useActionState(signOwnerContractAction, initial);
   return (
-    <form action={a} className="card loginbox">
+    <form action={a} className={`card ${loginBox}`}>
       <input type="hidden" name="token" value={token} />
       <p className="setup-note">{ownerContractPricingTerms}</p>
       <label>
@@ -278,7 +281,7 @@ export function OwnerApplication({
   return (
     <>
       {pendingApplication ? (
-        <section className="card loginbox">
+        <section className={`card ${loginBox}`}>
           <p className="eyebrow">APPLICATION RECEIVED</p>
           <h2>Waiting for KCH review</h2>
           <p className="setup-note">
@@ -288,17 +291,17 @@ export function OwnerApplication({
           </p>
         </section>
       ) : !start.token ? (
-        <form action={startAction} className="card loginbox">
+        <form action={startAction} className={`card ${loginBox}`}>
           <button className="btn primary" disabled={starting}>
             {starting ? "Starting…" : "Continue"}
           </button>
           {start.error && <p className="form-error">{start.error}</p>}
         </form>
       ) : (
-        <form action={acknowledgmentAction} className="loginbox">
+        <form action={acknowledgmentAction} className={loginBox}>
           <OwnerDemoOverview />
           <input type="hidden" name="ownerId" value={start.token} />
-          <div className="owner-application-field">
+          <div className={tallField}>
             <label htmlFor="proposedConferenceName">Proposed conference name</label>
             <input id="proposedConferenceName" name="conferenceName" required />
           </div>

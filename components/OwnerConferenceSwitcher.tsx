@@ -13,6 +13,7 @@ import {
   contextSheet,
   contextTrigger,
 } from "@/components/ui/context-classes";
+import { contextHelp, contextOptions, sheetHandle } from "@/components/ui/shared-classes";
 
 export default function OwnerConferenceSwitcher({
   conferences,
@@ -62,7 +63,7 @@ export default function OwnerConferenceSwitcher({
             aria-modal="true"
             aria-labelledby="owner-conference-title"
           >
-            <div className="context-sheet-handle" />
+            <div className={sheetHandle} />
             <header>
               <span>
                 <small>OWNER VIEW</small>
@@ -72,10 +73,10 @@ export default function OwnerConferenceSwitcher({
                 ×
               </button>
             </header>
-            <p className="context-help">
+            <p className={contextHelp}>
               Your owner workspace will update to the selected conference.
             </p>
-            <div className="context-options">
+            <div className={contextOptions}>
               {conferences.map((conference) => (
                 <form action={selectOwnerConferenceAction} key={conference.id}>
                   <input type="hidden" name="conferenceId" value={conference.id} />

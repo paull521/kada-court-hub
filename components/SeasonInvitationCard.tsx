@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { respondInvitationAction, type InvitationActionState } from "@/app/home/actions";
+import { invitationNote, invitationSummary } from "@/components/ui/shared-classes";
 
 const initialState: InvitationActionState = {};
 type Invitation = {
@@ -41,7 +42,7 @@ export default function SeasonInvitationCard({ invitation }: { invitation: Invit
         <h2>{invitation.conferenceName}</h2>
         <small>Hosted by {invitation.ownerName}</small>
       </div>
-      <div className="invitation-summary">
+      <div className={invitationSummary}>
         <b>
           {invitation.seasonName} · {invitation.divisionName}
         </b>
@@ -63,7 +64,7 @@ export default function SeasonInvitationCard({ invitation }: { invitation: Invit
       {invitation.responseDeadline && (
         <p className="response-deadline">Please respond by {date(invitation.responseDeadline)}</p>
       )}
-      <p className="invitation-note">{invitation.message}</p>
+      <p className={invitationNote}>{invitation.message}</p>
       <form action={action}>
         <input type="hidden" name="invitationId" value={invitation.id} />
         <Link className="btn bg-green! text-white!" href={`/rules?invitation=${invitation.id}`}>

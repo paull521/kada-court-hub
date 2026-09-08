@@ -63,3 +63,41 @@ export const familyBanner =
 /** The rules acknowledgement form at the foot of a rules document. */
 export const rulesAcknowledgment =
   "grid gap-[13px] border-t border-line p-[18px] [&>p]:m-0 [&>p]:text-[13px] [&>p]:leading-[1.55] [&>p]:text-muted [&_.check-row]:items-start [&_.check-row]:leading-[1.45] [&_.check-row_input]:mt-[3px] [&_.btn:disabled]:cursor-not-allowed [&_.btn:disabled]:opacity-[0.48]";
+
+/* ---------------------------------------------------------------------------
+   The last of them: the panel and its heading, the team dropdown, the context
+   sheet's small parts, and three one-line notes. */
+
+/* .panel h2 shared a selector list with .section-heading h2 and .list-label -
+   the gold 12px label above a block. All three say it themselves now. */
+export const panel = "mb-[14px] p-[17px] [&>h2]:m-0 [&>h2]:text-[12px] [&>h2]:text-gold";
+export const sectionHeading =
+  "flex justify-between border-b border-line pb-2 [&_h2]:m-0 [&_h2]:text-[12px] [&_h2]:text-gold [&_span]:text-[13px] [&_span]:text-muted";
+export const listLabel = "m-[18px_4px_8px] text-[12px] text-gold";
+
+/** Georgia, italic, and the initials under it. Three frames sign off with it. */
+export const familyQuote =
+  "m-0 font-[Georgia,'Times_New_Roman',serif] text-[clamp(16px,4.4vw,20px)] leading-[1.45] italic";
+export const familyQuoteAuthor = "m-[5px_0_0] text-xs font-[700] tracking-[0.08em]";
+
+/** The team switcher's dropdown, its scrim, and the caret that turns. */
+export const teamSwitcher = "relative mb-[14px]";
+export const teamDropdownScrim = "fixed inset-0 z-30 bg-[rgba(4,18,35,0.22)] backdrop-blur-[4px]";
+export const teamDropdown =
+  "absolute top-[calc(100%_+_6px)] right-0 left-0 z-40 max-h-[min(58vh,420px)] overflow-auto rounded-2xl border border-line bg-[#fffdf9] p-[9px] shadow-[0_18px_44px_rgba(4,18,35,0.22)]";
+export const teamBannerCaret =
+  "h-5 w-5 text-[rgba(255,255,255,0.62)] transition-transform duration-150 ease-in-out group-[.open]:rotate-180";
+
+/** Inside a context sheet. The handle is a phone affordance and hides at 900px. */
+export const sheetHandle = "mx-auto mb-3 h-1 w-[44px] rounded-[5px] bg-[#d7d3ce] desk:hidden";
+export const contextHelp = "m-[9px_0_14px] text-[11px] leading-[1.5] text-muted";
+export const contextOptions = "grid gap-[9px]";
+export const contextStatus = "m-[11px_0_0] text-center text-[11px] text-muted";
+
+/** The season invitation's centred summary, and the notes around it. */
+export const invitationSummary =
+  "grid gap-1 text-center [&>b]:text-base [&>span]:m-0 [&>span]:text-[13px] [&>span]:leading-[1.45] [&>span]:text-muted";
+export const invitationNote = "m-0 text-[13px] leading-[1.45] text-muted";
+export const invitationPlatformNote = "text-center text-[10px] text-muted";
+export const rulesEmpty = "grid gap-[13px] p-[18px] [&_h2]:m-0 [&_h2]:text-lg";
+export const frameList = "grid gap-3";

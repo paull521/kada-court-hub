@@ -19,7 +19,9 @@ setup("authenticate platform", async ({ page }) => {
   await page.goto("/platform/login");
   await page.fill('input[name="email"]', email);
   await page.fill('input[name="password"]', password);
-  await page.click("form.loginbox button.btn.primary");
+  // The form's own submit, found by role rather than by class: .loginbox was
+  // a styling name and the migration deleted it.
+  await page.getByRole("button", { name: /sign in|log in/i }).click();
 
   // /platform bounces anyone unauthorised straight back to the login form, so
   // landing anywhere else is the signal the creator account took.

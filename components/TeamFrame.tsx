@@ -2,7 +2,15 @@ import { LoadingNote, SkeletonText } from "@/components/Skeleton";
 import PlayerContextSwitcher from "@/components/PlayerContextSwitcher";
 import type { PlayerPortalData } from "@/lib/kch-data";
 import { teamBanner, teamBannerCopy } from "@/components/ui/schedule-classes";
-import { familyBanner, rosterRow } from "@/components/ui/shared-classes";
+import {
+  familyBanner,
+  rosterRow,
+  familyQuote,
+  familyQuoteAuthor,
+  panel,
+  sectionHeading,
+  teamSwitcher,
+} from "@/components/ui/shared-classes";
 
 /**
  * My Team, written once and drawn twice: with the portal data, and without it.
@@ -30,7 +38,7 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
           activeRegistrationId={data.activeRegistrationId}
         />
       ) : (
-        <div className="team-switcher">
+        <div className={teamSwitcher}>
           <div className={`card ${teamBanner}`}>
             <span className="team-mark small" aria-hidden="true">
               K
@@ -46,8 +54,8 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
           </div>
         </div>
       )}
-      <section className="card panel roster-panel">
-        <div className="section-heading">
+      <section className={`card roster-panel ${panel}`}>
+        <div className={sectionHeading}>
           <h2>ROSTER</h2>
           <span>
             {data ? (
@@ -107,10 +115,10 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
         )}
       </section>
       <section className={familyBanner}>
-        <p className="family-quote">
+        <p className={familyQuote}>
           “Talent wins games, but teamwork and intelligence win championships.”
         </p>
-        <p className="family-quote-author">— MJ</p>
+        <p className={familyQuoteAuthor}>— MJ</p>
       </section>
     </>
   );

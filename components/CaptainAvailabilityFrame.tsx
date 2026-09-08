@@ -2,6 +2,7 @@ import { Check } from "lucide-react";
 import { LoadingNote, SkeletonText } from "@/components/Skeleton";
 import type { CaptainPortalData } from "@/lib/captain-data";
 import { scheduleEmpty } from "@/components/ui/schedule-classes";
+import { panel, sectionHeading } from "@/components/ui/shared-classes";
 
 /**
  * The team's answers for the next game, written once and drawn twice. TEAM
@@ -22,9 +23,9 @@ export default function CaptainAvailabilityFrame({ data }: { data?: CaptainPorta
       </section>
     );
   return (
-    <section className="card panel">
+    <section className={`card ${panel}`}>
       {!data && <LoadingNote />}
-      <div className="section-heading">
+      <div className={sectionHeading}>
         <h2>TEAM RESPONSE</h2>
         <span>
           {data ? `${data.availability.length - no} Yes · ${no} No` : <SkeletonText width="6em" />}

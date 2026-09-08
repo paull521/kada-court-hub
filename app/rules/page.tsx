@@ -6,6 +6,7 @@ import { RulesDocument } from "@/components/ui/RulesDocument";
 import { createClient } from "@/lib/supabase/server";
 import { getPlayerPortalData } from "@/lib/kch-data";
 import { getAvailableRoles } from "@/lib/roles";
+import { rulesEmpty } from "@/components/ui/shared-classes";
 
 type RuleRecord = {
   invitation_id?: string;
@@ -93,7 +94,7 @@ export default async function RulesPage({
         role={role}
       >
         <h1 className="title">Rules &amp; Discipline</h1>
-        <section className="card rules-empty">
+        <section className={`card ${rulesEmpty}`}>
           <h2>Rules record unavailable</h2>
           <Link href="/profile" className="btn primary">
             Back to Profile

@@ -13,6 +13,7 @@ import {
   weeklySchedule,
   weeklyScheduleList,
 } from "@/components/ui/schedule-classes";
+import { listLabel } from "@/components/ui/shared-classes";
 
 function weekStart(dateKey: string) {
   const date = new Date(`${dateKey}T12:00:00Z`);
@@ -198,7 +199,7 @@ export default function CaptainScheduleFrame({ data }: { data?: CaptainPortalDat
             <NextGameCard game={next} teamName={data?.teamName} className="schedule-feature" />
             {(!data || upcoming.length > 0) && (
               <>
-                <h2 className="list-label">UPCOMING GAMES</h2>
+                <h2 className={listLabel}>UPCOMING GAMES</h2>
                 <div className="grid gap-[10px]">
                   {data
                     ? upcoming.map((game) => (

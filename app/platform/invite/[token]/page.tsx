@@ -2,6 +2,7 @@ import KchLogo from "@/components/KchLogo";
 import Link from "next/link";
 import { AcceptOwnerInvitation, OwnerContractSignature } from "@/components/PlatformCreatorTools";
 import { createClient } from "@/lib/supabase/server";
+import { loginBox, loginColumn, loginLogo } from "@/components/ui/auth-classes";
 
 export default async function PlatformOwnerInvitePage({
   params,
@@ -17,10 +18,10 @@ export default async function PlatformOwnerInvitePage({
     } = await supabase.auth.getUser();
   return (
     <div className="shell login-shell">
-      <header className="login-logo">
+      <header className={loginLogo}>
         <KchLogo />
       </header>
-      <main className="login">
+      <main className={loginColumn}>
         <p className="eyebrow">OWNER INVITATION</p>
         <h1>
           Run your
@@ -31,7 +32,7 @@ export default async function PlatformOwnerInvitePage({
         {!valid ? (
           <p className="form-error">This invitation link is not valid.</p>
         ) : !user ? (
-          <div className="card loginbox">
+          <div className={`card ${loginBox}`}>
             <Link href={`/login?next=${encodeURIComponent(path)}`} className="btn primary">
               Log In
             </Link>

@@ -11,11 +11,11 @@ export default async function PlatformCreatorPage() {
     <div className="shell owner-shell guided-owner-shell platform-shell">
       <header className="topbar">
         <KchLogo className="logo" />
-        <Link href="/login" className="muted platform-signout">
+        <Link href="/login" className="muted text-xs">
           Player sign in
         </Link>
       </header>
-      <main className="content owner-content platform-content">
+      <main className="content owner-content max-desk:pb-12! [&>form]:m-0">
         <p className="eyebrow">KCH PLATFORM CREATOR</p>
         <h1 className="title">Welcome, {data.adminName.split(" ")[0] || "Creator"}.</h1>
         <p className="owner-dashboard-question">Platform overview.</p>

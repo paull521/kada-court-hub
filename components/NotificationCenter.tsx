@@ -10,6 +10,7 @@ import {
 } from "@/app/notifications/actions";
 import type { PlayerNotification } from "@/lib/kch-data";
 import { contextSheet } from "@/components/ui/context-classes";
+import { sheetHandle } from "@/components/ui/shared-classes";
 
 export default function NotificationCenter({
   notifications,
@@ -69,7 +70,7 @@ export default function NotificationCenter({
             aria-modal="true"
             aria-labelledby="notification-title"
           >
-            <div className="context-sheet-handle" />
+            <div className={sheetHandle} />
             <header>
               <span>
                 <small>PLAYER UPDATES</small>

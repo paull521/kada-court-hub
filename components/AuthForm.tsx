@@ -6,6 +6,7 @@ import { useActionState, useEffect, useState, type FormEvent } from "react";
 import { loginAction, logoutAction, signUpAction, type AuthActionState } from "@/app/auth/actions";
 import { createClient as createBrowserClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { forgotLink, loginBox } from "@/components/ui/auth-classes";
 
 const initialState: AuthActionState = {};
 
@@ -28,7 +29,7 @@ export function LoginForm({
   const [state, action, pending] = useActionState(loginAction, initialState);
   const [showPassword, setShowPassword] = useState(false);
   return (
-    <form action={action} className="card loginbox">
+    <form action={action} className={`card ${loginBox}`}>
       <input type="hidden" name="nextPath" value={nextPath} />
       {demoMode && (
         <p className="setup-note">
@@ -83,7 +84,7 @@ export function LoginForm({
           {state.error}
         </p>
       )}
-      <Link href="/login?forgot=1" className="forgot">
+      <Link href="/login?forgot=1" className={forgotLink}>
         Forgot Password?
       </Link>
       <button className="btn primary" disabled={pending}>
@@ -130,7 +131,7 @@ export function PasswordResetRequestForm() {
     );
   };
   return (
-    <form onSubmit={sendLink} className="card loginbox">
+    <form onSubmit={sendLink} className={`card ${loginBox}`}>
       <label htmlFor="resetEmail">Email</label>
       <div className={inputWrap}>
         <span>
@@ -231,7 +232,7 @@ export function ResetPasswordForm() {
     setState({ message: "Password updated. You can now log in." });
   };
   return (
-    <form onSubmit={savePassword} className="card loginbox">
+    <form onSubmit={savePassword} className={`card ${loginBox}`}>
       <label htmlFor="newPassword">New Password</label>
       <div className={inputWrap}>
         <span>
@@ -272,7 +273,7 @@ export function SignUpForm({ nextPath = "" }: { nextPath?: string }) {
   const [state, action, pending] = useActionState(signUpAction, initialState);
   const ownerApplication = nextPath === "/platform/owner-invitation";
   return (
-    <form action={action} className="card loginbox">
+    <form action={action} className={`card ${loginBox}`}>
       <input type="hidden" name="nextPath" value={nextPath} />
       <label htmlFor="displayName">Full Name</label>
       <div className={inputWrap}>

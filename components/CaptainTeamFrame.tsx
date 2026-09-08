@@ -3,7 +3,7 @@ import CaptainContextSwitcher from "@/components/CaptainContextSwitcher";
 import { LoadingNote, SkeletonText } from "@/components/Skeleton";
 import type { CaptainPortalData } from "@/lib/captain-data";
 import { scheduleEmpty, teamBanner, teamBannerCopy } from "@/components/ui/schedule-classes";
-import { rosterRow } from "@/components/ui/shared-classes";
+import { panel, rosterRow, sectionHeading, teamSwitcher } from "@/components/ui/shared-classes";
 
 /**
  * The published team, written once and drawn twice. The banner, the FINAL
@@ -25,7 +25,7 @@ export default function CaptainTeamFrame({ data }: { data?: CaptainPortalData })
           activeRegistrationId={data.activeRegistrationId}
         />
       ) : (
-        <div className="team-switcher">
+        <div className={teamSwitcher}>
           <div className={`card ${teamBanner}`}>
             <span className="team-mark small" aria-hidden="true">
               K
@@ -50,8 +50,8 @@ export default function CaptainTeamFrame({ data }: { data?: CaptainPortalData })
           <p>Continue working from Team Roster until the commissioner finalizes this division.</p>
         </section>
       ) : (
-        <section className="card panel captain-final-team">
-          <div className="section-heading">
+        <section className={`card captain-final-team ${panel}`}>
+          <div className={sectionHeading}>
             <h2>FINAL ROSTER</h2>
             <span>{data ? `${data.roster.length} Players` : <SkeletonText width="5em" />}</span>
           </div>

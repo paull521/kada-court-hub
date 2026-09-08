@@ -13,6 +13,16 @@ import {
   contextSheet,
   contextTrigger,
 } from "@/components/ui/context-classes";
+import {
+  contextHelp,
+  contextOptions,
+  contextStatus,
+  sheetHandle,
+  teamBannerCaret,
+  teamDropdown,
+  teamDropdownScrim,
+  teamSwitcher,
+} from "@/components/ui/shared-classes";
 
 export default function CaptainContextSwitcher({
   contexts,
@@ -59,7 +69,7 @@ export default function CaptainContextSwitcher({
 
   if (variant === "banner") {
     return (
-      <div className={`team-switcher ${open ? "open" : ""}`.trim()}>
+      <div className={`group ${teamSwitcher} ${open ? "open" : ""}`.trim()}>
         <button
           className={`card ${teamBanner}`}
           type="button"
@@ -77,18 +87,18 @@ export default function CaptainContextSwitcher({
               {active.divisionName} &nbsp;•&nbsp; {active.seasonName}
             </small>
           </span>
-          {contexts.length > 1 && <ChevronDown className="team-banner-caret" aria-hidden="true" />}
+          {contexts.length > 1 && <ChevronDown className={teamBannerCaret} aria-hidden="true" />}
         </button>
         {open && (
           <div
-            className="team-dropdown-scrim"
+            className={teamDropdownScrim}
             aria-hidden="true"
             onMouseDown={() => setOpen(false)}
           />
         )}
         {open && (
-          <div className="team-dropdown" role="menu" aria-label="Choose your team">
-            <div className="context-options">
+          <div className={teamDropdown} role="menu" aria-label="Choose your team">
+            <div className={contextOptions}>
               {contexts.map((context) => (
                 <button
                   className={`${contextOption} ${context.registrationId === active.registrationId ? contextOptionSelected : ""}`}
@@ -120,7 +130,7 @@ export default function CaptainContextSwitcher({
                 </button>
               ))}
             </div>
-            {pending && <p className="context-status">Updating your captain view…</p>}
+            {pending && <p className={contextStatus}>Updating your captain view…</p>}
             {error && <p className="form-error">{error}</p>}
           </div>
         )}
@@ -157,7 +167,7 @@ export default function CaptainContextSwitcher({
             aria-modal="true"
             aria-labelledby="captain-context-title"
           >
-            <div className="context-sheet-handle" />
+            <div className={sheetHandle} />
             <header>
               <span>
                 <small>CAPTAIN VIEW</small>
@@ -167,10 +177,10 @@ export default function CaptainContextSwitcher({
                 ×
               </button>
             </header>
-            <p className="context-help">
+            <p className={contextHelp}>
               Your Captain Home, Team Roster, Schedule, and Payments will update together.
             </p>
-            <div className="context-options">
+            <div className={contextOptions}>
               {contexts.map((context) => (
                 <button
                   className={`${contextOption} ${context.registrationId === active.registrationId ? contextOptionSelected : ""}`}
@@ -200,7 +210,7 @@ export default function CaptainContextSwitcher({
                 </button>
               ))}
             </div>
-            {pending && <p className="context-status">Updating your captain view…</p>}
+            {pending && <p className={contextStatus}>Updating your captain view…</p>}
             {error && <p className="form-error">{error}</p>}
           </section>
         </div>
