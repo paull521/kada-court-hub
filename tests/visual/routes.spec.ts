@@ -150,4 +150,92 @@ test.describe("states", () => {
     await expect(page.locator("[data-finalized]").first()).toBeVisible();
     await expect(page).toHaveScreenshot("owner-scores-finalized.png", { fullPage: true });
   });
+
+  /**
+   * The season and division disclosures on the teams workspace, opened. Their
+   * summaries are in the owner-teams baseline already; the rotated caret, the
+   * seam above the panel and everything inside it are not, and that is most of
+   * what styles them. Twenty-one disclosures and 5,700px - the same page with
+   * every game card open on /owner/schedule is six times that, which is why
+   * the open game card below is photographed one at a time instead.
+   */
+  test("owner-teams-open", async ({ page }) => {
+    const response = await page.goto("/owner/roster?view=teams", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(response?.status()).toBeLessThan(400);
+    await settle(page);
+    // Three passes, because the nesting is three deep: opening a season is
+    // what puts its divisions in the DOM, a division its teams, a team its
+    // players.
+    for (let pass = 0; pass < 3; pass++)
+      await page
+        .locator("details")
+        .evaluateAll((nodes) => nodes.forEach((n) => ((n as HTMLDetailsElement).open = true)));
+    const open = await page.locator("details[open]").count();
+    // If the conference loses its seasons this becomes a second copy of
+    // owner-teams and stops covering anything.
+    expect(open, "expected open disclosures on the teams workspace").toBeGreaterThan(2);
+    await settle(page);
+    await expect(page).toHaveScreenshot("owner-teams-open.png", { fullPage: true });
+  });
+
+  /**
+   * The schedule's whole game list. Its one division is final, so the division
+   * disclosure arrives shut and every game card sits inside collapsed content
+   * - the owner-schedule baseline is a season card, a division card and empty
+   * background, and photographs not one of the thirty-eight. Opening the
+   * division brings them all into view shut; opening the first brings the
+   * card's open state - caret turned, panel seam, the radius clipping it - in
+   * with them.
+   */
+  test("owner-schedule-games", async ({ page }) => {
+    const response = await page.goto("/owner/schedule", { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBeLessThan(400);
+    await settle(page);
+    await page
+      .locator("details.division-operation")
+      .evaluateAll((nodes) => nodes.forEach((n) => ((n as HTMLDetailsElement).open = true)));
+    await settle(page);
+    const cards = page.locator("details.game-action-card");
+    // A closed division renders none of these, which is the state this shot
+    // exists to escape. If it ever counts zero it has become owner-schedule.
+    expect(await cards.count(), "expected game cards on /owner/schedule").toBeGreaterThan(1);
+    // Two of them: the first is the create-game card, which is laid out with
+    // an icon column, and an existing game is laid out without one.
+    await cards.first().evaluate((node) => ((node as HTMLDetailsElement).open = true));
+    await cards
+      .filter({ has: page.locator("css=.update-schedule-panel") })
+      .first()
+      .evaluate((node) => ((node as HTMLDetailsElement).open = true));
+    await settle(page);
+    await expect(page).toHaveScreenshot("owner-schedule-games.png", { fullPage: true });
+  });
+
+  /**
+   * A finalized game is an <article> with no summary at all, not a disclosure.
+   * The conference every other shot uses has none, so this variant - a third
+   * of the schedule page in a season that has been played - is invisible to
+   * the suite without switching conferences the way owner-scores-finalized
+   * does, and shut inside its division even then.
+   */
+  test("owner-schedule-finalized", async ({ page, context, baseURL }) => {
+    await context.addCookies([
+      { name: "kch_owner_conference", value: CONFERENCE_WITH_RESULTS, url: baseURL! },
+    ]);
+    const response = await page.goto("/owner/schedule", { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBeLessThan(400);
+    await settle(page);
+    await page
+      .locator("details.division-operation")
+      .evaluateAll((nodes) => nodes.forEach((n) => ((n as HTMLDetailsElement).open = true)));
+    await settle(page);
+    // Zero of these means the conference no longer has finished games and the
+    // shot below proves nothing.
+    expect(
+      await page.locator("article.game-action-card").count(),
+      "expected finalized games on /owner/schedule",
+    ).toBeGreaterThan(0);
+    await expect(page).toHaveScreenshot("owner-schedule-finalized.png", { fullPage: true });
+  });
 });
