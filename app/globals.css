@@ -5322,49 +5322,7 @@ button.account-link {
   text-align: center;
   margin: 13px 5px 0;
 }
-.season-result-list {
-  display: grid;
-  gap: 9px;
-}
-.season-result-card {
-  display: grid;
-  grid-template-columns: 56px 1fr;
-  gap: 12px;
-  padding: 14px;
-}
-.season-result-card > time {
-  align-self: start;
-  background: #f2efeb;
-  border-radius: 11px;
-  padding: 9px 5px;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 800;
-}
-.season-result-card > div {
-  display: grid;
-  gap: 8px;
-}
-.season-result-card > div > span {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px;
-  align-items: center;
-}
-.season-result-card > div > span b {
-  font-size: 15px;
-  line-height: 1.25;
-}
-.season-result-card > div > span strong {
-  font-size: 20px;
-}
-.season-result-card small {
-  font-size: 11px;
-  line-height: 1.4;
-  color: var(--muted);
-  border-top: 1px solid var(--line);
-  padding-top: 7px;
-}
+
 .season-empty {
   text-align: center;
   padding: 30px 18px;
@@ -6419,14 +6377,6 @@ button.account-link {
 }
 .continue-manual {
   margin: 10px 0;
-}
-
-.season-result-card time {
-  display: block;
-  margin-bottom: 12px;
-  font-size: 11px;
-  color: var(--muted);
-  text-align: center;
 }
 
 .invitation-card {
@@ -8251,24 +8201,6 @@ body:has(.context-overlay-open) .bottom {
   display: inline-block;
   vertical-align: middle;
   flex-shrink: 0;
-}
-
-/* Results: who won. Colour alone would fail a colourblind reader, so the
-   winner also carries the heavier weight and the loser drops to muted - the
-   pair reads as a result even in greyscale. A draw colours neither side. */
-.season-result-card .result-won b,
-.season-result-card .result-won strong {
-  color: var(--green);
-}
-.season-result-card .result-won strong {
-  font-weight: 900;
-}
-.season-result-card .result-lost b,
-.season-result-card .result-lost strong {
-  color: var(--muted);
-}
-.season-result-card .result-lost strong {
-  font-weight: 700;
 }
 
 /* The desktop column wrappers on Home are transparent to layout everywhere
