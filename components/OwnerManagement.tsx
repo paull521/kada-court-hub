@@ -2936,13 +2936,16 @@ function DivisionScheduleOperation({
   return (
     <details
       id={`division-${division.id}`}
-      className={`division-operation division-schedule-${division.scheduleStatus}`}
+      // division-operation keeps its class with no rule of its own: a
+      // .schedule-finality override still reaches through it, and
+      // division-schedule-final is a sibling class with rules of its own.
+      className={`division-operation group overflow-hidden rounded-[15px] border border-line bg-[#fbfaf8] division-schedule-${division.scheduleStatus}`}
       open={division.rosterFinalPublished && division.scheduleStatus !== "final"}
     >
-      <summary>
-        <span>
-          <b>{division.name}</b>
-          <small>
+      <summary className="grid min-h-[76px] cursor-pointer list-none grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-[10px] p-[13px_15px] [&::-webkit-details-marker]:hidden">
+        <span className="grid gap-[3px]">
+          <b className="text-[16px]">{division.name}</b>
+          <small className="text-[12px] text-muted">
             {division.teams.length} teams · {divisionGames.length} games
           </small>
         </span>
@@ -2951,11 +2954,14 @@ function DivisionScheduleOperation({
         >
           {status}
         </em>
-        <strong aria-hidden="true">
+        <strong
+          aria-hidden="true"
+          className="text-[22px] transition-transform group-open:rotate-90"
+        >
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <div>
+      <div className="border-t border-line p-[11px]">
         {!division.rosterFinalPublished ? (
           <p className="empty-note">
             Publish the final {division.name} roster before creating its schedule.
@@ -3025,7 +3031,7 @@ function ScheduleSeasonOperations({ season, index }: { season: OwnerSeason; inde
         </strong>
       </summary>
       <div>
-        <div className="division-operation-list">
+        <div className="grid gap-[9px]">
           {season.divisions.map((division) => (
             <DivisionScheduleOperation season={season} division={division} key={division.id} />
           ))}
