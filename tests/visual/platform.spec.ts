@@ -34,3 +34,25 @@ for (const { path, name } of routes) {
     await expect(page).toHaveScreenshot(`${name}.png`, { fullPage: true });
   });
 }
+
+/**
+ * Support nests disclosures two deep - a conference, then each request inside
+ * it - and both are closed on arrival, so the baselines above photograph only
+ * the outermost summaries. Opening them is a DOM property, not a click.
+ */
+test("platform-support-open", async ({ page }) => {
+  const response = await page.goto("/platform/support", { waitUntil: "domcontentloaded" });
+  expect(response?.status()).toBeLessThan(400);
+  await settle(page);
+  // Twice: opening the outer disclosures is what puts the inner ones in the DOM.
+  for (let pass = 0; pass < 2; pass++)
+    await page
+      .locator("details")
+      .evaluateAll((nodes) => nodes.forEach((n) => ((n as HTMLDetailsElement).open = true)));
+  const count = await page.locator("details[open]").count();
+  // If support ever empties out, this shot stops covering anything and should
+  // say so rather than pass as a picture of two empty cards.
+  expect(count, "expected open disclosures on /platform/support").toBeGreaterThan(0);
+  await settle(page);
+  await expect(page).toHaveScreenshot("platform-support-open.png", { fullPage: true });
+});

@@ -304,6 +304,21 @@ function PaymentConfirmation({ submissionId }: { submissionId: string }) {
     </form>
   );
 }
+/** Both support disclosures hide their marker and own their row layout. */
+const supportSummary = "cursor-pointer list-none [&::-webkit-details-marker]:hidden";
+/** The chevron that turns when its <details> opens. */
+const supportCaret = "text-[23px] leading-none transition-transform group-open:rotate-90";
+/**
+ * The status pill. Keyed on the same names the CSS matched on, so a status it
+ * never had a colour for still falls through to the same green default.
+ */
+const statusTone: Record<string, string> = {
+  open: "bg-[#fff4da] text-[#8a5900]",
+  resolved: "bg-[#edf2f7] text-[#3a526c]",
+};
+const statusPill =
+  "rounded-full px-[6px] py-[4px] text-[9px] font-[850] whitespace-nowrap not-italic";
+
 function SupportRequestRow({ request }: { request: PlatformOperations["support"][number] }) {
   const [confirmState, confirmAction, confirming] = useActionState(
       confirmSupportRequestAction,
@@ -317,29 +332,39 @@ function SupportRequestRow({ request }: { request: PlatformOperations["support"]
         ? "Received"
         : "Fixed";
   return (
-    <details className="platform-support-request">
-      <summary>
-        <b>{request.subject}</b>
-        <em className={request.status}>{status}</em>
-        <strong aria-hidden="true">
+    <details className="group overflow-hidden rounded-[12px] border border-line bg-white">
+      <summary
+        className={`${supportSummary} grid grid-cols-[minmax(0,1fr)_auto_20px] items-center gap-[8px] p-[12px]`}
+      >
+        <b className="truncate text-[13px]">{request.subject}</b>
+        <em className={`${statusPill} ${statusTone[request.status] ?? "bg-[#eaf6ec] text-green"}`}>
+          {status}
+        </em>
+        <strong aria-hidden="true" className={supportCaret}>
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <div>
-        <p>{request.message}</p>
+      <div className="grid gap-[10px] border-t border-line px-[12px] pb-[12px]">
+        <p className="m-0 pt-[11px] text-[13px] leading-[1.45] text-[#314056]">{request.message}</p>
         {request.status === "open" && (
-          <form action={confirmAction}>
+          <form action={confirmAction} className="grid gap-[8px]">
             <input type="hidden" name="requestId" value={request.id} />
-            <button className="btn secondary" disabled={confirming}>
+            <button
+              className="btn secondary px-[13px]! py-[9px]! text-[12px] justify-self-start"
+              disabled={confirming}
+            >
               {confirming ? "Confirming…" : "Confirm received"}
             </button>
             {confirmState.error && <p className="form-error">{confirmState.error}</p>}
           </form>
         )}
         {request.status === "received" && (
-          <form action={fixedAction}>
+          <form action={fixedAction} className="grid gap-[8px]">
             <input type="hidden" name="requestId" value={request.id} />
-            <button className="btn primary" disabled={fixing}>
+            <button
+              className="btn primary px-[13px]! py-[9px]! text-[12px] justify-self-start"
+              disabled={fixing}
+            >
               {fixing ? "Marking…" : "Mark fixed"}
             </button>
             {fixedState.error && <p className="form-error">{fixedState.error}</p>}
@@ -360,7 +385,7 @@ export function SupportRequests({
     feedbackConferences = [...new Set(feedback.map((item) => item.conferenceName))];
   return (
     <section className="platform-list">
-      <section className="card platform-operation platform-support-box">
+      <section className="card platform-operation grid gap-[13px]">
         <p className="eyebrow">CUSTOMER REQUESTS</p>
         <h2>Requests by Conference</h2>
         {conferences.length ? (
@@ -369,20 +394,22 @@ export function SupportRequests({
               (request) => request.conferenceName === conference,
             );
             return (
-              <details className="platform-support-conference" key={conference}>
-                <summary>
-                  <span>
-                    <b>{conference}</b>
-                    <small>
+              <details className="group border-t border-line" key={conference}>
+                <summary
+                  className={`${supportSummary} grid grid-cols-[1fr_auto] items-center gap-[12px] py-[13px]`}
+                >
+                  <span className="grid gap-[3px]">
+                    <b className="text-[15px]">{conference}</b>
+                    <small className="text-[11px] text-muted">
                       {conferenceRequests.length} request
                       {conferenceRequests.length === 1 ? "" : "s"}
                     </small>
                   </span>
-                  <strong aria-hidden="true">
+                  <strong aria-hidden="true" className={supportCaret}>
                     <ChevronRight className="go-caret" />
                   </strong>
                 </summary>
-                <div>
+                <div className="grid gap-[8px] pb-[13px]">
                   {conferenceRequests.map((request) => (
                     <SupportRequestRow request={request} key={request.id} />
                   ))}
@@ -394,37 +421,46 @@ export function SupportRequests({
           <p className="empty-note">No customer requests.</p>
         )}
       </section>
-      <section className="card platform-operation platform-support-box">
+      <section className="card platform-operation grid gap-[13px]">
         <p className="eyebrow">PLATFORM FEEDBACK</p>
         <h2>Feedback by Conference</h2>
         {feedbackConferences.length ? (
           feedbackConferences.map((conference) => {
             const items = feedback.filter((item) => item.conferenceName === conference);
             return (
-              <details className="platform-support-conference" key={conference}>
-                <summary>
-                  <span>
-                    <b>{conference}</b>
-                    <small>
+              <details className="group border-t border-line" key={conference}>
+                <summary
+                  className={`${supportSummary} grid grid-cols-[1fr_auto] items-center gap-[12px] py-[13px]`}
+                >
+                  <span className="grid gap-[3px]">
+                    <b className="text-[15px]">{conference}</b>
+                    <small className="text-[11px] text-muted">
                       {items.length} feedback item{items.length === 1 ? "" : "s"}
                     </small>
                   </span>
-                  <strong aria-hidden="true">
+                  <strong aria-hidden="true" className={supportCaret}>
                     <ChevronRight className="go-caret" />
                   </strong>
                 </summary>
-                <div>
+                <div className="grid gap-[8px] pb-[13px]">
                   {items.map((item) => (
-                    <details className="platform-support-request" key={item.id}>
-                      <summary>
-                        <b>{item.playerName}</b>
-                        <em className="received">Feedback</em>
-                        <strong aria-hidden="true">
+                    <details
+                      className="group overflow-hidden rounded-[12px] border border-line bg-white"
+                      key={item.id}
+                    >
+                      <summary
+                        className={`${supportSummary} grid grid-cols-[minmax(0,1fr)_auto_20px] items-center gap-[8px] p-[12px]`}
+                      >
+                        <b className="truncate text-[13px]">{item.playerName}</b>
+                        <em className={`${statusPill} bg-[#eaf6ec] text-green`}>Feedback</em>
+                        <strong aria-hidden="true" className={supportCaret}>
                           <ChevronRight className="go-caret" />
                         </strong>
                       </summary>
-                      <div>
-                        <p>{item.message}</p>
+                      <div className="grid gap-[10px] border-t border-line px-[12px] pb-[12px]">
+                        <p className="m-0 pt-[11px] text-[13px] leading-[1.45] text-[#314056]">
+                          {item.message}
+                        </p>
                       </div>
                     </details>
                   ))}
