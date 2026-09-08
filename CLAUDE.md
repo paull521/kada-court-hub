@@ -4,9 +4,10 @@
 
 ## Checks
 
-No CI. Run after every change:
-
 `npm test` (162) · `npm run build` · `npx tsc --noEmit` · `npx prettier --check app components lib`
+
+Run them before pushing. `.github/workflows/checks.yml` runs the same four on
+every pull request and on push to `main`, so a miss is caught rather than shipped.
 
 ## Shape
 
