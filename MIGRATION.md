@@ -58,31 +58,22 @@ Per component, in this order. Do not skip step 2.
 
 ## Done
 
-Fifteen components. **2,186 lines of CSS gone, zero pixels moved.**
+Twenty-three components and two dead-CSS sweeps.
+**3,726 lines of CSS gone, zero pixels moved.**
 
-| Component / step                 | Rules |
-| -------------------------------- | ----- |
-| Tailwind installed, no Preflight | 0     |
-| `components/ui/` primitives      | 0     |
-| `OwnerScoresheets`               | 71    |
-| Owner dashboard `ActionCard`     | 43    |
-| `OwnerFinancialSummary`          | 41    |
-| Setup wizard `GuidedStep`        | 33    |
-| Owner subscription panel         | 33    |
-| Owner's guide                    | 31    |
-| Support requests                 | 30    |
-| Season subscription dropdown     | 24    |
-| Owner-invitation box             | 24    |
-| Owner directory + payment ledger | 20    |
-| `PlatformFeedback`               | 19    |
-| `score-sheet-*` (dead)           | 14    |
-| `ResultsFrame`                   | 13    |
-| `StandingsFrame`                 | 12    |
-| Owner support request            | 12    |
-| `owner-team` (mostly dead)       | 8     |
+`globals.css` 8,837 → 5,889 · `owner-refinement.css` 897 → 459 ·
+`workspaces.css` 606 → 414 · `captain-refinement.css` 111 → 70 ·
+`desktop.css` 530 → 423.
 
-`globals.css` 8,837 → 7,168 · `owner-refinement.css` 897 → 476 ·
-`desktop.css` 530 → 439.
+Owner: scoresheets (71 rules), dashboard `ActionCard` (43), financial summary
+(41), setup `GuidedStep` (33), subscription panel (33), guide (31),
+subscription dropdown (24), division schedule (15), `owner-team` (8).
+Platform: support requests (30), invitation box (24), directory + ledger (20),
+feedback (19), support request (12).
+Player: payment form (19), results (13), standings (12).
+Captain: roster requests (30), dashboard tiles (14), draft status (6).
+Dead sweeps: 192 rules for 65 classes, 40 for seven captain classes, 14 for
+`score-sheet-*`.
 
 ## Coverage
 
@@ -134,40 +125,26 @@ Take them a component at a time, as above.
 
 ## Next
 
-Probing what a route actually renders is step 2 of the loop and keeps paying:
+**`operations-season` + `game-action-card` together** (28 rules). They share
+their summary rules, so neither can be deleted without the other. Eight render
+sites across `OwnerManagement.tsx`, a `game-${status}` dynamic class and an
+`existing-game` variant - a full session's work, not a quick one.
+`operations-season` will need to stay as a hook: `.owner-schedule-archive` and
+`.owner-schedule-current` both re-scope it.
 
-```ts
-await page.evaluate(() => document.querySelectorAll(".thing").length);
-```
+**Renders nowhere in the current data.** Probed and confirmed absent, so
+conversion is unverifiable: `team-leadership`, `payment-division`,
+`team-draft`, `payment-review`, `roster-change`, `mobile-draft-list`.
 
-**Renders nowhere in the current data** - converting these is unverifiable, and
-they may be dead in practice rather than only in theory:
+**Entangled:** `captain-final-team` (ancestor-scoped through
+`.captain-roster-disclosure`, and depends on `.roster-row`, `.jersey`,
+`.roster-player-name` from other components), `conference-player-invitation`
+(sized differently inside `.owner-action-grid` than `.captain-content`; wants a
+variant prop), `NextGameCard` (skeleton rule shared with `.team-banner` and
+`.balance-card`), `owner-subscription-history`.
 
-- `mobile-draft-list` (15 rules) - zero on `/owner/roster`, `/owner/setup` and
-  the teams view. Referenced at `OwnerManagement.tsx:1398`, so it is reachable
-  code, just not reachable data.
-
-**Entangled, needs its neighbours first:**
-
-- `operations-season` (13) shares its summary rules with `.game-action-card`
-  and is re-scoped by `.owner-schedule-archive` and `.owner-schedule-current`.
-- `conference-player-invitation` (16) is sized differently inside
-  `.owner-action-grid` than inside `.captain-content`. It needs a variant prop
-  rather than an ancestor selector - a real improvement, but it changes two
-  call sites.
-- `NextGameCard` - its skeleton rule is shared with `.team-banner` and
-  `.balance-card`, so that selector must be edited rather than deleted.
-- `owner-subscription-history` - summary grid entangled with
-  `.payment-history-panel`.
-
-**Clean and waiting:** `schedule-method` (13), `captain-task` (16),
-`captain-draft` (23) and most of the captain workspace. Several build class
-names at runtime, so read the call site before trusting `--dead`.
-
-**Hooks left in place on purpose.** Three classes now carry no styles of their
-own and stay only because a descendant rule still reaches through them:
-`owner-action-grid`, `owner-team-list`, and `.platform-operation` on the invite
-box. Each has a comment saying what it is waiting for.
+**The safe dead sweep is exhausted.** `--dead` now reports 0 safe and 46 that a
+runtime template could reach. Those need the call site read one at a time.
 
 ## Carried by hand, not by screenshot
 
