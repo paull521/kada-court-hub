@@ -238,4 +238,31 @@ test.describe("states", () => {
     ).toBeGreaterThan(0);
     await expect(page).toHaveScreenshot("owner-schedule-finalized.png", { fullPage: true });
   });
+
+  /**
+   * The captain's roster is four disclosures and all four arrive shut, so the
+   * captain-roster baseline is four summaries on an empty page: the published
+   * team list, the request form, the history and the player-details panel are
+   * none of them in it. The list alone is ten rows of markup that six rules in
+   * two stylesheets re-scope.
+   */
+  test("captain-roster-open", async ({ page }) => {
+    const response = await page.goto("/captain/roster", { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBeLessThan(400);
+    await settle(page);
+    // Twice: the published roster is inside a disclosure that is itself inside
+    // one, and opening the outer is what puts the inner in the DOM.
+    for (let pass = 0; pass < 2; pass++)
+      await page
+        .locator("details")
+        .evaluateAll((nodes) => nodes.forEach((n) => ((n as HTMLDetailsElement).open = true)));
+    // The first two disclosures render only once a roster is published. If
+    // that stops being true this shot quietly loses half its subject.
+    expect(
+      await page.locator("details[open]").count(),
+      "expected the published roster to be open",
+    ).toBeGreaterThan(3);
+    await settle(page);
+    await expect(page).toHaveScreenshot("captain-roster-open.png", { fullPage: true });
+  });
 });
