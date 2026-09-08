@@ -97,6 +97,27 @@ shoot(ownerRoutes, "owner");
 const CONFERENCE_WITH_RESULTS = "c559f3c2-447d-4b3c-8006-265c5ed377ef";
 
 test.describe("states", () => {
+  /**
+   * Disclosures are closed on arrival, so everything inside one - the whole of
+   * PlatformFeedback's form, and the account panels beside it - is absent from
+   * the profile baselines. Opening them is a DOM property, not a click: the
+   * spec still presses nothing.
+   */
+  test("owner-profile-disclosures-open", async ({ page }) => {
+    const response = await page.goto("/profile?view=owner", { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBeLessThan(400);
+    await settle(page);
+    const count = await page.locator("details").evaluateAll((nodes) => {
+      nodes.forEach((node) => ((node as HTMLDetailsElement).open = true));
+      return nodes.length;
+    });
+    // If the page stops using disclosures this shot silently becomes a second
+    // copy of owner-profile and stops covering anything.
+    expect(count, "expected disclosures to open").toBeGreaterThan(0);
+    await settle(page);
+    await expect(page).toHaveScreenshot("owner-profile-disclosures-open.png", { fullPage: true });
+  });
+
   test("owner-scores-finalized", async ({ page, context, baseURL }) => {
     await context.addCookies([
       { name: "kch_owner_conference", value: CONFERENCE_WITH_RESULTS, url: baseURL! },
