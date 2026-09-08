@@ -58,16 +58,17 @@ Per component, in this order. Do not skip step 2.
 
 ## Done
 
-Twenty-three components and two dead-CSS sweeps.
-**3,726 lines of CSS gone, zero pixels moved.**
+Twenty-four components and two dead-CSS sweeps.
+**3,829 lines of CSS gone, zero pixels moved.**
 
-`globals.css` 8,837 → 5,889 · `owner-refinement.css` 897 → 459 ·
+`globals.css` 8,837 → 5,807 · `owner-refinement.css` 897 → 438 ·
 `workspaces.css` 606 → 414 · `captain-refinement.css` 111 → 70 ·
 `desktop.css` 530 → 423.
 
 Owner: scoresheets (71 rules), dashboard `ActionCard` (43), financial summary
 (41), setup `GuidedStep` (33), subscription panel (33), guide (31),
-subscription dropdown (24), division schedule (15), `owner-team` (8).
+`operations-season` + `game-action-card` (28), subscription dropdown (24),
+division schedule (15), `owner-team` (8).
 Platform: support requests (30), invitation box (24), directory + ledger (20),
 feedback (19), support request (12).
 Player: payment form (19), results (13), standings (12).
@@ -77,16 +78,25 @@ Dead sweeps: 192 rules for 65 classes, 40 for seven captain classes, 14 for
 
 ## Coverage
 
-94 checks. Beyond one shot per route, the suite now carries the states the
+104 checks. Beyond one shot per route, the suite now carries the states the
 routes never reach on their own:
 
-- a season **with results**, which is what unblocked the scoresheets
+- a season **with results**, which is what unblocked the scoresheets and,
+  separately, the finalized game card on the schedule
 - the **platform workspace**, eight routes on its own session
-- **disclosures opened** on the owner profile and on platform support, by
-  setting the DOM property rather than clicking
+- **disclosures opened** on the owner profile, on platform support, on the
+  teams workspace and on the schedule, by setting the DOM property rather
+  than clicking
 
 Each of those asserts it found what it came for, so a data change makes them
 fail rather than quietly turn into a second copy of a page they already had.
+
+**A route being in the suite is not the same as its markup being in a shot.**
+`/owner/schedule` had a baseline from the first day and photographed none of
+its thirty-eight game cards: the page ships one division, it is final, and the
+division disclosure opens only while a schedule is still a draft, so the whole
+list sat inside collapsed content behind 500px of background. Nothing about
+the file listing said so. Open the picture before trusting the route name.
 
 ## The rule that keeps biting
 
@@ -117,20 +127,27 @@ Worth reaching for early when a diff is small and uniform.
 
 ## Dead CSS keeps turning up on its own
 
-Nine of the rules deleted so far were for markup nothing renders, and every one
-surfaced from converting its neighbours rather than from a sweep.
+Ten of the rules deleted so far were for markup nothing renders, and every one
+surfaced from converting its neighbours rather than from a sweep. The latest
+was not even that: `.game-action-card .owner-icon` restated `.owner-icon`'s own
+42px and had never done anything at all.
 `node scripts/css-usage.mjs --dead` still lists 100+ candidates; they are still
 not safe to bulk delete, because the screenshots cover default states only.
 Take them a component at a time, as above.
 
 ## Next
 
-**`operations-season` + `game-action-card` together** (28 rules). They share
-their summary rules, so neither can be deleted without the other. Eight render
-sites across `OwnerManagement.tsx`, a `game-${status}` dynamic class and an
-`existing-game` variant - a full session's work, not a quick one.
-`operations-season` will need to stay as a hook: `.owner-schedule-archive` and
-`.owner-schedule-current` both re-scope it.
+**`roster-player-editor`** (13 rules, 6 in `globals.css` and 7 in
+`owner-refinement.css`). One owner, `OwnerManagement.tsx`. It sits inside the
+team card on `/owner/roster?view=teams`, which had no open baseline until
+`owner-teams-open` was added for the disclosures above - so it is newly
+verifiable rather than newly written. `roster-${...}` is built at runtime;
+read which classes that reaches before deleting any of them.
+
+**`captain-roster-disclosure`** (26 rules, and the largest left). It is also
+the ancestor `captain-final-team` is scoped through, so converting it is what
+unblocks that one. `workspaces.css` and `captain-refinement.css`, one owner in
+`app/captain/roster/page.tsx`. Note the known flake below is on this route.
 
 **Renders nowhere in the current data.** Probed and confirmed absent, so
 conversion is unverifiable: `team-leadership`, `payment-division`,
@@ -143,18 +160,28 @@ conversion is unverifiable: `team-leadership`, `payment-division`,
 variant prop), `NextGameCard` (skeleton rule shared with `.team-banner` and
 `.balance-card`), `owner-subscription-history`.
 
+Two names came off that list by converting the pair that shared their rules
+rather than by finding a seam in one of them. Where two components hold each
+other up, taking both in one commit is usually cheaper than keeping either as
+a hook - and it is the only way the shared rule actually leaves the file.
+
 **The safe dead sweep is exhausted.** `--dead` now reports 0 safe and 46 that a
 runtime template could reach. Those need the call site read one at a time.
 
 ## Carried by hand, not by screenshot
 
-One rule so far was copied across with no shot able to confirm it:
-`.platform-owner-payment .btn { width: 100% }` applied to
-`PaymentConfirmation`'s button, which renders only while a submission is
-pending. It is `w-full` now, with the reason in a comment beside it.
+Two rules so far were copied across with no shot able to confirm them:
 
-That is the pattern when a single declaration is unreachable. It does not scale
-to a whole variant - which is why the two above were left alone instead.
+- `.platform-owner-payment .btn { width: 100% }` applied to
+  `PaymentConfirmation`'s button, which renders only while a submission is
+  pending. It is `w-full` now.
+- `.owner-schedule-archive .operations-season { margin-bottom: 10px }` applied
+  to the archived season card. The archive renders only for a season that has
+  ended and no conference has one. It is `mb-[10px]` now.
+
+Both carry the reason in a comment beside them. That is the pattern when a
+single declaration is unreachable. It does not scale to a whole variant -
+which is why the two below were left alone instead.
 
 ## Known flake
 
