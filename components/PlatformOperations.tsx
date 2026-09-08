@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
+import { FormMessage } from "@/components/ui/FormMessage";
 import { useActionState, useEffect, useState } from "react";
 import {
   confirmSubscriptionAction,
@@ -514,8 +515,10 @@ export function OwnerSupportRequest({
   }>;
 }) {
   const [s, a, p] = useActionState(requestSupportAction, initial);
+  // `owner-support-request` restated what .card already said - same border,
+  // background, radius and shadow - on an element that carried both.
   return (
-    <details className="card account-disclosure owner-support-request">
+    <details className="card account-disclosure">
       <summary>
         <span>?</span>
         <b>Request Support</b>
@@ -523,25 +526,35 @@ export function OwnerSupportRequest({
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <form action={a}>
+      <form action={a} className="grid gap-[9px] border-t border-line p-[17px]">
         <input type="hidden" name="conferenceId" value={conferenceId} />
-        <label>
+        <label className="text-[12px] font-[800]">
           Subject
-          <input name="subject" maxLength={120} required />
+          <input
+            name="subject"
+            maxLength={120}
+            required
+            className="w-full rounded-[11px] border border-[#d6dbe2] bg-white p-[11px] [font:inherit]"
+          />
         </label>
-        <label>
+        <label className="text-[12px] font-[800]">
           Message
-          <textarea name="message" maxLength={1000} required />
+          <textarea
+            name="message"
+            maxLength={1000}
+            required
+            className="w-full rounded-[11px] border border-[#d6dbe2] bg-white p-[11px] [font:inherit] min-h-[96px] resize-y"
+          />
         </label>
         <button className="btn primary" disabled={p}>
           {p ? "Sending…" : "Send Request"}
         </button>
-        {s.error && <p className="form-error">{s.error}</p>}
-        {s.message && <p className="form-success">{s.message}</p>}
+        {s.error && <FormMessage tone="error">{s.error}</FormMessage>}
+        {s.message && <FormMessage tone="success">{s.message}</FormMessage>}
       </form>
       {history.length > 0 && (
-        <section className="owner-support-history">
-          <b>Request History</b>
+        <section className="grid gap-[9px] border-t border-line p-[16px] [&_article]:grid [&_article]:gap-[5px] [&_article]:rounded-[11px] [&_article]:border [&_article]:border-line [&_article]:p-[11px] [&_em]:text-[10px] [&_em]:text-green [&_em]:uppercase [&_em]:not-italic [&_header]:flex [&_header]:justify-between [&_header]:gap-[10px] [&_header]:text-[13px] [&_header]:font-[800] [&_p]:m-0 [&_p]:text-[12px] [&_p]:leading-[1.45] [&_p]:text-muted [&_small]:m-0 [&_small]:text-[12px] [&_small]:leading-[1.45] [&_small]:text-muted [&_small_b]:text-navy">
+          <b className="text-[12px] tracking-[0.05em] uppercase">Request History</b>
           {history.map((request) => (
             <article key={request.id}>
               <header>
