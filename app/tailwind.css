@@ -41,5 +41,7 @@
  * remain available but this app has never used them. */
 @theme {
   --breakpoint-tiny: 411px;
+  /* The platform tables reflow here, well before the 900px laptop layer. */
+  --breakpoint-mid: 651px;
   --breakpoint-desk: 900px;
 }

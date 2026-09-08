@@ -110,30 +110,30 @@ function OwnerCard({ owner }: { owner: PlatformOperations["owners"][number] }) {
   const [state, action, pending] = useActionState(setOwnerStatusAction, initial);
   const status = owner.status;
   return (
-    <section className="platform-owner-row">
-      <div className="platform-owner-details">
-        <span>
-          <small>OWNER NAME</small>
+    <section className="grid gap-[11px] border-t border-line py-[14px]">
+      <div className="grid grid-cols-5 gap-[9px] max-mid:grid-cols-2">
+        <span className="grid min-w-0 gap-[4px] text-[12px] [overflow-wrap:anywhere] max-mid:col-span-full">
+          <small className="text-[8px] font-[850] text-muted">OWNER NAME</small>
           {owner.name}
         </span>
-        <span>
-          <small>CONFERENCE NAME</small>
+        <span className="grid min-w-0 gap-[4px] text-[12px] [overflow-wrap:anywhere]">
+          <small className="text-[8px] font-[850] text-muted">CONFERENCE NAME</small>
           {owner.conferenceName ?? "Not assigned"}
         </span>
-        <span>
-          <small>EMAIL</small>
+        <span className="grid min-w-0 gap-[4px] text-[12px] [overflow-wrap:anywhere]">
+          <small className="text-[8px] font-[850] text-muted">EMAIL</small>
           {owner.email || "—"}
         </span>
-        <span>
-          <small>PHONE</small>
+        <span className="grid min-w-0 gap-[4px] text-[12px] [overflow-wrap:anywhere]">
+          <small className="text-[8px] font-[850] text-muted">PHONE</small>
           {owner.phone || "—"}
         </span>
-        <span>
-          <small>SUBSCRIPTION DATE</small>
+        <span className="grid min-w-0 gap-[4px] text-[12px] [overflow-wrap:anywhere]">
+          <small className="text-[8px] font-[850] text-muted">SUBSCRIPTION DATE</small>
           {owner.subscriptionStartsOn ?? "—"}
         </span>
-        <span>
-          <small>DEMO OVERVIEW ACCEPTED</small>
+        <span className="grid min-w-0 gap-[4px] text-[12px] [overflow-wrap:anywhere]">
+          <small className="text-[8px] font-[850] text-muted">DEMO OVERVIEW ACCEPTED</small>
           {owner.demoAcknowledgedAt ? timestamp(owner.demoAcknowledgedAt) : "—"}
         </span>
       </div>
@@ -214,9 +214,19 @@ const paymentTimestamp = (value: string) =>
     hour: "numeric",
     minute: "2-digit",
   }).format(new Date(value));
+/**
+ * The payment status word. Keyed on the same names the CSS matched, so
+ * "confirmation" - which never had a rule - still falls through to the same
+ * red default it always got.
+ */
+const payTone: Record<string, string> = {
+  paid: "text-green",
+  partial: "text-[#8a5900]",
+};
+
 export function OwnerPayments({ records }: { records: PlatformOwnerPaymentBilling[] }) {
   return (
-    <section className="platform-owner-payment-list">
+    <section className="grid gap-[10px]">
       {records.length ? (
         records.map((record) => {
           const entries = record.billing.entries.filter((item) => !item.label.startsWith("Legacy")),
@@ -239,20 +249,24 @@ export function OwnerPayments({ records }: { records: PlatformOwnerPaymentBillin
                   : "Not paid",
             statusClass = balance === 0 ? "paid" : pending ? "confirmation" : "partial";
           return (
-            <details className="card platform-owner-payment" key={record.conferenceId}>
-              <summary>
-                <span>
-                  <b>{record.conferenceName}</b>
-                  <small>
+            <details className="card group overflow-hidden" key={record.conferenceId}>
+              <summary className="grid min-h-[72px] cursor-pointer list-none grid-cols-[1fr_auto_auto] items-center gap-[10px] p-[13px_15px] [&::-webkit-details-marker]:hidden">
+                <span className="grid gap-[4px]">
+                  <b className="text-[15px]">{record.conferenceName}</b>
+                  <small className="text-[11px] text-muted">
                     {money(received)} received · {money(balance)} due
                   </small>
                 </span>
-                <em className={statusClass}>{status}</em>
-                <strong aria-hidden="true">
+                <em
+                  className={`text-[9px] font-[850] uppercase not-italic ${payTone[statusClass] ?? "text-[#a51118]"}`}
+                >
+                  {status}
+                </em>
+                <strong aria-hidden="true" className="text-[23px] group-open:rotate-90">
                   <ChevronRight className="go-caret" />
                 </strong>
               </summary>
-              <div>
+              <div className="border-t border-line p-[14px]">
                 <p className="platform-payment-contact">
                   <b>{record.ownerName}</b>
                   <span>{record.phone}</span>
@@ -303,7 +317,11 @@ function PaymentConfirmation({ submissionId }: { submissionId: string }) {
   return (
     <form action={action}>
       <input type="hidden" name="submissionId" value={submissionId} />
-      <button className="btn primary" disabled={pending}>
+      {/* .platform-owner-payment .btn set width: 100% on whatever button landed
+          inside the disclosure. This is that button, and it only renders when a
+          submission is pending - so it may not be in any screenshot. Carried
+          over deliberately rather than left to chance. */}
+      <button className="btn primary w-full" disabled={pending}>
         {pending ? "Confirming…" : "Confirm payment"}
       </button>
       {state.error && <p className="form-error">{state.error}</p>}

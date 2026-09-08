@@ -6939,37 +6939,6 @@ body:has(.context-overlay-open) .bottom {
   font-size: 11px;
   color: var(--muted);
 }
-.platform-owner-row {
-  padding: 14px 0;
-  border-top: 1px solid var(--line);
-  display: grid;
-  gap: 11px;
-}
-.platform-owner-details {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 9px;
-}
-.platform-owner-details span {
-  display: grid;
-  gap: 4px;
-  min-width: 0;
-  overflow-wrap: anywhere;
-  font-size: 12px;
-}
-.platform-owner-details small {
-  font-size: 8px;
-  font-weight: 850;
-  color: var(--muted);
-}
-@media (max-width: 650px) {
-  .platform-owner-details {
-    grid-template-columns: 1fr 1fr;
-  }
-  .platform-owner-details span:first-child {
-    grid-column: 1/-1;
-  }
-}
 
 .platform-local-status {
   font-size: 10px;
@@ -7236,60 +7205,7 @@ body:has(.context-overlay-open) .bottom {
 .owner-subscription-history > summary::-webkit-details-marker {
   display: none;
 }
-.platform-owner-payment-list {
-  display: grid;
-  gap: 10px;
-}
-.platform-owner-payment {
-  overflow: hidden;
-}
-.platform-owner-payment > summary {
-  list-style: none;
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 10px;
-  align-items: center;
-  min-height: 72px;
-  padding: 13px 15px;
-  cursor: pointer;
-}
-.platform-owner-payment > summary::-webkit-details-marker {
-  display: none;
-}
-.platform-owner-payment > summary span {
-  display: grid;
-  gap: 4px;
-}
-.platform-owner-payment > summary b {
-  font-size: 15px;
-}
-.platform-owner-payment > summary small {
-  font-size: 11px;
-  color: var(--muted);
-}
-.platform-owner-payment > summary em {
-  font-size: 9px;
-  font-weight: 850;
-  font-style: normal;
-  text-transform: uppercase;
-  color: #a51118;
-}
-.platform-owner-payment > summary em.paid {
-  color: var(--green);
-}
-.platform-owner-payment > summary em.partial {
-  color: #8a5900;
-}
-.platform-owner-payment > summary strong {
-  font-size: 23px;
-}
-.platform-owner-payment[open] > summary strong {
-  transform: rotate(90deg);
-}
-.platform-owner-payment > div {
-  border-top: 1px solid var(--line);
-  padding: 14px;
-}
+
 .platform-payment-contact {
   display: grid;
   grid-template-columns: 1fr 1fr 1.4fr;
@@ -7300,15 +7216,10 @@ body:has(.context-overlay-open) .bottom {
 .platform-payment-contact span {
   color: var(--muted);
 }
-.platform-owner-payment .btn {
-  width: 100%;
-}
+
 @media (max-width: 500px) {
   .platform-payment-contact {
     grid-template-columns: 1fr;
-  }
-  .platform-owner-payment > summary {
-    grid-template-columns: 1fr auto auto;
   }
 }
 .monthly-subscription-dropdown > summary {

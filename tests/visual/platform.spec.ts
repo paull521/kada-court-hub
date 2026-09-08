@@ -56,3 +56,22 @@ test("platform-support-open", async ({ page }) => {
   await settle(page);
   await expect(page).toHaveScreenshot("platform-support-open.png", { fullPage: true });
 });
+
+/**
+ * Owner payments are one disclosure per conference and closed on arrival, so
+ * the ledger inside them - the whole reason the screen exists - is absent from
+ * the baseline above.
+ */
+test("platform-payments-open", async ({ page }) => {
+  const response = await page.goto("/platform/payments", { waitUntil: "domcontentloaded" });
+  expect(response?.status()).toBeLessThan(400);
+  await settle(page);
+  for (let pass = 0; pass < 2; pass++)
+    await page
+      .locator("details")
+      .evaluateAll((nodes) => nodes.forEach((n) => ((n as HTMLDetailsElement).open = true)));
+  const count = await page.locator("details[open]").count();
+  expect(count, "expected open disclosures on /platform/payments").toBeGreaterThan(0);
+  await settle(page);
+  await expect(page).toHaveScreenshot("platform-payments-open.png", { fullPage: true });
+});
