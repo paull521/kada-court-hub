@@ -1,6 +1,7 @@
 import AppShell from "@/components/AppShell";
 import { BookOpen } from "lucide-react";
 import { SkeletonText } from "@/components/Skeleton";
+import { RulesDocument } from "@/components/ui/RulesDocument";
 
 /**
  * The rules document itself is a conference record, so its words do wait - but
@@ -14,42 +15,32 @@ export default function Loading() {
       <p className="subtitle">
         <SkeletonText width="16em" />
       </p>
-      <section className="card rules-document">
-        <header>
-          <span>
-            <BookOpen className="ui-icon" />
-          </span>
-          <div>
-            <h2>
-              <SkeletonText width="11em" />
-            </h2>
+      <RulesDocument
+        icon={<BookOpen className="ui-icon" />}
+        title={<SkeletonText width="11em" />}
+        meta={<SkeletonText width="14em" />}
+        busy
+      >
+        <span className="sr-only" role="status">
+          Loading
+        </span>
+        {[0, 1, 2, 3].map((section) => (
+          <section key={section}>
             <p>
-              <SkeletonText width="14em" />
+              <SkeletonText width="13em" />
             </p>
-          </div>
-        </header>
-        <article aria-busy="true">
-          <span className="sr-only" role="status">
-            Loading
-          </span>
-          {[0, 1, 2, 3].map((section) => (
-            <section key={section}>
-              <p>
-                <SkeletonText width="13em" />
-              </p>
-              <p>
-                <SkeletonText width="100%" />
-              </p>
-              <p>
-                <SkeletonText width="100%" />
-              </p>
-              <p>
-                <SkeletonText width="62%" />
-              </p>
-            </section>
-          ))}
-        </article>
-      </section>
+            <p>
+              <SkeletonText width="100%" />
+            </p>
+            <p>
+              <SkeletonText width="100%" />
+            </p>
+            <p>
+              <SkeletonText width="62%" />
+            </p>
+          </section>
+        ))}
+      </RulesDocument>
     </AppShell>
   );
 }
