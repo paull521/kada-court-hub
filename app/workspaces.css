@@ -1,71 +1,21 @@
-/* The navy pill slides between two or three roles rather than being redrawn on
-   whichever link is current. One column of the track, and one gap per column
-   it has already passed. --role-count and --role-index come from the component,
-   because the switcher shows two roles for some accounts and three for others. */
+/* ============================================================================
+   Captain workspace
 
-/* Held over the whole page from the moment a role is pressed until that
-   workspace is on screen. The pill moves on press, so until the navigation
-   lands the screen is showing one workspace and promising another, and a tap on
-   the tab strip underneath would run in the old one. Above 101, the highest
-   z-index in the app, so the tab strip and any open sheet are covered too.
-   Transparent: the wait is already described by the pill that moved. */
-.role-switch-lock {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  cursor: progress;
-}
-.captain-dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
+   What is left after the migration: the two rules that cannot be a utility on
+   an element, because they describe the tab strip's own geometry rather than
+   any component's.
+   ========================================================================== */
 
+/* The dots the nav badges hang off are absolutely positioned against this. */
 .nav {
   position: relative;
 }
-.nav-alert-dot {
-  position: absolute;
-  top: 7px;
-  right: 25%;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #d71920;
-  border: 2px solid #fff;
-}
-
-/* The moving pill. Half the track, less the 4px padding on either side, so it
-   lands exactly on a button. Both the slide and the green-to-red change are the
-   same transition, which is what makes it read as one movement. */
-
-/* The buttons keep only their text colour - the fill is the thumb's job now. */
-
-.roster-with-availability {
-  grid-template-columns: auto auto 1fr auto !important;
-}
-.nav-team-dot {
-  position: absolute;
-  top: 7px;
-  right: 24%;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-}
-.nav-team-dot.yes {
-  background: #2a9b4c;
-}
-.nav-team-dot.no {
-  background: #d72b2b;
-}
 
 @media (max-width: 620px) {
+  /* The captain strip is taller than the player's, so its content needs more
+     room under it than .content's own 112px. */
   .captain-content {
     padding-bottom: 105px;
-  }
-  .captain-dashboard-grid {
-    gap: 9px;
   }
 
   .captain-bottom .nav {

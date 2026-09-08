@@ -101,7 +101,7 @@ async function RosterBody({ data: portal }: { data: Promise<CaptainPortalData> }
           </details>
           {/* captain-player-details-disclosure keeps its class with no rule of
               its own: it re-scopes .captain-draft-entry inside it. */}
-          <details className="captain-player-details-disclosure group mb-[14px] overflow-hidden rounded-[18px] border border-line bg-[rgba(255,255,255,0.96)] shadow-[0_8px_20px_rgba(13,38,69,0.08)]">
+          <details className="[&_.captain-draft-entry]:border-0! [&_.captain-draft-entry]:p-0! [&_.captain-draft-entry]:shadow-none! group mb-[14px] overflow-hidden rounded-[18px] border border-line bg-[rgba(255,255,255,0.96)] shadow-[0_8px_20px_rgba(13,38,69,0.08)]">
             <summary className="flex min-h-[76px] cursor-pointer list-none items-center justify-between gap-[12px] p-[15px_17px] [&::-webkit-details-marker]:hidden">
               <span className="flex min-w-0 items-center gap-[11px]">
                 <i className="grid h-[34px] w-[34px] place-items-center rounded-[11px] bg-[#fff0d5] font-[900] text-[#b76b00] not-italic">

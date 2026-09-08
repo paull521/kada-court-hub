@@ -164,12 +164,6 @@
   }
   /* The dots were positioned for a stacked, centred nav item. In a horizontal
      one they belong on the icon, not at a percentage of a much wider box. */
-  .nav .nav-team-dot,
-  .nav .nav-alert-dot {
-    top: 9px;
-    right: auto;
-    left: 27px;
-  }
 
   /* --- Content -------------------------------------------------------------
      No fixed bar left to clear, so the 112px of bottom padding goes. */
@@ -257,10 +251,6 @@
   /* --- Captain -------------------------------------------------------------
      The dashboard is a 2x3 stack of square tiles on a phone. With the width
      available it reads as one row rather than a column of pairs. */
-  .captain-dashboard-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px;
-  }
 
   /* A closed disclosure was drawing the rule that separates its heading from a
      body that is not on screen, and parking its caret in the middle of the row
@@ -277,36 +267,6 @@
      out of the flow, becomes a rail, and sticks - which is also the only way a
      six-section handbook stays navigable once it is longer than the window.
      The body keeps a reading measure of its own inside the leftover space. */
-  .owner-guide {
-    grid-template-columns: 210px minmax(0, 1fr);
-    gap: 44px;
-    align-items: start;
-  }
-  .owner-guide-index {
-    position: sticky;
-    top: 20px;
-    display: grid;
-    gap: 1px;
-    border-left: 2px solid var(--line);
-  }
-  .owner-guide-index a {
-    padding: 8px 0 8px 14px;
-    margin-left: -2px;
-    border: 0;
-    border-left: 2px solid transparent;
-    border-radius: 0;
-    background: none;
-    font-size: 13px;
-    line-height: 1.3;
-  }
-  .owner-guide-index a:hover {
-    border-left-color: var(--gold);
-    color: var(--navy);
-  }
-  .owner-guide-body {
-    max-width: 760px;
-    gap: 44px;
-  }
 
   /* Three columns, so the tab name is a column of its own and the five
      descriptions start on one edge instead of five. */

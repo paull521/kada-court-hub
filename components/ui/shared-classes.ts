@@ -194,3 +194,7 @@ export const uniformPlaceholder =
 export const profileSectionTitle = "m-[22px_3px_10px] text-sm text-gold";
 export const accountList = "grid gap-[9px] [&>form]:m-0";
 export const logoutAccount = "text-[#a51118] [&>span]:text-[#a51118]";
+
+/** The dot on a bottom-nav tab. Moves to the icon's left at 900px. */
+export const navDot =
+  "absolute top-[7px] right-[25%] h-[9px] w-[9px] rounded-full border-2 border-white desk:top-[9px] desk:right-auto desk:left-[27px]";

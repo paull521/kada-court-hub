@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import OwnerPageShell from "@/components/OwnerPageShell";
 import { getOwnerConferenceContext } from "@/lib/owner-data";
+import { guideBody, guideFrame, guideIndex } from "@/components/ui/guide-classes";
 
 /**
  * The commissioner's handbook. Every word on it is fixed, so the page blocks
@@ -298,15 +299,15 @@ export default async function OwnerGuidePage() {
       conferenceId={context.conferenceId}
       conferences={context.conferences}
     >
-      <div className="owner-guide">
-        <nav className="owner-guide-index" aria-label="Guide sections">
+      <div className={guideFrame}>
+        <nav className={guideIndex} aria-label="Guide sections">
           {sections.map(([id, label]) => (
             <a href={`#${id}`} key={id}>
               {label}
             </a>
           ))}
         </nav>
-        <div className="owner-guide-body">
+        <div className={guideBody}>
           <section className="grid gap-[12px] rounded-[22px] bg-[linear-gradient(145deg,#082b50,#0e477c)] p-[22px] text-white desk:p-[30px_32px]">
             <p className="m-0 text-[19px] leading-[1.42] tracking-[-0.2px] max-tiny:text-[17px] desk:max-w-[40ch] desk:text-[22px]">
               You are the commissioner of <b className="text-[#f6b33d]">{context.conferenceName}</b>

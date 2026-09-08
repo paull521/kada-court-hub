@@ -39,7 +39,7 @@ export default function ConferencePlayerInvitation({
     <section
       className={
         variant === "captain"
-          ? "card col-span-full m-[12px_0_0] grid grid-cols-[minmax(0,1fr)_116px] items-center gap-3 p-[14px] max-tiny:grid-cols-[minmax(0,1fr)_104px] desk:max-w-[430px] [&_.btn]:text-xs [&_.btn]:whitespace-nowrap [&_img]:h-[116px] [&_img]:w-[116px] [&_img]:max-tiny:h-[104px] [&_img]:max-tiny:w-[104px]"
+          ? "card m-[12px_0_0] grid grid-cols-[minmax(0,1fr)_116px] items-center gap-3 p-[14px] max-tiny:grid-cols-[minmax(0,1fr)_104px] desk:max-w-[430px] [&_.btn]:text-xs [&_.btn]:whitespace-nowrap [&_img]:h-[116px] [&_img]:w-[116px] [&_img]:max-tiny:h-[104px] [&_img]:max-tiny:w-[104px]"
           : "card col-span-full m-0 grid grid-cols-[minmax(0,1fr)_180px] items-center gap-4 p-4 max-tiny:grid-cols-1 desk:max-w-[470px] desk:grid-cols-[minmax(0,1fr)_132px] desk:p-[18px] [&_img]:h-[180px] [&_img]:w-[180px] [&_img]:max-tiny:justify-self-center desk:[&_img]:h-[132px] desk:[&_img]:w-[132px]"
       }
     >

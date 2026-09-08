@@ -1,5 +1,6 @@
 import OwnerShellFrame from "@/components/OwnerShellFrame";
 import { SkeletonBlock } from "@/components/Skeleton";
+import { guideBody, guideFrame, guideIndex } from "@/components/ui/guide-classes";
 
 /**
  * The guide is fixed words apart from the conference name in its opening
@@ -13,8 +14,8 @@ export default function Loading() {
       subtitle="What a commissioner can do, and where each of it lives."
       active="home"
     >
-      <div className="owner-guide">
-        <nav className="owner-guide-index" aria-label="Guide sections">
+      <div className={guideFrame}>
+        <nav className={guideIndex} aria-label="Guide sections">
           <a>Where everything lives</a>
           <a>A season, start to finish</a>
           <a>What each page does</a>
@@ -22,7 +23,7 @@ export default function Loading() {
           <a>Words used here</a>
           <a>Questions</a>
         </nav>
-        <div className="owner-guide-body">
+        <div className={guideBody}>
           <SkeletonBlock height="150px" radius="22px" />
           <SkeletonBlock height="230px" radius="18px" />
           <SkeletonBlock height="320px" radius="18px" />

@@ -92,7 +92,10 @@ export default function CaptainDashboardFrame({ data }: { data?: CaptainPortalDa
     // took the taller min-height until the read landed, then snapped back.
     <>
       {!data && <LoadingNote />}
-      <section className="captain-dashboard-grid">
+      {/* captain-dashboard-grid keeps its class carrying no rule of its own:
+          desktop.css asks the shell whether it :has() one, and gives the page
+          the wide measure if it does. */}
+      <section className="captain-dashboard-grid grid grid-cols-[repeat(2,minmax(0,1fr))] gap-3 max-[620px]:gap-[9px] desk:grid-cols-[repeat(4,minmax(0,1fr))] desk:gap-4">
         <TaskTile href="/captain/schedule" featured>
           <span>
             <CalendarDays className="ui-icon" />

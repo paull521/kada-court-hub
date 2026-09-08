@@ -75,7 +75,7 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
             roster.map((player) => {
               const answer = data.availability.find((item) => item.name === player.name);
               return (
-                <div className={`${rosterRow} roster-with-availability`} key={player.id}>
+                <div className={`${rosterRow} grid-cols-[auto_auto_1fr_auto]`} key={player.id}>
                   <i
                     className={`availability-dot ${answer?.available === false ? "no" : "yes"}`}
                     title={answer?.available === false ? "Unavailable" : "Available"}
@@ -99,7 +99,7 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
           )
         ) : (
           [0, 1, 2, 3, 4, 5].map((index) => (
-            <div className={`${rosterRow} roster-with-availability`} key={index}>
+            <div className={`${rosterRow} grid-cols-[auto_auto_1fr_auto]`} key={index}>
               <i className="availability-dot" />
               <b className={jersey}>
                 <SkeletonText width="1.2em" />

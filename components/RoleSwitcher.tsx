@@ -112,7 +112,7 @@ export default function RoleSwitcher({
       </div>
       {/* Covers everything, including the tab strip, until the workspace the
           viewer asked for is the one they are looking at. */}
-      {switching && <span className="role-switch-lock" aria-hidden="true" />}
+      {switching && <span className="fixed inset-0 z-[200] cursor-progress" aria-hidden="true" />}
     </section>
   );
 }
