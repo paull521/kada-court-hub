@@ -33,11 +33,13 @@ function DraftedPlayer({
 }) {
   const [state, action, pending] = useActionState(updateDraftPlayerAction, initial);
   return (
-    <details className="captain-roster-player">
-      <summary>
-        <span>
+    // bg-white is the .captain-added-players re-scope, folded in: the two
+    // lists this renders in agreed on white, and only one said so.
+    <details className="overflow-hidden rounded-[12px] border border-line bg-white">
+      <summary className="grid cursor-pointer grid-cols-[1fr_auto] items-center p-[11px]">
+        <span className="grid gap-[3px]">
           <b>{player.name}</b>
-          <small>
+          <small className="text-[10px] text-muted">
             #{player.jerseyNumber ?? "—"} · {player.position || "Position needed"}
             {player.jerseyName ? ` · ${player.jerseyName}` : ""}
           </small>
@@ -46,7 +48,7 @@ function DraftedPlayer({
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <form action={action} className="owner-form">
+      <form action={action} className="owner-form border-t border-line p-[11px]">
         <input type="hidden" name="teamId" value={teamId} />
         <input type="hidden" name="registrationId" value={player.registrationId} />
         {detailsOnly && <input type="hidden" name="detailsOnly" value="yes" />}

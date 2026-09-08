@@ -9,6 +9,13 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 const initialState: AuthActionState = {};
 
+/* The bordered field shell every form on the auth screens uses, and the eye
+   button inside the password one. Eight call sites and two. */
+const inputWrap =
+  "grid grid-cols-[38px_1fr_auto] items-center rounded-[14px] border border-[#d6dbe2] px-[14px] [&_input]:min-w-0 [&_input]:border-0 [&_input]:bg-transparent [&_input]:py-[15px] [&_input]:outline-0 [&_input]:[&:-webkit-autofill]:[-webkit-text-fill-color:var(--navy)] [&_input]:[&:-webkit-autofill]:shadow-[0_0_0_1000px_#fff_inset]";
+const passwordToggle =
+  "grid h-[34px] w-[28px] cursor-pointer place-items-center border-0 bg-transparent p-0 text-blue focus-visible:rounded-[4px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-gold [&_svg]:h-[19px] [&_svg]:w-[19px] [&_svg]:fill-none [&_svg]:stroke-current [&_svg]:[stroke-linecap:round] [&_svg]:[stroke-linejoin:round] [&_svg]:[stroke-width:1.8]";
+
 export function LoginForm({
   demoMode,
   nextPath = "",
@@ -29,7 +36,7 @@ export function LoginForm({
         </p>
       )}
       <label htmlFor="email">Email</label>
-      <div className="input-wrap">
+      <div className={inputWrap}>
         <span>
           <Mail className="ui-icon" />
         </span>
@@ -42,7 +49,7 @@ export function LoginForm({
         />
       </div>
       <label htmlFor="password">Password</label>
-      <div className="input-wrap">
+      <div className={inputWrap}>
         <span>
           <User className="ui-icon" />
         </span>
@@ -55,7 +62,7 @@ export function LoginForm({
         />
         <button
           type="button"
-          className="password-toggle"
+          className={passwordToggle}
           onClick={() => setShowPassword((value) => !value)}
           aria-label={showPassword ? "Hide password" : "Show password"}
         >
@@ -125,7 +132,7 @@ export function PasswordResetRequestForm() {
   return (
     <form onSubmit={sendLink} className="card loginbox">
       <label htmlFor="resetEmail">Email</label>
-      <div className="input-wrap">
+      <div className={inputWrap}>
         <span>
           <Mail className="ui-icon" />
         </span>
@@ -226,7 +233,7 @@ export function ResetPasswordForm() {
   return (
     <form onSubmit={savePassword} className="card loginbox">
       <label htmlFor="newPassword">New Password</label>
-      <div className="input-wrap">
+      <div className={inputWrap}>
         <span>
           <User className="ui-icon" />
         </span>
@@ -268,7 +275,7 @@ export function SignUpForm({ nextPath = "" }: { nextPath?: string }) {
     <form action={action} className="card loginbox">
       <input type="hidden" name="nextPath" value={nextPath} />
       <label htmlFor="displayName">Full Name</label>
-      <div className="input-wrap">
+      <div className={inputWrap}>
         <span>
           <User className="ui-icon" />
         </span>
@@ -281,7 +288,7 @@ export function SignUpForm({ nextPath = "" }: { nextPath?: string }) {
         />
       </div>
       <label htmlFor="signupEmail">Email</label>
-      <div className="input-wrap">
+      <div className={inputWrap}>
         <span>
           <Mail className="ui-icon" />
         </span>
@@ -297,7 +304,7 @@ export function SignUpForm({ nextPath = "" }: { nextPath?: string }) {
       {ownerApplication && (
         <>
           <label htmlFor="signupMobile">Mobile Number</label>
-          <div className="input-wrap">
+          <div className={inputWrap}>
             <span>
               <User className="ui-icon" />
             </span>
@@ -313,7 +320,7 @@ export function SignUpForm({ nextPath = "" }: { nextPath?: string }) {
         </>
       )}
       <label htmlFor="signupPassword">Password</label>
-      <div className="input-wrap">
+      <div className={inputWrap}>
         <span>
           <User className="ui-icon" />
         </span>

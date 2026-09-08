@@ -729,51 +729,7 @@ body {
   border-color: var(--blue);
   box-shadow: 0 0 0 3px rgba(23, 74, 165, 0.12);
 }
-.input-wrap {
-  border: 1px solid #d6dbe2;
-  border-radius: 14px;
-  display: grid;
-  grid-template-columns: 38px 1fr auto;
-  align-items: center;
-  padding: 0 14px;
-}
-.input-wrap input {
-  padding: 15px 0;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  min-width: 0;
-}
-.input-wrap input:-webkit-autofill {
-  -webkit-text-fill-color: var(--navy);
-  -webkit-box-shadow: 0 0 0 1000px #fff inset;
-  box-shadow: 0 0 0 1000px #fff inset;
-}
-.password-toggle {
-  border: 0;
-  background: transparent;
-  color: var(--blue);
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 34px;
-  padding: 0;
-  cursor: pointer;
-}
-.password-toggle svg {
-  width: 19px;
-  height: 19px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.password-toggle:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
+
 .forgot {
   text-align: right;
   color: var(--blue);
@@ -834,41 +790,6 @@ body {
 
 .info-panel form {
   margin: 0;
-}
-.edit-profile {
-  margin-bottom: 14px;
-  overflow: hidden;
-}
-.edit-profile summary {
-  list-style: none;
-  padding: 15px 18px;
-  font-weight: 800;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-}
-.edit-profile summary::-webkit-details-marker {
-  display: none;
-}
-.edit-profile[open] summary {
-  border-bottom: 1px solid var(--line);
-}
-.edit-profile form {
-  display: grid;
-  gap: 9px;
-  padding: 17px;
-}
-.edit-profile label {
-  font-size: 12px;
-  font-weight: 800;
-}
-.edit-profile input,
-.edit-profile select {
-  width: 100%;
-  border: 1px solid #d6dbe2;
-  border-radius: 11px;
-  background: #fff;
-  padding: 11px;
 }
 
 .owner-shell {
@@ -1718,30 +1639,7 @@ body {
   display: grid;
   gap: 7px;
 }
-.captain-roster-player {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  overflow: hidden;
-}
-.captain-roster-player > summary {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  padding: 11px;
-  cursor: pointer;
-}
-.captain-roster-player > summary span {
-  display: grid;
-  gap: 3px;
-}
-.captain-roster-player small {
-  font-size: 10px;
-  color: var(--muted);
-}
-.captain-roster-player > form {
-  padding: 11px;
-  border-top: 1px solid var(--line);
-}
+
 .captain-submit-roster {
   padding-top: 12px;
   border-top: 1px solid var(--line);
@@ -1848,9 +1746,7 @@ body {
   font-size: 10px;
   color: var(--muted);
 }
-.captain-added-players .captain-roster-player {
-  background: #fff;
-}
+
 .mobile-draft-list {
   border: 1px solid var(--line);
   border-radius: 13px;
@@ -2548,15 +2444,6 @@ body {
   margin: 0 0 5px;
 }
 
-.payment-safety-note {
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--muted);
-  background: #f5f7f9;
-  border-radius: 11px;
-  padding: 11px;
-  margin: 0;
-}
 .payment-status-card {
   display: grid;
   grid-template-columns: 42px 1fr;
@@ -3023,74 +2910,15 @@ button.account-link {
 .logout-account > span {
   color: #a51118;
 }
-.legal-card {
-  padding: 20px;
-}
-.legal-card h2 {
-  font-size: 18px;
-  margin: 21px 0 6px;
-}
-.legal-card h2:first-child {
-  margin-top: 0;
-}
-.legal-card p {
-  font-size: 15px;
-  line-height: 1.65;
-  color: var(--muted);
-  margin: 0;
-}
-.legal-card .legal-note {
-  margin-top: 22px;
-  padding: 13px;
-  border-radius: 12px;
-  background: #fff4da;
-  color: #795009;
-  font-size: 13px;
-}
 
-.season-tabs {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
-  padding: 4px;
-  background: #efede9;
-  border-radius: 14px;
-  margin: 0 0 18px;
-  position: relative;
-}
-.season-tabs a {
-  min-height: 45px;
-  border-radius: 11px;
-  display: grid;
-  place-items: center;
-  font-size: 14px;
-  font-weight: 800;
-  color: var(--muted);
-  position: relative;
-  transition: color 0.2s ease;
-}
 /* The navy pill travels between the three views rather than being redrawn on
    whichever one is current. One column of the track - the width less its 4px
    padding on either side and the two 5px gaps - and one gap per column it has
    already passed. --season-index comes from the component, which moves it on
    press because each view is a separate route. It is positioned rather than
    placed, so the grid still lays out three links and not four. */
-.season-tabs-thumb {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  width: calc((100% - 8px - 2 * 5px) / 3);
-  border-radius: 11px;
-  background: var(--navy);
-  box-shadow: 0 3px 9px rgba(7, 31, 61, 0.18);
-  transform: translateX(calc(var(--season-index) * (100% + 5px)));
-  transition: transform 0.24s cubic-bezier(0.4, 0, 0.2, 1);
-}
+
 /* The link keeps only its text colour - the fill is the thumb's job now. */
-.season-tabs a.active {
-  color: #fff;
-}
 
 .season-empty {
   text-align: center;
@@ -4248,13 +4076,7 @@ body:has(.context-overlay-open) .bottom {
     grid-column: 2;
   }
 }
-.season-tabs {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-.season-tabs a {
-  min-width: 0;
-  text-align: center;
-}
+
 .schedule-feature {
   grid-template-rows: auto auto auto;
 }
@@ -4444,8 +4266,7 @@ body:has(.context-overlay-open) .bottom {
   /* The sliding pills still land in the right place, they just stop
      travelling to get there. */
   .availability-thumb,
-  .role-switcher-thumb,
-  .season-tabs-thumb {
+  .role-switcher-thumb {
     transition: none;
   }
 }

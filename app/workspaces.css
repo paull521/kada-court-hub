@@ -213,35 +213,7 @@
 .nav-team-dot.no {
   background: #d72b2b;
 }
-.payment-amount-label {
-  display: grid;
-  gap: 6px;
-  font-weight: 800;
-}
-.payment-amount-label > small {
-  font-weight: 500;
-  color: #657285;
-}
-.payment-amount-input {
-  display: flex;
-  align-items: center;
-  border: 1px solid #ccd2d8;
-  border-radius: 12px;
-  padding: 0 12px;
-  background: #fff;
-}
-.payment-amount-input span {
-  font-size: 20px;
-  font-weight: 900;
-}
-.payment-amount-input input {
-  border: 0 !important;
-  box-shadow: none !important;
-  font-size: 22px !important;
-  font-weight: 900;
-  width: 100%;
-  padding: 13px 8px !important;
-}
+
 @media (max-width: 620px) {
   .captain-content {
     padding-bottom: 105px;

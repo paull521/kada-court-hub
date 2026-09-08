@@ -36,11 +36,14 @@ export default function SeasonTabs() {
   }
   return (
     <nav
-      className="season-tabs"
+      className="relative m-[0_0_18px] grid grid-cols-[repeat(3,minmax(0,1fr))] gap-[5px] rounded-[14px] bg-[#efede9] p-[4px] [&_a]:relative [&_a]:grid [&_a]:min-h-[45px] [&_a]:min-w-0 [&_a]:place-items-center [&_a]:rounded-[11px] [&_a]:text-center [&_a]:text-[14px] [&_a]:font-[800] [&_a]:text-muted [&_a]:transition-colors [&_a]:duration-200 [&_a]:ease-in-out [&_a.active]:text-white"
       aria-label="Season views"
       style={{ "--season-index": chosen } as React.CSSProperties}
     >
-      <i className="season-tabs-thumb" aria-hidden="true" />
+      <i
+        className="absolute top-[4px] bottom-[4px] left-[4px] w-[calc((100%_-_8px_-_2_*_5px)/3)] translate-x-[calc(var(--season-index)_*_(100%_+_5px))] rounded-[11px] bg-navy shadow-[0_3px_9px_rgba(7,31,61,0.18)] transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none"
+        aria-hidden="true"
+      />
       {tabs.map((tab, index) => (
         <Link
           key={tab.href}

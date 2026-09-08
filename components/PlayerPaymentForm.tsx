@@ -45,9 +45,9 @@ export default function PlayerPaymentForm({
         className="grid gap-[14px] [&>label]:grid [&>label]:gap-[7px]! [&>label]:text-[14px] [&>label]:font-[800] [&>label_input]:min-h-[48px] [&>label_input]:rounded-[11px] [&>label_input]:border [&>label_input]:border-[#d6dbe2] [&>label_input]:p-[11px] [&>label_input]:text-[16px] [&>label_small]:font-[500] [&>label_small]:text-muted"
       >
         <input type="hidden" name="registrationId" value={registrationId} />
-        <label className="payment-amount-label">
+        <label className="grid gap-[6px] font-[800] [&>small]:font-medium [&>small]:text-[#657285]">
           How much will you pay?
-          <div className="payment-amount-input">
+          <div className="flex items-center rounded-[12px] border border-[#ccd2d8] bg-white px-[12px] [&>span]:text-[20px] [&>span]:font-[900] [&_input]:w-full [&_input]:border-0! [&_input]:p-[13px_8px]! [&_input]:text-[22px]! [&_input]:font-[900] [&_input]:shadow-none!">
             <span>$</span>
             <input
               name="amount"
@@ -130,7 +130,7 @@ export default function PlayerPaymentForm({
                 }
               />
             </label>
-            <p className="payment-safety-note">
+            <p className="m-0 rounded-[11px] bg-[#f5f7f9] p-[11px] text-[13px] leading-[1.5] text-muted">
               {method === "waiver"
                 ? "Your fee remains due until the conference owner approves the waiver."
                 : "Your balance changes only after the conference owner confirms receipt."}
