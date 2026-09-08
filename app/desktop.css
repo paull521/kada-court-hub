@@ -111,11 +111,7 @@
   .context-overlay {
     align-items: center;
   }
-  .context-sheet {
-    border-radius: 18px;
-    box-shadow: 0 24px 60px rgba(4, 18, 35, 0.28);
-    animation: none;
-  }
+
   .context-sheet-handle {
     display: none;
   }
@@ -281,10 +277,6 @@
     gap: 16px;
   }
 
-  .owner-more-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   /* A closed disclosure was drawing the rule that separates its heading from a
      body that is not on screen, and parking its caret in the middle of the row
      because the heading no longer fills the width. */
@@ -295,16 +287,6 @@
     border-bottom: 0;
     padding-bottom: 0;
     margin-bottom: 0;
-  }
-
-  /* The legal row is laid out for a phone's single column; given the measure
-     it sat at its intrinsic width against the left edge. Carried over from
-     main. The rules row beside it says the same thing in desk: utilities now,
-     and this rule kept only its half. */
-  .content.player-profile-content .account-link[href="/legal"],
-  .content.role-profile-content .account-link[href="/legal"] {
-    width: 100%;
-    justify-self: center;
   }
 
   /* --- Shared ---------------------------------------------------------------

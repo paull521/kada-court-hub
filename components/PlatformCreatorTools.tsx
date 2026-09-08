@@ -12,6 +12,7 @@ import {
 } from "@/app/platform/actions";
 import type { OwnerPaymentBilling } from "@/lib/owner-payment-ledger";
 import { OwnerDemoOverview } from "@/components/OwnerDemoOverview";
+import { historyPanel, historyRow } from "@/components/ui/account-classes";
 
 const initial: PlatformActionState = {};
 const money = (amount: number) => `$${amount.toFixed(2)}`;
@@ -195,7 +196,7 @@ export function OwnerSubscriptionPayment({
           {state.message && <p className="form-success">{state.message}</p>}
         </div>
       </details>
-      <details className="card payment-history-panel owner-subscription-history">
+      <details className={`card owner-subscription-history ${historyPanel}`}>
         <summary>
           <b>Payment History</b>
           <strong aria-hidden="true">
@@ -205,7 +206,7 @@ export function OwnerSubscriptionPayment({
         <div className="payment-history-scroll">
           {billing.submissions.length ? (
             billing.submissions.map((submission) => (
-              <div className="payment-history-row" key={submission.id}>
+              <div className={historyRow} key={submission.id}>
                 <span>
                   {submission.status === "confirmed" ? <Check className="ui-icon" /> : "!"}
                 </span>

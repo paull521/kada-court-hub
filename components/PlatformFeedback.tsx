@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { submitPlatformFeedbackAction, type ProfileActionState } from "@/app/profile/actions";
 import { Button } from "@/components/ui/Button";
 import { FormMessage } from "@/components/ui/FormMessage";
+import { accountDisclosure, accountRow } from "@/components/ui/account-classes";
 const initial: ProfileActionState = {};
 
 /**
@@ -16,8 +17,8 @@ const initial: ProfileActionState = {};
 export default function PlatformFeedback({ conferenceId }: { conferenceId: string }) {
   const [state, action, pending] = useActionState(submitPlatformFeedbackAction, initial);
   return (
-    <details className="card account-disclosure">
-      <summary>
+    <details className={`card ${accountDisclosure}`}>
+      <summary className={accountRow}>
         <span>
           <Sparkles className="ui-icon" />
         </span>

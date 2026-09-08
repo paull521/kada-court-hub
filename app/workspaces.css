@@ -1,52 +1,8 @@
-.role-switcher {
-  padding: 16px;
-  margin: 16px 0;
-  display: grid;
-  gap: 10px;
-}
-.role-switcher > small {
-  font-weight: 800;
-  color: #a85d00;
-  letter-spacing: 0.08em;
-}
-.role-switcher > div {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
-  gap: 6px;
-  background: #eef1f4;
-  border-radius: 14px;
-  padding: 4px;
-  position: relative;
-}
-.role-switcher a {
-  text-align: center;
-  padding: 10px 6px;
-  border-radius: 11px;
-  color: #526172;
-  font-weight: 800;
-  position: relative;
-  transition: color 0.2s ease;
-}
 /* The navy pill slides between two or three roles rather than being redrawn on
    whichever link is current. One column of the track, and one gap per column
    it has already passed. --role-count and --role-index come from the component,
    because the switcher shows two roles for some accounts and three for others. */
-.role-switcher-thumb {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  width: calc((100% - 8px - (var(--role-count) - 1) * 6px) / var(--role-count));
-  border-radius: 11px;
-  background: #08254a;
-  box-shadow: 0 3px 10px #08254a33;
-  transform: translateX(calc(var(--role-index) * (100% + 6px)));
-  transition: transform 0.24s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.role-switcher a.active {
-  color: #fff;
-}
+
 /* Held over the whole page from the moment a role is pressed until that
    workspace is on screen. The pill moves on press, so until the navigation
    lands the screen is showing one workspace and promising another, and a tap on
@@ -65,35 +21,6 @@
   gap: 12px;
 }
 
-.availability-dot {
-  display: inline-block;
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: #2a9b4c;
-  flex: 0 0 auto;
-}
-.availability-dot.no {
-  background: #d72b2b;
-}
-.availability-player {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 12px;
-  align-items: center;
-  padding: 13px 0;
-  border-bottom: 1px solid #e1e5e8;
-}
-.availability-player span {
-  display: grid;
-}
-.availability-player small {
-  color: #697687;
-  margin-top: 2px;
-}
-.availability-player strong {
-  color: #0d7130;
-}
 .captain-final-team .roster-row {
   grid-template-columns: auto auto 1fr auto;
 }
@@ -128,69 +55,13 @@
   padding: 18px;
   margin-top: 12px;
 }
-.availability-control {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
-  align-items: center;
-}
-.availability-control > span {
-  display: grid;
-}
-.availability-control > span small {
-  color: #b76b00;
-  font-weight: 800;
-}
-.availability-control > span b {
-  font-size: 14px;
-}
-.availability-control > div {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  background: #eef1f4;
-  border-radius: 12px;
-  padding: 4px;
-  position: relative;
-}
-.availability-control button {
-  min-width: 64px;
-  padding: 9px;
-  border: 0;
-  border-radius: 9px;
-  background: transparent;
-  font-weight: 900;
-  color: #5a6675;
-  position: relative;
-  transition: color 0.2s ease;
-}
+
 /* The moving pill. Half the track, less the 4px padding on either side, so it
    lands exactly on a button. Both the slide and the green-to-red change are the
    same transition, which is what makes it read as one movement. */
-.availability-thumb {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  width: calc((100% - 8px) / 2);
-  border-radius: 9px;
-  background: #258b45;
-  transition:
-    transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
-    background-color 0.22s ease;
-}
-.availability-choice[data-choice="no"] .availability-thumb {
-  transform: translateX(100%);
-  background: #cf2e2e;
-}
+
 /* The buttons keep only their text colour - the fill is the thumb's job now. */
-.availability-control button.active.yes,
-.availability-control button.active.no {
-  color: #fff;
-}
-.availability-control p {
-  grid-column: 1/-1;
-  margin: 0;
-}
+
 .roster-with-availability {
   grid-template-columns: auto auto 1fr auto !important;
 }

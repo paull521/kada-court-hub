@@ -14,6 +14,7 @@ import {
 } from "@/app/platform/actions";
 import type { PlatformOperations } from "@/lib/platform-data";
 import type { PlatformOwnerPaymentBilling } from "@/lib/owner-payment-ledger";
+import { accountDisclosure, accountRow } from "@/components/ui/account-classes";
 
 const initial: PlatformActionState = {};
 const timestamp = (value: string) =>
@@ -525,8 +526,8 @@ export function OwnerSupportRequest({
   // `owner-support-request` restated what .card already said - same border,
   // background, radius and shadow - on an element that carried both.
   return (
-    <details className="card account-disclosure">
-      <summary>
+    <details className={`card ${accountDisclosure}`}>
+      <summary className={accountRow}>
         <span>?</span>
         <b>Request Support</b>
         <strong aria-hidden="true">

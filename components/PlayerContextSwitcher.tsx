@@ -7,6 +7,11 @@ import { useRouter } from "next/navigation";
 import { switchPlayerContextAction } from "@/app/context/actions";
 import type { PlayerContextOption } from "@/lib/kch-data";
 import { teamBanner, teamBannerCopy } from "@/components/ui/schedule-classes";
+import {
+  contextOption,
+  contextOptionMark,
+  contextOptionSelected,
+} from "@/components/ui/context-classes";
 
 export default function PlayerContextSwitcher({
   contexts,
@@ -93,14 +98,14 @@ export default function PlayerContextSwitcher({
           <div className="context-options">
             {contexts.map((context) => (
               <button
-                className={`context-option ${context.registrationId === active.registrationId ? "selected" : ""}`}
+                className={`${contextOption} ${context.registrationId === active.registrationId ? contextOptionSelected : ""}`}
                 type="button"
                 role="menuitem"
                 disabled={pending}
                 onClick={() => choose(context.registrationId)}
                 key={context.registrationId}
               >
-                <span className="context-option-mark" aria-hidden="true">
+                <span className={contextOptionMark} aria-hidden="true">
                   {context.registrationId === active.registrationId ? (
                     <Check className="ui-icon" />
                   ) : (

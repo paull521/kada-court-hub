@@ -32,7 +32,10 @@ export default function CaptainAvailabilityFrame({ data }: { data?: CaptainPorta
       </div>
       {data
         ? data.availability.map((player) => (
-            <div className="availability-player" key={player.registrationId}>
+            <div
+              className="grid grid-cols-[auto_1fr_auto] items-center gap-3 border-b border-[#e1e5e8] py-[13px] [&>span]:grid [&_small]:mt-[2px] [&_small]:text-[#697687] [&_strong]:text-[#0d7130]"
+              key={player.registrationId}
+            >
               <i className={`availability-dot ${player.available ? "yes" : "no"}`} />
               <span>
                 <b>{player.name}</b>
@@ -44,7 +47,10 @@ export default function CaptainAvailabilityFrame({ data }: { data?: CaptainPorta
             </div>
           ))
         : [0, 1, 2, 3, 4, 5].map((index) => (
-            <div className="availability-player" key={index}>
+            <div
+              className="grid grid-cols-[auto_1fr_auto] items-center gap-3 border-b border-[#e1e5e8] py-[13px] [&>span]:grid [&_small]:mt-[2px] [&_small]:text-[#697687] [&_strong]:text-[#0d7130]"
+              key={index}
+            >
               <i className="availability-dot" />
               <span>
                 <b>

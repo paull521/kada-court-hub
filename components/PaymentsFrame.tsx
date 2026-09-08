@@ -2,6 +2,7 @@ import { Check, ChevronRight, Clock } from "lucide-react";
 import { LoadingNote, SkeletonBlock, SkeletonText } from "@/components/Skeleton";
 import PlayerPaymentForm from "@/components/PlayerPaymentForm";
 import type { PlayerPortalData } from "@/lib/kch-data";
+import { historyPanel, historyRow } from "@/components/ui/account-classes";
 
 /**
  * Payments, written once and drawn twice: with the portal data, and without it.
@@ -93,7 +94,7 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
         )}
         {/* Closed, this disclosure is four fixed things and a caret. It has
             never needed the read to be drawn. */}
-        <details className="card payment-history-panel">
+        <details className={`card ${historyPanel}`}>
           <summary>
             <span>
               <Clock className="ui-icon" />
@@ -106,7 +107,7 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
           <div className="payment-history-scroll">
             {data?.paymentHistory.length ? (
               data.paymentHistory.slice(0, 10).map((payment) => (
-                <div className="payment-history-row" key={payment.id}>
+                <div className={historyRow} key={payment.id}>
                   <span>
                     <Check className="ui-icon" />
                   </span>

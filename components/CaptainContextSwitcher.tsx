@@ -6,6 +6,13 @@ import { useRouter } from "next/navigation";
 import { switchCaptainContextAction } from "@/app/captain/context-actions";
 import type { CaptainContextOption } from "@/lib/captain-data";
 import { teamBanner, teamBannerCopy } from "@/components/ui/schedule-classes";
+import {
+  contextOption,
+  contextOptionMark,
+  contextOptionSelected,
+  contextSheet,
+  contextTrigger,
+} from "@/components/ui/context-classes";
 
 export default function CaptainContextSwitcher({
   contexts,
@@ -84,14 +91,14 @@ export default function CaptainContextSwitcher({
             <div className="context-options">
               {contexts.map((context) => (
                 <button
-                  className={`context-option ${context.registrationId === active.registrationId ? "selected" : ""}`}
+                  className={`${contextOption} ${context.registrationId === active.registrationId ? contextOptionSelected : ""}`}
                   type="button"
                   role="menuitem"
                   disabled={pending}
                   onClick={() => choose(context.registrationId)}
                   key={context.registrationId}
                 >
-                  <span className="context-option-mark" aria-hidden="true">
+                  <span className={contextOptionMark} aria-hidden="true">
                     {context.registrationId === active.registrationId ? (
                       <Check className="ui-icon" />
                     ) : (
@@ -124,7 +131,7 @@ export default function CaptainContextSwitcher({
   return (
     <>
       <button
-        className="context-switcher-trigger captain-context-trigger"
+        className={`captain-context-trigger ${contextTrigger}`}
         type="button"
         onClick={() => contexts.length > 1 && setOpen(true)}
         aria-haspopup={contexts.length > 1 ? "dialog" : undefined}
@@ -145,7 +152,7 @@ export default function CaptainContextSwitcher({
           onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}
         >
           <section
-            className="context-sheet"
+            className={contextSheet}
             role="dialog"
             aria-modal="true"
             aria-labelledby="captain-context-title"
@@ -166,13 +173,13 @@ export default function CaptainContextSwitcher({
             <div className="context-options">
               {contexts.map((context) => (
                 <button
-                  className={`context-option ${context.registrationId === active.registrationId ? "selected" : ""}`}
+                  className={`${contextOption} ${context.registrationId === active.registrationId ? contextOptionSelected : ""}`}
                   type="button"
                   disabled={pending}
                   onClick={() => choose(context.registrationId)}
                   key={context.registrationId}
                 >
-                  <span className="context-option-mark" aria-hidden="true">
+                  <span className={contextOptionMark} aria-hidden="true">
                     {context.registrationId === active.registrationId ? (
                       <Check className="ui-icon" />
                     ) : (

@@ -9,6 +9,7 @@ import {
   markNotificationReadAction,
 } from "@/app/notifications/actions";
 import type { PlayerNotification } from "@/lib/kch-data";
+import { contextSheet } from "@/components/ui/context-classes";
 
 export default function NotificationCenter({
   notifications,
@@ -63,7 +64,7 @@ export default function NotificationCenter({
           onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}
         >
           <section
-            className="context-sheet notification-sheet"
+            className={`notification-sheet ${contextSheet}`}
             role="dialog"
             aria-modal="true"
             aria-labelledby="notification-title"

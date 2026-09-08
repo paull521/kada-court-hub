@@ -7,6 +7,7 @@ import {
   type PreferenceActionState,
 } from "@/app/profile/notification-actions";
 import type { NotificationPreferences } from "@/lib/kch-data";
+import { accountDisclosure, accountRow } from "@/components/ui/account-classes";
 
 const options = [
   ["gameUpdates", "Games & scores", "Schedule changes and final scores"],
@@ -39,8 +40,8 @@ export default function NotificationPreferencesForm({
     setSaving(false);
   }
   return (
-    <details className="card account-disclosure">
-      <summary>
+    <details className={`card ${accountDisclosure}`}>
+      <summary className={accountRow}>
         <span>
           <Bell className="ui-icon" />
         </span>

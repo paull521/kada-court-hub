@@ -11,6 +11,7 @@ import {
   User,
 } from "lucide-react";
 import { LoadingNote, SkeletonBlock, SkeletonText } from "@/components/Skeleton";
+import { accountLink, accountRow } from "@/components/ui/account-classes";
 
 function InfoPanelFrame({ title, rows }: { title: string; rows: [ReactNode, string][] }) {
   return (
@@ -89,7 +90,7 @@ export default function ProfileFrame() {
         <SkeletonBlock height="58px" radius="18px" />
         <SkeletonBlock height="58px" radius="18px" />
         {/* These two are the same on every profile there has ever been. */}
-        <span className="card account-link">
+        <span className={`card ${accountRow} ${accountLink}`}>
           <span>
             <BookOpen className="ui-icon" />
           </span>

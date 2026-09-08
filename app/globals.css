@@ -133,40 +133,10 @@ body {
   color: #f5a313;
   margin: 0 0 12px;
 }
-.context-switcher-trigger {
-  max-width: 174px;
-  min-width: 0;
-  border: 1px solid rgba(7, 31, 61, 0.11);
-  background: rgba(255, 255, 255, 0.82);
-  /* Was 15px on a ~33px-tall control, i.e. half its height, so it rendered as a
-     full pill rather than a rounded rectangle. */
-  border-radius: 9px;
-  padding: 9px 11px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 16px;
-  align-items: center;
-  gap: 6px;
-  box-shadow: 0 5px 14px rgba(13, 38, 69, 0.06);
-  text-align: left;
-}
-.context-switcher-trigger > span {
-  display: grid;
-  min-width: 0;
-}
-.context-switcher-trigger b {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 11px;
-}
+
 /* The caret used to be a text glyph, which centres on its baseline rather than
    its box and always sat low next to the label. An SVG centres on its box. */
-.context-switcher-trigger .context-switcher-caret {
-  display: block;
-  width: 16px;
-  height: 16px;
-  color: rgba(7, 31, 61, 0.45);
-}
+
 .context-overlay {
   position: fixed;
   inset: 0;
@@ -177,16 +147,7 @@ body {
   justify-content: center;
   padding: 12px;
 }
-.context-sheet {
-  width: min(100%, 456px);
-  max-height: min(78vh, 620px);
-  overflow: auto;
-  background: #fffdf9;
-  border-radius: 24px 24px 17px 17px;
-  padding: 10px 18px 20px;
-  box-shadow: 0 -14px 50px rgba(4, 18, 35, 0.25);
-  animation: context-sheet-in 0.18s ease-out;
-}
+
 .context-sheet-handle {
   width: 44px;
   height: 4px;
@@ -194,36 +155,7 @@ body {
   background: #d7d3ce;
   margin: 0 auto 12px;
 }
-.context-sheet header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
-}
-.context-sheet header span {
-  display: grid;
-  gap: 3px;
-}
-.context-sheet header small {
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: 0.8px;
-  color: var(--gold);
-}
-.context-sheet h2 {
-  font-size: 22px;
-  line-height: 1.15;
-  margin: 0;
-}
-.context-sheet header button {
-  width: 34px;
-  height: 34px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: #fff;
-  font-size: 23px;
-  line-height: 1;
-}
+
 .context-help {
   font-size: 11px;
   line-height: 1.5;
@@ -234,62 +166,7 @@ body {
   display: grid;
   gap: 9px;
 }
-.context-option {
-  width: 100%;
-  border: 1px solid var(--line);
-  border-radius: 15px;
-  background: #fff;
-  padding: 11px;
-  display: grid;
-  grid-template-columns: 39px minmax(0, 1fr) auto;
-  gap: 10px;
-  align-items: center;
-  text-align: left;
-}
-.context-option.selected {
-  border-color: #e0a43f;
-  background: #fffbf3;
-  box-shadow: 0 5px 14px rgba(209, 132, 8, 0.08);
-}
-.context-option:disabled {
-  cursor: wait;
-  opacity: 0.65;
-}
-.context-option-mark {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  background: var(--navy);
-  color: #f5a313;
-  display: grid;
-  place-items: center;
-  font-weight: 900;
-}
-.context-option.selected .context-option-mark {
-  background: #e8f4e8;
-  color: var(--green);
-}
-.context-option > span:nth-child(2) {
-  display: grid;
-  gap: 2px;
-  min-width: 0;
-}
-.context-option b {
-  font-size: 14px;
-}
-.context-option small {
-  font-size: 10px;
-  color: var(--gold);
-}
-.context-option em {
-  font-size: 10px;
-  color: var(--muted);
-  font-style: normal;
-}
-.context-option strong {
-  font-size: 9px;
-  color: var(--green);
-}
+
 .context-status {
   text-align: center;
   color: var(--muted);
@@ -1036,62 +913,6 @@ body {
   margin: 24px 0 12px;
 }
 
-.owner-more-list {
-  display: grid;
-  gap: 10px;
-  margin-top: 18px;
-}
-.owner-more-list > a {
-  display: grid;
-  grid-template-columns: 46px minmax(0, 1fr) auto auto;
-  gap: 11px;
-  align-items: center;
-  min-height: 76px;
-  padding: 13px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 6px 16px rgba(13, 38, 69, 0.06);
-}
-.owner-more-list > a > span {
-  width: 44px;
-  height: 44px;
-  border-radius: 13px;
-  background: #f7f0e4;
-  color: var(--gold);
-  display: grid;
-  place-items: center;
-  font-size: 22px;
-}
-.owner-more-list > a > div {
-  display: grid;
-  gap: 4px;
-}
-.owner-more-list b {
-  font-size: 15px;
-}
-.owner-more-list small {
-  font-size: 12px;
-  line-height: 1.35;
-  color: var(--muted);
-}
-.owner-more-list em {
-  min-width: 25px;
-  height: 25px;
-  padding: 0 7px;
-  border-radius: 15px;
-  background: var(--red);
-  color: #fff;
-  display: grid;
-  place-items: center;
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 900;
-}
-.owner-more-list strong {
-  font-size: 23px;
-}
-
 .notification-sheet {
   padding-bottom: 24px;
 }
@@ -1109,12 +930,6 @@ body {
 .notification-list {
   display: grid;
   gap: 8px;
-}
-
-.payment-history-panel > h2 {
-  font-size: 14px;
-  color: var(--gold);
-  margin: 0 0 5px;
 }
 
 .payment-status-card {
@@ -1149,44 +964,6 @@ body {
   font-size: 13px;
   line-height: 1.4;
   color: var(--muted);
-}
-
-.payment-history-panel {
-  margin-top: 18px;
-}
-.payment-history-row {
-  display: grid;
-  grid-template-columns: 36px 1fr auto;
-  gap: 10px;
-  align-items: center;
-  padding: 13px 0;
-  border-bottom: 1px solid var(--line);
-}
-.payment-history-row:last-child {
-  border-bottom: 0;
-}
-.payment-history-row > span:first-child {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #e8f4e8;
-  color: var(--green);
-  display: grid;
-  place-items: center;
-}
-.payment-history-row > span:nth-child(2) {
-  display: grid;
-  gap: 4px;
-}
-.payment-history-row b {
-  font-size: 14px;
-}
-.payment-history-row small {
-  font-size: 12px;
-  color: var(--muted);
-}
-.payment-history-row > strong {
-  font-size: 16px;
 }
 
 .owner-empty-operation {
@@ -1224,36 +1001,6 @@ body {
   margin: 0 0 12px;
 }
 
-.payment-history-panel {
-  overflow: hidden;
-}
-.payment-history-panel > summary {
-  list-style: none;
-  display: grid;
-  grid-template-columns: 35px 1fr auto;
-  gap: 10px;
-  align-items: center;
-  min-height: 64px;
-  padding: 13px 16px;
-  cursor: pointer;
-}
-.payment-history-panel > summary::-webkit-details-marker {
-  display: none;
-}
-.payment-history-panel > summary > span {
-  font-size: 23px;
-  color: var(--muted);
-}
-.payment-history-panel > summary > b {
-  font-size: 16px;
-}
-.payment-history-panel > summary > strong {
-  font-size: 24px;
-  transition: transform 0.15s;
-}
-.payment-history-panel[open] > summary > strong {
-  transform: rotate(90deg);
-}
 .payment-history-scroll {
   max-height: 540px;
   overflow-y: auto;
@@ -1376,61 +1123,7 @@ body {
 .profile-account-list > form {
   margin: 0;
 }
-.account-disclosure {
-  overflow: hidden;
-}
-.account-disclosure > summary,
-.account-link {
-  list-style: none;
-  width: 100%;
-  min-height: 64px;
-  padding: 13px 16px;
-  display: grid;
-  grid-template-columns: 36px 1fr auto;
-  gap: 10px;
-  align-items: center;
-  text-align: left;
-}
-.account-disclosure > summary {
-  cursor: pointer;
-}
-.account-disclosure > summary::-webkit-details-marker {
-  display: none;
-}
-.account-disclosure > summary > span,
-.account-link > span {
-  width: 34px;
-  height: 34px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  color: var(--navy);
-  font-size: 18px;
-}
-.account-disclosure > summary > b,
-.account-link > b {
-  font-size: 15px;
-}
-.account-disclosure > summary > strong,
-.account-link > strong {
-  font-size: 24px;
-  transition: transform 0.15s;
-}
-.account-disclosure[open] > summary > strong {
-  transform: rotate(90deg);
-}
 
-.account-link {
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.94);
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(13, 38, 69, 0.08);
-}
-button.account-link {
-  font: inherit;
-  cursor: pointer;
-}
 .logout-account {
   color: #a51118;
 }
@@ -1512,11 +1205,6 @@ button.account-link {
   .topbar .logo {
     --kch-logo-size: 36px;
   }
-  .context-switcher-trigger {
-    max-width: 137px;
-    padding-left: 7px;
-    padding-right: 7px;
-  }
 
   .game-row {
     grid-template-columns: 40px 1fr 70px 12px;
@@ -1566,17 +1254,23 @@ button.account-link {
   z-index: 100 !important;
   padding-bottom: 0;
 }
+
+/* The sheet keeps its class for these two: an ancestor sets the first, and the
+   second is a stacking decision the whole overlay shares. Everything else it
+   used to carry is now utilities on the element - see components/ui/
+   context-classes.ts. */
 .context-overlay-open .context-sheet {
   margin-bottom: 0;
   padding-bottom: calc(22px + env(safe-area-inset-bottom));
   max-height: calc(100dvh - 18px);
 }
-body:has(.context-overlay-open) .bottom {
-  visibility: hidden;
-}
 .context-sheet {
   z-index: 101;
 }
+body:has(.context-overlay-open) .bottom {
+  visibility: hidden;
+}
+
 .rules-acknowledgment {
   display: grid;
   gap: 13px;
@@ -1691,11 +1385,6 @@ body:has(.context-overlay-open) .bottom {
 }
 .owner-subscription-history > summary::-webkit-details-marker {
   display: none;
-}
-
-.payment-history-row > span:first-child {
-  background: #fff1f1;
-  color: #a51118;
 }
 
 .platform-content > form {
@@ -1823,10 +1512,6 @@ body:has(.context-overlay-open) .bottom {
   }
   /* The sliding pills still land in the right place, they just stop
      travelling to get there. */
-  .availability-thumb,
-  .role-switcher-thumb {
-    transition: none;
-  }
 }
 
 .sr-only {

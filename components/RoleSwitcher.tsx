@@ -77,7 +77,10 @@ export default function RoleSwitcher({
   if (options.length < 2) return null;
   const switching = pendingRole !== null;
   return (
-    <section className="card role-switcher" aria-busy={switching || undefined}>
+    <section
+      className="card m-[16px_0] grid gap-[10px] p-4 [&>small]:font-[800] [&>small]:tracking-[0.08em] [&>small]:text-[#a85d00] [&>div]:relative [&>div]:grid [&>div]:auto-cols-fr [&>div]:grid-flow-col [&>div]:gap-[6px] [&>div]:rounded-[14px] [&>div]:bg-[#eef1f4] [&>div]:p-1 [&_a]:relative [&_a]:rounded-[11px] [&_a]:p-[10px_6px] [&_a]:text-center [&_a]:font-[800] [&_a]:text-[#526172] [&_a]:transition-colors [&_a]:duration-200 [&_a]:ease-in-out [&_a.active]:text-white"
+      aria-busy={switching || undefined}
+    >
       <small>VIEW AS</small>
       <div
         style={
@@ -87,7 +90,12 @@ export default function RoleSwitcher({
           } as React.CSSProperties
         }
       >
-        {index >= 0 && <i className="role-switcher-thumb" aria-hidden="true" />}
+        {index >= 0 && (
+          <i
+            className="absolute top-1 bottom-1 left-1 w-[calc((100%_-_8px_-_(var(--role-count)_-_1)_*_6px)/var(--role-count))] translate-x-[calc(var(--role-index)_*_(100%_+_6px))] rounded-[11px] bg-[#08254a] shadow-[0_3px_10px_#08254a33] transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none"
+            aria-hidden="true"
+          />
+        )}
         {options.map(([role, href, label]) => (
           <Link
             key={role}

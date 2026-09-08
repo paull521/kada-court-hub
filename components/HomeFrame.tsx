@@ -5,6 +5,7 @@ import NextGameCard from "@/components/NextGameCard";
 import SeasonInvitationCard from "@/components/SeasonInvitationCard";
 import AvailabilityControl from "@/components/AvailabilityControl";
 import type { PlayerPortalData } from "@/lib/kch-data";
+import { availabilityControl } from "@/components/ui/account-classes";
 
 /**
  * Home, written once and drawn twice: with the portal data, and without it.
@@ -48,7 +49,7 @@ export default function HomeFrame({ data }: { data?: PlayerPortalData }) {
               {next && data ? (
                 <AvailabilityControl gameId={next.id} available={data.myAvailability} />
               ) : (
-                <section className="availability-control">
+                <section className={availabilityControl}>
                   <span>
                     <small>ARE YOU PLAYING?</small>
                   </span>
@@ -56,7 +57,7 @@ export default function HomeFrame({ data }: { data?: PlayerPortalData }) {
                       decides is which of them is filled, so the control is
                       drawn straight away with no pill on it and nothing to
                       press until the answer lands. */}
-                  <div className="availability-choice">
+                  <div className="relative grid grid-cols-2 rounded-xl bg-[#eef1f4] p-1">
                     <button type="button" disabled>
                       Yes
                     </button>

@@ -26,6 +26,7 @@ import { OwnerSupportRequest } from "@/components/PlatformOperations";
 import PlatformFeedback from "@/components/PlatformFeedback";
 import OwnerConferenceSwitcher from "@/components/OwnerConferenceSwitcher";
 import "@/components/ProfileCleanup.css";
+import { accountLink, accountRow } from "@/components/ui/account-classes";
 
 function InfoPanel({
   title,
@@ -191,7 +192,7 @@ export default async function Profile({
       <div className="profile-account-list">
         <PlatformFeedback conferenceId={ownerData.conferenceId} />
         <NotificationPreferencesForm preferences={data.notificationPreferences} />
-        <Link href="/documents" className="card account-link">
+        <Link href="/documents" className={`card ${accountRow} ${accountLink}`}>
           <span>
             <BookOpen className="ui-icon" />
           </span>
@@ -200,7 +201,12 @@ export default async function Profile({
             <ChevronRight className="go-caret" />
           </strong>
         </Link>
-        <Link href={`/legal?view=${currentRole}`} className="card account-link">
+        <Link
+          href={`/legal?view=${currentRole}`}
+          // desk: replaces an ancestor-scoped rule in desktop.css. This row
+          // renders only on /profile, the one place that rule could reach.
+          className={`card ${accountRow} ${accountLink} desk:w-full desk:justify-self-center`}
+        >
           <span>
             <BookOpen className="ui-icon" />
           </span>
@@ -220,7 +226,7 @@ export default async function Profile({
           }))}
         />
         <form action={logoutAction}>
-          <button className="card account-link logout-account">
+          <button className={`card logout-account ${accountRow} ${accountLink}`}>
             <span>
               <LogOut className="ui-icon" />
             </span>
@@ -267,7 +273,12 @@ export default async function Profile({
         ) : null}
         <NotificationPreferencesForm preferences={data.notificationPreferences} />
         {rulesLink}
-        <Link href={`/legal?view=${currentRole}`} className="card account-link">
+        <Link
+          href={`/legal?view=${currentRole}`}
+          // desk: replaces an ancestor-scoped rule in desktop.css. This row
+          // renders only on /profile, the one place that rule could reach.
+          className={`card ${accountRow} ${accountLink} desk:w-full desk:justify-self-center`}
+        >
           <span>
             <BookOpen className="ui-icon" />
           </span>
@@ -289,7 +300,7 @@ export default async function Profile({
           />
         )}
         <form action={logoutAction}>
-          <button className="card account-link logout-account">
+          <button className={`card logout-account ${accountRow} ${accountLink}`}>
             <span>
               <LogOut className="ui-icon" />
             </span>

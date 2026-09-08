@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { setAvailabilityAction, type AvailabilityActionState } from "@/app/availability/actions";
+import { availabilityControl, availabilityThumb } from "@/components/ui/account-classes";
 
 export default function AvailabilityControl({
   gameId,
@@ -30,15 +31,18 @@ export default function AvailabilityControl({
     setPending(false);
   }
   return (
-    <section className="availability-control">
+    <section className={availabilityControl}>
       <span>
         <small>ARE YOU PLAYING?</small>
       </span>
       {/* The filled pill is one element that slides between the two buttons and
           recolours on the way, rather than a background that switches from one
           button to the other. data-choice drives both. */}
-      <div className="availability-choice" data-choice={current ? "yes" : "no"}>
-        <i className="availability-thumb" aria-hidden="true" />
+      <div
+        className="group relative grid grid-cols-2 rounded-xl bg-[#eef1f4] p-1"
+        data-choice={current ? "yes" : "no"}
+      >
+        <i className={availabilityThumb} aria-hidden="true" />
         <button
           type="button"
           onClick={() => choose(true)}

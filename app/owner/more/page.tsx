@@ -6,6 +6,7 @@ import OwnerPageShell from "@/components/OwnerPageShell";
 import RoleSwitcher from "@/components/RoleSwitcher";
 import { getOwnerConferenceContext, getOwnerPortalData } from "@/lib/owner-data";
 import { getAvailableRoles } from "@/lib/roles";
+import { moreList } from "@/components/ui/account-classes";
 
 /**
  * Everything here is static except the pending-payment count, which is the one
@@ -25,7 +26,7 @@ export default async function OwnerMorePage() {
       conferences={context.conferences}
     >
       <RoleSwitcher roles={roles} active="owner" />
-      <nav className="owner-more-list" aria-label="More owner tools">
+      <nav className={moreList} aria-label="More owner tools">
         <Link href="/owner/payments">
           <span>
             <Wallet className="ui-icon" />

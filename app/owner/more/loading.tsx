@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ChevronRight, DollarSign, Wallet } from "lucide-react";
 import OwnerShellFrame from "@/components/OwnerShellFrame";
+import { moreList } from "@/components/ui/account-classes";
 
 /**
  * Both links are fixed text, so this is the page apart from its role switcher -
@@ -22,7 +23,7 @@ export default function Loading() {
           <a>Owner</a>
         </div>
       </section>
-      <nav className="owner-more-list" aria-label="More owner tools">
+      <nav className={moreList} aria-label="More owner tools">
         <Link href="/owner/payments">
           <span>
             <Wallet className="ui-icon" />

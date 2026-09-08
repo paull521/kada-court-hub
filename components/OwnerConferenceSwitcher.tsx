@@ -6,6 +6,13 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { selectOwnerConferenceAction } from "@/app/owner/actions";
 import type { OwnerConferenceOption } from "@/lib/owner-data";
+import {
+  contextOption,
+  contextOptionMark,
+  contextOptionSelected,
+  contextSheet,
+  contextTrigger,
+} from "@/components/ui/context-classes";
 
 export default function OwnerConferenceSwitcher({
   conferences,
@@ -32,7 +39,7 @@ export default function OwnerConferenceSwitcher({
   return (
     <>
       <button
-        className="context-switcher-trigger owner-context-trigger"
+        className={`owner-context-trigger ${contextTrigger}`}
         type="button"
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
@@ -50,7 +57,7 @@ export default function OwnerConferenceSwitcher({
           onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}
         >
           <section
-            className="context-sheet"
+            className={contextSheet}
             role="dialog"
             aria-modal="true"
             aria-labelledby="owner-conference-title"
@@ -74,11 +81,11 @@ export default function OwnerConferenceSwitcher({
                   <input type="hidden" name="conferenceId" value={conference.id} />
                   <input type="hidden" name="returnPath" value={returnPath} />
                   <button
-                    className={`context-option ${conference.id === current.id ? "selected" : ""}`}
+                    className={`${contextOption} ${conference.id === current.id ? contextOptionSelected : ""}`}
                     type="submit"
                     disabled={conference.id === current.id}
                   >
-                    <span className="context-option-mark" aria-hidden="true">
+                    <span className={contextOptionMark} aria-hidden="true">
                       {conference.id === current.id ? <Check className="ui-icon" /> : "K"}
                     </span>
                     <span>
