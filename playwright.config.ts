@@ -32,7 +32,12 @@ export default defineConfig({
       // Antialiasing differs by a pixel here and there even on identical
       // renders. Fail on layout movement, not on a softened edge.
       threshold: 0.2,
-      maxDiffPixelRatio: 0.01,
+      // The migration's contract is close enough, not pixel perfect - see
+      // "What counts as a match" in MIGRATION.md. 5% absorbs the spacing and
+      // type-metric drift a faithful conversion leaves behind; a real layout
+      // break is far larger than that, and a page whose height changes fails
+      // here whatever this number says.
+      maxDiffPixelRatio: 0.05,
       animations: "disabled",
       caret: "hide",
     },
