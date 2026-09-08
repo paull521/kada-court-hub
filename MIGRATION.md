@@ -48,9 +48,16 @@ Per component, in this order. Do not skip step 2.
 - **Colours bind by reference.** `--color-navy` reads `--navy`, so `bg-navy`
   and the old `.primary` cannot drift.
 - **Primitives live in `components/ui/`.** Card, Button, Eyebrow, FormMessage,
-  PageHeading. They currently emit the same classes the old markup did, which
-  is what makes adopting one a provable no-op. When `.card` becomes utilities
-  it changes there once, for all 117 call sites.
+  PageHeading, RulesDocument. They emit the same classes the old markup did,
+  which is what makes adopting one a provable no-op. When `.card` becomes
+  utilities it changes there once, for all 117 call sites.
+- **Reach for a primitive when a call site cannot be photographed.**
+  `RulesDocument` is the worked example, in two commits: adopt it at all four
+  sites still emitting `.rules-document` (a no-op the screenshots prove), then
+  convert inside it. `app/rules/loading.tsx` is a skeleton the suite waits out
+  by definition, and it came along correct because it renders the same
+  component as the two files that _are_ photographed - not because the
+  utilities were transcribed into it accurately.
 - **Repeated utility runs become a `const` beside the component.** `stepRow`,
   `tile`, `summaryRow`, `actionCard`. A file-local name, not a primitive: it
   is deleted with the component, which is the whole point.
@@ -65,12 +72,12 @@ Per component, in this order. Do not skip step 2.
 
 ## Done
 
-Twenty-six components and two dead-CSS sweeps.
-**4,010 lines of CSS gone, zero pixels moved.**
+Twenty-eight components and two dead-CSS sweeps.
+**4,092 lines of CSS gone, zero pixels moved.**
 
-`globals.css` 8,837 → 5,778 · `owner-refinement.css` 897 → 408 ·
+`globals.css` 8,837 → 5,697 · `owner-refinement.css` 897 → 408 ·
 `workspaces.css` 606 → 347 · `captain-refinement.css` 111 → 15 ·
-`desktop.css` 530 → 423.
+`desktop.css` 530 → 422.
 
 Owner: scoresheets (71 rules), dashboard `ActionCard` (43), financial summary
 (41), setup `GuidedStep` (33), subscription panel (33), guide (31),
@@ -78,7 +85,8 @@ Owner: scoresheets (71 rules), dashboard `ActionCard` (43), financial summary
 division schedule (15), `roster-player-editor` (13), `owner-team` (8).
 Platform: support requests (30), invitation box (24), directory + ledger (20),
 feedback (19), support request (12).
-Player: payment form (19), results (13), standings (12).
+Player: payment form (19), `rules-document` (12), results (13), standings
+(12), profile's `rules-account-link` (5).
 Captain: `captain-roster-disclosure` + the roster list it re-scoped (26),
 roster requests (30), dashboard tiles (14), draft status (6).
 Dead sweeps: 192 rules for 65 classes, 40 for seven captain classes, 14 for
@@ -172,27 +180,24 @@ removal named it. It greps source text - that is all it can do.
 
 ## Next
 
-**`rules-document`** (12 rules, all in `globals.css`) - scouted, not started,
-because it is four files rather than one:
+Nothing is scouted past this point. Four candidates, cheapest first, and
+**every one of them needs step 2 run before it is started** - twice today a
+target that looked covered was not.
 
-- `app/rules/page.tsx` and `components/OwnerDemoOverview.tsx` render it. Both
-  are photographed now: `player-rules` has the header, the article and the
-  acknowledged footer, `player-documents` has the header and article without
-  one. Between them every rule is covered.
-- `app/rules/loading.tsx` renders the same card as a skeleton. **No screenshot
-  can reach it** - `settle()` waits it out by definition - so converting it is
-  transcription, not verification. The way to make that safe is to have it
-  emit the _same_ strings as the file that is verified, which argues for a
-  `components/ui/` primitive here rather than utilities at four sites. That is
-  the two-step the conventions describe: adopt the primitive emitting today's
-  class (a provable no-op), then convert inside it once.
-- `components/OwnerServiceAgreement.tsx` renders it too, and **is imported by
-  nothing**. Worth confirming before it is carried along.
+| Prefix                 | Rules | Owner                    | The catch                                                   |
+| ---------------------- | ----: | ------------------------ | ----------------------------------------------------------- |
+| `notification-item`    |    11 | `NotificationCenter.tsx` | Opens from the header; probably in no baseline shut or open |
+| `schedule-method-card` |    11 | `OwnerManagement.tsx`    | Renders only for a division with no games yet - probe first |
+| `payment-count-grid`   |    12 | `OwnerManagement.tsx`    | `payment-${...}` is built at runtime; read the call site    |
+| `team-draft-review`    |    20 | `OwnerManagement.tsx`    | `team-${...}` at runtime, and `team-draft` renders nowhere  |
 
-One rule is shared: `.rules-document > header > span, .rules-account-link >
-span`. `.rules-account-link` is five more rules on `/profile` (one of them in
-`desktop.css`), one owner, and is photographed in all three profile views - so
-the pair can go together the way the last pair did.
+`btn` (21 rules) is the largest name left and is deliberately last: it is a
+primitive with call sites in every workspace, and `.btn` beat its own utility
+replacement once already.
+
+`components/OwnerServiceAgreement.tsx` renders `RulesDocument` and **is
+imported by nothing**. Left alone deliberately rather than deleted - it is
+converted and correct, it simply has no route.
 
 **Renders nowhere in the current data.** Probed and confirmed absent, so
 conversion is unverifiable: `team-leadership`, `payment-division`,
