@@ -2370,41 +2370,7 @@ body {
   line-height: 1.4;
   color: var(--muted);
 }
-.captain-team-card {
-  padding: 20px;
-  margin-bottom: 16px;
-  background: linear-gradient(125deg, #08243e, #0a3767);
-  color: #fff;
-}
-.captain-team-card small {
-  color: #f5a313;
-  font-weight: 800;
-}
-.captain-team-card h2 {
-  font-size: 28px;
-  margin: 6px 0;
-}
-.captain-team-card p {
-  color: #d7e0e9;
-}
-.captain-team-card > div {
-  display: inline-block;
-}
-.captain-team-card .published,
-.captain-team-card .waiting {
-  display: inline-block;
-  padding: 6px 9px;
-  border-radius: 11px;
-  font-size: 10px;
-}
-.captain-team-card .published {
-  background: #dff3df;
-  color: var(--green);
-}
-.captain-team-card .waiting {
-  background: #fff4da;
-  color: #795009;
-}
+
 .captain-request-list {
   display: grid;
   gap: 8px;
@@ -2437,98 +2403,7 @@ body {
   color: var(--muted);
   line-height: 1.4;
 }
-.captain-draft-list-card {
-  display: grid;
-  gap: 11px;
-  margin-top: 16px;
-  padding: 15px;
-}
-.captain-draft-list-card > header {
-  display: grid;
-  grid-template-columns: 35px minmax(0, 1fr) auto;
-  gap: 10px;
-  align-items: center;
-}
-.captain-draft-list-card > header > span:first-child {
-  width: 35px;
-  height: 35px;
-  display: grid;
-  place-items: center;
-  border-radius: 11px;
-  background: #fff4da;
-  color: #9a6100;
-}
-.captain-draft-list-card > header > span:nth-child(2) {
-  display: grid;
-  gap: 2px;
-}
-.captain-draft-list-card header small {
-  font-size: 9px;
-  font-weight: 800;
-  color: var(--gold);
-}
-.captain-draft-list-card h2 {
-  margin: 0;
-  font-size: 16px;
-}
-.captain-draft-list-card > header > em {
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 800;
-  color: var(--muted);
-  background: #f2f0ed;
-  border-radius: 999px;
-  padding: 6px 8px;
-  white-space: nowrap;
-}
-.captain-draft-list-card ul {
-  display: grid;
-  gap: 7px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.captain-draft-list-card li {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 8px;
-  align-items: center;
-  padding: 11px 12px;
-  border: 1px solid var(--line);
-  border-radius: 11px;
-  background: #fff;
-}
-.captain-draft-list-card li span {
-  display: grid;
-  gap: 2px;
-  min-width: 0;
-}
-.captain-draft-list-card li strong {
-  font-size: 13px;
-}
-.captain-draft-list-card li small,
-.captain-draft-list-card > p {
-  font-size: 10px;
-  color: var(--muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.captain-draft-list-card li i {
-  font-size: 11px;
-  font-style: normal;
-  color: var(--muted);
-  white-space: nowrap;
-}
-.captain-draft-list-card > a {
-  color: var(--blue);
-  font-size: 12px;
-  font-weight: 800;
-  text-decoration: none;
-  display: flex;
-  justify-content: space-between;
-  padding-top: 2px;
-}
+
 .home-payment-reminder {
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr) auto;
@@ -2570,24 +2445,7 @@ body {
 .home-payment-reminder > b {
   font-size: 25px;
 }
-.captain-self-details {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 12px;
-  margin: 3px 0;
-}
-.captain-self-details legend {
-  padding: 0 5px;
-  font-size: 12px;
-  font-weight: 850;
-  color: var(--gold);
-}
-.captain-self-details p {
-  margin: 0 0 10px;
-  font-size: 11px;
-  line-height: 1.4;
-  color: var(--muted);
-}
+
 .owner-draft-override {
   margin: 12px 0;
   border: 1px solid #e4bd78;
