@@ -13,7 +13,12 @@ import {
   contextSheet,
   contextTrigger,
 } from "@/components/ui/context-classes";
-import { contextHelp, contextOptions, sheetHandle } from "@/components/ui/shared-classes";
+import {
+  contextHelp,
+  contextOptions,
+  sheetHandle,
+  contextOverlay,
+} from "@/components/ui/shared-classes";
 
 export default function OwnerConferenceSwitcher({
   conferences,
@@ -53,7 +58,7 @@ export default function OwnerConferenceSwitcher({
       </button>
       {open && (
         <div
-          className="context-overlay context-overlay-open"
+          className={`context-overlay-open ${contextOverlay}`}
           role="presentation"
           onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}
         >

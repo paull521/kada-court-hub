@@ -21,6 +21,8 @@ import {
   teamBannerCaret,
   teamDropdown,
   teamDropdownScrim,
+  teamMark,
+  teamMarkSmall,
   teamSwitcher,
 } from "@/components/ui/shared-classes";
 
@@ -78,7 +80,7 @@ export default function CaptainContextSwitcher({
           aria-expanded={contexts.length > 1 ? open : undefined}
           disabled={contexts.length < 2}
         >
-          <span className="team-mark small" aria-hidden="true">
+          <span className={`${teamMark} ${teamMarkSmall}`} aria-hidden="true">
             K
           </span>
           <span className={teamBannerCopy}>

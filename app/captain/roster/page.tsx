@@ -7,6 +7,7 @@ import CaptainDraftRoster from "@/components/CaptainDraftRoster";
 import CaptainRosterFrame from "@/components/CaptainRosterFrame";
 import { getCaptainPortalData, type CaptainPortalData } from "@/lib/captain-data";
 import { getAvailableRoles } from "@/lib/roles";
+import { emptyNote } from "@/components/ui/shared-classes";
 
 /** Only two statuses colour the pill; anything else keeps the grey default. */
 const requestTone: Record<string, string> = {
@@ -195,7 +196,7 @@ async function RosterBody({ data: portal }: { data: Promise<CaptainPortalData> }
               ))}
             </div>
           ) : (
-            <p className="empty-note">No roster requests yet.</p>
+            <p className={emptyNote}>No roster requests yet.</p>
           )}
         </div>
       </details>

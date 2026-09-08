@@ -67,7 +67,17 @@ import {
   scheduleWeek,
   weeklyScheduleList,
 } from "@/components/ui/schedule-classes";
-import { emptyOperation, ownerForm, sectionTitle } from "@/components/ui/shared-classes";
+import {
+  cardLabel,
+  compactFields,
+  emptyNote,
+  emptyOperation,
+  fieldHelp,
+  ownerForm,
+  ownerIcon,
+  ownerSection,
+  sectionTitle,
+} from "@/components/ui/shared-classes";
 
 const initialState: OwnerActionState = {};
 function Feedback({ state }: { state: OwnerActionState }) {
@@ -402,7 +412,7 @@ function DirectoryLeaderPicker({
             <Check className="ui-icon" /> Selected: <b>{selected.name}</b>
           </p>
         )}
-        <p className="field-help">
+        <p className={fieldHelp}>
           The full player directory stays hidden until you search. Assigning this role also creates
           the player&apos;s normal season registration.
         </p>
@@ -620,7 +630,7 @@ function PreseasonDivisionForm({
               <input name="lightImage" type="file" accept="image/jpeg,image/png,image/webp" />
             </label>
           </div>
-          <p className="field-help">
+          <p className={fieldHelp}>
             Fees are required before invitations. Uniform photos are optional and can be added later
             for {division.name}.
           </p>
@@ -777,7 +787,7 @@ function DivisionInvitationForm({
             <b>{selected.size + captainCount}</b>
           </span>
         </section>
-        <p className="field-help">
+        <p className={fieldHelp}>
           {captainCount
             ? `${captainCount} captain${captainCount === 1 ? " is" : "s are"} already counted. Select the additional players who should receive this invitation.`
             : "Choose the players who should receive this division invitation."}
@@ -814,7 +824,7 @@ function DivisionInvitationForm({
             );
           })}
           {!directory.length && (
-            <p className="empty-note">Add KCH players to this conference directory first.</p>
+            <p className={emptyNote}>Add KCH players to this conference directory first.</p>
           )}
         </div>
         <label>
@@ -846,7 +856,7 @@ function DivisionInvitationForm({
           Invitation flyer <small>(optional)</small>
           <input name="flyer" type="file" accept="image/jpeg,image/png,image/webp" />
         </label>
-        <p className="field-help">
+        <p className={fieldHelp}>
           Only the checked players receive this division invitation. Earlier invite responses are
           preserved.
         </p>
@@ -1031,7 +1041,7 @@ function TeamDraftReview({
               </span>
             );
           })}
-          {!roster.length && <p className="empty-note">No players assigned to this team.</p>}
+          {!roster.length && <p className={emptyNote}>No players assigned to this team.</p>}
         </div>
         {(team.draftStatus === "submitted" ||
           (allowChanges && team.draftStatus === "approved")) && (
@@ -1108,7 +1118,7 @@ export function OwnerRosterChangeReviews({ requests }: { requests: OwnerRosterRe
   const pending = requests.filter((request) => request.status === "pending");
   return (
     <details
-      className="card owner-section group overflow-hidden p-0 [&>summary]:grid [&>summary]:min-h-[64px] [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:grid-cols-[minmax(0,1fr)_auto_24px] [&>summary]:items-center [&>summary]:gap-3 [&>summary]:p-[18px] [&>summary::-webkit-details-marker]:hidden [&>summary_span]:grid [&>summary_span]:gap-[5px] [&>summary_b]:text-lg [&>summary_small]:text-[13px] [&>summary_small]:text-muted [&>summary>strong]:grid [&>summary>strong]:place-items-center [&>summary>strong]:transition-transform group-open:[&>summary>strong]:rotate-90 [&>div]:grid [&>div]:gap-2 [&>div]:p-[0_14px_14px]"
+      className={`card ${ownerSection} group overflow-hidden p-0! [&>summary]:grid [&>summary]:min-h-[64px] [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:grid-cols-[minmax(0,1fr)_auto_24px] [&>summary]:items-center [&>summary]:gap-3 [&>summary]:p-[18px] [&>summary::-webkit-details-marker]:hidden [&>summary_span]:grid [&>summary_span]:gap-[5px] [&>summary_b]:text-lg [&>summary_small]:text-[13px] [&>summary_small]:text-muted [&>summary>strong]:grid [&>summary>strong]:place-items-center [&>summary>strong]:transition-transform group-open:[&>summary>strong]:rotate-90 [&>div]:grid [&>div]:gap-2 [&>div]:p-[0_14px_14px]`}
       open={pending.length > 0}
     >
       <summary>
@@ -1152,10 +1162,12 @@ function UnassignedPlayerForm({ seasons }: { seasons: OwnerSeason[] }) {
   );
   if (!assignmentDivisions.some((division) => division.teams.length)) return null;
   return (
-    <details className="card owner-section [&>summary]:cursor-pointer [&>summary]:list-none [&>summary::-webkit-details-marker]:hidden">
+    <details
+      className={`card ${ownerSection} [&>summary]:cursor-pointer [&>summary]:list-none [&>summary::-webkit-details-marker]:hidden`}
+    >
       <summary>
         <span className={sectionTitle}>
-          <span className="owner-icon">
+          <span className={ownerIcon}>
             <Plus className="ui-icon" />
           </span>
           <span>
@@ -1313,7 +1325,7 @@ function OwnerTeamsWorkspace({
                 {season.divisions.map((division) => (
                   <details className={actionCard} key={division.id}>
                     <summary className={`${actionSummary} grid-cols-[44px_1fr_auto]`}>
-                      <span className="owner-icon">
+                      <span className={ownerIcon}>
                         <Users className="ui-icon" />
                       </span>
                       <span className="grid gap-[4px]">
@@ -1331,7 +1343,7 @@ function OwnerTeamsWorkspace({
                         {division.teams.length ? (
                           division.teams.map((team) => <TeamEditor key={team.id} team={team} />)
                         ) : (
-                          <p className="empty-note">No teams in this division yet.</p>
+                          <p className={emptyNote}>No teams in this division yet.</p>
                         )}
                       </div>
                     </div>
@@ -1342,7 +1354,7 @@ function OwnerTeamsWorkspace({
           ))}
         </div>
       ) : (
-        <p className="empty-note">No active seasons yet. Create a season from Home first.</p>
+        <p className={emptyNote}>No active seasons yet. Create a season from Home first.</p>
       )}
       <OwnerRosterChangeReviews requests={requests} />
     </section>
@@ -1456,7 +1468,7 @@ export function OwnerPlayerDirectoryManagement({
           </span>
         </div>
         <UnassignedPlayerForm seasons={seasons} />
-        <section className="card owner-section player-directory-list">
+        <section className={`card player-directory-list ${ownerSection}`}>
           {directory.length ? (
             <div className={directoryStyles.list}>
               {directory.map((player) => (
@@ -1464,7 +1476,7 @@ export function OwnerPlayerDirectoryManagement({
               ))}
             </div>
           ) : (
-            <p className="empty-note">No KCH players have been added to this conference yet.</p>
+            <p className={emptyNote}>No KCH players have been added to this conference yet.</p>
           )}
         </section>
       </>
@@ -1542,7 +1554,7 @@ function DivisionRespondedPlayers({ players }: { players: OwnerSeason["invitees"
           </em>
         </article>
       ))}
-      {!visible.length && <p className="empty-note">No players in this view.</p>}
+      {!visible.length && <p className={emptyNote}>No players in this view.</p>}
     </details>
   );
 }
@@ -1601,7 +1613,7 @@ function OwnerDraftOverride({
             ))}
           </select>
         </label>
-        <div className="compact-fields">
+        <div className={compactFields}>
           <label>
             Jersey number
             <input name="jerseyNumber" type="number" min="0" max="99" />
@@ -1903,7 +1915,7 @@ function CancelSeasonForm({ season }: { season: OwnerSeason }) {
       <summary>Cancel this season</summary>
       <form action={action} className={ownerForm}>
         <input type="hidden" name="seasonId" value={season.id} />
-        <p className="field-help">
+        <p className={fieldHelp}>
           The season will not be deleted. Its teams, rosters, responses, payments, and history
           remain preserved.
         </p>
@@ -1975,7 +1987,7 @@ function ExpandExistingSeason({ season }: { season: OwnerSeason }) {
             </button>
           </form>
         ) : (
-          <p className="empty-note">This season already has the maximum of 10 divisions.</p>
+          <p className={emptyNote}>This season already has the maximum of 10 divisions.</p>
         )}
         {divisionsNeedingTeams.length > 0 && (
           <section className="grid gap-2">
@@ -2348,7 +2360,7 @@ function ManualGameDayBuilder({
           })),
         )}
       />
-      <div className="compact-fields">
+      <div className={compactFields}>
         <label>
           Game date
           <input name="gameDate" type="date" min={season.startsOn} max={season.endsOn} required />
@@ -2362,7 +2374,7 @@ function ManualGameDayBuilder({
         Venue
         <input name="venue" defaultValue="Kada Court Center" maxLength={120} required />
       </label>
-      <p className="field-help">Each team can play only once on this game day.</p>
+      <p className={fieldHelp}>Each team can play only once on this game day.</p>
       <div className="grid gap-[9px] [&_fieldset]:relative [&_fieldset]:grid [&_fieldset]:grid-cols-2 [&_fieldset]:gap-[9px] [&_fieldset]:rounded-xl [&_fieldset]:border [&_fieldset]:border-line [&_fieldset]:p-3 [&_legend]:px-[5px] [&_legend]:text-xs [&_legend]:font-[900] [&_legend]:text-gold [&_label:nth-of-type(n+3)]:col-span-full">
         {rows.map((row, index) => (
           <fieldset key={row.id}>
@@ -2454,7 +2466,7 @@ function KchDivisionScheduleBuilder({
   return (
     <form action={action} className={`${ownerForm} [&_textarea]:min-h-[80px]`}>
       <input type="hidden" name="divisionId" value={division.id} />
-      <div className="compact-fields">
+      <div className={compactFields}>
         <label>
           First game date
           <input
@@ -2492,7 +2504,7 @@ function KchDivisionScheduleBuilder({
           </label>
         ))}
       </fieldset>
-      <div className="compact-fields">
+      <div className={compactFields}>
         <label>
           Number of courts
           <input name="courtCount" type="number" min="1" max="10" defaultValue="2" required />
@@ -2513,7 +2525,7 @@ function KchDivisionScheduleBuilder({
           required
         />
       </label>
-      <p className="field-help">
+      <p className={fieldHelp}>
         KCH schedules each team only once per day, even when more court time is available.
       </p>
       <label className="check-row">
@@ -2653,7 +2665,7 @@ function CreateGameForm({
   return (
     <details className={actionCard} data-game-card="new">
       <summary className={`${actionSummary} grid-cols-[44px_1fr_auto]`}>
-        <span className="owner-icon">
+        <span className={ownerIcon}>
           <Plus className="ui-icon" />
         </span>
         <span className="grid gap-[4px]">
@@ -3124,7 +3136,7 @@ function DivisionScheduleOperation({
       </summary>
       <div className="border-t border-line p-[11px]">
         {!division.rosterFinalPublished ? (
-          <p className="empty-note">
+          <p className={emptyNote}>
             Publish the final {division.name} roster before creating its schedule.
           </p>
         ) : (
@@ -3233,7 +3245,7 @@ export function OwnerGameManagement({ seasons }: { seasons: OwnerSeason[] }) {
           ))}
         </div>
       ) : (
-        <p className="empty-note">No current schedules. Completed seasons are available below.</p>
+        <p className={emptyNote}>No current schedules. Completed seasons are available below.</p>
       )}
       {completed.length ? (
         <details className="group mt-[18px] [&>summary]:flex [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:items-center [&>summary]:justify-between [&>summary]:gap-3 [&>summary]:border-t [&>summary]:border-line [&>summary]:py-4 [&>summary::-webkit-details-marker]:hidden [&>summary_span]:grid [&>summary_span]:gap-[3px] [&>summary_small]:text-xs [&>summary_small]:text-muted [&>summary_strong]:text-[22px] group-open:[&>summary_strong]:rotate-90">
@@ -3266,7 +3278,7 @@ export function OwnerGameManagement({ seasons }: { seasons: OwnerSeason[] }) {
               </summary>
               <div className={seasonPanel}>
                 <WeeklyScheduleTable season={season} />
-                <p className="empty-note">Completed schedules are kept here as a record.</p>
+                <p className={emptyNote}>Completed schedules are kept here as a record.</p>
               </div>
             </details>
           ))}
@@ -3479,7 +3491,7 @@ export function OwnerPaymentManagement({
                   </strong>
                 </summary>
                 <div className={paymentBody}>
-                  <p className="payment-card-label">PLAYER PAYMENT STATUS</p>
+                  <p className={cardLabel}>PLAYER PAYMENT STATUS</p>
                   <div className={paymentCounts}>
                     <span className="border-[#cce6d0]! bg-[#eaf6ec]! [&>b]:text-green">
                       <small>PAID</small>
@@ -3494,7 +3506,7 @@ export function OwnerPaymentManagement({
                       <b>{group.waivedPlayers}</b>
                     </span>
                   </div>
-                  <p className="payment-card-label">PAID PLAYERS BY METHOD</p>
+                  <p className={cardLabel}>PAID PLAYERS BY METHOD</p>
                   <div className="grid grid-cols-2 gap-[7px] [&>span]:grid [&>span]:min-h-[78px] [&>span]:content-center [&>span]:gap-[4px] [&>span]:rounded-[12px] [&>span]:border [&>span]:border-line [&>span]:bg-white [&>span]:p-[10px] [&_b]:text-[15px] [&_small]:text-[9px] [&_small]:font-[850] [&_small]:tracking-[0.05em] [&_small]:text-muted [&_strong]:text-[12px] [&_strong]:text-green">
                     <span>
                       <small>ZELLE</small>
@@ -3507,7 +3519,7 @@ export function OwnerPaymentManagement({
                       <strong>{money(group.cashReceived)}</strong>
                     </span>
                   </div>
-                  <p className="payment-card-label">SEASON / DIVISION INCOME</p>
+                  <p className={cardLabel}>SEASON / DIVISION INCOME</p>
                   <div className={paymentStats}>
                     <span>
                       <small>EXPECTED INCOME</small>
@@ -3694,7 +3706,7 @@ export function OwnerPastPaymentsArchive({ groups }: { groups: OwnerPaymentGroup
           ))}
         </div>
       ) : (
-        <p className="empty-note">No completed-season payments yet.</p>
+        <p className={emptyNote}>No completed-season payments yet.</p>
       )}
     </section>
   );
@@ -3754,7 +3766,7 @@ function DivisionUniformForm({
               <input name="lightImage" type="file" accept="image/jpeg,image/png,image/webp" />
             </label>
           </div>
-          <p className="field-help">
+          <p className={fieldHelp}>
             These two photos apply to every team in the division. On a phone, choose the camera or
             photo library.
           </p>
@@ -3961,7 +3973,7 @@ function TeamEditor({ team }: { team: OwnerTeam }) {
         {players.length ? (
           players.map((player) => <TeamPlayerRow key={player.registrationId} player={player} />)
         ) : (
-          <p className="empty-note">No active players yet.</p>
+          <p className={emptyNote}>No active players yet.</p>
         )}
       </div>
     </details>

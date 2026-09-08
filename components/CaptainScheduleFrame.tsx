@@ -13,7 +13,7 @@ import {
   weeklySchedule,
   weeklyScheduleList,
 } from "@/components/ui/schedule-classes";
-import { listLabel } from "@/components/ui/shared-classes";
+import { listLabel, uniformDot, uniformDotDark } from "@/components/ui/shared-classes";
 
 function weekStart(dateKey: string) {
   const date = new Date(`${dateKey}T12:00:00Z`);
@@ -55,7 +55,7 @@ function CompactGameRow({ game, teamName }: { game: CaptainGame; teamName: strin
         <span>
           <small>UNIFORM</small>
           <i
-            className={`uniform-dot ${game.uniform.toLowerCase().includes("dark") ? "dark" : "white"}`}
+            className={`${uniformDot} ${game.uniform.toLowerCase().includes("dark") ? uniformDotDark : ""}`}
           />
           {game.uniform.toUpperCase()}
         </span>

@@ -35,18 +35,6 @@
   border: 2px solid #fff;
 }
 
-.uniform-dot {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #fff;
-  border: 1px solid #aab1ba;
-}
-.uniform-dot.dark {
-  background: #061d3c;
-  border-color: #061d3c;
-}
-
 /* The moving pill. Half the track, less the 4px padding on either side, so it
    lands exactly on a button. Both the slide and the green-to-red change are the
    same transition, which is what makes it read as one movement. */

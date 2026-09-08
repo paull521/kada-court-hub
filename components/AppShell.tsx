@@ -12,6 +12,7 @@ import {
   type ShellChrome,
 } from "@/components/NavBadges";
 import type { PlayerNotification } from "@/lib/kch-data";
+import { topbarActions } from "@/components/ui/shared-classes";
 
 const nav = {
   player: { links: playerNavLinks, className: "bottom", label: "Player navigation" },
@@ -92,7 +93,7 @@ export default function AppShell({
     <div className="shell">
       <header className="topbar">
         <KchLogo className="logo" href={home} />
-        <div className="topbar-actions">
+        <div className={topbarActions}>
           {headerAction}
           {headerNotification ??
             (chrome ? (

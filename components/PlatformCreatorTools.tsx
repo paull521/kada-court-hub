@@ -14,6 +14,7 @@ import type { OwnerPaymentBilling } from "@/lib/owner-payment-ledger";
 import { OwnerDemoOverview } from "@/components/OwnerDemoOverview";
 import { historyPanel, historyRow } from "@/components/ui/account-classes";
 import { amountField, loginBox, platformForm, tallField } from "@/components/ui/auth-classes";
+import { emptyNote } from "@/components/ui/shared-classes";
 
 const initial: PlatformActionState = {};
 const money = (amount: number) => `$${amount.toFixed(2)}`;
@@ -223,7 +224,7 @@ export function OwnerSubscriptionPayment({
               </div>
             ))
           ) : (
-            <p className="empty-note">No payments have been sent yet.</p>
+            <p className={emptyNote}>No payments have been sent yet.</p>
           )}
         </div>
       </details>

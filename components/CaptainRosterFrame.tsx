@@ -1,5 +1,10 @@
 import { LoadingNote, SkeletonBlock, SkeletonText } from "@/components/Skeleton";
-import { addedPlayers, sectionTitle } from "@/components/ui/shared-classes";
+import {
+  addedPlayers,
+  ownerIcon,
+  sectionTitle,
+  ownerSection,
+} from "@/components/ui/shared-classes";
 
 /**
  * What /captain/roster draws while its read is in flight.
@@ -13,10 +18,10 @@ import { addedPlayers, sectionTitle } from "@/components/ui/shared-classes";
  */
 export default function CaptainRosterFrame() {
   return (
-    <section className="card owner-section captain-draft-entry grid gap-[13px]">
+    <section className={`card captain-draft-entry grid gap-[13px] ${ownerSection}`}>
       <LoadingNote />
       <div className={sectionTitle}>
-        <span className="owner-icon">🏀</span>
+        <span className={ownerIcon}>🏀</span>
         <span>
           <h2>Enter Drafted Players</h2>
           <p>

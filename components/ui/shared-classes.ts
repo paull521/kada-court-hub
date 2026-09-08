@@ -20,10 +20,6 @@ export const sectionTitle =
 export const rosterRow =
   "grid grid-cols-[52px_1fr_auto] items-center gap-3 border-b border-line py-2 text-[14px] last:border-0 [&>span]:text-blue [&_.staff-role]:text-gold";
 
-/** The light/dark swatch beside a uniform. */
-export const uniformDot = "inline-block h-[18px] w-[18px] rounded-full border border-navy bg-white";
-export const uniformDotDark = "bg-navy!";
-
 /** Profile's header card and the label/value rows under it. */
 export const profileCard =
   "mb-[14px] grid grid-cols-[90px_1fr] items-center gap-[15px] p-[18px] [&_h2]:m-0 [&_h2]:text-[27px] [&_p]:my-[6px] [&_p]:text-xs [&_p]:text-muted";
@@ -101,3 +97,46 @@ export const invitationNote = "m-0 text-[13px] leading-[1.45] text-muted";
 export const invitationPlatformNote = "text-center text-[10px] text-muted";
 export const rulesEmpty = "grid gap-[13px] p-[18px] [&_h2]:m-0 [&_h2]:text-lg";
 export const frameList = "grid gap-3";
+
+/* ---------------------------------------------------------------------------
+   Small marks and one-line helpers. Most of these are a single element with
+   one job, which is why they were scattered through globals.css rather than
+   grouped with anything. */
+
+/** The KADA shield, and the smaller one on a row. */
+export const teamMark =
+  "m-auto grid h-[68px] w-[68px] place-items-center rounded-[18px_18px_45%_45%] border-4 border-[#f4a31b] bg-navy text-[31px] font-[900] text-[#f4a31b] outline-2 outline-red";
+export const teamMarkSmall = "h-[54px]! w-[54px]! text-[23px]!";
+/** A jersey number badge, and the jersey shape the uniform pages draw. */
+export const jersey = "min-w-[30px] rounded-[15px] bg-[#f0efed] p-[5px] text-center";
+export const jerseyArt =
+  "grid h-[120px] place-items-center bg-[linear-gradient(90deg,#071f3d,#123863,#071f3d)] text-[25px] font-[900] text-white [clip-path:polygon(21%_0,36%_9%,64%_9%,79%_0,100%_18%,86%_38%,86%_100%,14%_100%,14%_38%,0_18%)]";
+/** Light or dark, beside a fixture. workspaces.css won this one at 20px. */
+export const uniformDot = "inline-block h-5 w-5 rounded-full border border-[#aab1ba] bg-white";
+export const uniformDotDark = "border-[#061d3c]! bg-[#061d3c]!";
+
+/** The season/team picker at the top of a page, plain and boxed. */
+export const selector =
+  "m-[4px_0_16px] flex justify-between gap-3 border-0 bg-transparent p-0 text-lg";
+export const selectorWide =
+  "w-full items-center rounded-2xl border border-line bg-white p-[14px_16px] shadow-[0_7px_17px_rgba(13,38,69,0.07)] [&_span]:flex-1 [&_span]:text-left [&_small]:text-[13px] [&_small]:text-muted [&_small]:max-tiny:hidden";
+
+export const avatar =
+  "grid h-20 w-20 place-items-center rounded-full bg-[linear-gradient(135deg,#eee,#d9d9d9)] text-[35px] font-[800] max-tiny:h-[65px] max-tiny:w-[65px]";
+export const statusPill =
+  "inline-block rounded-[18px] bg-[#dff3df] p-[5px_9px] text-[11px] text-green";
+export const ownerIcon =
+  "grid h-[42px] w-[42px] place-items-center rounded-[13px] bg-[#fff4da] text-[22px] text-gold";
+export const ownerSection = "mb-4 p-5";
+export const emptyNote = "m-0 p-[10px] text-xs text-muted";
+export const fieldHelp = "m-0 text-[10px] leading-[1.45] text-muted";
+export const compactFields = "grid grid-cols-2 gap-[10px]";
+export const cardLabel =
+  "m-[16px_2px_8px] text-[10px] font-[850] tracking-[0.06em] text-gold first:mt-[2px]";
+export const topbarActions = "flex min-w-0 items-center justify-end gap-[6px]";
+/** The bell, and the unread dot on it. */
+export const notificationButton =
+  "relative flex-none border-0 bg-transparent text-[29px] [&>span]:absolute [&>span]:top-[2px] [&>span]:right-0 [&>span]:h-[7px] [&>span]:w-[7px] [&>span]:rounded-full [&>span]:bg-red";
+/** The scrim a context sheet rises out of; centred rather than docked at 900px. */
+export const contextOverlay =
+  "fixed inset-0 z-[60] flex items-end justify-center bg-[rgba(4,18,35,0.48)] p-3 desk:items-center";

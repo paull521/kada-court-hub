@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { uniformGalleryLabels, uniformToggle } from "@/components/ui/shared-classes";
+import { jerseyArt, uniformGalleryLabels, uniformToggle } from "@/components/ui/shared-classes";
 
 export default function TeamUniformGallery({
   teamName,
@@ -46,7 +46,7 @@ export default function TeamUniformGallery({
         </div>
       ) : (
         <div className="uniform-placeholder">
-          <span className="jersey-art">{jerseyNumber || "—"}</span>
+          <span className={jerseyArt}>{jerseyNumber || "—"}</span>
           <p>Official division uniform photo coming soon.</p>
         </div>
       )}

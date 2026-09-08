@@ -3,12 +3,16 @@ import PlayerContextSwitcher from "@/components/PlayerContextSwitcher";
 import type { PlayerPortalData } from "@/lib/kch-data";
 import { teamBanner, teamBannerCopy } from "@/components/ui/schedule-classes";
 import {
+  emptyNote,
   familyBanner,
-  rosterRow,
   familyQuote,
   familyQuoteAuthor,
+  jersey,
   panel,
+  rosterRow,
   sectionHeading,
+  teamMark,
+  teamMarkSmall,
   teamSwitcher,
 } from "@/components/ui/shared-classes";
 
@@ -40,7 +44,7 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
       ) : (
         <div className={teamSwitcher}>
           <div className={`card ${teamBanner}`}>
-            <span className="team-mark small" aria-hidden="true">
+            <span className={`${teamMark} ${teamMarkSmall}`} aria-hidden="true">
               K
             </span>
             <span className={teamBannerCopy}>
@@ -75,7 +79,7 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
                     className={`availability-dot ${answer?.available === false ? "no" : "yes"}`}
                     title={answer?.available === false ? "Unavailable" : "Available"}
                   />
-                  <b className="jersey">{player.number || "—"}</b>
+                  <b className={jersey}>{player.number || "—"}</b>
                   <span className="roster-player-name">
                     <strong>{player.name}</strong>
                     <small>
@@ -90,13 +94,13 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
               );
             })
           ) : (
-            <p className="empty-note">The roster has not been published yet.</p>
+            <p className={emptyNote}>The roster has not been published yet.</p>
           )
         ) : (
           [0, 1, 2, 3, 4, 5].map((index) => (
             <div className={`${rosterRow} roster-with-availability`} key={index}>
               <i className="availability-dot" />
-              <b className="jersey">
+              <b className={jersey}>
                 <SkeletonText width="1.2em" />
               </b>
               <span className="roster-player-name">

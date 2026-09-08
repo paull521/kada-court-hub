@@ -10,7 +10,7 @@ import {
 } from "@/app/notifications/actions";
 import type { PlayerNotification } from "@/lib/kch-data";
 import { contextSheet } from "@/components/ui/context-classes";
-import { sheetHandle } from "@/components/ui/shared-classes";
+import { contextOverlay, notificationButton, sheetHandle } from "@/components/ui/shared-classes";
 
 export default function NotificationCenter({
   notifications,
@@ -51,7 +51,7 @@ export default function NotificationCenter({
   return (
     <>
       <button
-        className="notification"
+        className={notificationButton}
         type="button"
         aria-label={unread ? `${unread} unread notifications` : "Notifications"}
         onClick={() => setOpen(true)}
@@ -60,7 +60,7 @@ export default function NotificationCenter({
       </button>
       {open && (
         <div
-          className="context-overlay"
+          className={contextOverlay}
           role="presentation"
           onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}
         >

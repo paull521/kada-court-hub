@@ -19,6 +19,8 @@ import {
   familyQuote,
   familyQuoteAuthor,
   listLabel,
+  uniformDot,
+  uniformDotDark,
 } from "@/components/ui/shared-classes";
 
 function GameRow({ game, teamName }: { game: Game; teamName: string }) {
@@ -43,7 +45,7 @@ function GameRow({ game, teamName }: { game: Game; teamName: string }) {
         <span>
           <small>UNIFORM</small>
           <i
-            className={`uniform-dot ${game.uniform.toLowerCase().includes("dark") ? "dark" : "white"}`}
+            className={`${uniformDot} ${game.uniform.toLowerCase().includes("dark") ? uniformDotDark : ""}`}
           />
           {game.uniform.toUpperCase()}
         </span>

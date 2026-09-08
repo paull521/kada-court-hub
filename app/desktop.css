@@ -108,9 +108,6 @@
   /* The context sheet slides up from the bottom edge, which is where a thumb
      is. A pointer is wherever the click was, so it becomes a centred dialog
      and drops the drag handle that implies a swipe. */
-  .context-overlay {
-    align-items: center;
-  }
 
   /* --- Header and tab strip ------------------------------------------------
      The bottom bar becomes a tab strip under the header. Bottom nav is a

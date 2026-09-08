@@ -1,5 +1,6 @@
 import { MapPin } from "lucide-react";
 import { SkeletonText } from "@/components/Skeleton";
+import { teamMark, uniformDot, uniformDotDark } from "@/components/ui/shared-classes";
 
 /**
  * Only the fields the card draws, so a player Game and a captain's CaptainGame
@@ -58,14 +59,14 @@ export default function NextGameCard({
       </div>
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-[8px] text-center [&>div]:grid [&>div]:gap-[8px] [&>div]:text-[11px]">
         <div>
-          <span className="team-mark">K</span>
+          <span className={teamMark}>K</span>
           <b>{teamName ?? <SkeletonText width="4.5em" />}</b>
         </div>
         <strong className="text-[18px]">VS</strong>
         <div>
           {/* All four shout: .team-mark.opponent outranked a bare .team-mark,
               and a layered utility outranks neither. */}
-          <span className="team-mark border-[#e2ca8f]! text-[17px] text-white! outline-[#111]!">
+          <span className={`${teamMark} border-[#e2ca8f]! text-[17px] text-white! outline-[#111]!`}>
             {game ? game.opponent.slice(0, 2).toUpperCase() : ""}
           </span>
           <b>{game ? game.opponent : <SkeletonText width="4.5em" />}</b>
@@ -92,7 +93,7 @@ export default function NextGameCard({
         {game ? (
           <>
             <span
-              className={`uniform-dot ${game.uniform.toLowerCase().includes("dark") ? "dark" : "white"}`}
+              className={`${uniformDot} ${game.uniform.toLowerCase().includes("dark") ? uniformDotDark : ""}`}
             />
             <b>{game.uniform.toUpperCase()}</b>
           </>

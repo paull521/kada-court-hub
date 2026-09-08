@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { FormMessage } from "@/components/ui/FormMessage";
 import { cx } from "@/components/ui/cx";
-import { emptyOperation, ownerForm } from "@/components/ui/shared-classes";
+import { cardLabel, emptyOperation, ownerForm } from "@/components/ui/shared-classes";
 
 const initialState: OwnerActionState = {};
 const money = (amount: number) =>
@@ -128,7 +128,7 @@ function SeasonFinancialCard({
       </summary>
 
       <div className="border-t border-line p-3">
-        <p className="payment-card-label">SEASON INCOME</p>
+        <p className={cardLabel}>SEASON INCOME</p>
         <div className="grid grid-cols-4 gap-[6px]">
           <Figure
             label="LEAGUE FEES RECEIVED"
@@ -215,7 +215,7 @@ function SeasonFinancialCard({
           </form>
         </details>
 
-        <p className="payment-card-label">SEASON TOTALS</p>
+        <p className={cardLabel}>SEASON TOTALS</p>
         <div className="grid grid-cols-3 gap-[7px]">
           <Figure
             label="TOTAL INCOME"

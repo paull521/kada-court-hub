@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { LoadingNote, SkeletonBlock, SkeletonText } from "@/components/Skeleton";
 import { accountLink, accountRow } from "@/components/ui/account-classes";
-import { infoRow, profileCard } from "@/components/ui/shared-classes";
+import { avatar, infoRow, profileCard } from "@/components/ui/shared-classes";
 
 function InfoPanelFrame({ title, rows }: { title: string; rows: [ReactNode, string][] }) {
   return (
@@ -44,7 +44,7 @@ export default function ProfileFrame() {
       <h1 className="title">Profile</h1>
       <p className="subtitle">Manage your account and player details</p>
       <section className={`card ${profileCard}`}>
-        <span className="avatar" />
+        <span className={avatar} />
         <div>
           <h2>
             <SkeletonText width="8em" />

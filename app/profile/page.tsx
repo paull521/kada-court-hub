@@ -27,7 +27,7 @@ import PlatformFeedback from "@/components/PlatformFeedback";
 import OwnerConferenceSwitcher from "@/components/OwnerConferenceSwitcher";
 import "@/components/ProfileCleanup.css";
 import { accountLink, accountRow } from "@/components/ui/account-classes";
-import { infoRow, profileCard } from "@/components/ui/shared-classes";
+import { avatar, infoRow, profileCard, statusPill } from "@/components/ui/shared-classes";
 
 function InfoPanel({
   title,
@@ -157,7 +157,7 @@ export default async function Profile({
   const ownerProfileContent = ownerData?.authorized ? (
     <>
       <section className={`card ${profileCard}`}>
-        <span className="avatar">
+        <span className={avatar}>
           {ownerData.ownerName
             .split(/\s+/)
             .map((part) => part[0])
@@ -168,7 +168,7 @@ export default async function Profile({
         <div>
           <h2>{ownerData.ownerName}</h2>
           <p>Conference Owner</p>
-          <b className="status">● &nbsp;Active</b>
+          <b className={statusPill}>● &nbsp;Active</b>
         </div>
       </section>
       <RoleSwitcher roles={roles} current="owner" profile />
@@ -243,11 +243,11 @@ export default async function Profile({
   const profileContent = (
     <>
       <section className={`card ${profileCard}`}>
-        <span className="avatar">{player.initials}</span>
+        <span className={avatar}>{player.initials}</span>
         <div>
           <h2>{player.name}</h2>
           <p>KCH Player ID: &nbsp;{player.id}</p>
-          <b className="status">● &nbsp;{player.status}</b>
+          <b className={statusPill}>● &nbsp;{player.status}</b>
         </div>
       </section>
       <RoleSwitcher roles={roles} current={currentRole} profile />

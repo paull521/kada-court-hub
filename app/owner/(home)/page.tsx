@@ -138,7 +138,7 @@ export default async function Owner() {
               only return them to this same screen. The header already offers
               the way out. */}
           <KchLogo className="logo" />
-          <Link href="/home" className="muted">
+          <Link href="/home" className="text-muted">
             Player View
           </Link>
         </header>
@@ -147,7 +147,7 @@ export default async function Owner() {
           <h1 className="title">Conference Management</h1>
           <section className="card owner-access">
             <h2>Commissioner access required</h2>
-            <p className="muted">
+            <p className="text-muted">
               This area is available only to a conference commissioner. Ask the current commissioner
               to add the commissioner role to your conference membership.
             </p>

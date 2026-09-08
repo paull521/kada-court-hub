@@ -81,29 +81,7 @@ body {
   --kch-logo-size: 42px;
   flex: none;
 }
-.topbar-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
-  min-width: 0;
-}
-.notification {
-  border: 0;
-  background: transparent;
-  font-size: 29px;
-  position: relative;
-  flex: none;
-}
-.notification span {
-  position: absolute;
-  right: 0;
-  top: 2px;
-  width: 7px;
-  height: 7px;
-  background: var(--red);
-  border-radius: 50%;
-}
+
 .content {
   padding: 18px 24px 112px;
   position: relative;
@@ -137,17 +115,6 @@ body {
 /* The caret used to be a text glyph, which centres on its baseline rather than
    its box and always sat low next to the label. An SVG centres on its box. */
 
-.context-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  background: rgba(4, 18, 35, 0.48);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding: 12px;
-}
-
 @keyframes context-sheet-in {
   from {
     transform: translateY(24px);
@@ -157,27 +124,6 @@ body {
     transform: translateY(0);
     opacity: 1;
   }
-}
-
-.team-mark {
-  width: 68px;
-  height: 68px;
-  margin: auto;
-  display: grid;
-  place-items: center;
-  border: 4px solid #f4a31b;
-  outline: 2px solid var(--red);
-  border-radius: 18px 18px 45% 45%;
-  background: var(--navy);
-  color: #f4a31b;
-  font-weight: 900;
-  font-size: 31px;
-}
-
-.team-mark.small {
-  width: 54px;
-  height: 54px;
-  font-size: 23px;
 }
 
 .bottom {
@@ -250,100 +196,14 @@ body {
    floor wide enough for two digits makes every badge the same width and every
    name begin at the same place, without any of the four roster grids having to
    agree on a track size. */
-.jersey {
-  background: #f0efed;
-  border-radius: 15px;
-  padding: 5px;
-  min-width: 30px;
-  text-align: center;
-}
 
-.jersey-art {
-  height: 120px;
-  background: linear-gradient(90deg, #071f3d, #123863, #071f3d);
-  clip-path: polygon(
-    21% 0,
-    36% 9%,
-    64% 9%,
-    79% 0,
-    100% 18%,
-    86% 38%,
-    86% 100%,
-    14% 100%,
-    14% 38%,
-    0 18%
-  );
-  display: grid;
-  place-items: center;
-  color: #fff;
-  font-size: 25px;
-  font-weight: 900;
-}
-.selector {
-  border: 0;
-  background: transparent;
-  font-size: 18px;
-  margin: 4px 0 16px;
-  padding: 0;
-  display: flex;
-  gap: 12px;
-  justify-content: space-between;
-}
-.selector.wide {
-  width: 100%;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 14px 16px;
-  box-shadow: 0 7px 17px rgba(13, 38, 69, 0.07);
-  align-items: center;
-}
-.selector.wide span {
-  flex: 1;
-  text-align: left;
-}
-.selector.wide small {
-  font-size: 13px;
-  color: var(--muted);
-}
 .schedule-feature {
   grid-template-rows: auto 38px;
-}
-
-.uniform-dot {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 1px solid var(--navy);
-  background: #fff;
-}
-.uniform-dot.dark {
-  background: var(--navy);
 }
 
 /* Sized to sit inside the height the amount already takes, so naming the team
    costs the card nothing. */
 
-.avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #eee, #d9d9d9);
-  display: grid;
-  place-items: center;
-  font-size: 35px;
-  font-weight: 800;
-}
-
-.status {
-  display: inline-block;
-  background: #dff3df;
-  color: var(--green);
-  padding: 5px 9px;
-  border-radius: 18px;
-  font-size: 11px;
-}
 .info-panel h2 {
   margin-bottom: 5px;
 }
@@ -404,29 +264,6 @@ body {
   padding-bottom: 112px;
 }
 
-.owner-section {
-  padding: 20px;
-  margin-bottom: 16px;
-}
-
-.owner-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 13px;
-  background: #fff4da;
-  color: var(--gold);
-  display: grid;
-  place-items: center;
-  font-size: 22px;
-}
-
-.empty-note {
-  font-size: 12px;
-  color: var(--muted);
-  padding: 10px;
-  margin: 0;
-}
-
 .owner-access {
   padding: 22px;
   display: grid;
@@ -440,15 +277,6 @@ body {
   display: inline-block;
   width: max-content;
 }
-.muted {
-  color: var(--muted);
-}
-
-.compact-fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
 
 .guided-owner-shell {
   width: min(100%, 560px);
@@ -460,13 +288,6 @@ body {
   padding: 8px 14px;
   justify-self: end;
   font-size: 13px;
-}
-
-.field-help {
-  font-size: 10px;
-  line-height: 1.45;
-  color: var(--muted);
-  margin: 0;
 }
 
 .invitation-facts {
@@ -641,9 +462,7 @@ body {
   background: #f7f5f2;
   border-radius: 14px;
 }
-.uniform-placeholder .jersey-art {
-  width: 92px;
-}
+
 .uniform-placeholder p {
   font-size: 13px;
   color: var(--muted);
@@ -689,17 +508,6 @@ body {
   background: #fff5f5;
 }
 
-.payment-card-label {
-  margin: 16px 2px 8px;
-  font-size: 10px;
-  font-weight: 850;
-  letter-spacing: 0.06em;
-  color: var(--gold);
-}
-.payment-card-label:first-child {
-  margin-top: 2px;
-}
-
 @media (max-width: 500px) {
   .uniform-photo img {
     max-height: 520px;
@@ -721,14 +529,6 @@ body {
   }
   .topbar .logo {
     --kch-logo-size: 36px;
-  }
-
-  .avatar {
-    width: 65px;
-    height: 65px;
-  }
-  .selector.wide small {
-    display: none;
   }
 }
 

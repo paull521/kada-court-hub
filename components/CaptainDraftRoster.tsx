@@ -9,7 +9,16 @@ import {
   type CaptainActionState,
 } from "@/app/captain/actions";
 import type { CaptainPortalData } from "@/lib/captain-data";
-import { addedPlayers, ownerForm, sectionTitle } from "@/components/ui/shared-classes";
+import {
+  addedPlayers,
+  compactFields,
+  emptyNote,
+  fieldHelp,
+  ownerForm,
+  ownerIcon,
+  ownerSection,
+  sectionTitle,
+} from "@/components/ui/shared-classes";
 
 const initial: CaptainActionState = {};
 function Notice({ state }: { state: CaptainActionState }) {
@@ -53,7 +62,7 @@ function DraftedPlayer({
         <input type="hidden" name="teamId" value={teamId} />
         <input type="hidden" name="registrationId" value={player.registrationId} />
         {detailsOnly && <input type="hidden" name="detailsOnly" value="yes" />}
-        <div className="compact-fields">
+        <div className={compactFields}>
           <label>
             Jersey Number
             <input
@@ -163,10 +172,10 @@ export default function CaptainDraftRoster({
     (candidate) => candidate.invitationId === selected,
   );
   return (
-    <section className="card owner-section captain-draft-entry grid gap-[13px]">
+    <section className={`card captain-draft-entry grid gap-[13px] ${ownerSection}`}>
       {!detailsOnly && (
         <div className={sectionTitle}>
-          <span className="owner-icon">🏀</span>
+          <span className={ownerIcon}>🏀</span>
           <span>
             <h2>Enter Drafted Players</h2>
             <p>
@@ -210,7 +219,7 @@ export default function CaptainDraftRoster({
               detailsOnly={detailsOnly}
             />
           ))}
-          {!players.length && <p className="empty-note">No drafted players entered yet.</p>}
+          {!players.length && <p className={emptyNote}>No drafted players entered yet.</p>}
         </div>
       </section>
       {!locked && !detailsOnly && (
@@ -250,7 +259,7 @@ export default function CaptainDraftRoster({
               ))}
             </div>
           )}
-          <div className="compact-fields">
+          <div className={compactFields}>
             <label>
               Jersey number
               <input
@@ -295,7 +304,7 @@ export default function CaptainDraftRoster({
             <input name="jerseyName" maxLength={24} disabled={atLimit} />
           </label>
           {atLimit && (
-            <p className="field-help">
+            <p className={fieldHelp}>
               Your team is at its assigned roster limit. Send an Add request if you need
               commissioner approval for an extra player.
             </p>

@@ -3,7 +3,14 @@ import { LoadingNote, SkeletonBlock, SkeletonText } from "@/components/Skeleton"
 import PlayerPaymentForm from "@/components/PlayerPaymentForm";
 import type { PlayerPortalData } from "@/lib/kch-data";
 import { historyPanel, historyRow } from "@/components/ui/account-classes";
-import { familyBanner, familyQuote, panel } from "@/components/ui/shared-classes";
+import {
+  emptyNote,
+  familyBanner,
+  familyQuote,
+  panel,
+  teamMark,
+  teamMarkSmall,
+} from "@/components/ui/shared-classes";
 
 /**
  * Payments, written once and drawn twice: with the portal data, and without it.
@@ -45,7 +52,7 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
             )}
           </span>
           <div className="col-start-2 row-span-full grid w-[92px] justify-items-center gap-[6px] self-center text-center text-[12px] leading-[1.2]">
-            <span className="team-mark small" aria-hidden="true">
+            <span className={`${teamMark} ${teamMarkSmall}`} aria-hidden="true">
               K
             </span>
             <b>{data ? data.context.team : <SkeletonText width="4.5em" />}</b>
@@ -63,7 +70,7 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
                 </div>
               ))
             ) : (
-              <p className="empty-note">No outstanding fees.</p>
+              <p className={emptyNote}>No outstanding fees.</p>
             )
           ) : (
             [0, 1, 2].map((index) => (
@@ -122,7 +129,7 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
                 </div>
               ))
             ) : (
-              <p className="empty-note">Confirmed payments will appear here.</p>
+              <p className={emptyNote}>Confirmed payments will appear here.</p>
             )}
           </div>
         </details>

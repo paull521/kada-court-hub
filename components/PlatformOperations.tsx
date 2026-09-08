@@ -15,7 +15,7 @@ import {
 import type { PlatformOperations } from "@/lib/platform-data";
 import type { PlatformOwnerPaymentBilling } from "@/lib/owner-payment-ledger";
 import { accountDisclosure, accountRow } from "@/components/ui/account-classes";
-import { ownerForm } from "@/components/ui/shared-classes";
+import { emptyNote, ownerForm } from "@/components/ui/shared-classes";
 
 const initial: PlatformActionState = {};
 const timestamp = (value: string) =>
@@ -63,7 +63,7 @@ export function OwnerManagement({
         {candidates.length ? (
           candidates.map((candidate) => <CandidateCard candidate={candidate} key={candidate.id} />)
         ) : (
-          <p className="empty-note">No completed owner applications.</p>
+          <p className={emptyNote}>No completed owner applications.</p>
         )}
       </section>
       <section className="card p-[16px] mb-[12px] [&_h2]:m-0! [&_p]:m-0!">
@@ -72,7 +72,7 @@ export function OwnerManagement({
         {owners.length ? (
           owners.map((owner) => <OwnerCard owner={owner} key={owner.id} />)
         ) : (
-          <p className="empty-note">No conference owners.</p>
+          <p className={emptyNote}>No conference owners.</p>
         )}
       </section>
     </>
@@ -313,7 +313,7 @@ export function OwnerPayments({ records }: { records: PlatformOwnerPaymentBillin
           );
         })
       ) : (
-        <p className="empty-note">No owner payment ledgers are available yet.</p>
+        <p className={emptyNote}>No owner payment ledgers are available yet.</p>
       )}
     </section>
   );
@@ -453,7 +453,7 @@ export function SupportRequests({
             );
           })
         ) : (
-          <p className="empty-note">No customer requests.</p>
+          <p className={emptyNote}>No customer requests.</p>
         )}
       </section>
       <section className="card grid gap-[13px] p-[16px] mb-[12px] [&_h2]:m-0! [&_p]:m-0!">
@@ -504,7 +504,7 @@ export function SupportRequests({
             );
           })
         ) : (
-          <p className="empty-note">No platform feedback yet.</p>
+          <p className={emptyNote}>No platform feedback yet.</p>
         )}
       </section>
     </section>
