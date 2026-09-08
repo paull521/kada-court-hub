@@ -36,72 +36,7 @@
 .owner-schedule-archive[open] > summary strong {
   transform: rotate(90deg);
 }
-.owner-schedule-current {
-  display: grid;
-  gap: 10px;
-}
 
-.division-operation .schedule-finality {
-  align-self: center !important;
-}
-.game-change-panel {
-  margin: 12px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: #fff;
-  overflow: hidden;
-}
-.game-change-panel > header {
-  display: grid;
-  gap: 3px;
-  padding: 12px 13px;
-  border-bottom: 1px solid var(--line);
-  background: #fcfbf9;
-}
-.game-change-panel > header b {
-  font-size: 15px;
-  color: var(--navy);
-}
-.game-change-panel > header small {
-  font-size: 12px;
-  color: var(--muted);
-}
-.game-change-panel form {
-  display: grid;
-  gap: 11px;
-  padding: 13px;
-}
-.game-change-panel .btn {
-  width: 100%;
-}
-.cancel-game-panel {
-  border-color: #edc5c7;
-  background: #fffafa;
-}
-.cancel-game-panel > header {
-  background: #fff4f4;
-  border-bottom-color: #edc5c7;
-}
-.cancel-game-panel > header b {
-  color: #a51d25;
-}
-.cancel-game-panel .btn {
-  background: #a51d25;
-  color: #fff;
-}
-
-.game-editor-summary {
-  display: grid;
-  gap: 4px;
-  padding: 14px 16px;
-}
-.game-editor-summary b {
-  font-size: 15px;
-}
-.game-editor-summary small {
-  font-size: 12px;
-  color: var(--muted);
-}
 /* ============================================================================
    Owner's Guide
 

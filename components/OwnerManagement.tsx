@@ -555,7 +555,7 @@ function PreseasonDivisionForm({
               />
             </label>
           </fieldset>
-          <div className="uniform-upload-grid">
+          <div className={`${uniformUploadGrid} mt-[2px]`}>
             <label>
               <span>
                 Dark uniform <small>(optional)</small>
@@ -1227,7 +1227,7 @@ function OwnerTeamsWorkspace({
         Open a season, then a division, to see each team&apos;s simple roster.
       </p>
       {available.length ? (
-        <div className="uniform-season-list">
+        <div className="grid gap-[11px]">
           {available.map((season, index) => (
             <details
               className="card group mb-[12px] overflow-hidden"
@@ -1264,7 +1264,7 @@ function OwnerTeamsWorkspace({
                         <ChevronRight className="go-caret" />
                       </strong>
                     </summary>
-                    <div className="game-form">
+                    <div className={gameForm}>
                       <div className="grid gap-[8px]">
                         {division.teams.length ? (
                           division.teams.map((team) => <TeamEditor key={team.id} team={team} />)
@@ -2464,8 +2464,14 @@ function DivisionMatchupProgress({
   const total = (teams.length * (teams.length - 1)) / 2,
     complete = total - missing.length;
   return (
-    <details className={`matchup-progress ${missing.length ? "incomplete" : "complete"}`}>
-      <summary>
+    <details
+      className={`mb-[10px] overflow-hidden rounded-[13px] ${
+        missing.length
+          ? "border border-[#e4bd78] bg-[#fffaf2]"
+          : "border border-[#bcdcbf] bg-[#edf8ef]"
+      }`}
+    >
+      <summary className="flex cursor-pointer list-none items-center justify-between p-[12px] [&::-webkit-details-marker]:hidden [&>span]:grid [&>span]:gap-[3px] [&_small]:text-[11px] [&_small]:text-muted">
         <span>
           <b>
             {missing.length ? `${missing.length} Matchups Still Needed` : "Round Robin Complete"}
@@ -2479,7 +2485,7 @@ function DivisionMatchupProgress({
         </strong>
       </summary>
       {missing.length ? (
-        <div>
+        <div className="grid gap-[6px] border-t border-line p-[10px] [&>span]:text-[11px]">
           {missing.map(([home, away]) => (
             <span key={`${home.id}-${away.id}`}>
               {home.name} <b>vs</b> {away.name}
@@ -2487,7 +2493,9 @@ function DivisionMatchupProgress({
           ))}
         </div>
       ) : (
-        <p>Every team has been matched once. This draft can be finalized.</p>
+        <p className="m-0 p-[0_12px_12px] text-[11px] text-green">
+          Every team has been matched once. This draft can be finalized.
+        </p>
       )}
     </details>
   );
@@ -2503,7 +2511,7 @@ function FinalizeDivisionSchedule({
   const [state, action, pending] = useActionState(finalizeDivisionScheduleAction, initialState);
   if (division.scheduleStatus === "final")
     return (
-      <section className="division-schedule-final">
+      <section className="mb-[10px] grid gap-[3px] rounded-[13px] border border-[#bcdcbf] bg-[#edf8ef] p-[12px] text-green [&_small]:text-[#47734c]">
         <b>
           <Check className="ui-icon" /> Final Schedule
         </b>
@@ -2564,7 +2572,7 @@ function CreateGameForm({
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <form action={action} className="owner-form game-form">
+      <form action={action} className={`owner-form ${gameForm}`}>
         <input type="hidden" name="divisionId" value={division.id} />
         {playoffAvailable ? (
           <label>
@@ -2636,7 +2644,7 @@ function CreateGameForm({
 function GameCancellationCard({ game }: { game: OwnerSeason["games"][number] }) {
   const [state, action, pending] = useActionState(changeGameStatusAction, initialState);
   return (
-    <section className="game-change-panel cancel-game-panel">
+    <section className={`${changePanel} ${cancelPanel}`}>
       <header>
         <b>Cancel Game</b>
         <small>Use only if this game will not be played.</small>
@@ -2685,7 +2693,9 @@ function GameEditor({ game }: { game: OwnerSeason["games"][number] }) {
         className={`${actionCard} scroll-mt-[16px]`}
         data-game-card="final"
       >
-        <div className="game-editor-summary">{summary}</div>
+        <div className="grid gap-[4px] p-[14px_16px] [&_b]:text-[15px] [&_small]:text-[12px] [&_small]:text-muted">
+          {summary}
+        </div>
       </article>
     );
   return (
@@ -2710,12 +2720,12 @@ function GameEditor({ game }: { game: OwnerSeason["games"][number] }) {
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <section className="game-change-panel update-schedule-panel">
+      <section className={`update-schedule-panel ${changePanel}`}>
         <header>
           <b>Update Schedule</b>
           <small>Change the game details and notify both teams.</small>
         </header>
-        <form action={action} className="owner-form game-form">
+        <form action={action} className={`owner-form ${gameForm}`}>
           <input type="hidden" name="gameId" value={game.id} />
           <label>
             Date and time
@@ -2994,7 +3004,11 @@ function DivisionScheduleOperation({
           </small>
         </span>
         <em
-          className={`schedule-finality ${division.scheduleStatus === "final" ? "final" : "draft"}`}
+          className={`inline-flex w-max self-center rounded-full p-[5px_8px] text-[9px] font-[900] tracking-[0.04em] not-italic ${
+            division.scheduleStatus === "final"
+              ? "bg-[#eaf6ec] text-green"
+              : "bg-[#fff4da] text-[#8a5900]"
+          }`}
         >
           {status}
         </em>
@@ -3041,7 +3055,7 @@ function DivisionScheduleOperation({
                     regularGamesRemaining={regularGamesRemaining}
                   />
                 )}
-                <section className="scheduled-games">
+                <section className="[&>h3]:m-[18px_3px_10px] [&>h3]:text-[15px] [&>h3]:text-gold">
                   <h3>Update Individual Games</h3>
                   {divisionGames.map((game) => (
                     <GameEditor game={game} key={game.id} />
@@ -3110,7 +3124,7 @@ export function OwnerGameManagement({ seasons }: { seasons: OwnerSeason[] }) {
         Choose a season, then a division. Each division keeps its own schedule, teams, and results.
       </p>
       {current.length ? (
-        <div className="owner-schedule-current">
+        <div className="grid gap-[10px]">
           {current.map((season, index) => (
             <ScheduleSeasonOperations season={season} index={index} key={season.id} />
           ))}
@@ -3248,7 +3262,23 @@ function PaymentReviewCard({ submission }: { submission: OwnerPaymentSubmission 
 /* The owner's payment tracking, drawn twice: once for the live season and once
    in the past-payments archive. The two were identical markup pointing at one
    block of globals.css, so they point at one block of strings instead. */
+/* Every descendant here shouts. .owner-form sits on the same elements and sets
+   the label size and the control metrics unlayered; .game-form only ever beat
+   it on source order, which a layered utility cannot do. */
+const gameForm =
+  "border-t border-line p-[16px] [&_label]:text-[14px]! [&_input]:min-h-[48px]! [&_input]:text-[16px]! [&_select]:min-h-[48px]! [&_select]:text-[16px]!";
+/* The update panel and the cancel panel: same box, different alarm. The form
+   gap shouts because .owner-form is on the same element with 12px unlayered,
+   and .game-change-panel form only ever won it on specificity. */
+const changePanel =
+  "m-[12px] overflow-hidden rounded-[14px] border border-line bg-white [&>header]:grid [&>header]:gap-[3px] [&>header]:border-b [&>header]:border-line [&>header]:bg-[#fcfbf9] [&>header]:p-[12px_13px] [&>header_b]:text-[15px] [&>header_b]:text-navy [&>header_small]:text-[12px] [&>header_small]:text-muted [&_form]:grid [&_form]:gap-[11px]! [&_form]:p-[13px] [&_.btn]:w-full";
+const cancelPanel =
+  "border-[#edc5c7]! bg-[#fffafa]! [&>header]:border-b-[#edc5c7] [&>header]:bg-[#fff4f4] [&>header_b]:text-[#a51d25] [&_.btn]:bg-[#a51d25]! [&_.btn]:text-white!";
 const paymentSeason = "card group overflow-hidden";
+/* The two photo pickers - one in preseason setup, one on the uniforms page.
+   The preseason one adds a 2px top margin and nothing else. */
+const uniformUploadGrid =
+  "grid grid-cols-2 gap-[9px] [&_label]:overflow-hidden [&_label]:rounded-[13px] [&_label]:border [&_label]:border-line [&_label]:bg-white [&_label]:p-[9px] [&_label>span]:mb-[7px] [&_label>span]:block [&_label>span]:text-gold [&_i]:not-italic [&_img,&_i]:grid [&_img,&_i]:h-[130px] [&_img,&_i]:w-full [&_img,&_i]:place-items-center [&_img,&_i]:rounded-[10px] [&_img,&_i]:bg-[#f1efec] [&_img,&_i]:object-cover [&_img,&_i]:text-[35px] [&_input]:mt-[8px] [&_input]:w-full [&_input]:min-h-auto! [&_input]:text-[12px]!";
 const paymentSummary =
   "grid min-h-[76px] cursor-pointer list-none grid-cols-[minmax(0,1fr)_auto_24px] items-center gap-[10px] p-[14px_15px] [&::-webkit-details-marker]:hidden [&>span:first-child]:grid [&>span:first-child]:min-w-0 [&>span:first-child]:gap-[5px] [&>span:first-child_b]:leading-[1.3] [&_b]:text-[17px] [&_small]:text-[11px] [&_small]:leading-[1.35] [&_small]:text-muted";
 const paymentCaret = "text-[24px] transition-transform group-open:rotate-90";
@@ -3570,25 +3600,25 @@ function DivisionUniformForm({
     initialState,
   );
   return (
-    <details className="uniform-settings-card">
-      <summary>
+    <details className="overflow-hidden rounded-[15px] border border-line bg-white">
+      <summary className="grid min-h-[70px] cursor-pointer list-none grid-cols-[42px_1fr_auto] items-center gap-[11px] p-[13px] [&::-webkit-details-marker]:hidden">
         <span className="grid h-[36px] w-[36px] place-items-center rounded-[11px] bg-navy font-[900] text-[#f5a313]">
           {division.name.slice(0, 2).toUpperCase()}
         </span>
-        <span>
-          <b>{division.name}</b>
-          <small>
+        <span className="grid gap-[4px]">
+          <b className="text-[15px]">{division.name}</b>
+          <small className="text-[13px] text-muted">
             {seasonName} · {division.teams.length} teams · Dark &amp; Light photos
           </small>
         </span>
-        <strong aria-hidden="true">
+        <strong aria-hidden="true" className="text-[24px]">
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <div className="division-uniform-editor">
-        <form action={photoAction} className="owner-form uniform-photo-upload">
+      <div className="[&>form]:border-t [&>form]:border-line [&>form]:p-[15px] [&>form_input]:min-h-[48px] [&>form_input]:text-[16px]">
+        <form action={photoAction} className="owner-form bg-[#fbfaf8]">
           <input type="hidden" name="divisionId" value={division.id} />
-          <div className="uniform-upload-grid">
+          <div className={uniformUploadGrid}>
             <label>
               <span>Dark</span>
               {division.darkImage ? (
@@ -3637,7 +3667,7 @@ export function OwnerUniformManagement({ seasons }: { seasons: OwnerSeason[] }) 
         Open one season, then one division. Upload one dark and one light reference photo for every
         team in that division.
       </p>
-      <div className="uniform-season-list">
+      <div className="grid gap-[11px]">
         {available.map((season, index) => (
           <details
             className="card group mb-[12px] overflow-hidden"
@@ -3655,7 +3685,7 @@ export function OwnerUniformManagement({ seasons }: { seasons: OwnerSeason[] }) 
                 <ChevronRight className="go-caret" />
               </strong>
             </summary>
-            <div className={`uniform-settings-list ${seasonPanel}`}>
+            <div className={`grid gap-[10px] ${seasonPanel}`}>
               {season.divisions.map((division) => (
                 <DivisionUniformForm
                   key={division.id}
@@ -3806,7 +3836,7 @@ function TeamEditor({ team }: { team: OwnerTeam }) {
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <div className="game-form">
+      <div className={gameForm}>
         <TeamLeadershipEditor team={team} />
         {players.length ? (
           players.map((player) => <TeamPlayerRow key={player.registrationId} player={player} />)

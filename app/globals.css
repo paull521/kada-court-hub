@@ -2031,24 +2031,6 @@ body {
   color: var(--muted);
   margin: 0 0 16px;
 }
-.game-form {
-  border-top: 1px solid var(--line);
-  padding: 16px;
-}
-.game-form label {
-  font-size: 14px;
-}
-.game-form input,
-.game-form select {
-  min-height: 48px;
-  font-size: 16px;
-}
-
-.scheduled-games h3 {
-  font-size: 15px;
-  margin: 18px 3px 10px;
-  color: var(--gold);
-}
 
 .empty-feature {
   min-height: 150px;
@@ -2250,10 +2232,6 @@ body {
 .owner-page-section {
   margin-top: 22px;
 }
-.uniform-season-list {
-  display: grid;
-  gap: 11px;
-}
 
 .owner-dashboard-question {
   font-size: 19px;
@@ -2335,9 +2313,6 @@ body {
 .fee-toggle-card input:disabled {
   background: #eee;
   color: #999;
-}
-.preseason-form .uniform-upload-grid {
-  margin-top: 2px;
 }
 
 .notification-sheet {
@@ -2690,52 +2665,6 @@ body {
   font-weight: 500;
 }
 
-.uniform-settings-list {
-  display: grid;
-  gap: 10px;
-}
-
-.uniform-settings-card {
-  border: 1px solid var(--line);
-  border-radius: 15px;
-  background: #fff;
-  overflow: hidden;
-}
-.uniform-settings-card > summary {
-  list-style: none;
-  display: grid;
-  grid-template-columns: 42px 1fr auto;
-  gap: 11px;
-  align-items: center;
-  min-height: 70px;
-  padding: 13px;
-  cursor: pointer;
-}
-.uniform-settings-card > summary::-webkit-details-marker {
-  display: none;
-}
-.uniform-settings-card > summary > span:nth-child(2) {
-  display: grid;
-  gap: 4px;
-}
-.uniform-settings-card > summary b {
-  font-size: 15px;
-}
-.uniform-settings-card > summary small {
-  font-size: 13px;
-  color: var(--muted);
-}
-.uniform-settings-card > summary strong {
-  font-size: 24px;
-}
-.uniform-settings-card > form {
-  border-top: 1px solid var(--line);
-  padding: 15px;
-}
-.uniform-settings-card > form input {
-  min-height: 48px;
-  font-size: 16px;
-}
 .uniform-gallery {
   display: grid;
   gap: 12px;
@@ -2938,14 +2867,7 @@ button.account-link {
   color: var(--muted);
   margin: 0;
 }
-.division-uniform-editor > form {
-  border-top: 1px solid var(--line);
-  padding: 15px;
-}
-.division-uniform-editor > form input {
-  min-height: 48px;
-  font-size: 16px;
-}
+
 .schedule-build-summary {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -2969,44 +2891,6 @@ button.account-link {
 }
 .schedule-builder-form textarea {
   min-height: 80px;
-}
-.uniform-photo-upload {
-  background: #fbfaf8;
-}
-.uniform-upload-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 9px;
-}
-.uniform-upload-grid label {
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  background: #fff;
-  padding: 9px;
-  overflow: hidden;
-}
-.uniform-upload-grid label > span {
-  display: block;
-  color: var(--gold);
-  margin-bottom: 7px;
-}
-.uniform-upload-grid img,
-.uniform-upload-grid i {
-  width: 100%;
-  height: 130px;
-  border-radius: 10px;
-  background: #f1efec;
-  object-fit: cover;
-  display: grid;
-  place-items: center;
-  font-size: 35px;
-  font-style: normal;
-}
-.uniform-upload-grid input {
-  width: 100%;
-  min-height: auto !important;
-  margin-top: 8px;
-  font-size: 12px !important;
 }
 
 .game-postponed,
@@ -3059,7 +2943,6 @@ button.account-link {
   border-color: #e4bd78;
   background: #fffbf3;
 }
-.schedule-finality,
 .game-phase {
   display: inline-flex;
   width: max-content;
@@ -3070,15 +2953,11 @@ button.account-link {
   font-weight: 900;
   letter-spacing: 0.04em;
 }
-.schedule-finality.draft,
 .game-phase.playoff {
   background: #fff4da;
   color: #8a5900;
 }
-.schedule-finality.final {
-  background: #eaf6ec;
-  color: var(--green);
-}
+
 .game-phase.regular {
   background: #eef1f4;
   color: #536170;
@@ -3389,64 +3268,7 @@ button.account-link {
   background: var(--navy);
   color: #fff;
 }
-.matchup-progress {
-  border: 1px solid #e4bd78;
-  border-radius: 13px;
-  background: #fffaf2;
-  margin-bottom: 10px;
-  overflow: hidden;
-}
-.matchup-progress.complete {
-  border-color: #bcdcbf;
-  background: #edf8ef;
-}
-.matchup-progress > summary {
-  list-style: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px;
-  cursor: pointer;
-}
-.matchup-progress > summary::-webkit-details-marker {
-  display: none;
-}
-.matchup-progress > summary span {
-  display: grid;
-  gap: 3px;
-}
-.matchup-progress > summary small {
-  font-size: 11px;
-  color: var(--muted);
-}
-.matchup-progress > div {
-  border-top: 1px solid var(--line);
-  padding: 10px;
-  display: grid;
-  gap: 6px;
-}
-.matchup-progress > div span {
-  font-size: 11px;
-}
-.matchup-progress > p {
-  padding: 0 12px 12px;
-  margin: 0;
-  font-size: 11px;
-  color: var(--green);
-}
-.division-schedule-final {
-  display: grid;
-  gap: 3px;
-  padding: 12px;
-  border: 1px solid #bcdcbf;
-  border-radius: 13px;
-  background: #edf8ef;
-  color: var(--green);
-  margin-bottom: 10px;
-}
-.division-schedule-final small {
-  color: #47734c;
-}
+
 .continue-manual {
   margin: 10px 0;
 }
