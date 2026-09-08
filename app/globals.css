@@ -612,23 +612,6 @@ body {
   color: var(--gold);
 }
 
-.uniform-block {
-  display: grid;
-  grid-template-columns: 72px 1fr;
-  gap: 10px;
-}
-.uniform-block p {
-  margin: 0;
-}
-.uniform-block p > * {
-  display: block;
-  margin-top: 4px;
-}
-.uniform-block small {
-  color: var(--muted);
-  border-top: 1px solid var(--line);
-  padding-top: 5px;
-}
 .jersey-art {
   height: 120px;
   background: linear-gradient(90deg, #071f3d, #123863, #071f3d);
@@ -708,51 +691,7 @@ body {
   display: grid;
   gap: 8px;
 }
-.game-row {
-  display: grid;
-  grid-template-columns: 43px 1.2fr 1fr 75px 12px;
-  gap: 8px;
-  align-items: center;
-  padding: 11px;
-  font-size: 10px;
-}
-.game-row time {
-  display: grid;
-  text-align: center;
-  border-right: 1px solid var(--line);
-}
-.game-row time strong {
-  font-size: 24px;
-}
-.game-place {
-  display: grid;
-  gap: 8px;
-}
-.game-place strong {
-  font-size: 17px;
-}
-.game-place span {
-  color: var(--muted);
-}
 
-.game-uniform {
-  border-left: 1px solid var(--line);
-  padding-left: 8px;
-  display: grid;
-  gap: 7px;
-}
-.game-uniform small {
-  color: var(--gold);
-}
-.game-uniform span {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.game-uniform .uniform-dot {
-  width: 14px;
-  height: 14px;
-}
 .balance-card {
   background:
     radial-gradient(circle at 90% 35%, rgba(79, 122, 166, 0.3), transparent 32%),
@@ -825,29 +764,6 @@ body {
   display: grid;
   place-items: center;
   color: var(--gold);
-}
-.payment-methods {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 13px;
-}
-.payment-methods button {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  padding: 15px;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  font-weight: 700;
-}
-.payment-methods button span {
-  margin-left: auto;
-}
-.payment-methods button b {
-  font-size: 22px;
-  color: var(--blue);
 }
 
 .profile-card {
@@ -1113,11 +1029,6 @@ body {
 .owner-content {
   padding-bottom: 112px;
 }
-.player-view-link {
-  color: var(--blue);
-  font-weight: 700;
-  font-size: 13px;
-}
 
 .owner-section {
   padding: 20px;
@@ -1188,16 +1099,6 @@ body {
   height: 17px;
 }
 
-.division-heading {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 9px;
-}
-.division-heading span {
-  font-size: 12px;
-  color: var(--muted);
-}
-
 .empty-note {
   font-size: 12px;
   color: var(--muted);
@@ -1221,87 +1122,13 @@ body {
 .muted {
   color: var(--muted);
 }
-.roster-add-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-.roster-form {
-  padding: 16px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: #fbfaf8;
-  align-content: start;
-}
-.roster-form h3 {
-  margin: 0;
-  font-size: 16px;
-}
-.roster-form > p {
-  margin: -5px 0 2px;
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.4;
-}
+
 .compact-fields {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
-.team-roster-management {
-  grid-column: 1/-1;
-  border-top: 1px solid var(--line);
-  padding-top: 13px;
-}
-.team-roster-management h4 {
-  margin: 0 0 9px;
-  color: var(--gold);
-  font-size: 12px;
-}
-.team-roster-management > div {
-  display: grid;
-  gap: 7px;
-}
-.roster-number {
-  width: 34px;
-  height: 29px;
-  border-radius: 10px;
-  background: #f0efed;
-  display: grid;
-  place-items: center;
-}
-.roster-status {
-  font-size: 9px;
-  font-style: normal;
-  text-transform: uppercase;
-  padding: 4px 7px;
-  border-radius: 10px;
-  background: #eee;
-  color: var(--muted);
-}
-.roster-status.active {
-  background: #dff3df;
-  color: var(--green);
-}
-.roster-status.pending {
-  background: #fff4da;
-  color: #795009;
-}
-.roster-status.inactive {
-  background: #eee;
-  color: #666;
-}
-.roster-identity {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  font-size: 10px;
-  color: var(--muted);
-}
-.roster-identity b {
-  color: var(--blue);
-  text-align: right;
-}
+
 .guided-owner-shell {
   width: min(100%, 560px);
 }
@@ -1717,22 +1544,6 @@ body {
   border: 1px solid #d6dbe2;
 }
 
-.flyer-placeholder {
-  height: 105px;
-  border: 1px dashed rgba(255, 255, 255, 0.45);
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  font-weight: 900;
-  color: #f5a313;
-}
-.flyer-placeholder small {
-  font-size: 8px;
-  color: #d7e0e9;
-  font-weight: 500;
-}
-
 .invitation-facts {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1894,24 +1705,6 @@ body {
   margin: 4px 0 0;
   font-size: 13px;
   color: var(--gold);
-}
-.division-draft-totals {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-}
-.division-draft-totals span {
-  padding: 8px 4px;
-  border-radius: 9px;
-  background: #f7f7f6;
-  text-align: center;
-  font-size: 8px;
-  color: var(--muted);
-}
-.division-draft-totals b {
-  display: block;
-  font-size: 16px;
-  color: var(--navy);
 }
 
 .division-invitation-locked {
@@ -2587,83 +2380,7 @@ body {
   line-height: 1.45;
   color: var(--muted);
 }
-.roster-release-banner {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 14px;
-  margin: 0 0 14px;
-}
-.roster-release-banner > span {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  font-weight: 900;
-}
-.roster-release-banner b {
-  font-size: 15px;
-}
-.roster-release-banner p {
-  margin: 3px 0 0;
-  font-size: 12px;
-  line-height: 1.45;
-  color: var(--muted);
-}
-.roster-release-banner.review {
-  border-color: #efd18e;
-  background: #fff9e9;
-}
-.roster-release-banner.review > span {
-  background: #ffe7ad;
-  color: #9a6100;
-}
-.roster-release-banner.final {
-  border-color: #bcdcbf;
-  background: #edf8ef;
-}
-.roster-release-banner.final > span {
-  background: #ccebd0;
-  color: var(--green);
-}
-.division-roster-intro {
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.45;
-}
-.player-division-team {
-  border-top: 1px solid var(--line);
-}
-.player-division-team > summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 13px 2px;
-  cursor: pointer;
-  list-style: none;
-}
-.player-division-team > summary::-webkit-details-marker {
-  display: none;
-}
-.player-division-team > summary span {
-  display: grid;
-  gap: 2px;
-}
-.player-division-team > summary small {
-  color: var(--muted);
-}
-.player-division-team > summary strong {
-  transition: transform 0.2s;
-}
-.player-division-team[open] > summary > strong {
-  transform: rotate(90deg);
-}
 
-.player-division-team > div {
-  padding: 0 4px 6px;
-}
 .owner-operations {
   margin-top: 34px;
 }
@@ -2689,39 +2406,13 @@ body {
   min-height: 48px;
   font-size: 16px;
 }
-.game-uniform-fields,
-.score-fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
+
 .scheduled-games h3 {
   font-size: 15px;
   margin: 18px 3px 10px;
   color: var(--gold);
 }
-.game-date-chip {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: #f4f1ed;
-  display: grid !important;
-  place-items: center;
-  align-content: center;
-  gap: 1px !important;
-  text-align: center;
-}
-.game-date-chip b {
-  font-size: 13px !important;
-}
-.game-date-chip small {
-  font-size: 11px !important;
-}
-.game-matchup-label {
-  font-size: 15px;
-  line-height: 1.4;
-  margin: 0;
-}
+
 .empty-feature {
   min-height: 150px;
   padding: 25px;
@@ -2927,15 +2618,6 @@ body {
   gap: 11px;
 }
 
-.score-unavailable {
-  font-size: 12px;
-  line-height: 1.5;
-  color: #981b1f;
-  background: #fff2f2;
-  border-radius: 10px;
-  padding: 10px;
-  margin: 11px 0 0;
-}
 .owner-dashboard-question {
   font-size: 19px;
   font-weight: 800;
@@ -3126,66 +2808,11 @@ body {
   color: var(--muted);
   margin: 0;
 }
-.balance-action {
-  margin-top: 20px;
-  background: #fff;
-  color: var(--navy);
-  border: 0;
-  border-radius: 12px;
-  padding: 14px;
-  text-align: center;
-  font-weight: 800;
-  font-size: 16px;
-}
-.payment-action-list {
-  margin: 20px 0;
-}
-.payment-action-list > h2,
+
 .payment-history-panel > h2 {
   font-size: 14px;
   color: var(--gold);
   margin: 0 0 5px;
-}
-.payment-action-list > p {
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--muted);
-  margin: 0 0 11px;
-}
-.payment-action-card {
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: #fff;
-  overflow: hidden;
-  margin-bottom: 9px;
-}
-.payment-action-card > summary {
-  list-style: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  min-height: 68px;
-  padding: 14px 16px;
-  cursor: pointer;
-}
-.payment-action-card > summary::-webkit-details-marker {
-  display: none;
-}
-.payment-action-card > summary span {
-  display: grid;
-  gap: 4px;
-}
-.payment-action-card > summary b {
-  font-size: 16px;
-}
-.payment-action-card > summary small {
-  font-size: 13px;
-  color: var(--muted);
-}
-.payment-action-card > summary strong {
-  color: var(--blue);
-  font-size: 14px;
 }
 
 .payment-safety-note {
@@ -3230,31 +2857,7 @@ body {
   line-height: 1.4;
   color: var(--muted);
 }
-.paid-up-card {
-  text-align: center;
-  padding: 28px 18px;
-  margin: 18px 0;
-}
-.paid-up-card > span {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: #e8f4e8;
-  color: var(--green);
-  display: grid;
-  place-items: center;
-  margin: auto;
-  font-size: 23px;
-}
-.paid-up-card h2 {
-  font-size: 20px;
-  margin: 12px 0 5px;
-}
-.paid-up-card p {
-  font-size: 14px;
-  color: var(--muted);
-  margin: 0;
-}
+
 .payment-history-panel {
   margin-top: 18px;
 }
@@ -3466,22 +3069,12 @@ body {
   color: var(--muted);
   font-weight: 500;
 }
-.team-detail-panels {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 11px;
-}
 
 .uniform-settings-list {
   display: grid;
   gap: 10px;
 }
-.uniform-team-context {
-  display: block;
-  font-size: 12px;
-  color: var(--muted);
-  margin: 0 3px 5px;
-}
+
 .uniform-settings-card {
   border: 1px solid var(--line);
   border-radius: 15px;
@@ -3945,37 +3538,7 @@ button.account-link {
   margin-top: 8px;
   font-size: 12px !important;
 }
-.game-status-control {
-  margin: 0 15px 15px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  overflow: hidden;
-}
-.game-status-control > summary {
-  list-style: none;
-  min-height: 48px;
-  padding: 10px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 800;
-}
-.game-status-control > summary::-webkit-details-marker {
-  display: none;
-}
-.game-status-control > summary strong {
-  font-size: 21px;
-  transition: transform 0.15s;
-}
-.game-status-control[open] > summary strong {
-  transform: rotate(90deg);
-}
-.game-status-control > form {
-  border-top: 1px solid var(--line);
-  padding: 13px;
-}
+
 .game-postponed,
 .game-canceled {
   border-color: #e5b3b5;
@@ -4079,69 +3642,11 @@ button.account-link {
 .schedule-finalize-panel .btn {
   width: 100%;
 }
-.game-matchup-label .game-phase {
-  margin-bottom: 8px;
-}
+
 .schedule-table-scroll .game-phase {
   white-space: nowrap;
 }
-.payment-dashboard-summary {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 9px;
-  margin: 15px 0 25px;
-}
-.payment-summary-card {
-  min-height: 116px;
-  padding: 15px;
-  border: 1px solid var(--line);
-  border-radius: 17px;
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 6px;
-  box-shadow: 0 5px 14px rgba(13, 38, 69, 0.06);
-}
-.payment-summary-card small {
-  font-size: 10px;
-  font-weight: 850;
-  letter-spacing: 0.06em;
-  color: var(--muted);
-}
-.payment-summary-card b {
-  font-size: 24px;
-  line-height: 1.05;
-}
-.payment-summary-card span {
-  font-size: 11px;
-  line-height: 1.35;
-  color: var(--muted);
-}
-.payment-summary-card.received {
-  background: #eaf6ec;
-  border-color: #cce6d0;
-}
-.payment-summary-card.received b {
-  color: var(--green);
-}
-.payment-summary-card.outstanding {
-  background: #fff7e8;
-  border-color: #edd5a9;
-}
-.payment-summary-card.outstanding b {
-  color: #a96700;
-}
-.payment-summary-card.waived {
-  background: #f1f3f5;
-}
-.payment-summary-card.review {
-  background: #fff1f1;
-  border-color: #efc9cb;
-}
-.payment-summary-card.review b {
-  color: #b01c25;
-}
+
 .payment-review-section,
 .payment-season-tracking {
   margin-top: 27px;
@@ -4163,12 +3668,10 @@ button.account-link {
   padding: 14px 15px;
   cursor: pointer;
 }
-.payment-season > summary::-webkit-details-marker,
-.payment-division > summary::-webkit-details-marker {
+.payment-season > summary::-webkit-details-marker {
   display: none;
 }
-.payment-season > summary > span:first-child,
-.payment-division > summary > span:first-child {
+.payment-season > summary > span:first-child {
   display: grid;
   gap: 5px;
   min-width: 0;
@@ -4176,19 +3679,16 @@ button.account-link {
 .payment-season > summary b {
   font-size: 17px;
 }
-.payment-season > summary small,
-.payment-division > summary small {
+.payment-season > summary small {
   font-size: 11px;
   line-height: 1.35;
   color: var(--muted);
 }
-.payment-season > summary > strong,
-.payment-division > summary > strong {
+.payment-season > summary > strong {
   font-size: 24px;
   transition: transform 0.15s;
 }
-.payment-season[open] > summary > strong,
-.payment-division[open] > summary > strong {
+.payment-season[open] > summary > strong {
   transform: rotate(90deg);
 }
 .payment-season-due {
@@ -4204,14 +3704,12 @@ button.account-link {
   border-top: 1px solid var(--line);
   padding: 12px;
 }
-.payment-season-stats,
 .payment-division-stats {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 7px;
   margin-bottom: 11px;
 }
-.payment-season-stats span,
 .payment-division-stats span {
   min-height: 61px;
   padding: 9px;
@@ -4221,7 +3719,6 @@ button.account-link {
   align-content: center;
   gap: 4px;
 }
-.payment-season-stats small,
 .payment-division-stats small,
 .payment-player-amounts small,
 .payment-player-row > p small {
@@ -4230,40 +3727,10 @@ button.account-link {
   letter-spacing: 0.04em;
   color: var(--muted);
 }
-.payment-season-stats b,
 .payment-division-stats b {
   font-size: 14px;
 }
-.payment-division {
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: #fbfaf8;
-  overflow: hidden;
-  margin-top: 8px;
-}
-.payment-division > summary {
-  list-style: none;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto 22px;
-  gap: 9px;
-  align-items: center;
-  min-height: 66px;
-  padding: 12px;
-  cursor: pointer;
-}
-.payment-division > summary > span:nth-child(2) {
-  display: grid;
-  gap: 3px;
-  text-align: right;
-}
-.payment-division > summary > span:nth-child(2) b {
-  font-size: 14px;
-  color: #a51118;
-}
-.payment-division-body {
-  border-top: 1px solid var(--line);
-  padding: 11px;
-}
+
 .payment-player-list {
   display: grid;
   gap: 8px;
@@ -4356,13 +3823,11 @@ button.account-link {
 .payment-card-label:first-child {
   margin-top: 2px;
 }
-.payment-fee-breakdown,
 .payment-count-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 7px;
 }
-.payment-fee-breakdown span,
 .payment-count-grid span {
   min-height: 68px;
   border: 1px solid var(--line);
@@ -4373,7 +3838,6 @@ button.account-link {
   align-content: center;
   gap: 5px;
 }
-.payment-fee-breakdown small,
 .payment-count-grid small,
 .payment-method-counts small {
   font-size: 9px;
@@ -4381,7 +3845,6 @@ button.account-link {
   letter-spacing: 0.05em;
   color: var(--muted);
 }
-.payment-fee-breakdown b,
 .payment-count-grid b {
   font-size: 18px;
 }
@@ -4490,9 +3953,6 @@ button.account-link {
   font-size: 20px;
 }
 @media (max-width: 500px) {
-  .team-detail-panels {
-    grid-template-columns: 1fr;
-  }
   .uniform-photo img {
     max-height: 520px;
   }
@@ -4507,15 +3967,6 @@ button.account-link {
   }
   .payment-player-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (max-width: 650px) {
-  .roster-add-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .team-roster-management {
-    grid-column: auto;
   }
 }
 @media (max-width: 410px) {
@@ -5048,10 +4499,6 @@ body:has(.context-overlay-open) .bottom {
   color: var(--navy);
 }
 
-.platform-payments {
-  min-height: 198px;
-}
-
 .platform-login-note {
   margin: 16px 0;
   color: var(--muted);
@@ -5153,8 +4600,6 @@ body:has(.context-overlay-open) .bottom {
 }
 .platform-table tr:last-child td {
   border-bottom: 0;
-}
-@media (max-width: 520px) {
 }
 
 .platform-status-actions {

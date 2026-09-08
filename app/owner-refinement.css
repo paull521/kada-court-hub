@@ -90,39 +90,6 @@
   color: #fff;
 }
 
-.score-game-meta {
-  display: grid;
-  gap: 6px;
-  justify-items: end;
-}
-.score-needed {
-  padding: 5px 8px;
-  border-radius: 999px;
-  background: #fff0f0;
-  color: #ad2028;
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 850;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.final-score-warning {
-  margin: 0 !important;
-  padding: 10px 12px;
-  border-radius: 11px;
-  background: #fff4da;
-  color: #805000;
-  font-size: 13px;
-  font-weight: 800;
-  text-align: center;
-}
-
-@media (max-width: 410px) {
-  .score-game-meta {
-    justify-items: start;
-  }
-}
 .game-editor-summary {
   display: grid;
   gap: 4px;

@@ -166,16 +166,7 @@
   padding: 8px 0;
   border-bottom: 1px solid #e5e7e9;
 }
-.game-final-lock {
-  color: #18753a;
-  font-weight: 900;
-}
-.final-score-warning {
-  padding: 12px;
-  background: #fff5d9;
-  border-radius: 10px;
-  color: #7a4b00;
-}
+
 .uniform-line {
   display: flex;
   align-items: center;
