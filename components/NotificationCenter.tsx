@@ -10,7 +10,13 @@ import {
 } from "@/app/notifications/actions";
 import type { PlayerNotification } from "@/lib/kch-data";
 import { contextSheet } from "@/components/ui/context-classes";
-import { contextOverlay, notificationButton, sheetHandle } from "@/components/ui/shared-classes";
+import {
+  contextOverlay,
+  markAllButton,
+  notificationButton,
+  notificationList,
+  sheetHandle,
+} from "@/components/ui/shared-classes";
 
 export default function NotificationCenter({
   notifications,
@@ -81,12 +87,12 @@ export default function NotificationCenter({
               </button>
             </header>
             {unread > 0 && (
-              <button className="mark-all" type="button" disabled={pending} onClick={markAll}>
+              <button className={markAllButton} type="button" disabled={pending} onClick={markAll}>
                 Mark all as read
               </button>
             )}
             {notifications.length ? (
-              <div className="notification-list">
+              <div className={notificationList}>
                 {notifications.map((notification) => (
                   <button
                     type="button"

@@ -7,6 +7,8 @@ import {
   emptyNote,
   familyBanner,
   familyQuote,
+  historyScroll,
+  methodPanel,
   panel,
   teamMark,
   teamMarkSmall,
@@ -95,14 +97,14 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
             submissions={data.paymentSubmissions}
           />
         ) : (
-          <section className={`card payment-method-panel ${panel}`}>
+          <section className={`card ${panel} ${methodPanel}`}>
             <h2>PAYMENT METHODS</h2>
             <SkeletonBlock height="148px" />
           </section>
         )}
         {/* Closed, this disclosure is four fixed things and a caret. It has
             never needed the read to be drawn. */}
-        <details className={`card ${historyPanel}`}>
+        <details className={`card ${historyPanel} [&>summary]:grid-cols-[35px_1fr_auto]`}>
           <summary>
             <span>
               <Clock className="ui-icon" />
@@ -112,7 +114,7 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
               <ChevronRight className="go-caret" />
             </strong>
           </summary>
-          <div className="payment-history-scroll">
+          <div className={historyScroll}>
             {data?.paymentHistory.length ? (
               data.paymentHistory.slice(0, 10).map((payment) => (
                 <div className={historyRow} key={payment.id}>

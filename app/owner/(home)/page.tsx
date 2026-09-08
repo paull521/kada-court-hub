@@ -17,6 +17,7 @@ import ConferencePlayerInvitation from "@/components/ConferencePlayerInvitation"
 import { getOwnerConferenceContext, getOwnerPortalData } from "@/lib/owner-data";
 import { createClient } from "@/lib/supabase/server";
 import { cx } from "@/components/ui/cx";
+import { dashboardQuestion, ownerAccess } from "@/components/ui/shared-classes";
 
 /**
  * One tile in the commissioner's grid.
@@ -145,7 +146,7 @@ export default async function Owner() {
         <main className="content owner-content">
           <p className="eyebrow">COMMISSIONER</p>
           <h1 className="title">Conference Management</h1>
-          <section className="card owner-access">
+          <section className={`card ${ownerAccess}`}>
             <h2>Commissioner access required</h2>
             <p className="text-muted">
               This area is available only to a conference commissioner. Ask the current commissioner
@@ -184,7 +185,7 @@ export default async function Owner() {
           {greeting},{" "}
           <span className="whitespace-nowrap max-[600px]:block">Mr.&nbsp;{lastName}!</span>
         </h1>
-        <p className="owner-dashboard-question">What would you like to do?</p>
+        <p className={dashboardQuestion}>What would you like to do?</p>
         {/* owner-action-grid carries no layout of its own any more - the two
             utilities below replaced it. It stays as the hook two children still
             reach for: the guide link and the invitation both take

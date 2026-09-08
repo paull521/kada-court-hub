@@ -3,6 +3,7 @@ import KchLogo from "@/components/KchLogo";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getPlatformDashboard } from "@/lib/platform-data";
+import { dashboardQuestion } from "@/components/ui/shared-classes";
 
 export default async function PlatformCreatorPage() {
   const data = await getPlatformDashboard();
@@ -18,7 +19,7 @@ export default async function PlatformCreatorPage() {
       <main className="content owner-content max-desk:pb-12! [&>form]:m-0">
         <p className="eyebrow">KCH PLATFORM CREATOR</p>
         <h1 className="title">Welcome, {data.adminName.split(" ")[0] || "Creator"}.</h1>
-        <p className="owner-dashboard-question">Platform overview.</p>
+        <p className={dashboardQuestion}>Platform overview.</p>
         <nav
           className="grid grid-cols-2 gap-[12px] max-[520px]:grid-cols-1"
           aria-label="Platform creator actions"

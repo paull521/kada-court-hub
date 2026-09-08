@@ -12,7 +12,13 @@ import {
 } from "lucide-react";
 import { LoadingNote, SkeletonBlock, SkeletonText } from "@/components/Skeleton";
 import { accountLink, accountRow } from "@/components/ui/account-classes";
-import { avatar, infoRow, profileCard } from "@/components/ui/shared-classes";
+import {
+  accountList,
+  avatar,
+  infoRow,
+  profileCard,
+  profileSectionTitle,
+} from "@/components/ui/shared-classes";
 
 function InfoPanelFrame({ title, rows }: { title: string; rows: [ReactNode, string][] }) {
   return (
@@ -86,8 +92,8 @@ export default function ProfileFrame() {
           [<Shirt className="ui-icon" key="size" />, "Preferred Uniform Size"],
         ]}
       />
-      <h2 className="profile-section-title">ACCOUNT</h2>
-      <div className="profile-account-list">
+      <h2 className={profileSectionTitle}>ACCOUNT</h2>
+      <div className={accountList}>
         <SkeletonBlock height="58px" radius="18px" />
         <SkeletonBlock height="58px" radius="18px" />
         {/* These two are the same on every profile there has ever been. */}

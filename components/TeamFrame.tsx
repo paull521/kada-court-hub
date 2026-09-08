@@ -9,6 +9,7 @@ import {
   familyQuoteAuthor,
   jersey,
   panel,
+  playerName,
   rosterRow,
   sectionHeading,
   teamMark,
@@ -80,7 +81,7 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
                     title={answer?.available === false ? "Unavailable" : "Available"}
                   />
                   <b className={jersey}>{player.number || "—"}</b>
-                  <span className="roster-player-name">
+                  <span className={playerName}>
                     <strong>{player.name}</strong>
                     <small>
                       {player.jerseyName ? `${player.jerseyName} · ` : ""}
@@ -103,7 +104,7 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
               <b className={jersey}>
                 <SkeletonText width="1.2em" />
               </b>
-              <span className="roster-player-name">
+              <span className={playerName}>
                 <strong>
                   <SkeletonText width="9em" />
                 </strong>

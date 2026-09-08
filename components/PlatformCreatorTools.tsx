@@ -14,7 +14,7 @@ import type { OwnerPaymentBilling } from "@/lib/owner-payment-ledger";
 import { OwnerDemoOverview } from "@/components/OwnerDemoOverview";
 import { historyPanel, historyRow } from "@/components/ui/account-classes";
 import { amountField, loginBox, platformForm, tallField } from "@/components/ui/auth-classes";
-import { emptyNote } from "@/components/ui/shared-classes";
+import { emptyNote, historyScroll } from "@/components/ui/shared-classes";
 
 const initial: PlatformActionState = {};
 const money = (amount: number) => `$${amount.toFixed(2)}`;
@@ -200,14 +200,16 @@ export function OwnerSubscriptionPayment({
           {state.message && <p className="form-success">{state.message}</p>}
         </div>
       </details>
-      <details className={`card owner-subscription-history ${historyPanel}`}>
+      {/* Two columns, not three: this copy of the history panel has no icon.
+          Its own rule used to say so from globals.css. */}
+      <details className={`card ${historyPanel} m-0! [&>summary]:grid-cols-[1fr_auto]`}>
         <summary>
           <b>Payment History</b>
           <strong aria-hidden="true">
             <ChevronRight className="go-caret" />
           </strong>
         </summary>
-        <div className="payment-history-scroll">
+        <div className={historyScroll}>
           {billing.submissions.length ? (
             billing.submissions.map((submission) => (
               <div className={historyRow} key={submission.id}>

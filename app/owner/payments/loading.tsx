@@ -1,6 +1,7 @@
 import OwnerShellFrame from "@/components/OwnerShellFrame";
 import OwnerSectionFrame from "@/components/OwnerSectionFrame";
 import { SkeletonCard } from "@/components/Skeleton";
+import { operationsIntro, ownerOperations, pageSection } from "@/components/ui/shared-classes";
 
 export default function Loading() {
   return (
@@ -9,9 +10,9 @@ export default function Loading() {
       subtitle="Track current-season collections and review past seasons separately."
       active="payments"
     >
-      <section className="owner-operations owner-page-section">
+      <section className={`${ownerOperations} ${pageSection}`}>
         <h2>Season Subscription</h2>
-        <p className="operations-intro">Season payment for KCH Platform Creator confirmation.</p>
+        <p className={operationsIntro}>Season payment for KCH Platform Creator confirmation.</p>
         <SkeletonCard />
       </section>
       <OwnerSectionFrame

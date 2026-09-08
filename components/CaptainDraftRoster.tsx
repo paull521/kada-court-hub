@@ -11,12 +11,14 @@ import {
 import type { CaptainPortalData } from "@/lib/captain-data";
 import {
   addedPlayers,
+  captainRosterList,
   compactFields,
   emptyNote,
   fieldHelp,
   ownerForm,
   ownerIcon,
   ownerSection,
+  reviewActions,
   sectionTitle,
 } from "@/components/ui/shared-classes";
 
@@ -112,7 +114,7 @@ function DraftedPlayer({
           </label>
         )}
         <Notice state={state} />
-        <div className="draft-review-actions">
+        <div className={reviewActions}>
           {!detailsOnly && (
             <button
               className="btn secondary"
@@ -209,7 +211,7 @@ export default function CaptainDraftRoster({
             {data.rosterLimit !== null ? ` / ${data.rosterLimit}` : ""} players
           </span>
         </div>
-        <div className="captain-roster-list">
+        <div className={captainRosterList}>
           {players.map((player) => (
             <DraftedPlayer
               key={player.registrationId}

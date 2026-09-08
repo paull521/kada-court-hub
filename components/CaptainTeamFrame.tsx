@@ -6,11 +6,12 @@ import { scheduleEmpty, teamBanner, teamBannerCopy } from "@/components/ui/sched
 import {
   jersey,
   panel,
+  playerName,
   rosterRow,
   sectionHeading,
-  teamSwitcher,
   teamMark,
   teamMarkSmall,
+  teamSwitcher,
 } from "@/components/ui/shared-classes";
 
 /**
@@ -77,7 +78,7 @@ export default function CaptainTeamFrame({ data }: { data?: CaptainPortalData })
                       className={`availability-dot ${availability?.available === false ? "no" : "yes"}`}
                     />
                     <b className={jersey}>{player.jerseyNumber ?? "—"}</b>
-                    <span className="roster-player-name">
+                    <span className={playerName}>
                       <strong>{player.name}</strong>
                       <small>
                         {player.role !== "Player" ? `${player.role} · ` : ""}
@@ -95,7 +96,7 @@ export default function CaptainTeamFrame({ data }: { data?: CaptainPortalData })
                   <b className={jersey}>
                     <SkeletonText width="1.2em" />
                   </b>
-                  <span className="roster-player-name">
+                  <span className={playerName}>
                     <strong>
                       <SkeletonText width="9em" />
                     </strong>

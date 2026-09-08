@@ -4,7 +4,7 @@ import { Clock, FileCheck, Landmark, Wallet } from "lucide-react";
 import { useActionState, useState } from "react";
 import { submitPaymentNoticeAction, type PaymentActionState } from "@/app/payments/actions";
 import type { PaymentSubmission } from "@/lib/kch-data";
-import { paymentStatusCard } from "@/components/ui/shared-classes";
+import { methodPanel, panel, paymentStatusCard } from "@/components/ui/shared-classes";
 
 const initialState: PaymentActionState = {};
 
@@ -23,7 +23,7 @@ export default function PlayerPaymentForm({
   const disabled = balance <= 0 || awaiting.length > 0;
 
   return (
-    <section className={`card panel payment-method-panel ${disabled ? "disabled" : ""}`}>
+    <section className={`card ${panel} ${methodPanel} ${disabled ? "disabled" : ""}`}>
       <h2>PAYMENT METHODS</h2>
       {awaiting.map((submission) => (
         <div className={paymentStatusCard} key={submission.id}>

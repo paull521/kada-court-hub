@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { respondInvitationAction, type InvitationActionState } from "@/app/home/actions";
-import { invitationNote, invitationSummary } from "@/components/ui/shared-classes";
+import {
+  invitationFacts,
+  invitationNote,
+  invitationSummary,
+  responseDeadline,
+} from "@/components/ui/shared-classes";
 
 const initialState: InvitationActionState = {};
 type Invitation = {
@@ -50,7 +55,7 @@ export default function SeasonInvitationCard({ invitation }: { invitation: Invit
           {date(invitation.startsOn)} – {date(invitation.endsOn)}
         </span>
       </div>
-      <div className="invitation-facts">
+      <div className={invitationFacts}>
         <span>
           <b>{invitation.teamCount}</b> Teams
         </span>
@@ -62,7 +67,7 @@ export default function SeasonInvitationCard({ invitation }: { invitation: Invit
         </span>
       </div>
       {invitation.responseDeadline && (
-        <p className="response-deadline">Please respond by {date(invitation.responseDeadline)}</p>
+        <p className={responseDeadline}>Please respond by {date(invitation.responseDeadline)}</p>
       )}
       <p className={invitationNote}>{invitation.message}</p>
       <form action={action}>

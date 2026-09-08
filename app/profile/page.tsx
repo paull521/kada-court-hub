@@ -27,7 +27,15 @@ import PlatformFeedback from "@/components/PlatformFeedback";
 import OwnerConferenceSwitcher from "@/components/OwnerConferenceSwitcher";
 import "@/components/ProfileCleanup.css";
 import { accountLink, accountRow } from "@/components/ui/account-classes";
-import { avatar, infoRow, profileCard, statusPill } from "@/components/ui/shared-classes";
+import {
+  accountList,
+  avatar,
+  infoRow,
+  profileCard,
+  statusPill,
+  logoutAccount,
+  profileSectionTitle,
+} from "@/components/ui/shared-classes";
 
 function InfoPanel({
   title,
@@ -189,8 +197,8 @@ export default async function Profile({
           ],
         ]}
       />
-      <h2 className="profile-section-title">ACCOUNT</h2>
-      <div className="profile-account-list">
+      <h2 className={profileSectionTitle}>ACCOUNT</h2>
+      <div className={accountList}>
         <PlatformFeedback conferenceId={ownerData.conferenceId} />
         <NotificationPreferencesForm preferences={data.notificationPreferences} />
         <Link href="/documents" className={`card ${accountRow} ${accountLink}`}>
@@ -227,7 +235,7 @@ export default async function Profile({
           }))}
         />
         <form action={logoutAction}>
-          <button className={`card logout-account ${accountRow} ${accountLink}`}>
+          <button className={`card ${logoutAccount} ${accountRow} ${accountLink}`}>
             <span>
               <LogOut className="ui-icon" />
             </span>
@@ -260,8 +268,8 @@ export default async function Profile({
       />
       <InfoPanel title="PERSONAL INFO" rows={personal} />
       <InfoPanel title="PLAYER DETAILS" rows={details} />
-      <h2 className="profile-section-title">ACCOUNT</h2>
-      <div className="profile-account-list">
+      <h2 className={profileSectionTitle}>ACCOUNT</h2>
+      <div className={accountList}>
         {ownerData?.authorized ? (
           <PlatformFeedback conferenceId={ownerData.conferenceId} />
         ) : data.contexts.length > 0 ? (
@@ -301,7 +309,7 @@ export default async function Profile({
           />
         )}
         <form action={logoutAction}>
-          <button className={`card logout-account ${accountRow} ${accountLink}`}>
+          <button className={`card ${logoutAccount} ${accountRow} ${accountLink}`}>
             <span>
               <LogOut className="ui-icon" />
             </span>

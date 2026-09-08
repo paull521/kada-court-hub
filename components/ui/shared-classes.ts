@@ -140,3 +140,57 @@ export const notificationButton =
 /** The scrim a context sheet rises out of; centred rather than docked at 900px. */
 export const contextOverlay =
   "fixed inset-0 z-[60] flex items-end justify-center bg-[rgba(4,18,35,0.48)] p-3 desk:items-center";
+
+/* ---------------------------------------------------------------------------
+   The last block. Owner section headings, the captain's draft controls, the
+   notification sheet's list, the uniform gallery and the profile's account
+   column. */
+
+export const ownerOperations = "mt-[34px] [&>h2]:m-[0_0_7px] [&>h2]:text-[27px]";
+export const operationsIntro = "m-[0_0_16px] text-[15px] leading-[1.55] text-muted";
+export const pageSection = "mt-[22px]";
+export const dashboardQuestion = "m-[24px_0_12px] text-[19px] font-[800]";
+export const ownerAccess =
+  "grid gap-3 p-[22px] [&>h2]:m-0 [&>p]:m-0 [&_.btn]:inline-block [&_.btn]:w-max";
+export const batchSaveButton = "min-h-[42px] w-max justify-self-end p-[8px_14px]! text-[13px]!";
+
+/** Season invitation facts, and the deadline line under them. */
+export const invitationFacts =
+  "grid grid-cols-3 gap-[7px] [&>span]:rounded-[10px] [&>span]:bg-[#faf8f5] [&>span]:p-2 [&>span]:text-center [&>span]:text-[9px] [&>span]:text-muted [&_b]:block [&_b]:text-base [&_b]:text-navy";
+export const responseDeadline = "text-center! font-[800] text-gold!";
+
+/** The captain's draft: search box, list, submit footer, and a button pair. */
+export const playerSearch = "rounded-[13px] border border-line p-3";
+export const captainRosterList = "grid gap-[7px]";
+export const submitRoster =
+  "border-t border-line pt-3 [&>small]:text-center [&>small]:text-[10px] [&>small]:leading-[1.4] [&>small]:text-muted";
+export const reviewActions = "grid grid-cols-2 gap-2";
+export const reviewActionsCompact =
+  "[&_.btn]:min-h-[36px] [&_.btn]:p-[7px_9px]! [&_.btn]:text-[10px]!";
+
+/** The notification sheet's own trim. */
+export const notificationSheet = "pb-6 [&>header]:mb-[10px]";
+export const markAllButton =
+  "border-0 bg-transparent p-[8px_2px_12px] text-sm font-[750] text-blue";
+export const notificationList = "grid gap-2";
+
+/** Payments: the method panel and the scrolling history. */
+export const methodPanel = "m-[16px_0_14px] [&>h2]:m-[0_0_12px] [&>h2]:text-sm [&>h2]:text-gold";
+export const historyScroll =
+  "max-h-[540px] overflow-y-auto overscroll-contain border-t border-line p-[3px_16px_8px]";
+
+/** A player's name and detail line inside a roster row. */
+export const playerName =
+  "grid gap-[3px] text-navy! [&_small]:text-[12px] [&_small]:font-medium [&_small]:text-muted";
+
+/** The uniform gallery: a photo with its caption, and the empty stand-in. */
+export const uniformGallery = "grid gap-3";
+export const uniformPhoto =
+  "relative overflow-hidden rounded-[15px] border border-line bg-[#f4f2ef] [&_img]:block [&_img]:h-auto [&_img]:max-h-[390px] [&_img]:w-full [&_img]:object-contain [&>span]:absolute [&>span]:bottom-[9px] [&>span]:left-[9px] [&>span]:rounded-[10px] [&>span]:bg-[rgba(7,31,61,0.9)] [&>span]:p-[7px_9px] [&>span]:text-xs [&>span]:font-[750] [&>span]:text-white";
+export const uniformPlaceholder =
+  "grid place-items-center gap-[9px] rounded-[14px] bg-[#f7f5f2] p-3 [&_p]:m-0 [&_p]:text-[13px] [&_p]:text-muted";
+
+/** Profile's account column. */
+export const profileSectionTitle = "m-[22px_3px_10px] text-sm text-gold";
+export const accountList = "grid gap-[9px] [&>form]:m-0";
+export const logoutAccount = "text-[#a51118] [&>span]:text-[#a51118]";

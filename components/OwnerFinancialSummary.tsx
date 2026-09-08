@@ -8,7 +8,13 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { FormMessage } from "@/components/ui/FormMessage";
 import { cx } from "@/components/ui/cx";
-import { cardLabel, emptyOperation, ownerForm } from "@/components/ui/shared-classes";
+import {
+  cardLabel,
+  emptyOperation,
+  ownerForm,
+  operationsIntro,
+  ownerOperations,
+} from "@/components/ui/shared-classes";
 
 const initialState: OwnerActionState = {};
 const money = (amount: number) =>
@@ -270,8 +276,8 @@ export default function OwnerFinancialSummary({
       </Card>
     );
   return (
-    <section className="owner-operations">
-      <p className="operations-intro">
+    <section className={ownerOperations}>
+      <p className={operationsIntro}>
         Add other expenses such as uniform, referee, court, and league operations. The page will
         provide the actual season financial summary.
       </p>

@@ -197,16 +197,8 @@ body {
    name begin at the same place, without any of the four roster grids having to
    agree on a track size. */
 
-.schedule-feature {
-  grid-template-rows: auto 38px;
-}
-
 /* Sized to sit inside the height the amount already takes, so naming the team
    costs the card nothing. */
-
-.info-panel h2 {
-  margin-bottom: 5px;
-}
 
 .login-shell:before {
   height: 300px;
@@ -253,10 +245,6 @@ body {
   color: #176c2c;
 }
 
-.info-panel form {
-  margin: 0;
-}
-
 .owner-shell {
   width: min(100%, 920px);
 }
@@ -264,230 +252,12 @@ body {
   padding-bottom: 112px;
 }
 
-.owner-access {
-  padding: 22px;
-  display: grid;
-  gap: 12px;
-}
-.owner-access h2,
-.owner-access p {
-  margin: 0;
-}
-.owner-access .btn {
-  display: inline-block;
-  width: max-content;
-}
-
 .guided-owner-shell {
   width: min(100%, 560px);
 }
 
-.batch-save-button {
-  width: max-content;
-  min-height: 42px;
-  padding: 8px 14px;
-  justify-self: end;
-  font-size: 13px;
-}
-
-.invitation-facts {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 7px;
-}
-.invitation-facts span {
-  padding: 8px;
-  border-radius: 10px;
-  background: #faf8f5;
-  text-align: center;
-  font-size: 9px;
-  color: var(--muted);
-}
-.invitation-facts b {
-  display: block;
-  font-size: 16px;
-  color: var(--navy);
-}
-
-.response-deadline {
-  text-align: center !important;
-  font-weight: 800;
-  color: var(--gold) !important;
-}
-
-.draft-review-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.captain-player-search {
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-}
-.captain-roster-list {
-  display: grid;
-  gap: 7px;
-}
-
-.captain-submit-roster {
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
-}
-.captain-submit-roster > small {
-  text-align: center;
-  color: var(--muted);
-  font-size: 10px;
-  line-height: 1.4;
-}
-
-.draft-review-actions.compact {
-  grid-template-columns: 1fr 1fr;
-}
-.draft-review-actions.compact .btn {
-  min-height: 36px;
-  padding: 7px 9px;
-  font-size: 10px;
-}
-
-.owner-operations {
-  margin-top: 34px;
-}
-.owner-operations > h2 {
-  font-size: 27px;
-  margin: 0 0 7px;
-}
-.operations-intro {
-  font-size: 15px;
-  line-height: 1.55;
-  color: var(--muted);
-  margin: 0 0 16px;
-}
-
 /* The same row before the weeks are known. A plain div, not a summary: there
    is nothing to open yet. */
-
-.owner-page-section {
-  margin-top: 22px;
-}
-
-.owner-dashboard-question {
-  font-size: 19px;
-  font-weight: 800;
-  margin: 24px 0 12px;
-}
-
-.notification-sheet {
-  padding-bottom: 24px;
-}
-.notification-sheet header {
-  margin-bottom: 10px;
-}
-.mark-all {
-  border: 0;
-  background: transparent;
-  color: var(--blue);
-  font-size: 14px;
-  font-weight: 750;
-  padding: 8px 2px 12px;
-}
-.notification-list {
-  display: grid;
-  gap: 8px;
-}
-
-.payment-method-panel {
-  margin: 16px 0 14px;
-}
-.payment-method-panel > h2 {
-  font-size: 14px;
-  color: var(--gold);
-  margin: 0 0 12px;
-}
-
-.payment-history-scroll {
-  max-height: 540px;
-  overflow-y: auto;
-  border-top: 1px solid var(--line);
-  padding: 3px 16px 8px;
-  overscroll-behavior: contain;
-}
-.roster-player-name {
-  display: grid;
-  gap: 3px;
-  color: var(--navy) !important;
-}
-.roster-player-name small {
-  font-size: 12px;
-  color: var(--muted);
-  font-weight: 500;
-}
-
-.uniform-gallery {
-  display: grid;
-  gap: 12px;
-}
-
-.uniform-photo {
-  position: relative;
-  border: 1px solid var(--line);
-  border-radius: 15px;
-  overflow: hidden;
-  background: #f4f2ef;
-}
-.uniform-photo img {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: 390px;
-  object-fit: contain;
-}
-.uniform-photo > span {
-  position: absolute;
-  left: 9px;
-  bottom: 9px;
-  background: rgba(7, 31, 61, 0.9);
-  color: #fff;
-  border-radius: 10px;
-  padding: 7px 9px;
-  font-size: 12px;
-  font-weight: 750;
-}
-.uniform-placeholder {
-  display: grid;
-  place-items: center;
-  gap: 9px;
-  padding: 12px;
-  background: #f7f5f2;
-  border-radius: 14px;
-}
-
-.uniform-placeholder p {
-  font-size: 13px;
-  color: var(--muted);
-  margin: 0;
-}
-
-.profile-section-title {
-  font-size: 14px;
-  color: var(--gold);
-  margin: 22px 3px 10px;
-}
-.profile-account-list {
-  display: grid;
-  gap: 9px;
-}
-.profile-account-list > form {
-  margin: 0;
-}
-
-.logout-account {
-  color: #a51118;
-}
-.logout-account > span {
-  color: #a51118;
-}
 
 /* The navy pill travels between the three views rather than being redrawn on
    whichever one is current. One column of the track - the width less its 4px
@@ -508,11 +278,6 @@ body {
   background: #fff5f5;
 }
 
-@media (max-width: 500px) {
-  .uniform-photo img {
-    max-height: 520px;
-  }
-}
 @media (min-width: 700px) {
   .payment-dashboard-summary {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -551,10 +316,6 @@ body {
 }
 body:has(.context-overlay-open) .bottom {
   visibility: hidden;
-}
-
-.schedule-feature {
-  grid-template-rows: auto auto auto;
 }
 
 /* Loading skeletons -------------------------------------------------------

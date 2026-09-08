@@ -68,14 +68,20 @@ import {
   weeklyScheduleList,
 } from "@/components/ui/schedule-classes";
 import {
+  batchSaveButton,
   cardLabel,
   compactFields,
   emptyNote,
   emptyOperation,
   fieldHelp,
+  operationsIntro,
   ownerForm,
   ownerIcon,
+  ownerOperations,
   ownerSection,
+  pageSection,
+  reviewActions,
+  reviewActionsCompact,
   sectionTitle,
 } from "@/components/ui/shared-classes";
 
@@ -243,7 +249,7 @@ function DivisionSetupStep({ season }: { season: OwnerSeason }) {
             ))}
           </div>
           <Feedback state={state} />
-          <button className="btn secondary batch-save-button" disabled={pending}>
+          <button className={`btn secondary ${batchSaveButton}`} disabled={pending}>
             {pending
               ? "Saving divisions…"
               : `Save ${Math.min(divisionCount, remaining)} Division${Math.min(divisionCount, remaining) === 1 ? "" : "s"}`}
@@ -310,7 +316,7 @@ function DivisionTeamBuilder({ division }: { division: OwnerSeason["divisions"][
             ))}
           </div>
           <Feedback state={state} />
-          <button className="btn secondary batch-save-button" disabled={pending}>
+          <button className={`btn secondary ${batchSaveButton}`} disabled={pending}>
             {pending ? "Saving teams…" : `Save ${teamCount} Team${teamCount === 1 ? "" : "s"}`}
           </button>
         </form>
@@ -1048,7 +1054,7 @@ function TeamDraftReview({
           <form action={action} className="col-span-full">
             <input type="hidden" name="teamId" value={team.id} />
             <Feedback state={state} />
-            <div className="draft-review-actions compact">
+            <div className={`${reviewActions} ${reviewActionsCompact}`}>
               <button
                 className="btn secondary"
                 name="decision"
@@ -1099,7 +1105,7 @@ function RosterRequestReview({ request }: { request: OwnerRosterRequest }) {
             />
           </label>
           <Feedback state={state} />
-          <div className="draft-review-actions">
+          <div className={reviewActions}>
             <button className="btn secondary" name="decision" value="declined" disabled={pending}>
               Decline
             </button>
@@ -1296,8 +1302,8 @@ function OwnerTeamsWorkspace({
     .filter((season) => !season.canceledAt)
     .sort((left, right) => right.startsOn.localeCompare(left.startsOn));
   return (
-    <section className="owner-operations owner-page-section">
-      <p className="operations-intro">
+    <section className={`${ownerOperations} ${pageSection}`}>
+      <p className={operationsIntro}>
         Open a season, then a division, to see each team&apos;s simple roster.
       </p>
       {available.length ? (
@@ -1982,7 +1988,7 @@ function ExpandExistingSeason({ season }: { season: OwnerSeason }) {
               ))}
             </div>
             <Feedback state={state} />
-            <button className="btn secondary batch-save-button" disabled={pending}>
+            <button className={`btn secondary ${batchSaveButton}`} disabled={pending}>
               {pending ? "Adding…" : "Add to This Season"}
             </button>
           </form>
@@ -3234,8 +3240,8 @@ export function OwnerGameManagement({ seasons }: { seasons: OwnerSeason[] }) {
       </section>
     );
   return (
-    <section className="owner-operations owner-page-section">
-      <p className="operations-intro">
+    <section className={`${ownerOperations} ${pageSection}`}>
+      <p className={operationsIntro}>
         Choose a season, then a division. Each division keeps its own schedule, teams, and results.
       </p>
       {current.length ? (
@@ -3453,7 +3459,7 @@ export function OwnerPaymentManagement({
         <section className="mt-[27px]">
           <p className="eyebrow">NEEDS ATTENTION</p>
           <h2>Payment Confirmations</h2>
-          <p className="operations-intro">
+          <p className={operationsIntro}>
             Only confirmed Zelle or cash notices change the player&apos;s balance.
           </p>
           <div className="grid gap-[9px]">
@@ -3465,7 +3471,7 @@ export function OwnerPaymentManagement({
       )}
       <section className="mt-[27px]">
         <h2>Season Tracking</h2>
-        <p className="operations-intro">
+        <p className={operationsIntro}>
           Each card contains one season and division. Open it for player-level details.
         </p>
         {groups.length ? (
@@ -3616,7 +3622,7 @@ export function OwnerPastPaymentsArchive({ groups }: { groups: OwnerPaymentGroup
   return (
     <section className="owner-operations payment-operations owner-page-section">
       <h2>Completed Seasons</h2>
-      <p className="operations-intro">Previous-season payment records stay here for reference.</p>
+      <p className={operationsIntro}>Previous-season payment records stay here for reference.</p>
       {groups.length ? (
         <div className="grid gap-[11px]">
           {groups.map((group) => (
@@ -3784,10 +3790,10 @@ export function OwnerUniformManagement({ seasons }: { seasons: OwnerSeason[] }) 
   const available = seasons.filter((season) => !season.canceledAt && season.divisions.length);
   if (!available.length) return null;
   return (
-    <section className="owner-operations owner-page-section uniform-operations">
+    <section className={`uniform-operations ${ownerOperations} ${pageSection}`}>
       <p className="eyebrow">DIVISION DETAILS</p>
       <h2>Uniform Photos</h2>
-      <p className="operations-intro">
+      <p className={operationsIntro}>
         Open one season, then one division. Upload one dark and one light reference photo for every
         team in that division.
       </p>

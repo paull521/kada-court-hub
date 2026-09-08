@@ -1,9 +1,10 @@
 import { LoadingNote, SkeletonBlock, SkeletonText } from "@/components/Skeleton";
 import {
   addedPlayers,
+  captainRosterList,
   ownerIcon,
-  sectionTitle,
   ownerSection,
+  sectionTitle,
 } from "@/components/ui/shared-classes";
 
 /**
@@ -36,7 +37,7 @@ export default function CaptainRosterFrame() {
             <SkeletonText width="5em" />
           </span>
         </div>
-        <div className="captain-roster-list">
+        <div className={captainRosterList}>
           {[0, 1, 2, 3, 4, 5].map((index) => (
             <SkeletonBlock key={index} height="54px" radius="14px" />
           ))}
