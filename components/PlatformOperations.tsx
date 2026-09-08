@@ -42,10 +42,10 @@ export function OwnerManagement({
   };
   return (
     <>
-      {/* p-[...]! and the button's padding both have to shout: .platform-operation
-          sets padding: 16px and .btn sets 15px, both unlayered, and a layered
-          utility loses to either. The old rules won on source order alone. */}
-      <section className="card platform-operation grid gap-[12px] p-[18px_20px]!">
+      {/* Three of these have to shout. .btn sets the button's padding, and
+          .eyebrow sets a 12px bottom margin on the <p> that .platform-operation
+          p used to flatten - all unlayered, all beating a layered utility. */}
+      <section className="card grid gap-[12px] p-[18px_20px] mb-[12px] [&_h2]:m-0! [&_p]:m-0!">
         <p className="eyebrow">INVITE NEW OWNER</p>
         <button
           type="button"
@@ -55,7 +55,7 @@ export function OwnerManagement({
           {copied ? "Copied!" : "Owner Invitation Link"}
         </button>
       </section>
-      <section className="card platform-operation">
+      <section className="card p-[16px] mb-[12px] [&_h2]:m-0! [&_p]:m-0!">
         <p className="eyebrow">CREATE NEW OWNER</p>
         <h2>Create New Owner</h2>
         {candidates.length ? (
@@ -64,7 +64,7 @@ export function OwnerManagement({
           <p className="empty-note">No completed owner applications.</p>
         )}
       </section>
-      <section className="card platform-operation">
+      <section className="card p-[16px] mb-[12px] [&_h2]:m-0! [&_p]:m-0!">
         <p className="eyebrow">OWNER MANAGEMENT</p>
         <h2>Owner Management</h2>
         {owners.length ? (
@@ -138,10 +138,13 @@ function OwnerCard({ owner }: { owner: PlatformOperations["owners"][number] }) {
           {owner.demoAcknowledgedAt ? timestamp(owner.demoAcknowledgedAt) : "—"}
         </span>
       </div>
-      <form action={action} className="platform-status-actions">
+      <form
+        action={action}
+        className="grid grid-cols-3 gap-[7px] [&_.btn]:p-[9px_4px]! [&_.btn]:text-[11px]!"
+      >
         <input type="hidden" name="ownerId" value={owner.id} />
         <button
-          className={`btn secondary ${status === "active" ? "selected active" : ""}`}
+          className={`btn secondary ${status === "active" ? "bg-navy! border-navy! text-white!" : ""}`}
           name="status"
           value="active"
           disabled={pending}
@@ -149,7 +152,7 @@ function OwnerCard({ owner }: { owner: PlatformOperations["owners"][number] }) {
           Active
         </button>
         <button
-          className={`btn secondary ${status === "suspended" ? "selected suspended" : ""}`}
+          className={`btn secondary ${status === "suspended" ? "bg-red! border-red! text-white!" : ""}`}
           name="status"
           value="suspended"
           disabled={pending}
@@ -157,7 +160,7 @@ function OwnerCard({ owner }: { owner: PlatformOperations["owners"][number] }) {
           Suspend
         </button>
         <button
-          className={`btn secondary ${status === "inactive" ? "selected inactive" : ""}`}
+          className={`btn secondary ${status === "inactive" ? "bg-[#68727e]! border-[#68727e]! text-white!" : ""}`}
           name="status"
           value="inactive"
           disabled={pending}
@@ -173,7 +176,7 @@ function OwnerCard({ owner }: { owner: PlatformOperations["owners"][number] }) {
 
 export function ConferenceDirectory({ rows }: { rows: PlatformOperations["directory"] }) {
   return (
-    <div className="card platform-table">
+    <div className="card overflow-hidden p-0 [&_table]:w-full [&_table]:border-collapse [&_td]:border-b [&_td]:border-line [&_td]:p-[13px_11px] [&_td]:text-left [&_td]:text-[12px] [&_th]:border-b [&_th]:border-line [&_th]:bg-[#08243e] [&_th]:p-[13px_11px] [&_th]:text-left [&_th]:text-[10px] [&_th]:text-white [&_tr:last-child_td]:border-b-0">
       <table>
         <thead>
           <tr>
@@ -268,12 +271,12 @@ export function OwnerPayments({ records }: { records: PlatformOwnerPaymentBillin
                 </strong>
               </summary>
               <div className="border-t border-line p-[14px]">
-                <p className="platform-payment-contact">
+                <p className="m-[0_0_12px] grid grid-cols-[1fr_1fr_1.4fr] gap-[8px] text-[12px] max-[500px]:grid-cols-1 [&>span]:text-muted">
                   <b>{record.ownerName}</b>
                   <span>{record.phone}</span>
                   <span>{record.email}</span>
                 </p>
-                <div className="platform-payment-breakdown">
+                <div className="m-[2px_0_12px] grid border-t border-line [&>span]:flex [&>span]:justify-between [&>span]:border-b [&>span]:border-line [&>span]:py-[9px] [&>span]:text-[12px] [&>span]:text-muted [&>span:last-child]:grid [&>span:last-child]:grid-cols-[1fr_auto] [&>span:last-child]:gap-[8px] [&>span:last-child]:bg-[#f7f5f2] [&>span:last-child]:p-[10px] [&>span:last-child]:text-navy [&_strong]:text-[15px]">
                   <span>
                     Owner Cost <b>{money(seasonSubscription)}</b>
                   </span>
@@ -289,7 +292,7 @@ export function OwnerPayments({ records }: { records: PlatformOwnerPaymentBillin
                   </span>
                 </div>
                 {submissions.length > 0 && (
-                  <section className="platform-payment-history">
+                  <section className="m-[14px_0] grid gap-[7px] [&>b]:text-[12px] [&>p]:m-0 [&>p]:flex [&>p]:justify-between [&>p]:gap-[10px] [&>p]:border-t [&>p]:border-line [&>p]:py-[9px] [&>p]:text-[12px] [&>p>span]:text-muted [&>p>span]:capitalize">
                     <b>Payment History</b>
                     {submissions.map((submission) => (
                       <p key={submission.id}>
@@ -342,8 +345,14 @@ const statusTone: Record<string, string> = {
   open: "bg-[#fff4da] text-[#8a5900]",
   resolved: "bg-[#edf2f7] text-[#3a526c]",
 };
+/* .platform-operation em set this pill's padding, size, background and colour
+   unlayered, so it beat both tone maps at every call site: measured on
+   /platform/support, every pill renders green at 10px on 5px 8px whatever its
+   status says. That is what is reproduced here. statusTone and payTone are
+   left where they are rather than quietly switched on - whether those tones
+   were meant to show is a question for a human, not for this migration. */
 const statusPill =
-  "rounded-full px-[6px] py-[4px] text-[9px] font-[850] whitespace-nowrap not-italic";
+  "self-start rounded-full bg-[#eaf6ec] p-[5px_8px] text-[10px] font-[850] whitespace-nowrap text-green not-italic";
 
 function SupportRequestRow({ request }: { request: PlatformOperations["support"][number] }) {
   const [confirmState, confirmAction, confirming] = useActionState(
@@ -363,9 +372,7 @@ function SupportRequestRow({ request }: { request: PlatformOperations["support"]
         className={`${supportSummary} grid grid-cols-[minmax(0,1fr)_auto_20px] items-center gap-[8px] p-[12px]`}
       >
         <b className="truncate text-[13px]">{request.subject}</b>
-        <em className={`${statusPill} ${statusTone[request.status] ?? "bg-[#eaf6ec] text-green"}`}>
-          {status}
-        </em>
+        <em className={statusPill}>{status}</em>
         <strong aria-hidden="true" className={supportCaret}>
           <ChevronRight className="go-caret" />
         </strong>
@@ -411,7 +418,7 @@ export function SupportRequests({
     feedbackConferences = [...new Set(feedback.map((item) => item.conferenceName))];
   return (
     <section className="platform-list">
-      <section className="card platform-operation grid gap-[13px]">
+      <section className="card grid gap-[13px] p-[16px] mb-[12px] [&_h2]:m-0! [&_p]:m-0!">
         <p className="eyebrow">CUSTOMER REQUESTS</p>
         <h2>Requests by Conference</h2>
         {conferences.length ? (
@@ -447,7 +454,7 @@ export function SupportRequests({
           <p className="empty-note">No customer requests.</p>
         )}
       </section>
-      <section className="card platform-operation grid gap-[13px]">
+      <section className="card grid gap-[13px] p-[16px] mb-[12px] [&_h2]:m-0! [&_p]:m-0!">
         <p className="eyebrow">PLATFORM FEEDBACK</p>
         <h2>Feedback by Conference</h2>
         {feedbackConferences.length ? (
@@ -478,7 +485,7 @@ export function SupportRequests({
                         className={`${supportSummary} grid grid-cols-[minmax(0,1fr)_auto_20px] items-center gap-[8px] p-[12px]`}
                       >
                         <b className="truncate text-[13px]">{item.playerName}</b>
-                        <em className={`${statusPill} bg-[#eaf6ec] text-green`}>Feedback</em>
+                        <em className={statusPill}>Feedback</em>
                         <strong aria-hidden="true" className={supportCaret}>
                           <ChevronRight className="go-caret" />
                         </strong>
