@@ -25,7 +25,7 @@ export default async function OwnerPaymentsPage() {
       conferenceId={context.conferenceId}
       conferences={context.conferences}
     >
-      <section className="owner-operations owner-page-section monthly-subscription-section">
+      <section className="owner-operations owner-page-section grid gap-[12px] [&>.operations-intro]:[margin:0]! [&>h2]:[margin:0_0_5px]!">
         <h2>Season Subscription</h2>
         <p className="operations-intro">Season payment for KCH Platform Creator confirmation.</p>
         {/* A plain block rather than a frame of its own: the heading and the

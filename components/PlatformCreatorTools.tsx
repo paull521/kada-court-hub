@@ -64,11 +64,11 @@ export function OwnerSubscriptionPayment({
     : "KCH tracks this obligation; the owner handles the transfer.";
   return (
     <>
-      <details className="monthly-subscription-dropdown">
-        <summary>
-          <span>
-            <b>Season Subscription</b>
-            <small>
+      <details className="group overflow-hidden rounded-[16px] border border-line bg-white">
+        <summary className="grid min-h-[70px] cursor-pointer list-none grid-cols-[1fr_auto_auto] items-center gap-[12px] p-[14px_16px] [&::-webkit-details-marker]:hidden">
+          <span className="grid gap-[4px]">
+            <b className="text-[17px]">Season Subscription</b>
+            <small className="text-[12px] text-muted">
               {pilotSeason
                 ? "Pilot season · no charge"
                 : `${activePlayers} active players · ${money(playerAccess)} player access`}
@@ -77,14 +77,19 @@ export function OwnerSubscriptionPayment({
                 : ""}
             </small>
           </span>
-          <em className={`owner-subscription-status ${statusClass}`}>
+          <em
+            className={`text-[9px] font-[850] tracking-[0.04em] whitespace-nowrap uppercase not-italic ${statusClass === "paid" ? "text-green" : "text-[#a51118]"}`}
+          >
             {pilotSeason ? "Pilot" : status}
           </em>
-          <strong aria-hidden="true">
+          <strong
+            aria-hidden="true"
+            className="text-[23px] transition-transform group-open:rotate-90"
+          >
             <ChevronRight className="go-caret" />
           </strong>
         </summary>
-        <div className="monthly-subscription-body">
+        <div className="border-t border-line">
           <div className="overflow-auto [&_td]:border-b [&_td]:border-line [&_td]:p-[13px] [&_td]:text-left [&_td]:text-[11px] [&_th]:border-b [&_th]:border-line [&_th]:bg-[#08243e] [&_th]:p-[13px] [&_th]:text-left [&_th]:text-[10px] [&_th]:text-white max-[420px]:[&_td]:p-[11px_8px] max-[420px]:[&_td]:text-[10px] max-[420px]:[&_th]:p-[11px_8px] max-[420px]:[&_th]:text-[10px]">
             <table className="w-full border-collapse">
               <thead>
