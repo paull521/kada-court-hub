@@ -227,14 +227,6 @@
      "All Teams". Same numbers as the rule it should have matched. Left scoped
      to a direct child of .content: the captain's weekly view sits in a column
      of its own and is not what was being looked at. */
-  .content > .player-weekly-schedule {
-    margin-top: 30px;
-  }
-  .content > .player-weekly-schedule > header h2 {
-    font-size: 21px;
-    margin: 3px 0;
-  }
-
   /* The sign-off line closes the page instead of floating in the gap under the
      last card. */
 

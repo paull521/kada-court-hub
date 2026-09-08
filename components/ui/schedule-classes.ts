@@ -59,3 +59,10 @@ export const teamBanner =
   "m-0 grid w-full grid-cols-[54px_minmax(0,1fr)_auto] items-center gap-[14px] border-[rgba(7,31,61,0.22)]! bg-[linear-gradient(125deg,#08243e,#0a3767)]! p-[13px_16px] text-left text-white disabled:cursor-default [&_.team-mark]:m-0! [&_.skeleton]:bg-[linear-gradient(90deg,#061b2f_25%,#0d3055_37%,#061b2f_63%)] [&_.skeleton]:bg-[length:400%_100%]";
 export const teamBannerCopy =
   "grid min-w-0 gap-[3px] [&_b]:truncate [&_b]:text-[21px] [&_b]:tracking-[-0.3px] [&_small]:text-[13px] [&_small]:text-[#d8e0e8]";
+
+/* The player's weekly view only. It sits directly in .content, where it needs
+   the space that separates two sections; the captain's is inside a column of
+   its own and the old rule - .content > .player-weekly-schedule - never
+   reached it. */
+export const weeklyScheduleLead =
+  "desk:mt-[30px] desk:[&>header_h2]:my-[3px] desk:[&>header_h2]:text-[21px]";

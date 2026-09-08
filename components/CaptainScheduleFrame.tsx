@@ -73,7 +73,7 @@ function WeeklyView({ games }: { games?: CaptainGame[] }) {
     for (const game of games)
       weeks.find(([key]) => key === weekStart(game.dateKey))?.[1].push(game);
   return (
-    <section className={`player-weekly-schedule ${weeklySchedule}`}>
+    <section className={weeklySchedule}>
       <header>
         <div>
           <small>WEEKLY VIEW</small>

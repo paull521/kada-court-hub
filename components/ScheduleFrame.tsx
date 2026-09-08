@@ -12,6 +12,7 @@ import {
   scheduleWeek,
   scheduleWeekFrame,
   weeklySchedule,
+  weeklyScheduleLead,
   weeklyScheduleList,
 } from "@/components/ui/schedule-classes";
 import {
@@ -119,7 +120,7 @@ function DivisionWeeklyView({ games }: { games?: DivisionScheduleGame[] }) {
     for (const game of games)
       weeks.find(([key]) => key === weekStart(game.dateKey))?.[1].push(game);
   return (
-    <section className={`player-weekly-schedule ${weeklySchedule}`}>
+    <section className={`${weeklySchedule} ${weeklyScheduleLead}`}>
       <header>
         <div>
           <small>WEEKLY VIEW</small>
