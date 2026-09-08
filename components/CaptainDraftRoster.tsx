@@ -9,6 +9,7 @@ import {
   type CaptainActionState,
 } from "@/app/captain/actions";
 import type { CaptainPortalData } from "@/lib/captain-data";
+import { addedPlayers, ownerForm, sectionTitle } from "@/components/ui/shared-classes";
 
 const initial: CaptainActionState = {};
 function Notice({ state }: { state: CaptainActionState }) {
@@ -48,7 +49,7 @@ function DraftedPlayer({
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <form action={action} className="owner-form border-t border-line p-[11px]">
+      <form action={action} className={`${ownerForm} border-t border-line p-[11px]`}>
         <input type="hidden" name="teamId" value={teamId} />
         <input type="hidden" name="registrationId" value={player.registrationId} />
         {detailsOnly && <input type="hidden" name="detailsOnly" value="yes" />}
@@ -164,7 +165,7 @@ export default function CaptainDraftRoster({
   return (
     <section className="card owner-section captain-draft-entry grid gap-[13px]">
       {!detailsOnly && (
-        <div className="owner-section-title">
+        <div className={sectionTitle}>
           <span className="owner-icon">🏀</span>
           <span>
             <h2>Enter Drafted Players</h2>
@@ -191,7 +192,7 @@ export default function CaptainDraftRoster({
           </span>
         </div>
       )}
-      <section className="captain-added-players">
+      <section className={addedPlayers}>
         <div>
           <h3>Team roster</h3>
           <span>
@@ -213,7 +214,7 @@ export default function CaptainDraftRoster({
         </div>
       </section>
       {!locked && !detailsOnly && (
-        <form action={addAction} className="owner-form captain-player-search">
+        <form action={addAction} className={`${ownerForm} captain-player-search`}>
           <input type="hidden" name="teamId" value={data.teamId} />
           <input type="hidden" name="invitationId" value={selected} />
           <label>
@@ -306,7 +307,7 @@ export default function CaptainDraftRoster({
         </form>
       )}
       {!locked && !detailsOnly && (
-        <form action={submitAction} className="owner-form captain-submit-roster">
+        <form action={submitAction} className={`${ownerForm} captain-submit-roster`}>
           <input type="hidden" name="teamId" value={data.teamId} />
           <Notice state={submitState} />
           <button className="btn primary" disabled={submitPending || !players.length}>

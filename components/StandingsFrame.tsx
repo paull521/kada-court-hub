@@ -3,6 +3,7 @@ import { LoadingNote, SkeletonText } from "@/components/Skeleton";
 import { Card } from "@/components/ui/Card";
 import { cx } from "@/components/ui/cx";
 import type { PlayerPortalData } from "@/lib/kch-data";
+import { seasonEmpty } from "@/components/ui/shared-classes";
 
 /** Rank, team, then the three counts - the header and every row share it. */
 const columns = "grid grid-cols-[27px_minmax(0,1fr)_25px_25px_44px] items-center gap-[7px]";
@@ -32,7 +33,7 @@ const count = "text-center text-[14px]";
 export default function StandingsFrame({ data }: { data?: PlayerPortalData }) {
   if (data && !data.standings.length)
     return (
-      <Card className="season-empty">
+      <Card className={seasonEmpty}>
         <span>
           <Trophy className="ui-icon" />
         </span>

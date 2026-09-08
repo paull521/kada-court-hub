@@ -6,6 +6,7 @@ import SeasonInvitationCard from "@/components/SeasonInvitationCard";
 import AvailabilityControl from "@/components/AvailabilityControl";
 import type { PlayerPortalData } from "@/lib/kch-data";
 import { availabilityControl } from "@/components/ui/account-classes";
+import { emptyFeature, familyBanner } from "@/components/ui/shared-classes";
 
 /**
  * Home, written once and drawn twice: with the portal data, and without it.
@@ -32,7 +33,7 @@ export default function HomeFrame({ data }: { data?: PlayerPortalData }) {
       <div className="col-pane col-pane-a">
         {data?.invitation && <SeasonInvitationCard invitation={data.invitation} />}
         {data && !next ? (
-          <section className="card empty-feature">
+          <section className={`card ${emptyFeature}`}>
             <span>
               <CalendarDays className="ui-icon" />
             </span>
@@ -146,7 +147,7 @@ export default function HomeFrame({ data }: { data?: PlayerPortalData }) {
           </Link>
         )}
       </div>
-      <section className="family-banner">
+      <section className={familyBanner}>
         <strong>
           One Team. One Court. <span>One Family.</span>
         </strong>

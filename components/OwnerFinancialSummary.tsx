@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { FormMessage } from "@/components/ui/FormMessage";
 import { cx } from "@/components/ui/cx";
+import { emptyOperation, ownerForm } from "@/components/ui/shared-classes";
 
 const initialState: OwnerActionState = {};
 const money = (amount: number) =>
@@ -181,7 +182,7 @@ function SeasonFinancialCard({
             </strong>
           </summary>
 
-          <form action={action} className="owner-form border-t border-line p-[13px]">
+          <form action={action} className={`${ownerForm} border-t border-line p-[13px]`}>
             <input type="hidden" name="seasonId" value={season.id} />
             <div className="grid grid-cols-2 gap-[9px] max-tiny:grid-cols-1">
               {expenseFields.map((field) => (
@@ -258,7 +259,7 @@ export default function OwnerFinancialSummary({
 }) {
   if (!seasons.length)
     return (
-      <Card className="owner-empty-operation">
+      <Card className={emptyOperation}>
         <span>
           <DollarSign className="ui-icon" />
         </span>

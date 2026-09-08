@@ -3,6 +3,7 @@ import { LoadingNote, SkeletonText } from "@/components/Skeleton";
 import { Card } from "@/components/ui/Card";
 import { cx } from "@/components/ui/cx";
 import type { PlayerPortalData } from "@/lib/kch-data";
+import { seasonEmpty } from "@/components/ui/shared-classes";
 
 /** A drawn game colours neither side - nobody won it. */
 function outcome(score: number, opponentScore: number) {
@@ -34,7 +35,7 @@ const resultCard = "grid grid-cols-[56px_1fr] gap-[12px] p-[14px]";
 export default function ResultsFrame({ data }: { data?: PlayerPortalData }) {
   if (data && !data.seasonResults.length)
     return (
-      <Card className="season-empty">
+      <Card className={seasonEmpty}>
         <span>
           <Trophy className="ui-icon" />
         </span>

@@ -67,6 +67,7 @@ import {
   scheduleWeek,
   weeklyScheduleList,
 } from "@/components/ui/schedule-classes";
+import { emptyOperation, ownerForm, sectionTitle } from "@/components/ui/shared-classes";
 
 const initialState: OwnerActionState = {};
 function Feedback({ state }: { state: OwnerActionState }) {
@@ -120,7 +121,7 @@ function DivisionJoinLink({ divisionId }: { divisionId: string }) {
 export function CreateSeasonForm({ conferenceId }: { conferenceId: string }) {
   const [state, action, pending] = useActionState(createSeasonAction, initialState);
   return (
-    <form action={action} className="owner-form season-create-form">
+    <form action={action} className={`${ownerForm} season-create-form`}>
       <input type="hidden" name="conferenceId" value={conferenceId} />
       <input type="hidden" name="divisionName" value="" />
       <div className="grid grid-cols-[1.2fr_1fr_1fr] gap-[8px] max-[500px]:grid-cols-2 [&_label]:text-[10px] [&_input]:min-h-[44px] [&_input]:p-[9px]! [&_input]:text-[13px]!">
@@ -354,7 +355,7 @@ function DirectoryLeaderPicker({
       <summary>
         {role}: {currentName}
       </summary>
-      <form action={action} className="owner-form">
+      <form action={action} className={ownerForm}>
         <input type="hidden" name="teamId" value={teamId} />
         <input type="hidden" name="role" value={role} />
         <input type="hidden" name="playerId" value={selected?.id ?? ""} />
@@ -514,7 +515,7 @@ function PreseasonDivisionForm({
       </summary>
       <div>
         {previousDivisions.length > 0 && (
-          <form action={copyAction} className="owner-form reuse-uniform-form">
+          <form action={copyAction} className={`${ownerForm} reuse-uniform-form`}>
             <input type="hidden" name="divisionId" value={division.id} />
             <label>
               Reuse prior season uniforms
@@ -538,7 +539,7 @@ function PreseasonDivisionForm({
         )}
         <form
           action={action}
-          className="owner-form [&_fieldset]:m-0 [&_fieldset]:border-0 [&_fieldset]:p-0"
+          className={`${ownerForm} [&_fieldset]:m-0 [&_fieldset]:border-0 [&_fieldset]:p-0`}
         >
           <input type="hidden" name="divisionId" value={division.id} />
           <fieldset className="grid gap-[10px] rounded-[13px]! border! border-line! bg-[#fbfaf8] p-3! [&>.check-row]:text-sm [&_input:disabled]:bg-[#eee] [&_input:disabled]:text-[#999]">
@@ -760,7 +761,7 @@ function DivisionInvitationForm({
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <form action={action} className="owner-form border-t border-line p-[13px]">
+      <form action={action} className={`${ownerForm} border-t border-line p-[13px]`}>
         <input type="hidden" name="divisionId" value={division.id} />
         <section className="grid grid-cols-3 gap-[7px] [&>span]:grid [&>span]:gap-[3px] [&>span]:rounded-[10px] [&>span]:bg-[#f7f7f6] [&>span]:p-[9px_5px] [&>span]:text-center [&_small]:text-[8px] [&_small]:font-[800] [&_small]:text-muted [&_b]:text-[17px]">
           <span>
@@ -1077,7 +1078,7 @@ function RosterRequestReview({ request }: { request: OwnerRosterRequest }) {
         <p className="rounded-lg bg-[#fff4da] p-2">Owner: {request.ownerNote}</p>
       )}
       {request.status === "pending" && (
-        <form action={action} className="owner-form">
+        <form action={action} className={ownerForm}>
           <input type="hidden" name="requestId" value={request.id} />
           <label>
             Owner note
@@ -1153,7 +1154,7 @@ function UnassignedPlayerForm({ seasons }: { seasons: OwnerSeason[] }) {
   return (
     <details className="card owner-section [&>summary]:cursor-pointer [&>summary]:list-none [&>summary::-webkit-details-marker]:hidden">
       <summary>
-        <span className="owner-section-title">
+        <span className={sectionTitle}>
           <span className="owner-icon">
             <Plus className="ui-icon" />
           </span>
@@ -1168,7 +1169,7 @@ function UnassignedPlayerForm({ seasons }: { seasons: OwnerSeason[] }) {
           </strong>
         </span>
       </summary>
-      <form action={assignAction} className="owner-form">
+      <form action={assignAction} className={ownerForm}>
         <label>
           Division
           <select
@@ -1573,7 +1574,7 @@ function OwnerDraftOverride({
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <form action={action} className="owner-form">
+      <form action={action} className={ownerForm}>
         <label>
           Draft-pool player
           <select name="invitationId" defaultValue="" required>
@@ -1669,7 +1670,7 @@ function DivisionRosterPublish({
     );
   if (division.rosterPublished && !division.rosterReviewDeadline)
     return (
-      <form action={deadlineAction} className={`owner-form compact ${publishForm} ${reviewForm}`}>
+      <form action={deadlineAction} className={`compact ${ownerForm} ${publishForm} ${reviewForm}`}>
         <input type="hidden" name="divisionId" value={division.id} />
         <label>
           Review deadline
@@ -1700,7 +1701,7 @@ function DivisionRosterPublish({
             {division.teams.length - approved === 1 ? " is" : "s are"} waiting for approval.
           </p>
         )}
-        <form action={finalAction} className={`owner-form ${publishForm}`}>
+        <form action={finalAction} className={`${ownerForm} ${publishForm}`}>
           <input type="hidden" name="divisionId" value={division.id} />
           <label>
             Final roster message
@@ -1730,7 +1731,7 @@ function DivisionRosterPublish({
       </section>
     );
   return (
-    <form action={action} className={`owner-form ${publishForm}`}>
+    <form action={action} className={`${ownerForm} ${publishForm}`}>
       <input type="hidden" name="divisionId" value={division.id} />
       <label>
         Message to {division.name} players
@@ -1900,7 +1901,7 @@ function CancelSeasonForm({ season }: { season: OwnerSeason }) {
   return (
     <details className="mt-2 border-t border-t-[rgba(255,255,255,0.2)] pt-2 [&>summary]:cursor-pointer [&>summary]:text-[10px] [&>summary]:text-[#ffd5d5] [&>form]:mt-[10px] [&>form]:rounded-xl [&>form]:bg-white [&>form]:p-3 [&>form]:text-navy">
       <summary>Cancel this season</summary>
-      <form action={action} className="owner-form">
+      <form action={action} className={ownerForm}>
         <input type="hidden" name="seasonId" value={season.id} />
         <p className="field-help">
           The season will not be deleted. Its teams, rosters, responses, payments, and history
@@ -2333,7 +2334,7 @@ function ManualGameDayBuilder({
     setNextId((value) => value + 1);
   };
   return (
-    <form action={action} className="owner-form border-t border-line p-[13px]">
+    <form action={action} className={`${ownerForm} border-t border-line p-[13px]`}>
       <input type="hidden" name="divisionId" value={division.id} />
       <input
         type="hidden"
@@ -2451,7 +2452,7 @@ function KchDivisionScheduleBuilder({
     Math.floor(division.teams.filter((team) => team.active).length / 2),
   );
   return (
-    <form action={action} className="owner-form [&_textarea]:min-h-[80px]">
+    <form action={action} className={`${ownerForm} [&_textarea]:min-h-[80px]`}>
       <input type="hidden" name="divisionId" value={division.id} />
       <div className="compact-fields">
         <label>
@@ -2669,7 +2670,7 @@ function CreateGameForm({
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <form action={action} className={`owner-form ${gameForm}`}>
+      <form action={action} className={`${ownerForm} ${gameForm}`}>
         <input type="hidden" name="divisionId" value={division.id} />
         {playoffAvailable ? (
           <label>
@@ -2746,7 +2747,7 @@ function GameCancellationCard({ game }: { game: OwnerSeason["games"][number] }) 
         <b>Cancel Game</b>
         <small>Use only if this game will not be played.</small>
       </header>
-      <form action={action} className="owner-form">
+      <form action={action} className={ownerForm}>
         <input type="hidden" name="gameId" value={game.id} />
         <input type="hidden" name="status" value="canceled" />
         <label>
@@ -2822,7 +2823,7 @@ function GameEditor({ game }: { game: OwnerSeason["games"][number] }) {
           <b>Update Schedule</b>
           <small>Change the game details and notify both teams.</small>
         </header>
-        <form action={action} className={`owner-form ${gameForm}`}>
+        <form action={action} className={`${ownerForm} ${gameForm}`}>
           <input type="hidden" name="gameId" value={game.id} />
           <label>
             Date and time
@@ -3210,7 +3211,7 @@ export function OwnerGameManagement({ seasons }: { seasons: OwnerSeason[] }) {
   const completed = scheduleSeasons.filter((season) => season.endsOn < today);
   if (!scheduleSeasons.length)
     return (
-      <section className="card owner-empty-operation">
+      <section className={`card ${emptyOperation}`}>
         <span>
           <CalendarDays className="ui-icon" />
         </span>
@@ -3310,7 +3311,7 @@ function PaymentReviewCard({ submission }: { submission: OwnerPaymentSubmission 
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <form action={action} className="owner-form">
+      <form action={action} className={ownerForm}>
         <input type="hidden" name="submissionId" value={submission.id} />
         <div className="grid grid-cols-[2fr_1fr_1fr] gap-[7px] max-tiny:grid-cols-2 [&>span:first-child]:max-tiny:col-span-full [&>span]:grid [&>span]:gap-[5px] [&>span]:rounded-[11px] [&>span]:bg-[#f7f5f2] [&>span]:p-[10px] [&>span]:[&_small]:text-[11px] [&>span]:[&_small]:text-gold [&>span]:[&_b]:text-[13px] [&>span]:[&_b]:leading-[1.4]">
           <span>
@@ -3584,7 +3585,7 @@ export function OwnerPaymentManagement({
             ))}
           </div>
         ) : (
-          <section className="card owner-empty-operation">
+          <section className={`card ${emptyOperation}`}>
             <span>₱</span>
             <div>
               <h3>No player charges yet</h3>
@@ -3727,7 +3728,7 @@ function DivisionUniformForm({
         </strong>
       </summary>
       <div className="[&>form]:border-t [&>form]:border-line [&>form]:p-[15px] [&>form_input]:min-h-[48px] [&>form_input]:text-[16px]">
-        <form action={photoAction} className="owner-form bg-[#fbfaf8]">
+        <form action={photoAction} className={`${ownerForm} bg-[#fbfaf8]`}>
           <input type="hidden" name="divisionId" value={division.id} />
           <div className={uniformUploadGrid}>
             <label>
@@ -3982,7 +3983,7 @@ function TeamPlayerRow({ player }: { player: OwnerRosterPlayer }) {
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <form action={action} className="owner-form border-t border-line p-[12px]">
+      <form action={action} className={`${ownerForm} border-t border-line p-[12px]`}>
         <input type="hidden" name="registrationId" value={player.registrationId} />
         <label>
           Reason for returning to the draft pool

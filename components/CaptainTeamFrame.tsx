@@ -3,6 +3,7 @@ import CaptainContextSwitcher from "@/components/CaptainContextSwitcher";
 import { LoadingNote, SkeletonText } from "@/components/Skeleton";
 import type { CaptainPortalData } from "@/lib/captain-data";
 import { scheduleEmpty, teamBanner, teamBannerCopy } from "@/components/ui/schedule-classes";
+import { rosterRow } from "@/components/ui/shared-classes";
 
 /**
  * The published team, written once and drawn twice. The banner, the FINAL
@@ -60,7 +61,10 @@ export default function CaptainTeamFrame({ data }: { data?: CaptainPortalData })
                   (item) => item.registrationId === player.registrationId,
                 );
                 return (
-                  <div className="roster-row" key={player.registrationId}>
+                  <div
+                    className={`${rosterRow} grid-cols-[auto_auto_1fr_auto]`}
+                    key={player.registrationId}
+                  >
                     <i
                       className={`availability-dot ${availability?.available === false ? "no" : "yes"}`}
                     />
@@ -78,7 +82,7 @@ export default function CaptainTeamFrame({ data }: { data?: CaptainPortalData })
                 );
               })
             : [0, 1, 2, 3, 4, 5].map((index) => (
-                <div className="roster-row" key={index}>
+                <div className={`${rosterRow} grid-cols-[auto_auto_1fr_auto]`} key={index}>
                   <i className="availability-dot" />
                   <b className="jersey">
                     <SkeletonText width="1.2em" />

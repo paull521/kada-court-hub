@@ -3,6 +3,7 @@ import { LoadingNote, SkeletonBlock, SkeletonText } from "@/components/Skeleton"
 import PlayerPaymentForm from "@/components/PlayerPaymentForm";
 import type { PlayerPortalData } from "@/lib/kch-data";
 import { historyPanel, historyRow } from "@/components/ui/account-classes";
+import { familyBanner } from "@/components/ui/shared-classes";
 
 /**
  * Payments, written once and drawn twice: with the portal data, and without it.
@@ -126,7 +127,7 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
           </div>
         </details>
       </div>
-      <section className="family-banner">
+      <section className={familyBanner}>
         <p className="family-quote">“You cannot achieve greatness without sacrifice.”</p>
       </section>
     </>

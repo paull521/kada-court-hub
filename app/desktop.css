@@ -196,8 +196,7 @@
   /* Headings and anything that introduces the whole page run the full width. */
   .content.two-col > .eyebrow,
   .content.two-col > .title,
-  .content.two-col > .subtitle,
-  .content.two-col > .family-banner {
+  .content.two-col > .subtitle {
     grid-column: 1 / -1;
   }
   /* Each pane is its own flex stack. Placing cards directly in the grid with
@@ -254,11 +253,7 @@
 
   /* The sign-off line closes the page instead of floating in the gap under the
      last card. */
-  .content > .family-banner {
-    margin-top: 34px;
-    padding-top: 22px;
-    border-top: 1px solid var(--line);
-  }
+
   a.card {
     transition:
       border-color 0.12s ease,
@@ -280,14 +275,6 @@
   /* A closed disclosure was drawing the rule that separates its heading from a
      body that is not on screen, and parking its caret in the middle of the row
      because the heading no longer fills the width. */
-  .owner-section-title > strong {
-    margin-left: auto;
-  }
-  details.owner-section:not([open]) > summary > .owner-section-title {
-    border-bottom: 0;
-    padding-bottom: 0;
-    margin-bottom: 0;
-  }
 
   /* --- Shared ---------------------------------------------------------------
      The invitation card is a utility, not a headline. Stretched to the measure

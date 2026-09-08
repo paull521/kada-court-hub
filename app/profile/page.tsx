@@ -27,6 +27,7 @@ import PlatformFeedback from "@/components/PlatformFeedback";
 import OwnerConferenceSwitcher from "@/components/OwnerConferenceSwitcher";
 import "@/components/ProfileCleanup.css";
 import { accountLink, accountRow } from "@/components/ui/account-classes";
+import { infoRow, profileCard } from "@/components/ui/shared-classes";
 
 function InfoPanel({
   title,
@@ -40,7 +41,7 @@ function InfoPanel({
     <section className="card panel info-panel">
       <h2>{title}</h2>
       {rows.map(([icon, label, value]) => (
-        <div className="info-row" key={String(label)}>
+        <div className={infoRow} key={String(label)}>
           <span>{icon}</span>
           <b>{label}</b>
           <em>{value}</em>
@@ -155,7 +156,7 @@ export default async function Profile({
   ) : null;
   const ownerProfileContent = ownerData?.authorized ? (
     <>
-      <section className="card profile-card">
+      <section className={`card ${profileCard}`}>
         <span className="avatar">
           {ownerData.ownerName
             .split(/\s+/)
@@ -241,7 +242,7 @@ export default async function Profile({
   ) : null;
   const profileContent = (
     <>
-      <section className="card profile-card">
+      <section className={`card ${profileCard}`}>
         <span className="avatar">{player.initials}</span>
         <div>
           <h2>{player.name}</h2>

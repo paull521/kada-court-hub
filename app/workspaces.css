@@ -21,9 +21,6 @@
   gap: 12px;
 }
 
-.captain-final-team .roster-row {
-  grid-template-columns: auto auto 1fr auto;
-}
 .nav {
   position: relative;
 }
@@ -48,12 +45,6 @@
 .uniform-dot.dark {
   background: #061d3c;
   border-color: #061d3c;
-}
-.home-availability-card {
-  /* Was 14px against .home-row's 18px, which started "ARE YOU PLAYING?" left of
-     the cards below it. Shared gutter lines the stack up on one edge. */
-  padding: 18px;
-  margin-top: 12px;
 }
 
 /* The moving pill. Half the track, less the 4px padding on either side, so it

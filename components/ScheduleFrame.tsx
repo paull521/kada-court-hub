@@ -14,6 +14,7 @@ import {
   weeklySchedule,
   weeklyScheduleList,
 } from "@/components/ui/schedule-classes";
+import { familyBanner } from "@/components/ui/shared-classes";
 
 function GameRow({ game, teamName }: { game: Game; teamName: string }) {
   return (
@@ -226,7 +227,7 @@ export default function ScheduleFrame({ data }: { data?: PlayerPortalData }) {
         </>
       )}
       <DivisionWeeklyView games={data?.divisionSchedule} />
-      <section className="family-banner">
+      <section className={familyBanner}>
         <p className="family-quote">
           “Every game is a direct reflection of what you have prepared for.”
         </p>

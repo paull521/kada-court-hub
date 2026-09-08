@@ -213,11 +213,6 @@ body {
   margin: 0;
 }
 
-.family-banner {
-  padding: 22px 12px 6px;
-  text-align: center;
-  color: var(--muted);
-}
 .family-quote {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
@@ -231,9 +226,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.08em;
 }
-.family-banner span {
-  color: var(--red);
-}
+
 .bottom {
   position: fixed;
   bottom: 0;
@@ -347,18 +340,7 @@ body {
   color: var(--muted);
   font-size: 13px;
 }
-.roster-row {
-  display: grid;
-  grid-template-columns: 52px 1fr auto;
-  gap: 12px;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--line);
-  font-size: 14px;
-}
-.roster-row:last-child {
-  border: 0;
-}
+
 /* min-width is what keeps the names beside these in a straight line.
    .roster-row reserves a fixed 52px for the number, but the variants that add
    an availability dot re-declare their columns as auto, and an auto track is as
@@ -373,12 +355,6 @@ body {
   padding: 5px;
   min-width: 30px;
   text-align: center;
-}
-.roster-row > span {
-  color: var(--blue);
-}
-.roster-row .staff-role {
-  color: var(--gold);
 }
 
 .jersey-art {
@@ -451,14 +427,6 @@ body {
 /* Sized to sit inside the height the amount already takes, so naming the team
    costs the card nothing. */
 
-.profile-card {
-  padding: 18px;
-  display: grid;
-  grid-template-columns: 90px 1fr;
-  gap: 15px;
-  align-items: center;
-  margin-bottom: 14px;
-}
 .avatar {
   width: 80px;
   height: 80px;
@@ -469,15 +437,7 @@ body {
   font-size: 35px;
   font-weight: 800;
 }
-.profile-card h2 {
-  font-size: 27px;
-  margin: 0;
-}
-.profile-card p {
-  color: var(--muted);
-  font-size: 12px;
-  margin: 6px 0;
-}
+
 .status {
   display: inline-block;
   background: #dff3df;
@@ -488,31 +448,6 @@ body {
 }
 .info-panel h2 {
   margin-bottom: 5px;
-}
-.info-row {
-  display: grid;
-  grid-template-columns: 30px 1fr auto;
-  align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid var(--line);
-  padding: 9px 0;
-  font-size: 12px;
-}
-.info-row:last-child {
-  border: 0;
-}
-.info-row > span {
-  width: 27px;
-  height: 27px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-}
-.info-row em {
-  font-style: normal;
-  color: var(--muted);
-  text-align: right;
 }
 
 .login-shell:before {
@@ -640,23 +575,7 @@ body {
   padding: 20px;
   margin-bottom: 16px;
 }
-.owner-section-title {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 14px;
-  margin-bottom: 16px;
-}
-.owner-section-title h2 {
-  font-size: 19px;
-  margin: 0;
-}
-.owner-section-title p {
-  font-size: 12px;
-  color: var(--muted);
-  margin: 4px 0 0;
-}
+
 .owner-icon {
   width: 42px;
   height: 42px;
@@ -666,43 +585,6 @@ body {
   display: grid;
   place-items: center;
   font-size: 22px;
-}
-
-.owner-form {
-  display: grid;
-  gap: 12px;
-}
-
-.owner-form label {
-  font-size: 12px;
-  font-weight: 800;
-  display: grid;
-  gap: 6px;
-}
-.owner-form input,
-.owner-form select,
-.owner-form textarea {
-  width: 100%;
-  min-width: 0;
-  border: 1px solid #d6dbe2;
-  border-radius: 11px;
-  background: #fff;
-  padding: 11px;
-  font: inherit;
-  color: inherit;
-}
-.owner-form textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-.owner-form .check-row {
-  display: flex;
-  align-items: center;
-  font-weight: 600;
-}
-.owner-form .check-row input {
-  width: 17px;
-  height: 17px;
 }
 
 .empty-note {
@@ -779,30 +661,6 @@ body {
   color: var(--gold) !important;
 }
 
-.join-card {
-  margin-top: 70px;
-  padding: 28px 20px;
-  display: grid;
-  gap: 13px;
-  text-align: center;
-}
-.join-card > span {
-  font-size: 42px;
-}
-.join-card h1 {
-  font-size: 27px;
-  margin: 0;
-}
-.join-card p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.5;
-  font-size: 14px;
-}
-.join-card .btn {
-  display: block;
-}
-
 .draft-review-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -830,29 +688,6 @@ body {
   line-height: 1.4;
 }
 
-.captain-added-players {
-  display: grid;
-  gap: 8px;
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  background: #fafafa;
-}
-.captain-added-players > div:first-child {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-}
-.captain-added-players h3 {
-  margin: 0;
-  font-size: 13px;
-}
-.captain-added-players span {
-  font-size: 10px;
-  color: var(--muted);
-}
-
 .draft-review-actions.compact {
   grid-template-columns: 1fr 1fr;
 }
@@ -874,30 +709,6 @@ body {
   line-height: 1.55;
   color: var(--muted);
   margin: 0 0 16px;
-}
-
-.empty-feature {
-  min-height: 150px;
-  padding: 25px;
-  display: grid;
-  grid-template-columns: 58px 1fr;
-  gap: 16px;
-  align-items: center;
-  margin-bottom: 16px;
-}
-.empty-feature > span {
-  font-size: 42px;
-  color: var(--gold);
-}
-.empty-feature h2 {
-  font-size: 21px;
-  margin: 0 0 6px;
-}
-.empty-feature p:last-child {
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--muted);
-  margin: 0;
 }
 
 /* The same row before the weeks are known. A plain div, not a summary: there
@@ -932,66 +743,6 @@ body {
   gap: 8px;
 }
 
-.payment-status-card {
-  display: grid;
-  grid-template-columns: 42px 1fr;
-  gap: 10px;
-  align-items: center;
-  min-height: 68px;
-  padding: 13px 15px;
-  border: 1px solid #e8c98f;
-  border-radius: 15px;
-  background: #fffbf3;
-  margin-bottom: 9px;
-}
-.payment-status-card > span {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: #fff0d5;
-  color: var(--gold);
-  display: grid;
-  place-items: center;
-}
-.payment-status-card > div {
-  display: grid;
-  gap: 4px;
-}
-.payment-status-card b {
-  font-size: 15px;
-}
-.payment-status-card small {
-  font-size: 13px;
-  line-height: 1.4;
-  color: var(--muted);
-}
-
-.owner-empty-operation {
-  display: grid;
-  grid-template-columns: 48px 1fr;
-  gap: 12px;
-  align-items: center;
-  padding: 18px;
-}
-.owner-empty-operation > span {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: #e8f4e8;
-  color: var(--green);
-  display: grid;
-  place-items: center;
-  font-size: 22px;
-}
-.owner-empty-operation h3 {
-  font-size: 17px;
-  margin: 0 0 4px;
-}
-.owner-empty-operation p {
-  font-size: 14px;
-  color: var(--muted);
-  margin: 0;
-}
 .payment-method-panel {
   margin: 16px 0 14px;
 }
@@ -1023,31 +774,7 @@ body {
   display: grid;
   gap: 12px;
 }
-.uniform-toggle {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 7px;
-  padding: 4px;
-  background: #f0efed;
-  border-radius: 13px;
-}
-.uniform-toggle button {
-  min-height: 44px;
-  border: 0;
-  border-radius: 10px;
-  background: transparent;
-  font-size: 14px;
-  font-weight: 800;
-}
-.uniform-toggle button.active {
-  background: var(--navy);
-  color: #fff;
-  box-shadow: 0 3px 8px rgba(7, 31, 61, 0.16);
-}
-.uniform-toggle button:disabled {
-  color: #a1a5aa;
-  cursor: not-allowed;
-}
+
 .uniform-photo {
   position: relative;
   border: 1px solid var(--line);
@@ -1089,27 +816,6 @@ body {
   color: var(--muted);
   margin: 0;
 }
-.uniform-gallery-labels {
-  display: grid;
-  gap: 7px;
-}
-.uniform-gallery-labels span {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 9px;
-  border-top: 1px solid var(--line);
-  padding-top: 7px;
-}
-.uniform-gallery-labels small {
-  font-size: 11px;
-  color: var(--muted);
-  font-weight: 750;
-}
-.uniform-gallery-labels b {
-  font-size: 13px;
-  text-align: right;
-}
 
 .profile-section-title {
   font-size: 14px;
@@ -1139,25 +845,6 @@ body {
    placed, so the grid still lays out three links and not four. */
 
 /* The link keeps only its text colour - the fill is the thumb's job now. */
-
-.season-empty {
-  text-align: center;
-  padding: 30px 18px;
-}
-.season-empty > span {
-  font-size: 38px;
-  color: var(--gold);
-}
-.season-empty h2 {
-  font-size: 20px;
-  margin: 10px 0 5px;
-}
-.season-empty p {
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--muted);
-  margin: 0;
-}
 
 .game-postponed,
 .game-canceled {
@@ -1189,9 +876,6 @@ body {
   .payment-dashboard-summary {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  .payment-season-stats {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
 }
 @media (max-width: 410px) {
   .content {
@@ -1206,26 +890,12 @@ body {
     --kch-logo-size: 36px;
   }
 
-  .game-row {
-    grid-template-columns: 40px 1fr 70px 12px;
-  }
-
-  .team-detail-panels {
-    grid-template-columns: 1fr;
-  }
-  .profile-card {
-    grid-template-columns: 72px 1fr;
-  }
   .avatar {
     width: 65px;
     height: 65px;
   }
   .selector.wide small {
     display: none;
-  }
-  .game-uniform-fields,
-  .score-fields {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -1271,29 +941,6 @@ body:has(.context-overlay-open) .bottom {
   visibility: hidden;
 }
 
-.rules-acknowledgment {
-  display: grid;
-  gap: 13px;
-  padding: 18px;
-  border-top: 1px solid var(--line);
-}
-.rules-acknowledgment > p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.55;
-}
-.rules-acknowledgment .check-row {
-  align-items: flex-start;
-  line-height: 1.45;
-}
-.rules-acknowledgment .check-row input {
-  margin-top: 3px;
-}
-.rules-acknowledgment .btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.48;
-}
 .rules-empty {
   display: grid;
   gap: 13px;
@@ -1393,43 +1040,6 @@ body:has(.context-overlay-open) .bottom {
 
 .schedule-feature {
   grid-template-rows: auto auto auto;
-}
-
-.compact-upcoming-game {
-  display: grid;
-  grid-template-columns: 46px minmax(0, 1fr) auto;
-  grid-template-areas: "date matchup side";
-  gap: 10px;
-  align-items: center;
-  padding: 12px;
-}
-.compact-upcoming-game time {
-  grid-area: date;
-  display: grid;
-  align-content: center;
-  justify-items: center;
-  gap: 1px;
-  min-height: 64px;
-  padding-right: 8px;
-  border-right: 1px solid var(--line);
-  font-size: 9px;
-  line-height: 1.1;
-  text-align: center;
-}
-.compact-upcoming-game time b {
-  font-size: 10px;
-}
-.compact-upcoming-game time strong {
-  font-size: 23px;
-  line-height: 1;
-}
-
-@media (max-width: 410px) {
-  .compact-upcoming-game {
-    grid-template-columns: 42px minmax(0, 1fr) auto;
-    gap: 7px;
-    padding: 10px;
-  }
 }
 
 /* Loading skeletons -------------------------------------------------------

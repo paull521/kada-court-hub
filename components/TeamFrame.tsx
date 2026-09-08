@@ -2,6 +2,7 @@ import { LoadingNote, SkeletonText } from "@/components/Skeleton";
 import PlayerContextSwitcher from "@/components/PlayerContextSwitcher";
 import type { PlayerPortalData } from "@/lib/kch-data";
 import { teamBanner, teamBannerCopy } from "@/components/ui/schedule-classes";
+import { familyBanner, rosterRow } from "@/components/ui/shared-classes";
 
 /**
  * My Team, written once and drawn twice: with the portal data, and without it.
@@ -61,7 +62,7 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
             roster.map((player) => {
               const answer = data.availability.find((item) => item.name === player.name);
               return (
-                <div className="roster-row roster-with-availability" key={player.id}>
+                <div className={`${rosterRow} roster-with-availability`} key={player.id}>
                   <i
                     className={`availability-dot ${answer?.available === false ? "no" : "yes"}`}
                     title={answer?.available === false ? "Unavailable" : "Available"}
@@ -85,7 +86,7 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
           )
         ) : (
           [0, 1, 2, 3, 4, 5].map((index) => (
-            <div className="roster-row roster-with-availability" key={index}>
+            <div className={`${rosterRow} roster-with-availability`} key={index}>
               <i className="availability-dot" />
               <b className="jersey">
                 <SkeletonText width="1.2em" />
@@ -105,7 +106,7 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
           ))
         )}
       </section>
-      <section className="family-banner">
+      <section className={familyBanner}>
         <p className="family-quote">
           “Talent wins games, but teamwork and intelligence win championships.”
         </p>

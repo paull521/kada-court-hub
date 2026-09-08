@@ -12,13 +12,14 @@ import {
 } from "lucide-react";
 import { LoadingNote, SkeletonBlock, SkeletonText } from "@/components/Skeleton";
 import { accountLink, accountRow } from "@/components/ui/account-classes";
+import { infoRow, profileCard } from "@/components/ui/shared-classes";
 
 function InfoPanelFrame({ title, rows }: { title: string; rows: [ReactNode, string][] }) {
   return (
     <section className="card panel info-panel">
       <h2>{title}</h2>
       {rows.map(([icon, label]) => (
-        <div className="info-row" key={label}>
+        <div className={infoRow} key={label}>
           <span>{icon}</span>
           <b>{label}</b>
           <em>
@@ -42,7 +43,7 @@ export default function ProfileFrame() {
       <LoadingNote />
       <h1 className="title">Profile</h1>
       <p className="subtitle">Manage your account and player details</p>
-      <section className="card profile-card">
+      <section className={`card ${profileCard}`}>
         <span className="avatar" />
         <div>
           <h2>

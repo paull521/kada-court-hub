@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { uniformGalleryLabels, uniformToggle } from "@/components/ui/shared-classes";
 
 export default function TeamUniformGallery({
   teamName,
@@ -20,7 +21,7 @@ export default function TeamUniformGallery({
   const image = variant === "dark" ? darkImage : lightImage;
   return (
     <div className="uniform-gallery">
-      <div className="uniform-toggle" role="group" aria-label="Uniform color">
+      <div className={uniformToggle} role="group" aria-label="Uniform color">
         <button
           type="button"
           className={variant === "dark" ? "active" : ""}
@@ -49,7 +50,7 @@ export default function TeamUniformGallery({
           <p>Official division uniform photo coming soon.</p>
         </div>
       )}
-      <div className="uniform-gallery-labels">
+      <div className={uniformGalleryLabels}>
         <span>
           <small>NEXT GAME</small>
           <b>{nextGameUniform}</b>

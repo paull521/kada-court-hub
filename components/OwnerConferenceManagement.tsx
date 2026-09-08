@@ -7,6 +7,7 @@ import {
   type OwnerActionState,
 } from "@/app/owner/actions";
 import type { OwnerConferenceOption } from "@/lib/owner-data";
+import { ownerForm } from "@/components/ui/shared-classes";
 
 const initialState: OwnerActionState = {};
 
@@ -29,7 +30,7 @@ export default function OwnerConferenceManagement({
         </p>
         <form
           action={action}
-          className="owner-form mt-0 [&>small]:text-center [&>small]:text-[10px] [&>small]:leading-[1.4] [&>small]:text-muted"
+          className={`${ownerForm} mt-0 [&>small]:text-center [&>small]:text-[10px] [&>small]:leading-[1.4] [&>small]:text-muted`}
         >
           <label>
             Conference name

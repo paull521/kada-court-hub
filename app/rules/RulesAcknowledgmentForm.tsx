@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { acknowledgeRulesAction, type RulesActionState } from "./actions";
+import { rulesAcknowledgment } from "@/components/ui/shared-classes";
 
 export default function RulesAcknowledgmentForm({
   invitationId = "",
@@ -15,7 +16,7 @@ export default function RulesAcknowledgmentForm({
   const [state, action, pending] = useActionState(acknowledgeRulesAction, {} as RulesActionState);
   const [acknowledged, setAcknowledged] = useState(false);
   return (
-    <form action={action} className="rules-acknowledgment">
+    <form action={action} className={rulesAcknowledgment}>
       <input type="hidden" name="invitationId" value={invitationId} />
       <input type="hidden" name="registrationId" value={registrationId} />
       <input type="hidden" name="rulesDocumentId" value={rulesDocumentId} />

@@ -15,6 +15,7 @@ import {
 import type { PlatformOperations } from "@/lib/platform-data";
 import type { PlatformOwnerPaymentBilling } from "@/lib/owner-payment-ledger";
 import { accountDisclosure, accountRow } from "@/components/ui/account-classes";
+import { ownerForm } from "@/components/ui/shared-classes";
 
 const initial: PlatformActionState = {};
 const timestamp = (value: string) =>
@@ -81,7 +82,7 @@ export function OwnerManagement({
 function CandidateCard({ candidate }: { candidate: PlatformOperations["candidates"][number] }) {
   const [state, action, pending] = useActionState(createOwnerConferenceAction, initial);
   return (
-    <form action={action} className="owner-form platform-candidate">
+    <form action={action} className={`${ownerForm} platform-candidate`}>
       <input type="hidden" name="ownerId" value={candidate.id} />
       <div>
         <b>{candidate.name}</b>
