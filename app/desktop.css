@@ -263,13 +263,8 @@
     padding-top: 22px;
     border-top: 1px solid var(--line);
   }
-
-  /* --- Pointer feedback ----------------------------------------------------
-     Every card on these pages is a link, and a pointer gets no answer from the
-     phone layout because a finger never hovers. */
   a.card,
-  .captain-task-tile,
-  .owner-list-row {
+  .captain-task-tile {
     transition:
       border-color 0.12s ease,
       box-shadow 0.12s ease;

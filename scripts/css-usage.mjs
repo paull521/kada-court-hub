@@ -38,9 +38,16 @@ const sources = ["app", "components", "lib", "tests"].flatMap(walk);
 const blob = sources.map((f) => readFileSync(f, "utf8")).join("\n");
 const strip = (css) => css.replace(/\/\*[\s\S]*?\*\//g, "");
 
-/** Prefixes that a template literal completes at runtime, e.g. `status-${x}`. */
+/**
+ * Prefixes that a template literal completes at runtime, e.g. `status-${x}`.
+ *
+ * The first pattern deliberately does NOT anchor to a quote. KCH writes
+ * `payment-player-status status-${...}` - two classes in one literal, the
+ * dynamic one mid-string - and an anchored match reports status-due and its
+ * neighbours as unreferenced when they are built every render.
+ */
 const dynamicPrefixes = [
-  ...blob.matchAll(/[`"']([a-z][\w-]*?-)\$\{/g),
+  ...blob.matchAll(/([a-z][\w-]*?-)\$\{/g),
   ...blob.matchAll(/\$\{[^}]*\}\s*([a-z][\w-]*)/g),
 ].map((m) => m[1]);
 
