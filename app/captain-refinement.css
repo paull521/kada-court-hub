@@ -1,9 +1,6 @@
 .feature-card .uniform-line {
   grid-column: 1/-1;
 }
-.home-availability-card {
-  margin-bottom: 14px;
-}
 
 .captain-player-details-disclosure .captain-draft-entry {
   border: 0;

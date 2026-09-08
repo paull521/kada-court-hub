@@ -367,45 +367,12 @@ body {
   font-size: 23px;
 }
 
-.home-row {
-  display: grid;
-  grid-template-columns: 72px 1fr auto;
-  align-items: center;
-  padding: 18px;
-  margin-bottom: 14px;
-}
-.home-row > span:nth-child(2) {
-  display: grid;
-  gap: 4px;
-}
-.home-row small,
 .panel h2,
 .section-heading h2,
 .list-label {
   font-size: 12px;
   color: var(--gold);
   margin: 0;
-}
-.home-row strong {
-  font-size: 22px;
-}
-.home-row em {
-  font-size: 13px;
-  color: var(--muted);
-  font-style: normal;
-}
-.home-row > b {
-  font-size: 30px;
-}
-.roundel {
-  width: 58px;
-  height: 58px;
-  border: 1px solid var(--line);
-  background: #faf9f7;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-size: 30px;
 }
 
 .family-banner {
@@ -692,79 +659,8 @@ body {
   gap: 8px;
 }
 
-.balance-card {
-  background:
-    radial-gradient(circle at 90% 35%, rgba(79, 122, 166, 0.3), transparent 32%),
-    linear-gradient(125deg, #08243e, #0a3767);
-  color: #fff;
-  padding: 22px;
-  margin-bottom: 14px;
-  display: grid;
-  /* Three explicit rows for the label, amount and paid line, so the team badge
-     beside them can span the full height without inventing a fourth. */
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-rows: auto auto auto;
-  column-gap: 16px;
-}
-.balance-card > p,
-.balance-card > strong,
-.balance-card > span {
-  grid-column: 1;
-}
 /* Sized to sit inside the height the amount already takes, so naming the team
    costs the card nothing. */
-.balance-team {
-  grid-column: 2;
-  grid-row: 1 / -1;
-  align-self: center;
-  width: 92px;
-  display: grid;
-  gap: 6px;
-  justify-items: center;
-  text-align: center;
-  font-size: 12px;
-  line-height: 1.2;
-}
-.balance-card p {
-  color: #f4a313;
-  font-weight: 800;
-  margin: 0;
-}
-.balance-card > strong {
-  font-size: 48px;
-  margin: 9px 0;
-}
-.balance-card > span {
-  color: #d6dce4;
-  font-size: 14px;
-}
-.balance-card button {
-  margin-top: 20px;
-  background: #fff;
-  border: 0;
-  border-radius: 12px;
-  padding: 13px;
-  font-weight: 800;
-}
-.fee-row {
-  display: grid;
-  grid-template-columns: 35px 1fr auto;
-  align-items: center;
-  padding: 13px 0;
-  border-bottom: 1px solid var(--line);
-}
-.fee-row:last-child {
-  border: 0;
-}
-.fee-row > span {
-  width: 30px;
-  height: 30px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  color: var(--gold);
-}
 
 .profile-card {
   padding: 18px;
@@ -1718,48 +1614,6 @@ body {
   font-size: 10px;
   line-height: 1.4;
   color: var(--muted);
-}
-
-.home-payment-reminder {
-  display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 10px;
-  padding: 14px;
-  margin-bottom: 14px;
-  border-color: #edcf97;
-  background: #fffaf1;
-}
-.home-payment-reminder > span:first-child {
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border-radius: 12px;
-  background: #fff1d5;
-  color: #a96700;
-  font-size: 20px;
-}
-.home-payment-reminder > span:nth-child(2) {
-  display: grid;
-  gap: 3px;
-}
-.home-payment-reminder small {
-  font-size: 10px;
-  font-weight: 850;
-  letter-spacing: 0.06em;
-  color: #a96700;
-}
-.home-payment-reminder strong {
-  font-size: 15px;
-}
-.home-payment-reminder em {
-  font-size: 11px;
-  color: var(--muted);
-  font-style: normal;
-}
-.home-payment-reminder > b {
-  font-size: 25px;
 }
 
 .owner-draft-override {
@@ -3381,31 +3235,6 @@ button.account-link {
   font-size: 13px;
 }
 
-.season-home-row > span:nth-child(2) {
-  min-width: 0;
-}
-.season-home-row > span:nth-child(2) > nav {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  margin-top: 4px;
-}
-.season-home-row > span:nth-child(2) > nav a {
-  color: var(--blue);
-  font-size: 13px;
-  min-height: 30px;
-  display: flex;
-  align-items: center;
-}
-.season-home-row > span:nth-child(2) > nav a + a:before {
-  content: "|";
-  color: var(--navy);
-  margin: 0 9px;
-}
-.season-home-row > a:last-child {
-  font-size: 30px;
-  font-weight: 800;
-}
 .season-tabs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -4873,8 +4702,7 @@ body:has(.context-overlay-open) .bottom {
    on Home and Schedule, the team banner that opens the team list, and the
    balance card on Payments. */
 .feature-card .skeleton,
-.team-banner .skeleton,
-.balance-card .skeleton {
+.team-banner .skeleton {
   background: linear-gradient(90deg, #061b2f 25%, #0d3055 37%, #061b2f 63%);
   background-size: 400% 100%;
 }

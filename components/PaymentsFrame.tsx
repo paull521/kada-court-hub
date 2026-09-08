@@ -14,13 +14,19 @@ import type { PlayerPortalData } from "@/lib/kch-data";
  * streaming fallback and the finished page are one component and cannot
  * disagree about the layout.
  */
+const feeRow =
+  "grid grid-cols-[35px_1fr_auto] items-center border-b border-line py-[13px] last:border-0 [&>span]:grid [&>span]:h-[30px] [&>span]:w-[30px] [&>span]:place-items-center [&>span]:rounded-full [&>span]:border [&>span]:border-line [&>span]:text-gold";
+
 export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
   const account = data?.paymentAccount;
   return (
     <>
       {!data && <LoadingNote />}
       <div className="col-pane col-pane-a">
-        <section className="card balance-card">
+        {/* bg- shouts: .card sets a background unlayered. The .skeleton pair is
+            carried across by hand - it renders only while the frame is loading,
+            which settle() in the visual suite waits out by definition. */}
+        <section className="card mb-[14px] grid grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_auto_auto] gap-x-[16px] bg-[radial-gradient(circle_at_90%_35%,rgba(79,122,166,0.3),transparent_32%),linear-gradient(125deg,#08243e,#0a3767)]! p-[22px] text-white [&>p]:col-start-1 [&>p]:m-0 [&>p]:font-[800] [&>p]:text-[#f4a313] [&>strong]:col-start-1 [&>strong]:my-[9px] [&>strong]:text-[48px] [&>span]:col-start-1 [&>span]:text-[14px] [&>span]:text-[#d6dce4] [&_.skeleton]:bg-[linear-gradient(90deg,#061b2f_25%,#0d3055_37%,#061b2f_63%)] [&_.skeleton]:bg-[length:400%_100%]">
           <p>TOTAL BALANCE DUE</p>
           <strong>
             {account ? `$${account.balance.toFixed(2)}` : <SkeletonText width="4.5em" />}
@@ -36,7 +42,7 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
               <SkeletonText width="10em" />
             )}
           </span>
-          <div className="balance-team">
+          <div className="col-start-2 row-span-full grid w-[92px] justify-items-center gap-[6px] self-center text-center text-[12px] leading-[1.2]">
             <span className="team-mark small" aria-hidden="true">
               K
             </span>
@@ -48,7 +54,7 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
           {data ? (
             data.fees.length ? (
               data.fees.map((fee) => (
-                <div className="fee-row" key={fee.id}>
+                <div className={feeRow} key={fee.id}>
                   <span>{fee.icon}</span>
                   <b>{fee.label}</b>
                   <strong>${fee.amount.toFixed(2)}</strong>
@@ -59,7 +65,7 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
             )
           ) : (
             [0, 1, 2].map((index) => (
-              <div className="fee-row" key={index}>
+              <div className={feeRow} key={index}>
                 <span />
                 <b>
                   <SkeletonText width="9em" />

@@ -110,61 +110,9 @@
   background: #d71920;
   border: 2px solid #fff;
 }
-.captain-game-list,
-.captain-payment-list {
+.captain-game-list {
   display: grid;
   gap: 10px;
-}
-
-.captain-payment-player {
-  overflow: hidden;
-}
-.captain-payment-player summary {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 10px;
-  align-items: center;
-  padding: 16px;
-  cursor: pointer;
-}
-.captain-payment-player summary span {
-  display: grid;
-}
-.captain-payment-player summary small {
-  color: #657285;
-}
-.captain-payment-player summary em {
-  font-style: normal;
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-.captain-payment-player > div {
-  padding: 0 16px 16px;
-}
-.captain-balance-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 7px;
-}
-.captain-balance-grid span {
-  padding: 10px 6px;
-  background: #f3f5f6;
-  border-radius: 10px;
-  display: grid;
-}
-.captain-balance-grid small {
-  font-size: 11px;
-}
-.captain-fee-breakdown {
-  display: grid;
-  margin-top: 10px;
-}
-.captain-fee-breakdown span {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid #e5e7e9;
 }
 
 .uniform-line {
@@ -311,28 +259,10 @@
     gap: 9px;
   }
 
-  .captain-balance-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
   .captain-bottom .nav {
     font-size: 11px;
   }
   .captain-bottom .nav b {
     font-size: 20px;
   }
-}
-
-.captain-payment-player summary .payment-flag {
-  border-radius: 999px;
-  padding: 5px 8px;
-  background: #fff1f1;
-  color: #a51118;
-}
-.captain-payment-player summary .payment-flag.partial {
-  background: #fff4da;
-  color: #8a5900;
-}
-.captain-payment-player summary .payment-flag.paid {
-  background: #eaf6ec;
-  color: #18753a;
 }
