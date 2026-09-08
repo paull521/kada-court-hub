@@ -3245,6 +3245,46 @@ function PaymentReviewCard({ submission }: { submission: OwnerPaymentSubmission 
   );
 }
 
+/* The owner's payment tracking, drawn twice: once for the live season and once
+   in the past-payments archive. The two were identical markup pointing at one
+   block of globals.css, so they point at one block of strings instead. */
+const paymentSeason = "card group overflow-hidden";
+const paymentSummary =
+  "grid min-h-[76px] cursor-pointer list-none grid-cols-[minmax(0,1fr)_auto_24px] items-center gap-[10px] p-[14px_15px] [&::-webkit-details-marker]:hidden [&>span:first-child]:grid [&>span:first-child]:min-w-0 [&>span:first-child]:gap-[5px] [&>span:first-child_b]:leading-[1.3] [&_b]:text-[17px] [&_small]:text-[11px] [&_small]:leading-[1.35] [&_small]:text-muted";
+const paymentCaret = "text-[24px] transition-transform group-open:rotate-90";
+const paymentBody = "border-t border-line p-[12px]";
+/* The four stat tiles, and the three colours the division card gives them. */
+const paymentStats =
+  "mb-0 grid grid-cols-[repeat(2,minmax(0,1fr))] gap-[7px] [&>span]:grid [&>span]:min-h-[61px] [&>span]:content-center [&>span]:gap-[4px] [&>span]:rounded-[11px] [&>span]:bg-[#f6f4f1] [&>span]:p-[9px] [&>span:nth-child(2)]:bg-[#eaf6ec] [&>span:nth-child(3)]:bg-[#fff7e8] [&>span:nth-child(4)]:bg-[#f1f3f5] [&_b]:text-[14px] [&_small]:text-[9px] [&_small]:font-[850] [&_small]:tracking-[0.04em] [&_small]:text-muted min-[700px]:grid-cols-[repeat(4,minmax(0,1fr))]";
+/* Three tiles: paid, not paid, waived. The first two recolour themselves, and
+   have to shout to do it - the tile's own border and background are utilities
+   on the same element, at the same specificity, so source order in the
+   generated sheet would otherwise decide. */
+const paymentCounts =
+  "mb-[11px] grid grid-cols-[repeat(3,minmax(0,1fr))] gap-[7px] [&>span]:grid [&>span]:min-h-[68px] [&>span]:content-center [&>span]:gap-[5px] [&>span]:rounded-[12px] [&>span]:border [&>span]:border-line [&>span]:bg-white [&>span]:p-[9px_6px] [&>span]:text-center [&_b]:text-[20px] [&_small]:text-[9px] [&_small]:leading-[1.25] [&_small]:font-[850] [&_small]:tracking-[0.05em] [&_small]:text-muted";
+const paymentPlayerList =
+  "grid gap-[8px] border-t border-line p-[9px] min-[700px]:grid-cols-[repeat(2,minmax(0,1fr))]";
+const paymentDetails =
+  "group/details mt-[14px] overflow-hidden rounded-[13px] border border-line bg-[#fbfaf8]";
+const paymentDetailsSummary =
+  "grid min-h-[62px] cursor-pointer list-none grid-cols-[1fr_auto] items-center gap-[10px] p-[11px_13px] [&::-webkit-details-marker]:hidden [&>span]:grid [&>span]:gap-[4px] [&_b]:text-[14px] [&_small]:text-[10px] [&_small]:text-muted";
+/* Named, because this disclosure sits inside the season one and a bare
+   group-open: would turn its caret when the season opened. */
+const paymentDetailsCaret = "text-[22px] transition-transform group-open/details:rotate-90";
+const paymentRow =
+  "rounded-[13px] border border-line bg-white p-[12px] [&>header]:flex [&>header]:items-start [&>header]:justify-between [&>header]:gap-[9px] [&>header>span]:grid [&>header>span]:min-w-0 [&>header>span]:gap-[4px] [&>header_b]:text-[15px] [&>header_small]:text-[11px] [&>header_small]:text-muted [&>p]:m-[9px_0_0] [&>p]:flex [&>p]:items-center [&>p]:justify-between [&>p]:gap-[8px] [&>p]:border-t [&>p]:border-line [&>p]:pt-[9px] [&>p_b]:text-[12px] [&>p_small]:text-[9px] [&>p_small]:font-[850] [&>p_small]:tracking-[0.04em] [&>p_small]:text-muted";
+const paymentAmounts =
+  "mt-[11px] grid grid-cols-3 gap-[6px] [&>span]:grid [&>span]:gap-[4px] [&>span]:rounded-[9px] [&>span]:bg-[#f7f5f2] [&>span]:p-[8px_6px] [&_b]:text-[12px] [&_small]:text-[9px] [&_small]:font-[850] [&_small]:tracking-[0.04em] [&_small]:text-muted";
+/* status-waived and status-review render in no conference the suite can see;
+   their colours are carried across with the two that do. */
+const paymentStatus = "flex-none rounded-full p-[5px_8px] text-[10px] font-[850] not-italic";
+const paymentStatusTone = (status: string, pendingReview: boolean) =>
+  pendingReview || status === "Mixed" || status === "Waived"
+    ? "bg-[#fff4da] text-[#8a5900]"
+    : status === "Due"
+      ? "bg-[#fff1f1] text-[#a51118]"
+      : "bg-[#eaf6ec] text-green";
+
 export function OwnerPaymentManagement({
   submissions,
   groups,
@@ -3269,16 +3309,16 @@ export function OwnerPaymentManagement({
           </div>
         </section>
       )}
-      <section className="payment-season-tracking">
+      <section className="mt-[27px]">
         <h2>Season Tracking</h2>
         <p className="operations-intro">
           Each card contains one season and division. Open it for player-level details.
         </p>
         {groups.length ? (
-          <div className="payment-season-list">
+          <div className="grid gap-[11px]">
             {groups.map((group) => (
-              <details className="payment-season payment-division-card card" key={group.divisionId}>
-                <summary>
+              <details className={paymentSeason} key={group.divisionId}>
+                <summary className={paymentSummary}>
                   <span>
                     <b>
                       {group.seasonName} · {group.divisionName}
@@ -3288,22 +3328,22 @@ export function OwnerPaymentManagement({
                       player
                     </small>
                   </span>
-                  <span className="payment-season-due">
+                  <span className="grid gap-[3px] text-right [&>b]:text-[15px]! [&>b]:text-[#a51118]">
                     <small>NOT PAID</small>
                     <b>{group.unpaidPlayers}</b>
                   </span>
-                  <strong aria-hidden="true">
+                  <strong aria-hidden="true" className={paymentCaret}>
                     <ChevronRight className="go-caret" />
                   </strong>
                 </summary>
-                <div className="payment-season-body">
+                <div className={paymentBody}>
                   <p className="payment-card-label">PLAYER PAYMENT STATUS</p>
-                  <div className="payment-count-grid">
-                    <span className="paid">
+                  <div className={paymentCounts}>
+                    <span className="border-[#cce6d0]! bg-[#eaf6ec]! [&>b]:text-green">
                       <small>PAID</small>
                       <b>{group.paidPlayers}</b>
                     </span>
-                    <span className="unpaid">
+                    <span className="border-[#efc9cb]! bg-[#fff1f1]! [&>b]:text-[#a51118]">
                       <small>NOT PAID</small>
                       <b>{group.unpaidPlayers}</b>
                     </span>
@@ -3313,7 +3353,7 @@ export function OwnerPaymentManagement({
                     </span>
                   </div>
                   <p className="payment-card-label">PAID PLAYERS BY METHOD</p>
-                  <div className="payment-method-counts">
+                  <div className="grid grid-cols-2 gap-[7px] [&>span]:grid [&>span]:min-h-[78px] [&>span]:content-center [&>span]:gap-[4px] [&>span]:rounded-[12px] [&>span]:border [&>span]:border-line [&>span]:bg-white [&>span]:p-[10px] [&_b]:text-[15px] [&_small]:text-[9px] [&_small]:font-[850] [&_small]:tracking-[0.05em] [&_small]:text-muted [&_strong]:text-[12px] [&_strong]:text-green">
                     <span>
                       <small>ZELLE</small>
                       <b>{group.zellePlayers} players</b>
@@ -3326,7 +3366,7 @@ export function OwnerPaymentManagement({
                     </span>
                   </div>
                   <p className="payment-card-label">SEASON / DIVISION INCOME</p>
-                  <div className="payment-division-stats">
+                  <div className={paymentStats}>
                     <span>
                       <small>EXPECTED INCOME</small>
                       <b>{money(group.assessed)}</b>
@@ -3344,31 +3384,31 @@ export function OwnerPaymentManagement({
                       <b>{money(group.waived)}</b>
                     </span>
                   </div>
-                  <details className="payment-player-details">
-                    <summary>
+                  <details className={paymentDetails}>
+                    <summary className={paymentDetailsSummary}>
                       <span>
                         <b>Player Payment Details</b>
                         <small>Paid, not paid, waived, and payment method</small>
                       </span>
-                      <strong aria-hidden="true">
+                      <strong aria-hidden="true" className={paymentDetailsCaret}>
                         <ChevronRight className="go-caret" />
                       </strong>
                     </summary>
-                    <div className="payment-player-list">
+                    <div className={paymentPlayerList}>
                       {group.players.map((player) => (
-                        <article className="payment-player-row" key={player.registrationId}>
+                        <article className={paymentRow} key={player.registrationId}>
                           <header>
                             <span>
                               <b>{player.playerName}</b>
                               <small>{player.teamName}</small>
                             </span>
                             <em
-                              className={`payment-player-status status-${player.pendingReview ? "review" : player.status.toLowerCase()}`}
+                              className={`${paymentStatus} ${paymentStatusTone(player.status, player.pendingReview)}`}
                             >
                               {player.pendingReview ? "Pending review" : player.status}
                             </em>
                           </header>
-                          <div className="payment-player-amounts">
+                          <div className={paymentAmounts}>
                             <span>
                               <small>RECEIVED</small>
                               <b>{money(player.received)}</b>
@@ -3424,10 +3464,10 @@ export function OwnerPastPaymentsArchive({ groups }: { groups: OwnerPaymentGroup
       <h2>Completed Seasons</h2>
       <p className="operations-intro">Previous-season payment records stay here for reference.</p>
       {groups.length ? (
-        <div className="payment-season-list">
+        <div className="grid gap-[11px]">
           {groups.map((group) => (
-            <details className="payment-season payment-division-card card" key={group.divisionId}>
-              <summary>
+            <details className={paymentSeason} key={group.divisionId}>
+              <summary className={paymentSummary}>
                 <span>
                   <b>
                     {group.seasonName} · {group.divisionName}
@@ -3436,12 +3476,12 @@ export function OwnerPastPaymentsArchive({ groups }: { groups: OwnerPaymentGroup
                     {group.totalPlayers} rostered players · {money(group.received)} received
                   </small>
                 </span>
-                <strong aria-hidden="true">
+                <strong aria-hidden="true" className={paymentCaret}>
                   <ChevronRight className="go-caret" />
                 </strong>
               </summary>
-              <div className="payment-season-body">
-                <div className="payment-division-stats">
+              <div className={paymentBody}>
+                <div className={paymentStats}>
                   <span>
                     <small>EXPECTED</small>
                     <b>{money(group.assessed)}</b>
@@ -3455,31 +3495,31 @@ export function OwnerPastPaymentsArchive({ groups }: { groups: OwnerPaymentGroup
                     <b>{money(group.due)}</b>
                   </span>
                 </div>
-                <details className="payment-player-details">
-                  <summary>
+                <details className={paymentDetails}>
+                  <summary className={paymentDetailsSummary}>
                     <span>
                       <b>Player Payment Details</b>
                       <small>Read-only payment history</small>
                     </span>
-                    <strong aria-hidden="true">
+                    <strong aria-hidden="true" className={paymentDetailsCaret}>
                       <ChevronRight className="go-caret" />
                     </strong>
                   </summary>
-                  <div className="payment-player-list">
+                  <div className={paymentPlayerList}>
                     {group.players.map((player) => (
-                      <article className="payment-player-row" key={player.registrationId}>
+                      <article className={paymentRow} key={player.registrationId}>
                         <header>
                           <span>
                             <b>{player.playerName}</b>
                             <small>{player.teamName}</small>
                           </span>
                           <em
-                            className={`payment-player-status status-${player.pendingReview ? "review" : player.status.toLowerCase()}`}
+                            className={`${paymentStatus} ${paymentStatusTone(player.status, player.pendingReview)}`}
                           >
                             {player.pendingReview ? "Pending review" : player.status}
                           </em>
                         </header>
-                        <div className="payment-player-amounts">
+                        <div className={paymentAmounts}>
                           <span>
                             <small>RECEIVED</small>
                             <b>{money(player.received)}</b>

@@ -270,4 +270,27 @@ test.describe("states", () => {
     await settle(page);
     await expect(page).toHaveScreenshot("captain-roster-open.png", { fullPage: true });
   });
+
+  /**
+   * Owner payments nests three disclosures - a season, its player details, and
+   * the archive - and all of them arrive shut, so the owner-payments baseline
+   * photographs three summaries and nothing they contain. The stat tiles, the
+   * method counts, the per-player rows and their amount grids are most of what
+   * that page is made of.
+   */
+  test("owner-payments-open", async ({ page }) => {
+    const response = await page.goto("/owner/payments", { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBeLessThan(400);
+    await settle(page);
+    for (let pass = 0; pass < 3; pass++)
+      await page
+        .locator("details")
+        .evaluateAll((nodes) => nodes.forEach((n) => ((n as HTMLDetailsElement).open = true)));
+    expect(
+      await page.locator("details[open]").count(),
+      "expected the season and its player details to open",
+    ).toBeGreaterThan(1);
+    await settle(page);
+    await expect(page).toHaveScreenshot("owner-payments-open.png", { fullPage: true });
+  });
 });
