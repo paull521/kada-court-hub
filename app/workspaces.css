@@ -110,10 +110,6 @@
   background: #d71920;
   border: 2px solid #fff;
 }
-.captain-game-list {
-  display: grid;
-  gap: 10px;
-}
 
 .uniform-dot {
   width: 20px;

@@ -1,6 +1,7 @@
 import { Check } from "lucide-react";
 import { LoadingNote, SkeletonText } from "@/components/Skeleton";
 import type { CaptainPortalData } from "@/lib/captain-data";
+import { scheduleEmpty } from "@/components/ui/schedule-classes";
 
 /**
  * The team's answers for the next game, written once and drawn twice. TEAM
@@ -12,7 +13,7 @@ export default function CaptainAvailabilityFrame({ data }: { data?: CaptainPorta
   const no = data ? data.availability.filter((player) => !player.available).length : 0;
   if (data && !game)
     return (
-      <section className="card schedule-empty">
+      <section className={`card ${scheduleEmpty}`}>
         <span>
           <Check className="ui-icon" />
         </span>

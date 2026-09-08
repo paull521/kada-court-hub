@@ -34,9 +34,9 @@ const date = (value: string) =>
 export default function SeasonInvitationCard({ invitation }: { invitation: Invitation }) {
   const [state, action, pending] = useActionState(respondInvitationAction, initialState);
   return (
-    <section className="card invitation-card">
+    <section className="card mb-[15px] grid gap-[13px] border-[#e8b85e]! p-[18px] [&>h2]:m-[0_0_7px] [&>h2]:text-[22px] [&>p:not(.eyebrow)]:m-[0_0_14px] [&>p:not(.eyebrow)]:text-[13px] [&>p:not(.eyebrow)]:leading-[1.5] [&>p:not(.eyebrow)]:text-muted [&_.eyebrow]:m-0! [&_form]:grid [&_form]:grid-cols-2 [&_form]:gap-2">
       <p className="eyebrow">YOU’RE INVITED</p>
-      <div className="invitation-flyer">
+      <div className="grid gap-[5px] rounded-[15px] bg-[linear-gradient(135deg,#061f3d,#10497e)] p-[19px_16px] text-center text-white [&>span]:text-[26px] [&>h2]:m-0 [&>h2]:text-2xl [&>h2]:text-white [&>small]:text-[11px] [&>small]:text-[#f5c866]">
         <span>🏀</span>
         <h2>{invitation.conferenceName}</h2>
         <small>Hosted by {invitation.ownerName}</small>
@@ -66,10 +66,15 @@ export default function SeasonInvitationCard({ invitation }: { invitation: Invit
       <p className="invitation-note">{invitation.message}</p>
       <form action={action}>
         <input type="hidden" name="invitationId" value={invitation.id} />
-        <Link className="btn joining" href={`/rules?invitation=${invitation.id}`}>
+        <Link className="btn bg-green! text-white!" href={`/rules?invitation=${invitation.id}`}>
           Join this season
         </Link>
-        <button className="btn not-joining" name="response" value="not_joining" disabled={pending}>
+        <button
+          className="btn border! border-[#d6dbe2]! bg-white!"
+          name="response"
+          value="not_joining"
+          disabled={pending}
+        >
           Not Joining
         </button>
       </form>

@@ -58,6 +58,15 @@ import type {
   OwnerSeason,
   OwnerTeam,
 } from "@/lib/owner-data";
+import {
+  gamePhase,
+  gamePhaseTone,
+  scheduleStatus,
+  scheduleStatusTone,
+  scheduleTableScroll,
+  scheduleWeek,
+  weeklyScheduleList,
+} from "@/components/ui/schedule-classes";
 
 const initialState: OwnerActionState = {};
 function Feedback({ state }: { state: OwnerActionState }) {
@@ -2898,12 +2907,12 @@ function WeeklyScheduleTable({ season }: { season: OwnerSeason }) {
           <p>{sorted.length} total scheduled games</p>
         </div>
       </header>
-      <div className="weekly-schedule-list">
+      <div className={weeklyScheduleList}>
         {weeks.map(([key, games], weekIndex) => {
           const end = new Date(`${key}T12:00:00Z`);
           end.setUTCDate(end.getUTCDate() + 6);
           return (
-            <details className="schedule-week" key={key} open={weekIndex === 0}>
+            <details className={scheduleWeek} key={key} open={weekIndex === 0}>
               <summary>
                 <span>
                   {displayDate(key)} – {displayDate(end.toISOString().slice(0, 10))}
@@ -2915,7 +2924,7 @@ function WeeklyScheduleTable({ season }: { season: OwnerSeason }) {
                   <ChevronRight className="go-caret" />
                 </strong>
               </summary>
-              <div className="schedule-table-scroll">
+              <div className={scheduleTableScroll}>
                 <table>
                   <thead>
                     <tr>
@@ -2940,7 +2949,7 @@ function WeeklyScheduleTable({ season }: { season: OwnerSeason }) {
                           <td>{game.court || "—"}</td>
                           <td>{divisionNames.get(game.divisionId) ?? "—"}</td>
                           <td>
-                            <em className={`game-phase ${game.phase}`}>
+                            <em className={`${gamePhase} ${gamePhaseTone(game.phase)}`}>
                               {game.phase === "playoff" ? "Playoff" : "Regular"}
                             </em>
                           </td>
@@ -2958,7 +2967,9 @@ function WeeklyScheduleTable({ season }: { season: OwnerSeason }) {
                             )}
                           </td>
                           <td>
-                            <em className={`schedule-status ${game.status}`}>{game.status}</em>
+                            <em className={`${scheduleStatus} ${scheduleStatusTone(game.status)}`}>
+                              {game.status}
+                            </em>
                           </td>
                           <td>
                             <a

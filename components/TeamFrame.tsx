@@ -1,6 +1,7 @@
 import { LoadingNote, SkeletonText } from "@/components/Skeleton";
 import PlayerContextSwitcher from "@/components/PlayerContextSwitcher";
 import type { PlayerPortalData } from "@/lib/kch-data";
+import { teamBanner, teamBannerCopy } from "@/components/ui/schedule-classes";
 
 /**
  * My Team, written once and drawn twice: with the portal data, and without it.
@@ -29,11 +30,11 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
         />
       ) : (
         <div className="team-switcher">
-          <div className="card team-banner">
+          <div className={`card ${teamBanner}`}>
             <span className="team-mark small" aria-hidden="true">
               K
             </span>
-            <span className="team-banner-copy">
+            <span className={teamBannerCopy}>
               <b>
                 <SkeletonText width="7.5em" />
               </b>

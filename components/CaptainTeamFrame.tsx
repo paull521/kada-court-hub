@@ -2,6 +2,7 @@ import { Clock } from "lucide-react";
 import CaptainContextSwitcher from "@/components/CaptainContextSwitcher";
 import { LoadingNote, SkeletonText } from "@/components/Skeleton";
 import type { CaptainPortalData } from "@/lib/captain-data";
+import { scheduleEmpty, teamBanner, teamBannerCopy } from "@/components/ui/schedule-classes";
 
 /**
  * The published team, written once and drawn twice. The banner, the FINAL
@@ -24,11 +25,11 @@ export default function CaptainTeamFrame({ data }: { data?: CaptainPortalData })
         />
       ) : (
         <div className="team-switcher">
-          <div className="card team-banner">
+          <div className={`card ${teamBanner}`}>
             <span className="team-mark small" aria-hidden="true">
               K
             </span>
-            <span className="team-banner-copy">
+            <span className={teamBannerCopy}>
               <b>
                 <SkeletonText width="7.5em" />
               </b>
@@ -40,7 +41,7 @@ export default function CaptainTeamFrame({ data }: { data?: CaptainPortalData })
         </div>
       )}
       {data && !data.finalPublished ? (
-        <section className="card schedule-empty">
+        <section className={`card ${scheduleEmpty}`}>
           <span>
             <Clock className="ui-icon" />
           </span>

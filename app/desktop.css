@@ -311,18 +311,7 @@
      The invitation card is a utility, not a headline. Stretched to the measure
      it became a 1,100px button beside a QR code; it wants to be the size of the
      thing it holds. */
-  .conference-player-invitation {
-    max-width: 470px;
-    grid-template-columns: minmax(0, 1fr) 132px;
-    padding: 18px;
-  }
-  .conference-player-invitation img {
-    width: 132px;
-    height: 132px;
-  }
-  .captain-content > .conference-player-invitation {
-    max-width: 430px;
-  }
+
   /* --- Owner's Guide --------------------------------------------------------
      A reading page in a workspace that takes the full app width. Left as one
      column it would be a 1,180px line of body text, so the section index steps

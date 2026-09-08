@@ -6,6 +6,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { switchPlayerContextAction } from "@/app/context/actions";
 import type { PlayerContextOption } from "@/lib/kch-data";
+import { teamBanner, teamBannerCopy } from "@/components/ui/schedule-classes";
 
 export default function PlayerContextSwitcher({
   contexts,
@@ -62,7 +63,7 @@ export default function PlayerContextSwitcher({
   return (
     <div className={`team-switcher ${open ? "open" : ""}`.trim()} ref={wrapper}>
       <button
-        className="card team-banner"
+        className={`card ${teamBanner}`}
         type="button"
         onClick={() => hasContextChoices && setOpen(!open)}
         aria-haspopup={hasContextChoices ? "menu" : undefined}
@@ -72,7 +73,7 @@ export default function PlayerContextSwitcher({
         <span className="team-mark small" aria-hidden="true">
           K
         </span>
-        <span className="team-banner-copy">
+        <span className={teamBannerCopy}>
           <b>{active.team}</b>
           <small>
             {active.division} &nbsp;•&nbsp; {active.season}

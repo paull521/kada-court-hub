@@ -5,6 +5,7 @@ import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { switchCaptainContextAction } from "@/app/captain/context-actions";
 import type { CaptainContextOption } from "@/lib/captain-data";
+import { teamBanner, teamBannerCopy } from "@/components/ui/schedule-classes";
 
 export default function CaptainContextSwitcher({
   contexts,
@@ -53,7 +54,7 @@ export default function CaptainContextSwitcher({
     return (
       <div className={`team-switcher ${open ? "open" : ""}`.trim()}>
         <button
-          className="card team-banner"
+          className={`card ${teamBanner}`}
           type="button"
           onClick={() => contexts.length > 1 && setOpen(!open)}
           aria-haspopup={contexts.length > 1 ? "menu" : undefined}
@@ -63,7 +64,7 @@ export default function CaptainContextSwitcher({
           <span className="team-mark small" aria-hidden="true">
             K
           </span>
-          <span className="team-banner-copy">
+          <span className={teamBannerCopy}>
             <b>{active.teamName}</b>
             <small>
               {active.divisionName} &nbsp;•&nbsp; {active.seasonName}

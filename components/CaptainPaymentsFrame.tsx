@@ -1,6 +1,7 @@
 import { ChevronRight, Wallet } from "lucide-react";
 import { LoadingNote, SkeletonBlock } from "@/components/Skeleton";
 import type { CaptainPortalData } from "@/lib/captain-data";
+import { scheduleEmpty } from "@/components/ui/schedule-classes";
 
 const money = (value: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
@@ -13,7 +14,7 @@ const money = (value: number) =>
 export default function CaptainPaymentsFrame({ data }: { data?: CaptainPortalData }) {
   if (data && !data.payments.length)
     return (
-      <section className="card schedule-empty">
+      <section className={`card ${scheduleEmpty}`}>
         <span>
           <Wallet className="ui-icon" />
         </span>
