@@ -4066,36 +4066,7 @@ body {
   display: grid;
   gap: 9px;
 }
-.score-sheet-card {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  padding: 12px;
-  scroll-margin-top: 16px;
-}
-.score-sheet-card > header {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
-  align-items: start;
-}
-.score-sheet-card > header > div {
-  display: grid;
-  gap: 3px;
-}
-.score-sheet-card > header b {
-  font-size: 14px;
-}
-.score-sheet-card > header span {
-  font-size: 12px;
-  color: var(--muted);
-}
-.score-sheet-card > header small {
-  font-size: 11px;
-  line-height: 1.45;
-  text-align: right;
-  color: var(--muted);
-}
+
 .score-entry-form {
   border-top: 1px solid var(--line);
   margin-top: 11px;
@@ -6771,16 +6742,7 @@ button.account-link {
   color: var(--muted);
   text-align: center;
 }
-.score-sheet-card > header {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: center;
-}
-.score-sheet-card > header small {
-  color: #d5e2f0;
-  font-size: 11px;
-}
+
 .scoreboard-card .score-entry-form {
   border-color: rgba(255, 255, 255, 0.2);
 }

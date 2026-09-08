@@ -200,22 +200,7 @@
   background: #a51d25;
   color: #fff;
 }
-.score-sheet-card {
-  padding: 0 !important;
-  border-radius: 16px !important;
-  overflow: hidden;
-}
-.score-sheet-card > header {
-  padding: 15px 16px;
-  border-bottom: 1px solid var(--line);
-  align-items: center !important;
-}
-.score-sheet-card > header b {
-  font-size: 16px !important;
-}
-.score-sheet-card > header span {
-  font-size: 13px !important;
-}
+
 .score-game-meta {
   display: grid;
   gap: 6px;
@@ -273,16 +258,10 @@
   width: 100%;
 }
 @media (max-width: 410px) {
-  .score-sheet-card > header {
-    padding: 13px;
-    grid-template-columns: 1fr;
-  }
   .score-game-meta {
     justify-items: start;
   }
-  .score-sheet-card > header small {
-    text-align: left !important;
-  }
+
   .score-entry-form {
     padding: 13px !important;
   }
