@@ -5257,64 +5257,7 @@ button.account-link {
 .season-tabs a.active {
   color: #fff;
 }
-.standings-list {
-  display: grid;
-  gap: 7px;
-}
-.standings-list > header,
-.standing-row {
-  display: grid;
-  grid-template-columns: 27px minmax(0, 1fr) 25px 25px 44px;
-  gap: 7px;
-  align-items: center;
-}
-.standings-list > header {
-  padding: 0 12px 3px;
-  font-size: 10px;
-  color: var(--muted);
-}
-.standings-list > header b:not(:first-of-type) {
-  text-align: center;
-}
-.standing-row {
-  min-height: 66px;
-  padding: 10px 12px;
-  border-radius: 15px;
-}
-.standing-row > strong {
-  font-size: 16px;
-  text-align: center;
-  color: var(--muted);
-}
-.standing-row > span {
-  display: grid;
-  gap: 4px;
-  min-width: 0;
-}
-.standing-row > span > b {
-  font-size: 14px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.standing-row > span > small {
-  font-size: 10px;
-  color: var(--muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.standing-row > b {
-  text-align: center;
-  font-size: 14px;
-}
-.standing-row.current-team {
-  border: 2px solid #e0a43f;
-  background: #fffbf3;
-}
-.standing-row.current-team > span > b {
-  color: var(--gold);
-}
+
 .standings-note {
   font-size: 11px;
   line-height: 1.45;
