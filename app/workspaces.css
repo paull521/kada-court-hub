@@ -64,40 +64,6 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
-.captain-task-tile {
-  min-height: 150px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  color: #071b37;
-}
-.captain-task-tile > span {
-  font-size: 28px;
-}
-.captain-task-tile small {
-  color: #b76b00;
-  font-weight: 800;
-}
-.captain-task-tile b {
-  font-size: 18px;
-}
-.captain-task-tile em {
-  margin-top: auto;
-  color: #637083;
-  font-style: normal;
-  font-size: 13px;
-}
-.captain-task-tile.attention {
-  border: 1px solid #e3a323;
-}
-/* Finishes the two-up grid when there is an odd number of tiles. Counts every
-   element in the grid, not just tiles, so anything else placed inside it shifts
-   the parity - keep sr-only notes and the like outside. */
-.captain-task-tile:last-child:nth-child(odd) {
-  grid-column: 1/-1;
-  min-height: 125px;
-}
 
 .captain-request-list article {
   display: grid;
@@ -375,13 +341,6 @@
   .captain-dashboard-grid {
     gap: 9px;
   }
-  .captain-task-tile {
-    min-height: 135px;
-    padding: 13px;
-  }
-  .captain-task-tile b {
-    font-size: 16px;
-  }
 
   .captain-balance-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -394,17 +353,6 @@
   }
 }
 
-.captain-task-tile.featured {
-  background: linear-gradient(135deg, #08243e, #0c3c70);
-  border-color: #0c3c70;
-  color: #fff;
-}
-.captain-task-tile.featured small {
-  color: #f6b33d;
-}
-.captain-task-tile.featured em {
-  color: #d7e1ec;
-}
 .captain-roster-disclosure {
   overflow: hidden;
   margin-bottom: 13px;

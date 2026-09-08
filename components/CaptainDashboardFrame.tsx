@@ -1,4 +1,6 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
+import { cx } from "@/components/ui/cx";
 import { CalendarDays, Check, Users, Wallet } from "lucide-react";
 import { LoadingNote } from "@/components/Skeleton";
 import type { CaptainPortalData } from "@/lib/captain-data";
@@ -18,6 +20,55 @@ import type { CaptainPortalData } from "@/lib/captain-data";
  * because a tile carries a status modifier in its own className - the colour of
  * the tile is one of the things being read.
  */
+/**
+ * One tile in the captain's dashboard. Four of them, same shape: an icon, a
+ * label, the figure that matters and a line under it.
+ *
+ * `!` on the two modifiers because .card is unlayered and sets its own border
+ * and background - the old .attention and .featured rules beat it by sitting
+ * later in the same file, which is a thing only source order was deciding.
+ *
+ * The last-child/odd rule makes a lone fourth tile span both columns on a
+ * phone and stop doing so on a laptop. It counts elements, which is why the
+ * announcement below lives outside the grid.
+ */
+const taskTile =
+  "flex min-h-[150px] flex-col gap-[5px] p-[16px] last:odd:col-span-full last:odd:min-h-[125px] max-[620px]:min-h-[135px] max-[620px]:p-[13px] desk:min-h-[132px] desk:last:odd:col-auto desk:last:odd:min-h-[132px] [&>span]:text-[28px] [&_b]:text-[18px] max-[620px]:[&_b]:text-[16px] [&_em]:mt-auto [&_em]:text-[13px] [&_em]:not-italic [&_small]:font-[800]";
+const tilePlain = "text-[#071b37] [&_em]:text-[#637083] [&_small]:text-[#b76b00]";
+const tileFeatured =
+  "border-[#0c3c70]! bg-[linear-gradient(135deg,#08243e,#0c3c70)]! text-white [&_em]:text-[#d7e1ec] [&_small]:text-[#f6b33d]";
+const tileAttention = "border! border-[#e3a323]!";
+
+function TaskTile({
+  href,
+  featured,
+  attention,
+  extra,
+  children,
+}: {
+  href: string;
+  featured?: boolean;
+  attention?: boolean;
+  /** Carried through unchanged: the roster tile appends its draft status. */
+  extra?: string;
+  children: ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className={cx(
+        "card",
+        taskTile,
+        featured ? tileFeatured : tilePlain,
+        attention && tileAttention,
+        extra,
+      )}
+    >
+      {children}
+    </Link>
+  );
+}
+
 export default function CaptainDashboardFrame({ data }: { data?: CaptainPortalData }) {
   const next = data?.games[0];
   const noCount = data ? data.availability.filter((player) => !player.available).length : 0;
@@ -42,7 +93,7 @@ export default function CaptainDashboardFrame({ data }: { data?: CaptainPortalDa
     <>
       {!data && <LoadingNote />}
       <section className="captain-dashboard-grid">
-        <Link href="/captain/schedule" className="card captain-task-tile featured">
+        <TaskTile href="/captain/schedule" featured>
           <span>
             <CalendarDays className="ui-icon" />
           </span>
@@ -55,11 +106,8 @@ export default function CaptainDashboardFrame({ data }: { data?: CaptainPortalDa
                 : "Waiting for schedule"
               : "Next game and uniform"}
           </em>
-        </Link>
-        <Link
-          href="/captain/availability"
-          className={`card captain-task-tile ${noCount ? "attention" : ""}`}
-        >
+        </TaskTile>
+        <TaskTile href="/captain/availability" attention={noCount > 0}>
           <span>
             <Check className="ui-icon" />
           </span>
@@ -70,22 +118,16 @@ export default function CaptainDashboardFrame({ data }: { data?: CaptainPortalDa
               : "Counting responses…"}
           </b>
           <em>{data ? (next ? `For ${next.opponent}` : "No upcoming game") : "Who is playing"}</em>
-        </Link>
-        <Link
-          href="/captain/roster"
-          className={`card captain-task-tile ${data ? data.draftStatus : ""}`.trim()}
-        >
+        </TaskTile>
+        <TaskTile href="/captain/roster" extra={data ? data.draftStatus : undefined}>
           <span>
             <Users className="ui-icon" />
           </span>
           <small>TEAM ROSTER</small>
           <b>{rosterStatus ?? "Checking roster…"}</b>
           <em>{data ? `${data.roster.length} players` : "Draft and publication status"}</em>
-        </Link>
-        <Link
-          href="/captain/payments"
-          className={`card captain-task-tile featured ${notPaid ? "attention" : ""}`}
-        >
+        </TaskTile>
+        <TaskTile href="/captain/payments" featured attention={notPaid > 0}>
           <span>
             <Wallet className="ui-icon" />
           </span>
@@ -93,7 +135,7 @@ export default function CaptainDashboardFrame({ data }: { data?: CaptainPortalDa
           <b>{data ? `${notPaid} balance${notPaid === 1 ? "" : "s"} due` : "Checking balances…"}</b>
           {/* Fixed - it says what the tile is, not what is in it. */}
           <em>Team payment status</em>
-        </Link>
+        </TaskTile>
       </section>
     </>
   );

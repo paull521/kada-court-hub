@@ -263,14 +263,12 @@
     padding-top: 22px;
     border-top: 1px solid var(--line);
   }
-  a.card,
-  .captain-task-tile {
+  a.card {
     transition:
       border-color 0.12s ease,
       box-shadow 0.12s ease;
   }
-  a.card:hover,
-  .captain-task-tile:hover {
+  a.card:hover {
     border-color: rgba(7, 31, 61, 0.2);
     box-shadow: 0 12px 26px rgba(13, 38, 69, 0.13);
   }
@@ -281,15 +279,6 @@
   .captain-dashboard-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px;
-  }
-  .captain-task-tile {
-    min-height: 132px;
-  }
-  /* Sized to finish the phone's two-up grid. In a four-up row a full-width
-     last tile is just a stretched one. */
-  .captain-task-tile:last-child:nth-child(odd) {
-    grid-column: auto;
-    min-height: 132px;
   }
 
   .owner-more-list {
