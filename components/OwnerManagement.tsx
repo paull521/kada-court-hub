@@ -1238,7 +1238,7 @@ function OwnerTeamsWorkspace({
                       </strong>
                     </summary>
                     <div className="game-form">
-                      <div className="owner-team-list">
+                      <div className="owner-team-list grid gap-[8px]">
                         {division.teams.length ? (
                           division.teams.map((team) => <TeamEditor key={team.id} team={team} />)
                         ) : (
@@ -3479,7 +3479,9 @@ function DivisionUniformForm({
   return (
     <details className="uniform-settings-card">
       <summary>
-        <span className="owner-team-mark">{division.name.slice(0, 2).toUpperCase()}</span>
+        <span className="grid h-[36px] w-[36px] place-items-center rounded-[11px] bg-navy font-[900] text-[#f5a313]">
+          {division.name.slice(0, 2).toUpperCase()}
+        </span>
         <span>
           <b>{division.name}</b>
           <small>
@@ -3694,7 +3696,9 @@ function TeamEditor({ team }: { team: OwnerTeam }) {
   return (
     <details className="game-action-card">
       <summary>
-        <span className="owner-team-mark">{team.name.slice(0, 2).toUpperCase()}</span>
+        <span className="grid h-[36px] w-[36px] place-items-center rounded-[11px] bg-navy font-[900] text-[#f5a313]">
+          {team.name.slice(0, 2).toUpperCase()}
+        </span>
         <span>
           <b>{team.name}</b>
           <small>

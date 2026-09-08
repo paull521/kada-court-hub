@@ -1369,53 +1369,7 @@ body {
   font-size: 12px;
   color: var(--muted);
 }
-.owner-team-list {
-  display: grid;
-  gap: 8px;
-}
-.owner-team {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  overflow: hidden;
-}
-.owner-team > summary {
-  list-style: none;
-  display: grid;
-  grid-template-columns: 38px 1fr auto;
-  gap: 10px;
-  align-items: center;
-  padding: 10px 12px;
-  cursor: pointer;
-}
-.owner-team > summary::-webkit-details-marker {
-  display: none;
-}
-.owner-team > summary > span:nth-child(2) {
-  display: grid;
-  gap: 2px;
-}
-.owner-team > summary small {
-  color: var(--muted);
-  font-size: 11px;
-}
-.owner-team-mark {
-  width: 36px;
-  height: 36px;
-  border-radius: 11px;
-  background: var(--navy);
-  color: #f5a313;
-  display: grid;
-  place-items: center;
-  font-weight: 900;
-}
-.owner-team-body {
-  border-top: 1px solid var(--line);
-  padding: 14px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
+
 .leadership-summary {
   grid-column: 1/-1;
   display: grid;
@@ -5750,7 +5704,6 @@ button.account-link {
 @media (max-width: 650px) {
   .owner-split,
   .owner-form-grid,
-  .owner-team-body,
   .roster-add-grid {
     grid-template-columns: 1fr;
   }
