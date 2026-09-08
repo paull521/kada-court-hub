@@ -293,4 +293,47 @@ test.describe("states", () => {
     await settle(page);
     await expect(page).toHaveScreenshot("owner-payments-open.png", { fullPage: true });
   });
+
+  /**
+   * Everything a disclosure is holding shut.
+   *
+   * These are the routes where a plain visit photographs a summary and not one
+   * pixel of what it contains, found by counting details:not([open]) on every
+   * route rather than by reading the page. A conversion cannot be verified
+   * against a picture that does not include the markup, and three separate
+   * misses on owner payments came from exactly that gap.
+   *
+   * Routes with no shut disclosure are absent on purpose - their baseline
+   * already shows everything, and a second identical shot proves nothing.
+   */
+  const openShots = [
+    { path: "/schedule", name: "player-schedule-open" },
+    { path: "/payments", name: "player-payments-open" },
+    { path: "/captain/schedule", name: "captain-schedule-open" },
+    { path: "/owner/roster", name: "owner-roster-open" },
+    { path: "/owner/financials", name: "owner-financials-open" },
+    { path: "/owner/setup", name: "owner-setup-open" },
+    { path: "/owner/uniforms", name: "owner-uniforms-open" },
+  ];
+  for (const { path, name } of openShots) {
+    test(name, async ({ page }) => {
+      const response = await page.goto(path, { waitUntil: "domcontentloaded" });
+      expect(response?.status(), `${path} should not error`).toBeLessThan(400);
+      await settle(page);
+      // Three passes: a disclosure can be two deep, and opening the outer is
+      // what puts the inner one in the DOM.
+      for (let pass = 0; pass < 3; pass++)
+        await page
+          .locator("details")
+          .evaluateAll((nodes) => nodes.forEach((n) => ((n as HTMLDetailsElement).open = true)));
+      // If nothing is shut on arrival this has become a copy of the route's
+      // own baseline and should be deleted rather than left to pass.
+      expect(
+        await page.locator("details[open]").count(),
+        `${path} should open something`,
+      ).toBeGreaterThan(0);
+      await settle(page);
+      await expect(page).toHaveScreenshot(`${name}.png`, { fullPage: true });
+    });
+  }
 });
