@@ -6853,93 +6853,7 @@ body:has(.context-overlay-open) .bottom {
 .monthly-subscription-body {
   border-top: 1px solid var(--line);
 }
-.owner-platform-table-wrap {
-  overflow: auto;
-}
-.owner-platform-table-wrap table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.owner-platform-table-wrap th,
-.owner-platform-table-wrap td {
-  padding: 13px;
-  border-bottom: 1px solid var(--line);
-  text-align: left;
-  font-size: 11px;
-}
-.owner-platform-table-wrap th {
-  background: #08243e;
-  color: #fff;
-  font-size: 10px;
-}
-.owner-platform-breakdown {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--line);
-}
-.owner-platform-breakdown span {
-  display: grid;
-  gap: 5px;
-  background: #fff;
-  padding: 13px;
-}
-.owner-platform-breakdown small {
-  font-size: 9px;
-  color: var(--muted);
-  font-weight: 800;
-}
-.owner-platform-breakdown b {
-  font-size: 14px;
-  font-weight: 700;
-}
-.owner-platform-balance {
-  margin: 14px;
-  padding: 16px;
-  border: 1px solid var(--line);
-  border-radius: 15px;
-  background: #fbfaf8;
-}
-.owner-platform-balance header {
-  display: grid;
-  justify-items: center;
-  gap: 5px;
-  padding-bottom: 13px;
-  border-bottom: 1px solid var(--line);
-  text-align: center;
-}
-.owner-platform-balance header span {
-  display: grid;
-  justify-items: center;
-  gap: 4px;
-}
-.owner-platform-balance header small,
-.owner-payment-amount > span,
-.owner-platform-balance legend {
-  font-size: 10px;
-  font-weight: 850;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-}
-.owner-platform-balance header small {
-  font-size: 11px;
-  font-weight: 900;
-  color: var(--navy);
-}
-.owner-platform-balance header b {
-  font-size: 27px;
-  line-height: 1;
-}
-.owner-platform-balance header p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 12px;
-}
-.owner-platform-balance form {
-  display: grid;
-  gap: 13px;
-  margin-top: 15px;
-}
+
 .owner-payment-amount {
   display: grid;
   gap: 6px;
@@ -6951,63 +6865,14 @@ body:has(.context-overlay-open) .bottom {
   background: #fff;
   padding: 12px;
 }
-.owner-platform-balance .method-choice {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 9px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-.owner-platform-balance .method-choice legend {
-  grid-column: 1/-1;
-  margin-bottom: 1px;
-}
-.owner-platform-balance .method-choice label {
-  position: relative;
-  border: 1px solid #d6dbe2;
-  border-radius: 13px;
-  background: #fff;
-  min-height: 54px;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-size: 14px;
-  font-weight: 750;
-  color: var(--navy);
-}
-.owner-platform-balance .method-choice input {
-  position: absolute;
-  opacity: 0;
-}
-.owner-platform-balance .method-choice input:checked + span {
-  color: var(--blue);
-}
-.owner-platform-balance .method-choice b {
-  font-size: 21px;
-  color: var(--blue);
-}
-.owner-platform-balance .btn {
-  width: 100%;
-}
+
 .owner-subscription-history {
   margin: 0;
 }
 .owner-subscription-history > summary {
   grid-template-columns: 35px 1fr;
 }
-@media (max-width: 420px) {
-  .owner-platform-breakdown {
-    grid-template-columns: 1fr;
-  }
-  .owner-platform-table-wrap th,
-  .owner-platform-table-wrap td {
-    padding: 11px 8px;
-    font-size: 10px;
-  }
-}
+
 .platform-demo {
   display: inline-block;
   margin-left: 7px;
@@ -7081,38 +6946,12 @@ body:has(.context-overlay-open) .bottom {
 .owner-subscription-status.paid {
   color: var(--green);
 }
-.owner-platform-breakdown {
-  grid-template-columns: repeat(2, 1fr);
-}
-.owner-platform-breakdown b {
-  font-size: 12px;
-}
+
 .payment-history-row > span:first-child {
   background: #fff1f1;
   color: #a51118;
 }
-.owner-platform-breakdown span:first-child {
-  order: 1;
-}
-.owner-platform-breakdown span:nth-child(2) {
-  order: 2;
-}
-.owner-platform-breakdown span:nth-child(3) {
-  order: 3;
-}
-.owner-platform-breakdown span:nth-child(4) {
-  order: 4;
-}
-.owner-platform-balance .method-choice input:checked + span {
-  color: var(--blue);
-}
-.owner-platform-balance .method-choice label {
-  cursor: pointer;
-}
-.owner-platform-balance .method-choice label:has(input:checked) {
-  border: 2px solid var(--navy);
-  background: #eef3f8;
-}
+
 .platform-payment-history {
   display: grid;
   gap: 7px;
