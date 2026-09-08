@@ -102,8 +102,8 @@ export function CreateSeasonForm({ conferenceId }: { conferenceId: string }) {
     <form action={action} className="owner-form season-create-form">
       <input type="hidden" name="conferenceId" value={conferenceId} />
       <input type="hidden" name="divisionName" value="" />
-      <div className="season-create-grid">
-        <label className="season-name-field">
+      <div className="grid grid-cols-[1.2fr_1fr_1fr] gap-[8px] max-[500px]:grid-cols-2 [&_label]:text-[10px] [&_input]:min-h-[44px] [&_input]:p-[9px]! [&_input]:text-[13px]!">
+        <label className="max-[500px]:col-span-full">
           Season name
           <input name="name" defaultValue="Fall 2026" maxLength={80} required />
         </label>
@@ -150,6 +150,18 @@ function AdvanceStepForm({
   );
 }
 
+/* Season setup: the wizard's disclosure groups, its sub-forms, and the small
+   grids the create and batch forms are built from. */
+const guidedGroup =
+  "overflow-hidden rounded-[13px] border border-line bg-white [&>summary]:grid [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:grid-cols-[1fr_auto] [&>summary]:items-center [&>summary]:gap-[8px] [&>summary]:p-[12px] [&>summary::-webkit-details-marker]:hidden [&>summary>span:first-child]:grid [&>summary>span:first-child]:gap-[3px] [&>summary_small]:text-[10px] [&>summary_small]:text-muted [&>div]:grid [&>div]:gap-[11px] [&>div]:border-t [&>div]:border-line [&>div]:p-[12px]";
+const guidedSubform =
+  "overflow-hidden rounded-[11px] border border-line [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:p-[10px_12px] [&>summary]:text-[11px] [&>summary]:font-[800] [&>summary]:text-blue [&>summary::-webkit-details-marker]:hidden [&>form]:border-t [&>form]:border-line [&>form]:p-[12px]";
+/* padding and font-size shout: .owner-form input sets both unlayered. */
+const batchCountField =
+  "grid! grid-cols-[minmax(0,1fr)_68px]! items-center gap-[10px]! [&_input]:min-h-[44px] [&_input]:text-center [&_input]:text-[18px]! [&_input]:font-[850]";
+const batchNameGrid =
+  "grid grid-cols-1 gap-[8px] [&_label]:text-[10px] [&_input]:min-h-[44px] [&_input]:p-[9px]! [&_input]:text-[14px]!";
+
 function DivisionSetupStep({ season }: { season: OwnerSeason }) {
   const [state, action, pending] = useActionState(createDivisionsAction, initialState);
   const [divisionCount, setDivisionCount] = useState(1);
@@ -172,7 +184,7 @@ function DivisionSetupStep({ season }: { season: OwnerSeason }) {
       {remaining > 0 && (
         <form action={action} className="owner-form batch-setup-form">
           <input type="hidden" name="seasonId" value={season.id} />
-          <label className="batch-count-field">
+          <label className={batchCountField}>
             How many divisions are you creating now?
             <input
               type="number"
@@ -185,7 +197,7 @@ function DivisionSetupStep({ season }: { season: OwnerSeason }) {
               }
             />
           </label>
-          <div className="batch-name-grid">
+          <div className={batchNameGrid}>
             {Array.from({ length: Math.min(divisionCount, remaining) }, (_, index) => (
               <label key={index}>
                 Division {index + 1}
@@ -215,7 +227,7 @@ function DivisionTeamBuilder({ division }: { division: OwnerSeason["divisions"][
   const [state, action, pending] = useActionState(createTeamsAction, initialState);
   const [teamCount, setTeamCount] = useState(division.teams.length ? 1 : 8);
   return (
-    <details className="guided-group" open>
+    <details className={guidedGroup} open>
       <summary>
         <span>
           <b>{division.name}</b>
@@ -239,7 +251,7 @@ function DivisionTeamBuilder({ division }: { division: OwnerSeason["divisions"][
         )}
         <form action={action} className="owner-form batch-setup-form">
           <input type="hidden" name="divisionId" value={division.id} />
-          <label className="batch-count-field">
+          <label className={batchCountField}>
             How many teams are you creating for {division.name}?
             <input
               type="number"
@@ -252,7 +264,7 @@ function DivisionTeamBuilder({ division }: { division: OwnerSeason["divisions"][
               }
             />
           </label>
-          <div className="batch-name-grid">
+          <div className={batchNameGrid}>
             {Array.from({ length: teamCount }, (_, index) => (
               <label key={index}>
                 Team {index + 1}
@@ -317,7 +329,7 @@ function DirectoryLeaderPicker({
           )
           .slice(0, 6);
   return (
-    <details className="guided-subform leader-search" open={currentName === "Unassigned"}>
+    <details className={`leader-search ${guidedSubform}`} open={currentName === "Unassigned"}>
       <summary>
         {role}: {currentName}
       </summary>
@@ -412,7 +424,7 @@ function CaptainsSetupStep({
         </div>
       </aside>
       {teams.map((team) => (
-        <details className="guided-group" key={team.id}>
+        <details className={guidedGroup} key={team.id}>
           <summary>
             <span>
               <b>{team.name}</b>
@@ -465,7 +477,7 @@ function PreseasonDivisionForm({
     initialState,
   );
   return (
-    <details className="guided-group preseason-division" open={!division.preseasonConfigured}>
+    <details className={`preseason-division ${guidedGroup}`} open={!division.preseasonConfigured}>
       <summary>
         <span>
           <b>{division.name}</b>
@@ -1777,7 +1789,16 @@ function ScheduleSetupStep({ season }: { season: OwnerSeason }) {
         {season.divisions.map((division) => {
           const games = season.games.filter((game) => game.divisionId === division.id).length;
           return (
-            <article className={`step-eight-division ${division.scheduleStatus}`} key={division.id}>
+            <article
+              className={`grid grid-cols-[minmax(0,1fr)_auto] items-center gap-[8px] rounded-[14px] border border-line bg-white p-[12px] [&>span]:grid [&>span]:gap-[3px] [&>span_small]:text-[11px] [&>span_small]:text-muted [&>em]:rounded-full [&>em]:p-[5px_8px] [&>em]:text-[9px] [&>em]:font-[900] [&>em]:not-italic [&_.btn]:col-span-full [&_.btn]:flex [&_.btn]:min-h-[40px] [&_.btn]:items-center [&_.btn]:justify-center ${
+                division.scheduleStatus === "final"
+                  ? "[&>em]:bg-[#eaf6ec] [&>em]:text-green"
+                  : division.scheduleStatus === "draft"
+                    ? "[&>em]:bg-[#fff4da] [&>em]:text-[#8a5900]"
+                    : "[&>em]:bg-[#eef1f4] [&>em]:text-[#5b6875]"
+              }`}
+              key={division.id}
+            >
               <span>
                 <b>{division.name}</b>
                 <small>
@@ -1849,7 +1870,7 @@ function ExpandExistingSeason({ season }: { season: OwnerSeason }) {
   const remaining = Math.max(0, 10 - season.divisions.length);
   const divisionsNeedingTeams = season.divisions.filter((division) => division.teams.length === 0);
   return (
-    <details className="season-expansion-card">
+    <details className="overflow-hidden rounded-[12px] border border-line [&>summary]:flex [&>summary]:cursor-pointer [&>summary]:items-center [&>summary]:justify-between [&>summary]:gap-[10px] [&>summary]:p-[12px] [&>summary_span]:grid [&>summary_small]:text-muted [&>div]:grid [&>div]:gap-[12px] [&>div]:p-[0_12px_12px]">
       <summary>
         <span>
           <b>{season.name}</b>
@@ -1863,7 +1884,7 @@ function ExpandExistingSeason({ season }: { season: OwnerSeason }) {
         {remaining > 0 ? (
           <form action={action} className="owner-form batch-setup-form">
             <input type="hidden" name="seasonId" value={season.id} />
-            <label className="batch-count-field">
+            <label className={batchCountField}>
               How many new divisions?
               <input
                 type="number"
@@ -1877,7 +1898,7 @@ function ExpandExistingSeason({ season }: { season: OwnerSeason }) {
                 }
               />
             </label>
-            <div className="batch-name-grid">
+            <div className={batchNameGrid}>
               {Array.from({ length: Math.min(divisionCount, remaining) }, (_, index) => (
                 <label key={index}>
                   New division {index + 1}
@@ -2040,13 +2061,13 @@ export function OwnerSetupWizard({
       <div className="setup-wizard">
         <GuidedStep tone="current" step={1} label="Season" status="Choose a path" open>
           <div className="grid gap-[13px] border-t border-line p-[15px]">
-            <section className="season-path">
+            <section className="grid gap-[10px] rounded-[14px] border border-line bg-white p-[13px] [&>h3]:m-0 [&>h3]:text-navy">
               <h3>Create a New Season</h3>
               <p className="guided-instruction">Start a separate season inside {conferenceName}.</p>
               <CreateSeasonForm conferenceId={conferenceId} />
             </section>
             {completed.length > 0 && (
-              <section className="season-path">
+              <section className="grid gap-[10px] rounded-[14px] border border-line bg-white p-[13px] [&>h3]:m-0 [&>h3]:text-navy">
                 <h3>Use the Same Season</h3>
                 <p className="guided-instruction">
                   Add another division after setup is complete. Existing divisions, teams, rosters,
@@ -2062,9 +2083,12 @@ export function OwnerSetupWizard({
         {setupLabels.slice(1).map((label, index) => (
           <GuidedStep tone="locked" step={index + 2} label={label} status="Locked" key={label} />
         ))}
-        <div className="completed-seasons">
+        <div className="mb-[4px] grid gap-[6px] [&>span]:rounded-[12px] [&>span]:bg-[#e8f4e8] [&>span]:p-[10px_13px] [&>span]:text-[11px] [&>span]:font-[700] [&>span]:text-green">
           {published.map((season) => (
-            <span className={season.canceledAt ? "canceled" : ""} key={season.id}>
+            <span
+              className={season.canceledAt ? "bg-[#f6e8e8]! text-[#9b2525]!" : ""}
+              key={season.id}
+            >
               {season.canceledAt ? "×" : <Check className="ui-icon" />} {season.name}{" "}
               {season.canceledAt ? "canceled" : "published"}
             </span>
@@ -2146,7 +2170,7 @@ export function OwnerSetupWizard({
     ) : null;
   return (
     <div className="setup-wizard">
-      <section className="setup-context">
+      <section className="mb-[4px] grid gap-[4px] rounded-[16px] bg-[linear-gradient(120deg,#08243e,#0a3767)] p-[16px_18px] text-white [&>small]:text-[10px] [&>small]:font-[800] [&>small]:text-[#f5a313] [&>b]:text-[22px] [&>span]:text-[11px] [&>span]:text-[#d7e0e9]">
         <small>{conferenceName} / SETTING UP</small>
         <b>{activeSeason.name}</b>
         <span>
@@ -2623,7 +2647,7 @@ function CreateGameForm({
           Court
           <input name="court" placeholder="Example: Court 2" maxLength={60} />
         </label>
-        <p className="auto-assignment-note">
+        <p className="m-0 rounded-[11px] bg-[#e8f4e8] p-[11px] text-[13px] leading-[1.45] text-[#176c2c]">
           Uniforms are automatic: home wears light and away wears dark.
         </p>
         <Feedback state={state} />
