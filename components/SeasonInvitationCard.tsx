@@ -6,6 +6,7 @@ import { respondInvitationAction, type InvitationActionState } from "@/app/home/
 import {
   invitationFacts,
   invitationNote,
+  invitationPlatformNote,
   invitationSummary,
   responseDeadline,
 } from "@/components/ui/shared-classes";
@@ -84,7 +85,7 @@ export default function SeasonInvitationCard({ invitation }: { invitation: Invit
           Not Joining
         </button>
       </form>
-      <small className="invitation-platform-note">
+      <small className={invitationPlatformNote}>
         KadaCourtHub · One Team. One Court. One Family.
       </small>
       {state.error && (

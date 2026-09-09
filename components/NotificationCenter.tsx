@@ -15,6 +15,7 @@ import {
   markAllButton,
   notificationButton,
   notificationList,
+  notificationSheet,
   sheetHandle,
 } from "@/components/ui/shared-classes";
 
@@ -71,7 +72,7 @@ export default function NotificationCenter({
           onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}
         >
           <section
-            className={`notification-sheet ${contextSheet}`}
+            className={`${contextSheet} ${notificationSheet}`}
             role="dialog"
             aria-modal="true"
             aria-labelledby="notification-title"

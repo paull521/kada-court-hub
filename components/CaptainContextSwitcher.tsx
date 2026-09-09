@@ -16,6 +16,7 @@ import {
 import {
   contextHelp,
   contextOptions,
+  contextOverlay,
   contextStatus,
   sheetHandle,
   teamBannerCaret,
@@ -159,7 +160,7 @@ export default function CaptainContextSwitcher({
       </button>
       {open && (
         <div
-          className="context-overlay context-overlay-open"
+          className={`context-overlay-open ${contextOverlay}`}
           role="presentation"
           onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}
         >

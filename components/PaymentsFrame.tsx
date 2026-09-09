@@ -37,7 +37,7 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
         {/* bg- shouts: .card sets a background unlayered. The .skeleton pair is
             carried across by hand - it renders only while the frame is loading,
             which settle() in the visual suite waits out by definition. */}
-        <section className="card mb-[14px] grid grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_auto_auto] gap-x-[16px] bg-[radial-gradient(circle_at_90%_35%,rgba(79,122,166,0.3),transparent_32%),linear-gradient(125deg,#08243e,#0a3767)]! p-[22px] text-white [&>p]:col-start-1 [&>p]:m-0 [&>p]:font-[800] [&>p]:text-[#f4a313] [&>strong]:col-start-1 [&>strong]:my-[9px] [&>strong]:text-[48px] [&>span]:col-start-1 [&>span]:text-[14px] [&>span]:text-[#d6dce4] [&_.skeleton]:bg-[linear-gradient(90deg,#061b2f_25%,#0d3055_37%,#061b2f_63%)] [&_.skeleton]:bg-[length:400%_100%]">
+        <section className="card mb-[14px] grid grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_auto_auto] gap-x-[16px] bg-[radial-gradient(circle_at_90%_35%,rgba(79,122,166,0.3),transparent_32%),linear-gradient(125deg,#08243e,#0a3767)]! p-[22px] text-white [&>p]:col-start-1 [&>p]:m-0 [&>p]:font-[800] [&>p]:text-[#f4a313] [&>strong]:col-start-1 [&>strong]:my-[9px] [&>strong]:text-[48px] [&>span]:col-start-1 [&>span]:text-[14px] [&>span]:text-[#d6dce4] [&_.skeleton]:bg-[linear-gradient(90deg,#061b2f_25%,#0d3055_37%,#061b2f_63%)]! [&_.skeleton]:bg-[length:400%_100%]!">
           <p>TOTAL BALANCE DUE</p>
           <strong>
             {account ? `$${account.balance.toFixed(2)}` : <SkeletonText width="4.5em" />}

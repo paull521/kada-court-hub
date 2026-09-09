@@ -136,7 +136,7 @@ export const cardLabel =
 export const topbarActions = "flex min-w-0 items-center justify-end gap-[6px]";
 /** The bell, and the unread dot on it. */
 export const notificationButton =
-  "relative flex-none border-0 bg-transparent text-[29px] [&>span]:absolute [&>span]:top-[2px] [&>span]:right-0 [&>span]:h-[7px] [&>span]:w-[7px] [&>span]:rounded-full [&>span]:bg-red";
+  "relative flex-none border-0 bg-transparent text-[29px]! [&>span]:absolute [&>span]:top-[2px] [&>span]:right-0 [&>span]:h-[7px] [&>span]:w-[7px] [&>span]:rounded-full [&>span]:bg-red";
 /** The scrim a context sheet rises out of; centred rather than docked at 900px. */
 export const contextOverlay =
   "fixed inset-0 z-[60] flex items-end justify-center bg-[rgba(4,18,35,0.48)] p-3 desk:items-center";

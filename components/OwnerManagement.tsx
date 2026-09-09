@@ -65,6 +65,7 @@ import {
   scheduleStatusTone,
   scheduleTableScroll,
   scheduleWeek,
+  weeklySchedule,
   weeklyScheduleList,
 } from "@/components/ui/schedule-classes";
 import {
@@ -388,7 +389,7 @@ function DirectoryLeaderPicker({
           />
         </label>
         {normalized.length >= 2 && (
-          <div className="grid gap-[6px] rounded-xl border border-line bg-white p-[6px] [&>button]:grid [&>button]:w-full [&>button]:cursor-pointer [&>button]:gap-[2px] [&>button]:rounded-[9px] [&>button]:border-0 [&>button]:bg-[#f7f8fa] [&>button]:p-[10px_12px] [&>button]:text-left [&>button]:text-navy [&>button:hover]:bg-[#edf3fa] [&_small]:text-[11px] [&_small]:text-muted [&>p]:m-[6px] [&>p]:text-[13px] [&>p]:text-muted">
+          <div className="grid gap-[6px] rounded-xl border border-line bg-white p-[6px] [&>button]:grid [&>button]:w-full [&>button]:cursor-pointer [&>button]:gap-[2px] [&>button]:rounded-[9px] [&>button]:border-0 [&>button]:bg-[#f7f8fa] [&>button]:p-[10px_12px] [&>button]:text-left [&>button]:text-navy! [&>button:hover]:bg-[#edf3fa] [&_small]:text-[11px] [&_small]:text-muted [&>p]:m-[6px] [&>p]:text-[13px] [&>p]:text-muted">
             {matches.length ? (
               matches.map((player) => (
                 <button
@@ -1512,7 +1513,7 @@ function DivisionRespondedPlayers({ players }: { players: OwnerSeason["invitees"
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <div className="grid grid-cols-3 gap-[6px] p-[10px_11px] [&>button]:min-h-[34px] [&>button]:rounded-[10px] [&>button]:border [&>button]:border-[#d6dbe2] [&>button]:bg-white [&>button]:font-[inherit] [&>button]:text-[10px] [&>button]:font-[750] [&>button]:text-muted [&>button.active]:border-navy [&>button.active]:bg-navy [&>button.active]:text-white [&>button_b]:ml-[3px] [&>button_b]:text-[inherit]">
+      <div className="grid grid-cols-3 gap-[6px] p-[10px_11px] [&>button]:min-h-[34px] [&>button]:rounded-[10px] [&>button]:border [&>button]:border-[#d6dbe2] [&>button]:bg-white [&>button]:text-[10px]! [&>button]:font-[750]! [&>button]:text-muted! [&>button.active]:border-navy [&>button.active]:bg-navy [&>button.active]:text-white! [&>button_b]:ml-[3px] [&>button_b]:text-[inherit]">
         <button
           type="button"
           className={filter === "all" ? "active" : ""}
@@ -2918,7 +2919,7 @@ function WeeklyScheduleTable({ season }: { season: OwnerSeason }) {
     weeks.find(([key]) => key === weekStart(game.localStartsAt))?.[1].push(game);
   if (!sorted.length) return null;
   return (
-    <section className="weekly-schedule">
+    <section className={weeklySchedule}>
       <header>
         <div>
           <small>WEEKLY VIEW</small>
@@ -3454,7 +3455,7 @@ export function OwnerPaymentManagement({
 }) {
   const pending = submissions.filter((submission) => submission.status === "pending");
   return (
-    <section className="owner-operations payment-operations owner-page-section">
+    <section className={`payment-operations ${ownerOperations} ${pageSection}`}>
       {pending.length > 0 && (
         <section className="mt-[27px]">
           <p className="eyebrow">NEEDS ATTENTION</p>
@@ -3620,7 +3621,7 @@ export function OwnerPaymentManagement({
 
 export function OwnerPastPaymentsArchive({ groups }: { groups: OwnerPaymentGroup[] }) {
   return (
-    <section className="owner-operations payment-operations owner-page-section">
+    <section className={`payment-operations ${ownerOperations} ${pageSection}`}>
       <h2>Completed Seasons</h2>
       <p className={operationsIntro}>Previous-season payment records stay here for reference.</p>
       {groups.length ? (

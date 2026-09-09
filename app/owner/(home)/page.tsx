@@ -32,8 +32,10 @@ import { dashboardQuestion, ownerAccess } from "@/components/ui/shared-classes";
  * another.
  */
 const cardTone = {
-  season: "border-[#123d68] bg-[linear-gradient(145deg,#082b50,#0e477c)] text-white",
-  featured: "border-[#0b3966] bg-[linear-gradient(145deg,#082b50,#0e477c)] text-white",
+  // text-white shouts: these are anchors, and a { color: inherit } is
+  // unlayered, so without it the title reads body navy on a navy card.
+  season: "border-[#123d68] bg-[linear-gradient(145deg,#082b50,#0e477c)] text-white!",
+  featured: "border-[#0b3966] bg-[linear-gradient(145deg,#082b50,#0e477c)] text-white!",
   financial: "border-line bg-white/[0.94]",
   plain: "border-line bg-white/[0.94]",
 } as const;

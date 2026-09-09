@@ -77,9 +77,7 @@ export default function HomeFrame({ data }: { data?: PlayerPortalData }) {
           className={`card grid grid-cols-[72px_1fr_auto] items-center p-[18px] mb-[14px]`}
           href="/my-team"
         >
-          <span
-            className={`team-mark small grid h-[58px] w-[58px] place-items-center rounded-full border border-line bg-[#faf9f7] text-[30px]`}
-          >
+          <span className="m-auto grid h-[54px] w-[54px] place-items-center rounded-full border-4 border-[#f4a31b] bg-[#faf9f7] text-[23px] font-[900] text-[#f4a31b] outline-2 outline-red">
             K
           </span>
           <span className="grid gap-[4px]">

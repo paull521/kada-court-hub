@@ -77,7 +77,7 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
               return (
                 <div className={`${rosterRow} grid-cols-[auto_auto_1fr_auto]`} key={player.id}>
                   <i
-                    className={`availability-dot ${answer?.available === false ? "no" : "yes"}`}
+                    className={`inline-block h-[11px] w-[11px] flex-none rounded-full bg-[#2a9b4c] ${answer?.available === false ? "bg-[#d72b2b]" : ""}`}
                     title={answer?.available === false ? "Unavailable" : "Available"}
                   />
                   <b className={jersey}>{player.number || "—"}</b>
@@ -100,7 +100,7 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
         ) : (
           [0, 1, 2, 3, 4, 5].map((index) => (
             <div className={`${rosterRow} grid-cols-[auto_auto_1fr_auto]`} key={index}>
-              <i className="availability-dot" />
+              <i className="inline-block h-[11px] w-[11px] flex-none rounded-full bg-[#2a9b4c]" />
               <b className={jersey}>
                 <SkeletonText width="1.2em" />
               </b>

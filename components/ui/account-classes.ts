@@ -29,7 +29,9 @@ export const historyRow =
 
 /** Am I playing? - the two-way switch and the row it sits in. */
 export const availabilityControl =
-  "grid grid-cols-[1fr_auto] items-center gap-[10px] [&>span]:grid [&>span_small]:font-[800] [&>span_small]:text-[#b76b00] [&>span_b]:text-sm [&>div]:relative [&>div]:grid [&>div]:grid-cols-2 [&>div]:rounded-xl [&>div]:bg-[#eef1f4] [&>div]:p-1 [&_button]:relative [&_button]:min-w-[64px] [&_button]:rounded-[9px] [&_button]:border-0 [&_button]:bg-transparent [&_button]:p-[9px] [&_button]:font-[900] [&_button]:text-[#5a6675] [&_button]:transition-colors [&_button]:duration-200 [&_button]:ease-in-out [&_button.active]:text-white [&>p]:col-span-full [&>p]:m-0";
-/** The sliding pill. Its parent carries data-choice, which is what moves it. */
+  "grid grid-cols-[1fr_auto] items-center gap-[10px] [&>span]:grid [&>span_small]:font-[800] [&>span_small]:text-[#b76b00] [&>span_b]:text-sm [&>div]:relative [&>div]:grid [&>div]:grid-cols-2 [&>div]:rounded-xl [&>div]:bg-[#eef1f4] [&>div]:p-1 [&_button]:relative [&_button]:min-w-[64px] [&_button]:rounded-[9px] [&_button]:border-0 [&_button]:bg-transparent [&_button]:p-[9px] [&_button]:font-[900]! [&_button]:text-[#5a6675]! [&_button]:transition-colors [&_button]:duration-200 [&_button]:ease-in-out [&_button.active]:text-white! [&>p]:col-span-full [&>p]:m-0";
+/** The sliding pill. Its parent carries data-choice, which is what moves it.
+    transition-[translate], not transform: Tailwind's translate-x-* sets the
+    `translate` property, and a transform transition never animates it. */
 export const availabilityThumb =
-  "absolute top-1 bottom-1 left-1 w-[calc((100%_-_8px)/2)] rounded-[9px] bg-[#258b45] transition-[transform,background-color] duration-[220ms] ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none group-data-[choice=no]:translate-x-full group-data-[choice=no]:bg-[#cf2e2e]";
+  "absolute top-1 bottom-1 left-1 w-[calc((100%_-_8px)/2)] rounded-[9px] bg-[#258b45] transition-[translate,background-color] duration-[220ms] ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none group-data-[choice=no]:translate-x-full group-data-[choice=no]:bg-[#cf2e2e]";

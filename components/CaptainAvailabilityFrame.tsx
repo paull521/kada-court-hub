@@ -37,7 +37,9 @@ export default function CaptainAvailabilityFrame({ data }: { data?: CaptainPorta
               className="grid grid-cols-[auto_1fr_auto] items-center gap-3 border-b border-[#e1e5e8] py-[13px] [&>span]:grid [&_small]:mt-[2px] [&_small]:text-[#697687] [&_strong]:text-[#0d7130]"
               key={player.registrationId}
             >
-              <i className={`availability-dot ${player.available ? "yes" : "no"}`} />
+              <i
+                className={`inline-block h-[11px] w-[11px] flex-none rounded-full bg-[#2a9b4c] ${player.available ? "yes" : "no"}`}
+              />
               <span>
                 <b>{player.name}</b>
                 <small>
@@ -52,7 +54,7 @@ export default function CaptainAvailabilityFrame({ data }: { data?: CaptainPorta
               className="grid grid-cols-[auto_1fr_auto] items-center gap-3 border-b border-[#e1e5e8] py-[13px] [&>span]:grid [&_small]:mt-[2px] [&_small]:text-[#697687] [&_strong]:text-[#0d7130]"
               key={index}
             >
-              <i className="availability-dot" />
+              <i className="inline-block h-[11px] w-[11px] flex-none rounded-full bg-[#2a9b4c]" />
               <span>
                 <b>
                   <SkeletonText width="9em" />

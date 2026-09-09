@@ -18,8 +18,10 @@ import {
   ownerForm,
   ownerIcon,
   ownerSection,
+  playerSearch,
   reviewActions,
   sectionTitle,
+  submitRoster,
 } from "@/components/ui/shared-classes";
 
 const initial: CaptainActionState = {};
@@ -225,7 +227,7 @@ export default function CaptainDraftRoster({
         </div>
       </section>
       {!locked && !detailsOnly && (
-        <form action={addAction} className={`${ownerForm} captain-player-search`}>
+        <form action={addAction} className={`${ownerForm} ${playerSearch}`}>
           <input type="hidden" name="teamId" value={data.teamId} />
           <input type="hidden" name="invitationId" value={selected} />
           <label>
@@ -241,7 +243,7 @@ export default function CaptainDraftRoster({
             />
           </label>
           {matches.length > 0 && !atLimit && (
-            <div className="leader-search-results">
+            <div className="grid gap-[6px] rounded-xl border border-line bg-white p-[6px] [&>button]:grid [&>button]:w-full [&>button]:cursor-pointer [&>button]:gap-[2px] [&>button]:rounded-[9px] [&>button]:border-0 [&>button]:bg-[#f7f8fa] [&>button]:p-[10px_12px] [&>button]:text-left [&>button]:text-navy! [&>button:hover]:bg-[#edf3fa] [&_small]:text-[11px] [&_small]:text-muted [&>p]:m-[6px] [&>p]:text-[13px] [&>p]:text-muted">
               {matches.map((candidate) => (
                 <button
                   key={candidate.invitationId}
@@ -318,7 +320,7 @@ export default function CaptainDraftRoster({
         </form>
       )}
       {!locked && !detailsOnly && (
-        <form action={submitAction} className={`${ownerForm} captain-submit-roster`}>
+        <form action={submitAction} className={`${ownerForm} ${submitRoster}`}>
           <input type="hidden" name="teamId" value={data.teamId} />
           <Notice state={submitState} />
           <button className="btn primary" disabled={submitPending || !players.length}>

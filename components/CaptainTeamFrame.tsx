@@ -75,7 +75,7 @@ export default function CaptainTeamFrame({ data }: { data?: CaptainPortalData })
                     key={player.registrationId}
                   >
                     <i
-                      className={`availability-dot ${availability?.available === false ? "no" : "yes"}`}
+                      className={`inline-block h-[11px] w-[11px] flex-none rounded-full bg-[#2a9b4c] ${availability?.available === false ? "no" : "yes"}`}
                     />
                     <b className={jersey}>{player.jerseyNumber ?? "—"}</b>
                     <span className={playerName}>
@@ -92,7 +92,7 @@ export default function CaptainTeamFrame({ data }: { data?: CaptainPortalData })
               })
             : [0, 1, 2, 3, 4, 5].map((index) => (
                 <div className={`${rosterRow} grid-cols-[auto_auto_1fr_auto]`} key={index}>
-                  <i className="availability-dot" />
+                  <i className="inline-block h-[11px] w-[11px] flex-none rounded-full bg-[#2a9b4c]" />
                   <b className={jersey}>
                     <SkeletonText width="1.2em" />
                   </b>

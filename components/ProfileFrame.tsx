@@ -16,13 +16,14 @@ import {
   accountList,
   avatar,
   infoRow,
+  panel,
   profileCard,
   profileSectionTitle,
 } from "@/components/ui/shared-classes";
 
 function InfoPanelFrame({ title, rows }: { title: string; rows: [ReactNode, string][] }) {
   return (
-    <section className="card panel info-panel">
+    <section className={`card ${panel} [&>h2]:mb-[5px] [&_form]:m-0`}>
       <h2>{title}</h2>
       {rows.map(([icon, label]) => (
         <div className={infoRow} key={label}>

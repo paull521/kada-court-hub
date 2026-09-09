@@ -4,6 +4,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getPlatformDashboard } from "@/lib/platform-data";
 import { dashboardQuestion } from "@/components/ui/shared-classes";
+import { platformAttention } from "@/components/ui/auth-classes";
 
 export default async function PlatformCreatorPage() {
   const data = await getPlatformDashboard();
@@ -46,7 +47,7 @@ export default async function PlatformCreatorPage() {
             <h2>Owner Payments</h2>
             <p>Verify and approve payments.</p>
             {data.pendingSubscriptionPayments.length > 0 && (
-              <small className="platform-attention">
+              <small className={platformAttention}>
                 {data.pendingSubscriptionPayments.length} awaiting approval
               </small>
             )}

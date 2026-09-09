@@ -48,7 +48,7 @@ export default function NextGameCard({
     // bg- shouts: .card sets a background unlayered. The .skeleton pair is
     // carried across by hand - the loading state is what settle() waits out.
     <section
-      className={`card grid min-h-[205px] grid-cols-[42%_58%] mb-[16px] overflow-hidden bg-[radial-gradient(circle_at_88%_45%,rgba(76,113,150,0.23),transparent_38%),linear-gradient(125deg,#08243e,#0a3767)]! p-[22px] text-white [&_.skeleton]:bg-[linear-gradient(90deg,#061b2f_25%,#0d3055_37%,#061b2f_63%)] [&_.skeleton]:bg-[length:400%_100%] max-tiny:grid-cols-[45%_55%] max-tiny:p-[17px] ${className}`.trim()}
+      className={`card grid min-h-[205px] grid-cols-[42%_58%] mb-[16px] overflow-hidden bg-[radial-gradient(circle_at_88%_45%,rgba(76,113,150,0.23),transparent_38%),linear-gradient(125deg,#08243e,#0a3767)]! p-[22px] text-white [&_.skeleton]:bg-[linear-gradient(90deg,#061b2f_25%,#0d3055_37%,#061b2f_63%)]! [&_.skeleton]:bg-[length:400%_100%]! max-tiny:grid-cols-[45%_55%] max-tiny:p-[17px] ${onSchedule ? "grid-rows-[auto_auto_auto]" : ""} ${className}`.trim()}
     >
       <div className="feature-copy">
         <p className="eyebrow">NEXT GAME</p>
