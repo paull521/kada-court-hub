@@ -9,13 +9,17 @@ import { emptyFeature } from "@/components/ui/shared-classes";
 export default async function Home() {
   const data = await getPlayerPortalData("home");
   const supabase = await createClient();
-  const { data: requiredRules } = data.activeRegistrationId
-    ? await supabase.rpc("get_registration_rules", { p_registration_id: data.activeRegistrationId })
+  const { data: playerDocuments } = data.activeRegistrationId
+    ? await supabase.rpc("get_player_document_packet", {
+        p_invitation_id: null,
+        p_registration_id: data.activeRegistrationId,
+      })
     : { data: null };
-  // A pending invitation must be reviewed first. Its Join action opens Rules &
-  // Discipline only after the player has chosen to join.
-  if (!data.invitation && requiredRules?.[0] && !requiredRules[0].acknowledged_at)
-    redirect(`/rules?registration=${data.activeRegistrationId}`);
+  // Existing players who have not completed the current packet enter it as
+  // soon as they return to Home. Pending invitations remain on Home until the
+  // player chooses Join this season.
+  if (!data.invitation && playerDocuments?.some((document: { response: string | null }) => !document.response))
+    redirect(`/player-documents?registration=${data.activeRegistrationId}`);
   const firstName = data.profile.name.split(" ")[0];
   if (!data.contexts.length)
     return (

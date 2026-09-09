@@ -79,31 +79,21 @@ export default async function Profile({
     createClient(),
   ]);
   const ownerMode = requestedView === "owner" && roles.owner;
-  // Neither rules read depends on the owner portal, so they run alongside it
-  // rather than behind it.
-  const rulesPromise = Promise.all([
-    supabase.rpc("get_player_rule_acknowledgments"),
-    data.activeRegistrationId
-      ? supabase.rpc("get_registration_rules", { p_registration_id: data.activeRegistrationId })
-      : Promise.resolve({ data: null }),
-  ]);
   // Awaited whenever it was started, never only when ownerMode holds - a
   // started promise that nothing awaits becomes an unhandled rejection if the
   // read fails, and swallowing it here would hide a real error behind an empty
   // owner panel.
   const ownerPortal = ownerDataPromise ? await ownerDataPromise : null;
   const ownerData = ownerMode ? ownerPortal : null;
-  const [[{ data: rulesAcknowledgments }, { data: requiredRules }], { data: ownerSupportRows }] =
-    await Promise.all([
-      rulesPromise,
-      ownerData?.authorized
-        ? supabase
-            .from("platform_support_requests")
-            .select("id,subject,message,status,created_at")
-            .eq("conference_id", ownerData.conferenceId)
-            .order("created_at", { ascending: false })
-        : Promise.resolve({ data: [] }),
-    ]);
+  const [{ data: ownerSupportRows }] = await Promise.all([
+    ownerData?.authorized
+      ? supabase
+          .from("platform_support_requests")
+          .select("id,subject,message,status,created_at")
+          .eq("conference_id", ownerData.conferenceId)
+          .order("created_at", { ascending: false })
+      : Promise.resolve({ data: [] }),
+  ]);
   const currentRole = ownerMode
     ? "owner"
     : requestedView === "captain" && roles.captain
@@ -129,27 +119,9 @@ export default async function Profile({
     ],
     [<Shirt className="ui-icon" />, "Preferred Uniform Size", player.uniformSize || "Not provided"],
   ];
-  const currentRule = requiredRules?.[0] as
-    { rules_document_id: string; acknowledged_at: string | null } | undefined;
-  const acknowledgments = (rulesAcknowledgments ?? []) as {
-    acknowledgment_id: string;
-    rules_document_id: string;
-    acknowledged_at: string;
-  }[];
-  const acknowledgedRule =
-    acknowledgments.find((ack) => ack.rules_document_id === currentRule?.rules_document_id) ??
-    acknowledgments[0];
-  // The unsigned record and the signed one differed by their query string and
-  // by nothing else, so the row is written once and the branch picks the href.
-  const rulesHref =
-    currentRule && !currentRule.acknowledged_at
-      ? `/rules?registration=${data.activeRegistrationId}&view=${currentRole}`
-      : acknowledgedRule
-        ? `/rules?acknowledgment=${acknowledgedRule.acknowledgment_id}&view=${currentRole}`
-        : null;
-  const rulesLink = rulesHref ? (
+  const playerDocumentsLink = currentRole !== "owner" ? (
     <Link
-      href={rulesHref}
+      href={`/player-documents${data.activeRegistrationId ? `?registration=${data.activeRegistrationId}&view=${currentRole}` : `?view=${currentRole}`}`}
       // desk: replaces two ancestor-scoped rules in desktop.css. This row
       // renders only on /profile, which is the one place either could reach.
       className="card grid grid-cols-[38px_minmax(0,1fr)_20px] items-center gap-[12px] p-[14px_15px] desk:w-full desk:justify-self-center"
@@ -157,7 +129,7 @@ export default async function Profile({
       <span className="grid h-[38px] w-[38px] place-items-center rounded-[12px] bg-[#fff2d7] text-[19px] font-[900] text-gold">
         <BookOpen className="ui-icon" />
       </span>
-      <b className="text-[15px]">Rules &amp; Discipline</b>
+      <b className="text-[15px]">Player Documents</b>
       <strong aria-hidden="true" className="text-right text-[24px]">
         <ChevronRight className="go-caret" />
       </strong>
@@ -282,7 +254,7 @@ export default async function Profile({
           />
         ) : null}
         <NotificationPreferencesForm preferences={data.notificationPreferences} />
-        {rulesLink}
+        {playerDocumentsLink}
         <Link
           href={`/legal?view=${currentRole}`}
           // desk: replaces an ancestor-scoped rule in desktop.css. This row

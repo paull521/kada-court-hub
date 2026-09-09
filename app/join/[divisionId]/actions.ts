@@ -11,5 +11,5 @@ export async function joinDivisionAction(_: JoinState, formData: FormData): Prom
   });
   if (error) return { error: error.message };
   revalidatePath("/home");
-  redirect(`/rules?invitation=${invitationId}`);
+  redirect(`/player-documents?invitation=${invitationId}`);
 }

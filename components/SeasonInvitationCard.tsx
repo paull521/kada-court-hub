@@ -73,7 +73,7 @@ export default function SeasonInvitationCard({ invitation }: { invitation: Invit
       <p className={invitationNote}>{invitation.message}</p>
       <form action={action}>
         <input type="hidden" name="invitationId" value={invitation.id} />
-        <Link className="btn bg-green! text-white!" href={`/rules?invitation=${invitation.id}`}>
+        <Link className="btn bg-green! text-white!" href={`/player-documents?invitation=${invitation.id}`}>
           Join this season
         </Link>
         <button
