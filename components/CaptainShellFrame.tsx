@@ -5,6 +5,7 @@ import FastBottomNav from "@/components/FastBottomNav";
 import { captainNavLinks } from "@/lib/nav-links";
 import { SkeletonText } from "@/components/Skeleton";
 import type { CaptainNavKey } from "@/components/CaptainShell";
+import { topbarActions } from "@/components/ui/shared-classes";
 
 // CaptainShell requires a resolved CaptainPortalData, and a loading.tsx has no
 // data at all, so the chrome is rebuilt here from the same nav table.
@@ -39,7 +40,7 @@ export default function CaptainShellFrame({
     <div className="shell captain-shell">
       <header className="topbar">
         <KchLogo className="logo" href="/captain" />
-        <div className="topbar-actions">
+        <div className={topbarActions}>
           <NotificationCenter notifications={[]} />
         </div>
       </header>

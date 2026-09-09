@@ -6,6 +6,19 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { selectOwnerConferenceAction } from "@/app/owner/actions";
 import type { OwnerConferenceOption } from "@/lib/owner-data";
+import {
+  contextOption,
+  contextOptionMark,
+  contextOptionSelected,
+  contextSheet,
+  contextTrigger,
+} from "@/components/ui/context-classes";
+import {
+  contextHelp,
+  contextOptions,
+  sheetHandle,
+  contextOverlay,
+} from "@/components/ui/shared-classes";
 
 export default function OwnerConferenceSwitcher({
   conferences,
@@ -32,7 +45,7 @@ export default function OwnerConferenceSwitcher({
   return (
     <>
       <button
-        className="context-switcher-trigger owner-context-trigger"
+        className={`owner-context-trigger ${contextTrigger}`}
         type="button"
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
@@ -45,17 +58,17 @@ export default function OwnerConferenceSwitcher({
       </button>
       {open && (
         <div
-          className="context-overlay context-overlay-open"
+          className={`context-overlay-open ${contextOverlay}`}
           role="presentation"
           onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}
         >
           <section
-            className="context-sheet"
+            className={contextSheet}
             role="dialog"
             aria-modal="true"
             aria-labelledby="owner-conference-title"
           >
-            <div className="context-sheet-handle" />
+            <div className={sheetHandle} />
             <header>
               <span>
                 <small>OWNER VIEW</small>
@@ -65,20 +78,20 @@ export default function OwnerConferenceSwitcher({
                 ×
               </button>
             </header>
-            <p className="context-help">
+            <p className={contextHelp}>
               Your owner workspace will update to the selected conference.
             </p>
-            <div className="context-options">
+            <div className={contextOptions}>
               {conferences.map((conference) => (
                 <form action={selectOwnerConferenceAction} key={conference.id}>
                   <input type="hidden" name="conferenceId" value={conference.id} />
                   <input type="hidden" name="returnPath" value={returnPath} />
                   <button
-                    className={`context-option ${conference.id === current.id ? "selected" : ""}`}
+                    className={`${contextOption} ${conference.id === current.id ? contextOptionSelected : ""}`}
                     type="submit"
                     disabled={conference.id === current.id}
                   >
-                    <span className="context-option-mark" aria-hidden="true">
+                    <span className={contextOptionMark} aria-hidden="true">
                       {conference.id === current.id ? <Check className="ui-icon" /> : "K"}
                     </span>
                     <span>

@@ -12,6 +12,9 @@ import {
 } from "@/app/platform/actions";
 import type { OwnerPaymentBilling } from "@/lib/owner-payment-ledger";
 import { OwnerDemoOverview } from "@/components/OwnerDemoOverview";
+import { historyPanel, historyRow } from "@/components/ui/account-classes";
+import { amountField, loginBox, platformForm, tallField } from "@/components/ui/auth-classes";
+import { emptyNote, historyScroll } from "@/components/ui/shared-classes";
 
 const initial: PlatformActionState = {};
 const money = (amount: number) => `$${amount.toFixed(2)}`;
@@ -64,11 +67,11 @@ export function OwnerSubscriptionPayment({
     : "KCH tracks this obligation; the owner handles the transfer.";
   return (
     <>
-      <details className="monthly-subscription-dropdown">
-        <summary>
-          <span>
-            <b>Season Subscription</b>
-            <small>
+      <details className="group overflow-hidden rounded-[16px] border border-line bg-white">
+        <summary className="grid min-h-[70px] cursor-pointer list-none grid-cols-[1fr_auto_auto] items-center gap-[12px] p-[14px_16px] [&::-webkit-details-marker]:hidden">
+          <span className="grid gap-[4px]">
+            <b className="text-[17px]">Season Subscription</b>
+            <small className="text-[12px] text-muted">
               {pilotSeason
                 ? "Pilot season · no charge"
                 : `${activePlayers} active players · ${money(playerAccess)} player access`}
@@ -77,16 +80,21 @@ export function OwnerSubscriptionPayment({
                 : ""}
             </small>
           </span>
-          <em className={`owner-subscription-status ${statusClass}`}>
+          <em
+            className={`text-[9px] font-[850] tracking-[0.04em] whitespace-nowrap uppercase not-italic ${statusClass === "paid" ? "text-green" : "text-[#a51118]"}`}
+          >
             {pilotSeason ? "Pilot" : status}
           </em>
-          <strong aria-hidden="true">
+          <strong
+            aria-hidden="true"
+            className="text-[23px] transition-transform group-open:rotate-90"
+          >
             <ChevronRight className="go-caret" />
           </strong>
         </summary>
-        <div className="monthly-subscription-body">
-          <div className="owner-platform-table-wrap">
-            <table>
+        <div className="border-t border-line">
+          <div className="overflow-auto [&_td]:border-b [&_td]:border-line [&_td]:p-[13px] [&_td]:text-left [&_td]:text-[11px] [&_th]:border-b [&_th]:border-line [&_th]:bg-[#08243e] [&_th]:p-[13px] [&_th]:text-left [&_th]:text-[10px] [&_th]:text-white max-[420px]:[&_td]:p-[11px_8px] max-[420px]:[&_td]:text-[10px] max-[420px]:[&_th]:p-[11px_8px] max-[420px]:[&_th]:text-[10px]">
+            <table className="w-full border-collapse">
               <thead>
                 <tr>
                   <th>ACTIVE DIVISION</th>
@@ -111,7 +119,7 @@ export function OwnerSubscriptionPayment({
               </tbody>
             </table>
           </div>
-          <div className="owner-platform-breakdown">
+          <div className="grid grid-cols-2 gap-px bg-line max-[420px]:grid-cols-1 [&>span]:grid [&>span]:gap-[5px] [&>span]:bg-white [&>span]:p-[13px] [&_small]:text-[9px] [&_small]:font-[800] [&_small]:text-muted [&_b]:text-[12px] [&_b]:font-[700]">
             <span>
               <small>OWNER COST</small>
               <b>{money(seasonSubscription)}</b>
@@ -129,18 +137,25 @@ export function OwnerSubscriptionPayment({
               <b>{money(total)}</b>
             </span>
           </div>
-          <section className="owner-platform-balance">
-            <header>
-              <span>
-                <small>BALANCE DUE</small>
-                <b>{money(balance)}</b>
+          <section className="m-[14px] rounded-[15px] border border-line bg-[#fbfaf8] p-[16px]">
+            <header className="grid justify-items-center gap-[5px] border-b border-line pb-[13px] text-center">
+              <span className="grid justify-items-center gap-[4px]">
+                <small className="text-[11px] font-[900] text-navy">BALANCE DUE</small>
+                <b className="text-[27px] leading-none">{money(balance)}</b>
               </span>
-              <p>{pendingMessage}</p>
+              <p className="m-0 text-[12px] text-muted">{pendingMessage}</p>
             </header>
+            {/* NOTE: this form renders only with a balance owing and no
+                submission pending, which is a state the demo data does not
+                currently produce - /owner/payments returns zero forms. The
+                classes below are a faithful translation of the old rules but
+                no screenshot covers them. */}
             {!pendingSubmission && balance > 0 && (
-              <form action={action} className="platform-form">
+              <form action={action} className={`${platformForm} mt-[15px] gap-[13px]`}>
                 <input type="hidden" name="conferenceId" value={conferenceId} />
-                <label className="owner-payment-amount">
+                <label
+                  className={`${amountField} [&>span]:text-[10px] [&>span]:font-[850] [&>span]:tracking-[0.04em] [&>span]:text-muted`}
+                >
                   <span>Amount sent</span>
                   <input
                     name="amount"
@@ -152,8 +167,10 @@ export function OwnerSubscriptionPayment({
                     required
                   />
                 </label>
-                <fieldset className="method-choice owner-payment-methods">
-                  <legend>Payment method</legend>
+                <fieldset className="m-0 grid grid-cols-2 gap-[9px] border-0 p-0 [&_b]:text-[21px] [&_b]:text-blue [&_input:checked+span]:text-blue [&_input]:absolute [&_input]:opacity-0 [&_label:has(input:checked)]:border-2 [&_label:has(input:checked)]:border-navy [&_label:has(input:checked)]:bg-[#eef3f8] [&_label]:relative [&_label]:flex [&_label]:min-h-[54px] [&_label]:cursor-pointer [&_label]:items-center [&_label]:justify-center [&_label]:gap-[10px] [&_label]:rounded-[13px] [&_label]:border [&_label]:border-[#d6dbe2] [&_label]:bg-white [&_label]:p-[10px] [&_label]:text-[14px] [&_label]:font-[750] [&_label]:text-navy">
+                  <legend className="col-span-full mb-px text-[10px] font-[850] tracking-[0.04em] text-muted">
+                    Payment method
+                  </legend>
                   <label>
                     <input type="radio" name="method" value="zelle" required />
                     <span>
@@ -173,7 +190,7 @@ export function OwnerSubscriptionPayment({
                     </span>
                   </label>
                 </fieldset>
-                <button className="btn primary" disabled={pending}>
+                <button className="btn primary w-full" disabled={pending}>
                   {pending ? "Sending…" : "Send payment"}
                 </button>
               </form>
@@ -183,17 +200,19 @@ export function OwnerSubscriptionPayment({
           {state.message && <p className="form-success">{state.message}</p>}
         </div>
       </details>
-      <details className="card payment-history-panel owner-subscription-history">
+      {/* Two columns, not three: this copy of the history panel has no icon.
+          Its own rule used to say so from globals.css. */}
+      <details className={`card ${historyPanel} m-0! [&>summary]:grid-cols-[1fr_auto]`}>
         <summary>
           <b>Payment History</b>
           <strong aria-hidden="true">
             <ChevronRight className="go-caret" />
           </strong>
         </summary>
-        <div className="payment-history-scroll">
+        <div className={historyScroll}>
           {billing.submissions.length ? (
             billing.submissions.map((submission) => (
-              <div className="payment-history-row" key={submission.id}>
+              <div className={historyRow} key={submission.id}>
                 <span>
                   {submission.status === "confirmed" ? <Check className="ui-icon" /> : "!"}
                 </span>
@@ -207,7 +226,7 @@ export function OwnerSubscriptionPayment({
               </div>
             ))
           ) : (
-            <p className="empty-note">No payments have been sent yet.</p>
+            <p className={emptyNote}>No payments have been sent yet.</p>
           )}
         </div>
       </details>
@@ -218,7 +237,7 @@ export function OwnerSubscriptionPayment({
 export function AcceptOwnerInvitation({ token }: { token: string }) {
   const [state, action, pending] = useActionState(acceptOwnerInvitationAction, initial);
   return (
-    <form action={action} className="card loginbox">
+    <form action={action} className={`card ${loginBox}`}>
       <input type="hidden" name="token" value={token} />
       <p className="setup-note">
         This creates your private owner workspace. Your conference details remain visible only to
@@ -234,7 +253,7 @@ export function AcceptOwnerInvitation({ token }: { token: string }) {
 export function OwnerContractSignature({ token }: { token: string }) {
   const [s, a, p] = useActionState(signOwnerContractAction, initial);
   return (
-    <form action={a} className="card loginbox">
+    <form action={a} className={`card ${loginBox}`}>
       <input type="hidden" name="token" value={token} />
       <p className="setup-note">{ownerContractPricingTerms}</p>
       <label>
@@ -265,7 +284,7 @@ export function OwnerApplication({
   return (
     <>
       {pendingApplication ? (
-        <section className="card loginbox">
+        <section className={`card ${loginBox}`}>
           <p className="eyebrow">APPLICATION RECEIVED</p>
           <h2>Waiting for KCH review</h2>
           <p className="setup-note">
@@ -275,17 +294,17 @@ export function OwnerApplication({
           </p>
         </section>
       ) : !start.token ? (
-        <form action={startAction} className="card loginbox">
+        <form action={startAction} className={`card ${loginBox}`}>
           <button className="btn primary" disabled={starting}>
             {starting ? "Starting…" : "Continue"}
           </button>
           {start.error && <p className="form-error">{start.error}</p>}
         </form>
       ) : (
-        <form action={acknowledgmentAction} className="loginbox">
+        <form action={acknowledgmentAction} className={loginBox}>
           <OwnerDemoOverview />
           <input type="hidden" name="ownerId" value={start.token} />
-          <div className="owner-application-field">
+          <div className={tallField}>
             <label htmlFor="proposedConferenceName">Proposed conference name</label>
             <input id="proposedConferenceName" name="conferenceName" required />
           </div>

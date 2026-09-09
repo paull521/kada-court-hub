@@ -1,5 +1,6 @@
 import { BookOpen, Check, ChevronRight, User } from "lucide-react";
 import Link from "next/link";
+import { moreList } from "@/components/ui/account-classes";
 
 /**
  * The three links under the captain's More page. Fixed text, so the page and
@@ -7,7 +8,7 @@ import Link from "next/link";
  */
 export default function CaptainMoreLinks() {
   return (
-    <nav className="owner-more-list">
+    <nav className={moreList}>
       <Link href="/profile?view=captain">
         <span>
           <User className="ui-icon" />

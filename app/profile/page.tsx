@@ -26,6 +26,17 @@ import { OwnerSupportRequest } from "@/components/PlatformOperations";
 import PlatformFeedback from "@/components/PlatformFeedback";
 import OwnerConferenceSwitcher from "@/components/OwnerConferenceSwitcher";
 import "@/components/ProfileCleanup.css";
+import { accountLink, accountRow } from "@/components/ui/account-classes";
+import {
+  accountList,
+  avatar,
+  infoRow,
+  logoutAccount,
+  panel,
+  profileCard,
+  profileSectionTitle,
+  statusPill,
+} from "@/components/ui/shared-classes";
 
 function InfoPanel({
   title,
@@ -36,10 +47,10 @@ function InfoPanel({
   rows: (ReactNode | string)[][];
 }) {
   return (
-    <section className="card panel info-panel">
+    <section className={`card ${panel} [&>h2]:mb-[5px] [&_form]:m-0`}>
       <h2>{title}</h2>
       {rows.map(([icon, label, value]) => (
-        <div className="info-row" key={String(label)}>
+        <div className={infoRow} key={String(label)}>
           <span>{icon}</span>
           <b>{label}</b>
           <em>{value}</em>
@@ -128,38 +139,34 @@ export default async function Profile({
   const acknowledgedRule =
     acknowledgments.find((ack) => ack.rules_document_id === currentRule?.rules_document_id) ??
     acknowledgments[0];
-  const rulesLink =
-    currentRule && !currentRule.acknowledged_at ? (
-      <Link
-        href={`/rules?registration=${data.activeRegistrationId}&view=${currentRole}`}
-        className="card rules-account-link"
-      >
-        <span>
-          <BookOpen className="ui-icon" />
-        </span>
-        <b>Rules &amp; Discipline</b>
-        <strong aria-hidden="true">
-          <ChevronRight className="go-caret" />
-        </strong>
-      </Link>
-    ) : acknowledgedRule ? (
-      <Link
-        href={`/rules?acknowledgment=${acknowledgedRule.acknowledgment_id}&view=${currentRole}`}
-        className="card rules-account-link"
-      >
-        <span>
-          <BookOpen className="ui-icon" />
-        </span>
-        <b>Rules &amp; Discipline</b>
-        <strong aria-hidden="true">
-          <ChevronRight className="go-caret" />
-        </strong>
-      </Link>
-    ) : null;
+  // The unsigned record and the signed one differed by their query string and
+  // by nothing else, so the row is written once and the branch picks the href.
+  const rulesHref =
+    currentRule && !currentRule.acknowledged_at
+      ? `/rules?registration=${data.activeRegistrationId}&view=${currentRole}`
+      : acknowledgedRule
+        ? `/rules?acknowledgment=${acknowledgedRule.acknowledgment_id}&view=${currentRole}`
+        : null;
+  const rulesLink = rulesHref ? (
+    <Link
+      href={rulesHref}
+      // desk: replaces two ancestor-scoped rules in desktop.css. This row
+      // renders only on /profile, which is the one place either could reach.
+      className="card grid grid-cols-[38px_minmax(0,1fr)_20px] items-center gap-[12px] p-[14px_15px] desk:w-full desk:justify-self-center"
+    >
+      <span className="grid h-[38px] w-[38px] place-items-center rounded-[12px] bg-[#fff2d7] text-[19px] font-[900] text-gold">
+        <BookOpen className="ui-icon" />
+      </span>
+      <b className="text-[15px]">Rules &amp; Discipline</b>
+      <strong aria-hidden="true" className="text-right text-[24px]">
+        <ChevronRight className="go-caret" />
+      </strong>
+    </Link>
+  ) : null;
   const ownerProfileContent = ownerData?.authorized ? (
     <>
-      <section className="card profile-card">
-        <span className="avatar">
+      <section className={`card ${profileCard}`}>
+        <span className={avatar}>
           {ownerData.ownerName
             .split(/\s+/)
             .map((part) => part[0])
@@ -170,7 +177,7 @@ export default async function Profile({
         <div>
           <h2>{ownerData.ownerName}</h2>
           <p>Conference Owner</p>
-          <b className="status">● &nbsp;Active</b>
+          <b className={statusPill}>● &nbsp;Active</b>
         </div>
       </section>
       <RoleSwitcher roles={roles} current="owner" profile />
@@ -191,11 +198,11 @@ export default async function Profile({
           ],
         ]}
       />
-      <h2 className="profile-section-title">ACCOUNT</h2>
-      <div className="profile-account-list">
+      <h2 className={profileSectionTitle}>ACCOUNT</h2>
+      <div className={accountList}>
         <PlatformFeedback conferenceId={ownerData.conferenceId} />
         <NotificationPreferencesForm preferences={data.notificationPreferences} />
-        <Link href="/documents" className="card account-link">
+        <Link href="/documents" className={`card ${accountRow} ${accountLink}`}>
           <span>
             <BookOpen className="ui-icon" />
           </span>
@@ -204,7 +211,12 @@ export default async function Profile({
             <ChevronRight className="go-caret" />
           </strong>
         </Link>
-        <Link href={`/legal?view=${currentRole}`} className="card account-link">
+        <Link
+          href={`/legal?view=${currentRole}`}
+          // desk: replaces an ancestor-scoped rule in desktop.css. This row
+          // renders only on /profile, the one place that rule could reach.
+          className={`card ${accountRow} ${accountLink} desk:w-full desk:justify-self-center`}
+        >
           <span>
             <BookOpen className="ui-icon" />
           </span>
@@ -224,7 +236,7 @@ export default async function Profile({
           }))}
         />
         <form action={logoutAction}>
-          <button className="card account-link logout-account">
+          <button className={`card ${logoutAccount} ${accountRow} ${accountLink}`}>
             <span>
               <LogOut className="ui-icon" />
             </span>
@@ -239,12 +251,12 @@ export default async function Profile({
   ) : null;
   const profileContent = (
     <>
-      <section className="card profile-card">
-        <span className="avatar">{player.initials}</span>
+      <section className={`card ${profileCard}`}>
+        <span className={avatar}>{player.initials}</span>
         <div>
           <h2>{player.name}</h2>
           <p>KCH Player ID: &nbsp;{player.id}</p>
-          <b className="status">● &nbsp;{player.status}</b>
+          <b className={statusPill}>● &nbsp;{player.status}</b>
         </div>
       </section>
       <RoleSwitcher roles={roles} current={currentRole} profile />
@@ -257,8 +269,8 @@ export default async function Profile({
       />
       <InfoPanel title="PERSONAL INFO" rows={personal} />
       <InfoPanel title="PLAYER DETAILS" rows={details} />
-      <h2 className="profile-section-title">ACCOUNT</h2>
-      <div className="profile-account-list">
+      <h2 className={profileSectionTitle}>ACCOUNT</h2>
+      <div className={accountList}>
         {ownerData?.authorized ? (
           <PlatformFeedback conferenceId={ownerData.conferenceId} />
         ) : data.contexts.length > 0 ? (
@@ -271,7 +283,12 @@ export default async function Profile({
         ) : null}
         <NotificationPreferencesForm preferences={data.notificationPreferences} />
         {rulesLink}
-        <Link href={`/legal?view=${currentRole}`} className="card account-link">
+        <Link
+          href={`/legal?view=${currentRole}`}
+          // desk: replaces an ancestor-scoped rule in desktop.css. This row
+          // renders only on /profile, the one place that rule could reach.
+          className={`card ${accountRow} ${accountLink} desk:w-full desk:justify-self-center`}
+        >
           <span>
             <BookOpen className="ui-icon" />
           </span>
@@ -293,7 +310,7 @@ export default async function Profile({
           />
         )}
         <form action={logoutAction}>
-          <button className="card account-link logout-account">
+          <button className={`card ${logoutAccount} ${accountRow} ${accountLink}`}>
             <span>
               <LogOut className="ui-icon" />
             </span>

@@ -2,6 +2,17 @@ import { Check, ChevronRight, Clock } from "lucide-react";
 import { LoadingNote, SkeletonBlock, SkeletonText } from "@/components/Skeleton";
 import PlayerPaymentForm from "@/components/PlayerPaymentForm";
 import type { PlayerPortalData } from "@/lib/kch-data";
+import { historyPanel, historyRow } from "@/components/ui/account-classes";
+import {
+  emptyNote,
+  familyBanner,
+  familyQuote,
+  historyScroll,
+  methodPanel,
+  panel,
+  teamMark,
+  teamMarkSmall,
+} from "@/components/ui/shared-classes";
 
 /**
  * Payments, written once and drawn twice: with the portal data, and without it.
@@ -14,13 +25,19 @@ import type { PlayerPortalData } from "@/lib/kch-data";
  * streaming fallback and the finished page are one component and cannot
  * disagree about the layout.
  */
+const feeRow =
+  "grid grid-cols-[35px_1fr_auto] items-center border-b border-line py-[13px] last:border-0 [&>span]:grid [&>span]:h-[30px] [&>span]:w-[30px] [&>span]:place-items-center [&>span]:rounded-full [&>span]:border [&>span]:border-line [&>span]:text-gold";
+
 export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
   const account = data?.paymentAccount;
   return (
     <>
       {!data && <LoadingNote />}
       <div className="col-pane col-pane-a">
-        <section className="card balance-card">
+        {/* bg- shouts: .card sets a background unlayered. The .skeleton pair is
+            carried across by hand - it renders only while the frame is loading,
+            which settle() in the visual suite waits out by definition. */}
+        <section className="card mb-[14px] grid grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_auto_auto] gap-x-[16px] bg-[radial-gradient(circle_at_90%_35%,rgba(79,122,166,0.3),transparent_32%),linear-gradient(125deg,#08243e,#0a3767)]! p-[22px] text-white [&>p]:col-start-1 [&>p]:m-0 [&>p]:font-[800] [&>p]:text-[#f4a313] [&>strong]:col-start-1 [&>strong]:my-[9px] [&>strong]:text-[48px] [&>span]:col-start-1 [&>span]:text-[14px] [&>span]:text-[#d6dce4] [&_.skeleton]:bg-[linear-gradient(90deg,#061b2f_25%,#0d3055_37%,#061b2f_63%)]! [&_.skeleton]:bg-[length:400%_100%]!">
           <p>TOTAL BALANCE DUE</p>
           <strong>
             {account ? `$${account.balance.toFixed(2)}` : <SkeletonText width="4.5em" />}
@@ -36,30 +53,30 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
               <SkeletonText width="10em" />
             )}
           </span>
-          <div className="balance-team">
-            <span className="team-mark small" aria-hidden="true">
+          <div className="col-start-2 row-span-full grid w-[92px] justify-items-center gap-[6px] self-center text-center text-[12px] leading-[1.2]">
+            <span className={`${teamMark} ${teamMarkSmall}`} aria-hidden="true">
               K
             </span>
             <b>{data ? data.context.team : <SkeletonText width="4.5em" />}</b>
           </div>
         </section>
-        <section className="card panel">
+        <section className={`card ${panel}`}>
           <h2>FEE BREAKDOWN</h2>
           {data ? (
             data.fees.length ? (
               data.fees.map((fee) => (
-                <div className="fee-row" key={fee.id}>
+                <div className={feeRow} key={fee.id}>
                   <span>{fee.icon}</span>
                   <b>{fee.label}</b>
                   <strong>${fee.amount.toFixed(2)}</strong>
                 </div>
               ))
             ) : (
-              <p className="empty-note">No outstanding fees.</p>
+              <p className={emptyNote}>No outstanding fees.</p>
             )
           ) : (
             [0, 1, 2].map((index) => (
-              <div className="fee-row" key={index}>
+              <div className={feeRow} key={index}>
                 <span />
                 <b>
                   <SkeletonText width="9em" />
@@ -80,14 +97,14 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
             submissions={data.paymentSubmissions}
           />
         ) : (
-          <section className="card panel payment-method-panel">
+          <section className={`card ${panel} ${methodPanel}`}>
             <h2>PAYMENT METHODS</h2>
             <SkeletonBlock height="148px" />
           </section>
         )}
         {/* Closed, this disclosure is four fixed things and a caret. It has
             never needed the read to be drawn. */}
-        <details className="card payment-history-panel">
+        <details className={`card ${historyPanel} [&>summary]:grid-cols-[35px_1fr_auto]`}>
           <summary>
             <span>
               <Clock className="ui-icon" />
@@ -97,10 +114,10 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
               <ChevronRight className="go-caret" />
             </strong>
           </summary>
-          <div className="payment-history-scroll">
+          <div className={historyScroll}>
             {data?.paymentHistory.length ? (
               data.paymentHistory.slice(0, 10).map((payment) => (
-                <div className="payment-history-row" key={payment.id}>
+                <div className={historyRow} key={payment.id}>
                   <span>
                     <Check className="ui-icon" />
                   </span>
@@ -114,13 +131,13 @@ export default function PaymentsFrame({ data }: { data?: PlayerPortalData }) {
                 </div>
               ))
             ) : (
-              <p className="empty-note">Confirmed payments will appear here.</p>
+              <p className={emptyNote}>Confirmed payments will appear here.</p>
             )}
           </div>
         </details>
       </div>
-      <section className="family-banner">
-        <p className="family-quote">“You cannot achieve greatness without sacrifice.”</p>
+      <section className={familyBanner}>
+        <p className={familyQuote}>“You cannot achieve greatness without sacrifice.”</p>
       </section>
     </>
   );

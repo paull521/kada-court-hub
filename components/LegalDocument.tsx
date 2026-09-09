@@ -5,7 +5,7 @@
  */
 export default function LegalDocument() {
   return (
-    <section className="card legal-card">
+    <section className="card p-[20px] [&>h2]:m-[21px_0_6px] [&>h2]:text-[18px] [&>h2:first-child]:mt-0 [&>p]:m-0 [&>p]:text-[15px] [&>p]:leading-[1.65] [&>p]:text-muted">
       <h2>Your KCH profile</h2>
       <p>
         KadaCourtHub stores the information needed to identify your account, place you on team
@@ -32,7 +32,7 @@ export default function LegalDocument() {
         Completed or canceled seasons are preserved rather than deleted so rosters, games, payments,
         and administrative history remain accurate.
       </p>
-      <p className="legal-note">
+      <p className="mt-[22px]! rounded-[12px] bg-[#fff4da] p-[13px] text-[13px]! text-[#795009]!">
         This is the working MVP summary and should receive formal legal review before public launch.
       </p>
     </section>

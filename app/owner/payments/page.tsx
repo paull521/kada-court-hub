@@ -7,6 +7,7 @@ import { SkeletonCard } from "@/components/Skeleton";
 import { getOwnerConferenceContext, getOwnerPortalData } from "@/lib/owner-data";
 import { getOwnerPaymentBilling } from "@/lib/owner-payment-ledger";
 import { OwnerSubscriptionPayment } from "@/components/PlatformCreatorTools";
+import { operationsIntro, ownerOperations, pageSection } from "@/components/ui/shared-classes";
 
 /**
  * Two independent boundaries. The subscription card needs one RPC keyed on the
@@ -25,9 +26,11 @@ export default async function OwnerPaymentsPage() {
       conferenceId={context.conferenceId}
       conferences={context.conferences}
     >
-      <section className="owner-operations owner-page-section monthly-subscription-section">
+      <section
+        className={`${ownerOperations} ${pageSection} grid gap-[12px] [&>h2]:[margin:0_0_5px]!`}
+      >
         <h2>Season Subscription</h2>
-        <p className="operations-intro">Season payment for KCH Platform Creator confirmation.</p>
+        <p className={operationsIntro}>Season payment for KCH Platform Creator confirmation.</p>
         {/* A plain block rather than a frame of its own: the heading and the
             line above it are already drawn, this boundary covers one card, and
             the collections boundary below carries the page's live region -

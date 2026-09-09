@@ -1,6 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import {
+  jerseyArt,
+  uniformGalleryLabels,
+  uniformToggle,
+  uniformGallery,
+  uniformPhoto,
+  uniformPlaceholder,
+} from "@/components/ui/shared-classes";
 
 export default function TeamUniformGallery({
   teamName,
@@ -19,8 +27,8 @@ export default function TeamUniformGallery({
   const [variant, setVariant] = useState<"dark" | "light">(initial);
   const image = variant === "dark" ? darkImage : lightImage;
   return (
-    <div className="uniform-gallery">
-      <div className="uniform-toggle" role="group" aria-label="Uniform color">
+    <div className={uniformGallery}>
+      <div className={uniformToggle} role="group" aria-label="Uniform color">
         <button
           type="button"
           className={variant === "dark" ? "active" : ""}
@@ -39,17 +47,17 @@ export default function TeamUniformGallery({
         </button>
       </div>
       {image ? (
-        <div className="uniform-photo">
+        <div className={uniformPhoto}>
           <img src={image} alt={`${teamName} ${variant} uniform reference`} />
           <span>{variant === "dark" ? "Dark" : "Light"}</span>
         </div>
       ) : (
-        <div className="uniform-placeholder">
-          <span className="jersey-art">{jerseyNumber || "—"}</span>
+        <div className={uniformPlaceholder}>
+          <span className={jerseyArt}>{jerseyNumber || "—"}</span>
           <p>Official division uniform photo coming soon.</p>
         </div>
       )}
-      <div className="uniform-gallery-labels">
+      <div className={uniformGalleryLabels}>
         <span>
           <small>NEXT GAME</small>
           <b>{nextGameUniform}</b>

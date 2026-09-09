@@ -1,6 +1,7 @@
 import KchLogo from "@/components/KchLogo";
 import OwnerBottomNav from "@/components/OwnerBottomNav";
 import { OwnerContentPlaceholder, SkeletonChip, SkeletonTitle } from "@/components/Skeleton";
+import { topbarActions } from "@/components/ui/shared-classes";
 
 /**
  * Unchanged, and now in a (home) route group so that it covers /owner alone. A
@@ -18,7 +19,7 @@ export default function Loading() {
     <div className="shell owner-shell guided-owner-shell">
       <header className="topbar">
         <KchLogo className="logo" href="/owner" />
-        <div className="topbar-actions">
+        <div className={topbarActions}>
           <SkeletonChip />
         </div>
       </header>

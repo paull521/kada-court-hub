@@ -9,6 +9,15 @@ import {
   markNotificationReadAction,
 } from "@/app/notifications/actions";
 import type { PlayerNotification } from "@/lib/kch-data";
+import { contextSheet } from "@/components/ui/context-classes";
+import {
+  contextOverlay,
+  markAllButton,
+  notificationButton,
+  notificationList,
+  notificationSheet,
+  sheetHandle,
+} from "@/components/ui/shared-classes";
 
 export default function NotificationCenter({
   notifications,
@@ -49,7 +58,7 @@ export default function NotificationCenter({
   return (
     <>
       <button
-        className="notification"
+        className={notificationButton}
         type="button"
         aria-label={unread ? `${unread} unread notifications` : "Notifications"}
         onClick={() => setOpen(true)}
@@ -58,17 +67,17 @@ export default function NotificationCenter({
       </button>
       {open && (
         <div
-          className="context-overlay"
+          className={contextOverlay}
           role="presentation"
           onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}
         >
           <section
-            className="context-sheet notification-sheet"
+            className={`${contextSheet} ${notificationSheet}`}
             role="dialog"
             aria-modal="true"
             aria-labelledby="notification-title"
           >
-            <div className="context-sheet-handle" />
+            <div className={sheetHandle} />
             <header>
               <span>
                 <small>PLAYER UPDATES</small>
@@ -79,16 +88,20 @@ export default function NotificationCenter({
               </button>
             </header>
             {unread > 0 && (
-              <button className="mark-all" type="button" disabled={pending} onClick={markAll}>
+              <button className={markAllButton} type="button" disabled={pending} onClick={markAll}>
                 Mark all as read
               </button>
             )}
             {notifications.length ? (
-              <div className="notification-list">
+              <div className={notificationList}>
                 {notifications.map((notification) => (
                   <button
                     type="button"
-                    className={`notification-item ${notification.read ? "" : "unread"}`}
+                    className={`grid min-h-[78px] w-full grid-cols-[40px_1fr_auto] items-center gap-[11px] rounded-[15px] border border-line bg-white p-[13px] text-left [&>i]:grid [&>i]:h-[38px] [&>i]:w-[38px] [&>i]:place-items-center [&>i]:rounded-xl [&>i]:bg-[#eef3f8] [&>i]:text-[19px] [&>i]:text-blue [&>i]:not-italic [&>span]:grid [&>span]:min-w-0 [&>span]:gap-1 [&_b]:text-[15px] [&_b]:leading-[1.25] [&_small]:text-[13px] [&_small]:leading-[1.4] [&_small]:text-muted [&_em]:text-xs [&_em]:text-[#85909e] [&_em]:not-italic [&>strong]:text-[23px] ${
+                      notification.read
+                        ? ""
+                        : "border-[#e8c98f]! bg-[#fffbf3]! [&>i]:bg-[#fff0d5] [&>i]:text-gold"
+                    }`}
                     disabled={pending}
                     onClick={() => openNotification(notification)}
                     key={notification.id}
@@ -114,7 +127,7 @@ export default function NotificationCenter({
                 ))}
               </div>
             ) : (
-              <div className="notification-empty">
+              <div className="p-[30px_15px] text-center [&>span]:mx-auto [&>span]:grid [&>span]:h-[52px] [&>span]:w-[52px] [&>span]:place-items-center [&>span]:rounded-full [&>span]:bg-[#e8f4e8] [&>span]:text-[25px] [&>span]:text-green [&>h3]:m-[13px_0_6px] [&>h3]:text-[19px] [&>p]:m-0 [&>p]:text-sm [&>p]:leading-[1.5] [&>p]:text-muted">
                 <span>
                   <Check />
                 </span>

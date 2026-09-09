@@ -1,0 +1,201 @@
+/**
+ * The last of the runs that more than one component drew.
+ *
+ * Everything here was in globals.css because two or three files needed it, not
+ * because it belonged to any of them. Grouping by what it is rather than by
+ * which stylesheet it happened to live in.
+ */
+
+/** A form's controls. Six components use it; the labels and inputs are its. */
+export const ownerForm =
+  "grid gap-3 [&_label]:grid [&_label]:gap-[6px] [&_label]:text-xs [&_label]:font-[800] [&_input]:w-full [&_input]:min-w-0 [&_input]:rounded-[11px] [&_input]:border [&_input]:border-[#d6dbe2] [&_input]:bg-white [&_input]:p-[11px] [&_input]:font-[inherit] [&_input]:text-[inherit] [&_select]:w-full [&_select]:min-w-0 [&_select]:rounded-[11px] [&_select]:border [&_select]:border-[#d6dbe2] [&_select]:bg-white [&_select]:p-[11px] [&_select]:font-[inherit] [&_select]:text-[inherit] [&_textarea]:min-h-[100px] [&_textarea]:w-full [&_textarea]:min-w-0 [&_textarea]:resize-y [&_textarea]:rounded-[11px] [&_textarea]:border [&_textarea]:border-[#d6dbe2] [&_textarea]:bg-white [&_textarea]:p-[11px] [&_textarea]:font-[inherit] [&_textarea]:text-[inherit] [&_.check-row]:flex [&_.check-row]:items-center [&_.check-row]:font-[600] [&_.check-row_input]:h-[17px] [&_.check-row_input]:w-[17px]";
+
+/** A heading with a rule under it, above a block of owner or captain work. */
+export const sectionTitle =
+  "mb-4 flex items-center gap-3 border-b border-line pb-[14px] [&_h2]:m-0 [&_h2]:text-[19px] [&_p]:m-[4px_0_0] [&_p]:text-xs [&_p]:text-muted";
+
+/** One player on a roster. Two shapes agree on everything but their columns. */
+/* text-[14px] rather than text-sm: the named size carries a line-height the
+   original rule did not set, which is five pixels a row on a ten-row list. */
+export const rosterRow =
+  "grid grid-cols-[52px_1fr_auto] items-center gap-3 border-b border-line py-2 text-[14px] last:border-0 [&>span]:text-blue [&_.staff-role]:text-gold";
+
+/** Profile's header card and the label/value rows under it. */
+export const profileCard =
+  "mb-[14px] grid grid-cols-[90px_1fr] items-center gap-[15px] p-[18px] [&_h2]:m-0 [&_h2]:text-[27px] [&_p]:my-[6px] [&_p]:text-xs [&_p]:text-muted";
+export const infoRow =
+  "grid grid-cols-[30px_1fr_auto] items-center gap-2 border-b border-line py-[9px] text-xs last:border-0 [&>span]:grid [&>span]:h-[27px] [&>span]:w-[27px] [&>span]:place-items-center [&>span]:rounded-full [&>span]:border [&>span]:border-line [&_em]:text-right [&_em]:text-muted [&_em]:not-italic";
+
+/** Three empty states that differ only in how much air they take. */
+export const emptyFeature =
+  "mb-4 grid min-h-[150px] grid-cols-[58px_1fr] items-center gap-4 p-[25px] [&>span]:text-[42px] [&>span]:text-gold [&_h2]:m-[0_0_6px] [&_h2]:text-[21px] [&_p:last-child]:m-0 [&_p:last-child]:text-sm [&_p:last-child]:leading-[1.5] [&_p:last-child]:text-muted";
+export const seasonEmpty =
+  "p-[30px_18px] text-center [&>span]:text-[38px] [&>span]:text-gold [&_h2]:m-[10px_0_5px] [&_h2]:text-xl [&_p]:m-0 [&_p]:text-sm [&_p]:leading-[1.5] [&_p]:text-muted";
+export const emptyOperation =
+  "grid grid-cols-[46px_1fr] items-center gap-3 p-4 [&>span]:grid [&>span]:h-[42px] [&>span]:w-[42px] [&>span]:place-items-center [&>span]:rounded-[13px] [&>span]:bg-[#f7f0e4] [&>span]:text-[21px] [&>span]:text-gold [&_h3]:m-[0_0_4px] [&_h3]:text-[17px] [&_p]:m-0 [&_p]:text-sm [&_p]:text-muted";
+
+/** The card the invite and join flows land on. */
+export const joinCard =
+  "mt-[70px] grid gap-[13px] p-[28px_20px] text-center [&>span]:text-[42px] [&_h1]:m-0 [&_h1]:text-[27px] [&_p]:m-0 [&_p]:text-sm [&_p]:leading-[1.5] [&_p]:text-muted [&_.btn]:block";
+
+/** A captain's just-added players, and the uniform gallery's controls. */
+export const addedPlayers =
+  "grid gap-2 rounded-[13px] border border-line bg-[#fafafa] p-3 [&>div:first-child]:flex [&>div:first-child]:items-baseline [&>div:first-child]:justify-between [&>div:first-child]:gap-[10px] [&_h3]:m-0 [&_h3]:text-[13px] [&_span]:text-[10px] [&_span]:text-muted";
+export const uniformToggle =
+  "grid grid-cols-2 gap-[7px] rounded-[13px] bg-[#f0efed] p-1 [&_button]:min-h-[44px] [&_button]:rounded-[10px] [&_button]:border-0 [&_button]:bg-transparent [&_button]:text-sm [&_button]:font-[800] [&_button.active]:bg-navy [&_button.active]:text-white [&_button.active]:shadow-[0_3px_8px_rgba(7,31,61,0.16)] [&_button:disabled]:cursor-not-allowed [&_button:disabled]:text-[#a1a5aa]";
+export const uniformGalleryLabels =
+  "grid gap-[7px] [&>span]:flex [&>span]:items-center [&>span]:justify-between [&>span]:gap-[9px] [&>span]:border-t [&>span]:border-line [&>span]:pt-[7px] [&_small]:text-[11px] [&_small]:font-[750] [&_small]:text-muted [&_b]:text-right [&_b]:text-[13px]";
+
+/** A submitted payment awaiting the owner, and the KADA sign-off line. */
+export const paymentStatusCard =
+  "mb-[9px] grid min-h-[68px] grid-cols-[42px_1fr] items-center gap-[10px] rounded-[15px] border border-[#e8c98f] bg-[#fffbf3] p-[13px_15px] [&>span]:grid [&>span]:h-[38px] [&>span]:w-[38px] [&>span]:place-items-center [&>span]:rounded-full [&>span]:bg-[#fff0d5] [&>span]:text-gold [&>div]:grid [&>div]:gap-1 [&_b]:text-[15px]";
+/* The two desk: rules were ancestor-scoped in desktop.css - one to span both
+   panes of a two-column page, one to close the page with a rule above it. The
+   banner is the last child of .content on every page that has it, so it can
+   say both itself. */
+export const familyBanner =
+  "p-[22px_12px_6px] text-center text-muted [&_span]:text-red desk:col-span-full desk:mt-[34px] desk:border-t desk:border-line desk:pt-[22px]";
+
+/** The rules acknowledgement form at the foot of a rules document. */
+export const rulesAcknowledgment =
+  "grid gap-[13px] border-t border-line p-[18px] [&>p]:m-0 [&>p]:text-[13px] [&>p]:leading-[1.55] [&>p]:text-muted [&_.check-row]:items-start [&_.check-row]:leading-[1.45] [&_.check-row_input]:mt-[3px] [&_.btn:disabled]:cursor-not-allowed [&_.btn:disabled]:opacity-[0.48]";
+
+/* ---------------------------------------------------------------------------
+   The last of them: the panel and its heading, the team dropdown, the context
+   sheet's small parts, and three one-line notes. */
+
+/* .panel h2 shared a selector list with .section-heading h2 and .list-label -
+   the gold 12px label above a block. All three say it themselves now. */
+export const panel = "mb-[14px] p-[17px] [&>h2]:m-0 [&>h2]:text-[12px] [&>h2]:text-gold";
+export const sectionHeading =
+  "flex justify-between border-b border-line pb-2 [&_h2]:m-0 [&_h2]:text-[12px] [&_h2]:text-gold [&_span]:text-[13px] [&_span]:text-muted";
+export const listLabel = "m-[18px_4px_8px] text-[12px] text-gold";
+
+/** Georgia, italic, and the initials under it. Three frames sign off with it. */
+export const familyQuote =
+  "m-0 font-[Georgia,'Times_New_Roman',serif] text-[clamp(16px,4.4vw,20px)] leading-[1.45] italic";
+export const familyQuoteAuthor = "m-[5px_0_0] text-xs font-[700] tracking-[0.08em]";
+
+/** The team switcher's dropdown, its scrim, and the caret that turns. */
+export const teamSwitcher = "relative mb-[14px]";
+export const teamDropdownScrim = "fixed inset-0 z-30 bg-[rgba(4,18,35,0.22)] backdrop-blur-[4px]";
+export const teamDropdown =
+  "absolute top-[calc(100%_+_6px)] right-0 left-0 z-40 max-h-[min(58vh,420px)] overflow-auto rounded-2xl border border-line bg-[#fffdf9] p-[9px] shadow-[0_18px_44px_rgba(4,18,35,0.22)]";
+export const teamBannerCaret =
+  "h-5 w-5 text-[rgba(255,255,255,0.62)] transition-transform duration-150 ease-in-out group-[.open]:rotate-180";
+
+/** Inside a context sheet. The handle is a phone affordance and hides at 900px. */
+export const sheetHandle = "mx-auto mb-3 h-1 w-[44px] rounded-[5px] bg-[#d7d3ce] desk:hidden";
+export const contextHelp = "m-[9px_0_14px] text-[11px] leading-[1.5] text-muted";
+export const contextOptions = "grid gap-[9px]";
+export const contextStatus = "m-[11px_0_0] text-center text-[11px] text-muted";
+
+/** The season invitation's centred summary, and the notes around it. */
+export const invitationSummary =
+  "grid gap-1 text-center [&>b]:text-base [&>span]:m-0 [&>span]:text-[13px] [&>span]:leading-[1.45] [&>span]:text-muted";
+export const invitationNote = "m-0 text-[13px] leading-[1.45] text-muted";
+export const invitationPlatformNote = "text-center text-[10px] text-muted";
+export const rulesEmpty = "grid gap-[13px] p-[18px] [&_h2]:m-0 [&_h2]:text-lg";
+export const frameList = "grid gap-3";
+
+/* ---------------------------------------------------------------------------
+   Small marks and one-line helpers. Most of these are a single element with
+   one job, which is why they were scattered through globals.css rather than
+   grouped with anything. */
+
+/** The KADA shield, and the smaller one on a row. */
+export const teamMark =
+  "m-auto grid h-[68px] w-[68px] place-items-center rounded-[18px_18px_45%_45%] border-4 border-[#f4a31b] bg-navy text-[31px] font-[900] text-[#f4a31b] outline-2 outline-red";
+export const teamMarkSmall = "h-[54px]! w-[54px]! text-[23px]!";
+/** A jersey number badge, and the jersey shape the uniform pages draw. */
+export const jersey = "min-w-[30px] rounded-[15px] bg-[#f0efed] p-[5px] text-center";
+export const jerseyArt =
+  "grid h-[120px] place-items-center bg-[linear-gradient(90deg,#071f3d,#123863,#071f3d)] text-[25px] font-[900] text-white [clip-path:polygon(21%_0,36%_9%,64%_9%,79%_0,100%_18%,86%_38%,86%_100%,14%_100%,14%_38%,0_18%)]";
+/** Light or dark, beside a fixture. workspaces.css won this one at 20px. */
+export const uniformDot = "inline-block h-5 w-5 rounded-full border border-[#aab1ba] bg-white";
+export const uniformDotDark = "border-[#061d3c]! bg-[#061d3c]!";
+
+/** The season/team picker at the top of a page, plain and boxed. */
+export const selector =
+  "m-[4px_0_16px] flex justify-between gap-3 border-0 bg-transparent p-0 text-lg";
+export const selectorWide =
+  "w-full items-center rounded-2xl border border-line bg-white p-[14px_16px] shadow-[0_7px_17px_rgba(13,38,69,0.07)] [&_span]:flex-1 [&_span]:text-left [&_small]:text-[13px] [&_small]:text-muted [&_small]:max-tiny:hidden";
+
+export const avatar =
+  "grid h-20 w-20 place-items-center rounded-full bg-[linear-gradient(135deg,#eee,#d9d9d9)] text-[35px] font-[800] max-tiny:h-[65px] max-tiny:w-[65px]";
+export const statusPill =
+  "inline-block rounded-[18px] bg-[#dff3df] p-[5px_9px] text-[11px] text-green";
+export const ownerIcon =
+  "grid h-[42px] w-[42px] place-items-center rounded-[13px] bg-[#fff4da] text-[22px] text-gold";
+export const ownerSection = "mb-4 p-5";
+export const emptyNote = "m-0 p-[10px] text-xs text-muted";
+export const fieldHelp = "m-0 text-[10px] leading-[1.45] text-muted";
+export const compactFields = "grid grid-cols-2 gap-[10px]";
+export const cardLabel =
+  "m-[16px_2px_8px] text-[10px] font-[850] tracking-[0.06em] text-gold first:mt-[2px]";
+export const topbarActions = "flex min-w-0 items-center justify-end gap-[6px]";
+/** The bell, and the unread dot on it. */
+export const notificationButton =
+  "relative flex-none border-0 bg-transparent text-[29px]! [&>span]:absolute [&>span]:top-[2px] [&>span]:right-0 [&>span]:h-[7px] [&>span]:w-[7px] [&>span]:rounded-full [&>span]:bg-red";
+/** The scrim a context sheet rises out of; centred rather than docked at 900px. */
+export const contextOverlay =
+  "fixed inset-0 z-[60] flex items-end justify-center bg-[rgba(4,18,35,0.48)] p-3 desk:items-center";
+
+/* ---------------------------------------------------------------------------
+   The last block. Owner section headings, the captain's draft controls, the
+   notification sheet's list, the uniform gallery and the profile's account
+   column. */
+
+export const ownerOperations = "mt-[34px] [&>h2]:m-[0_0_7px] [&>h2]:text-[27px]";
+export const operationsIntro = "m-[0_0_16px] text-[15px] leading-[1.55] text-muted";
+export const pageSection = "mt-[22px]";
+export const dashboardQuestion = "m-[24px_0_12px] text-[19px] font-[800]";
+export const ownerAccess =
+  "grid gap-3 p-[22px] [&>h2]:m-0 [&>p]:m-0 [&_.btn]:inline-block [&_.btn]:w-max";
+export const batchSaveButton = "min-h-[42px] w-max justify-self-end p-[8px_14px]! text-[13px]!";
+
+/** Season invitation facts, and the deadline line under them. */
+export const invitationFacts =
+  "grid grid-cols-3 gap-[7px] [&>span]:rounded-[10px] [&>span]:bg-[#faf8f5] [&>span]:p-2 [&>span]:text-center [&>span]:text-[9px] [&>span]:text-muted [&_b]:block [&_b]:text-base [&_b]:text-navy";
+export const responseDeadline = "text-center! font-[800] text-gold!";
+
+/** The captain's draft: search box, list, submit footer, and a button pair. */
+export const playerSearch = "rounded-[13px] border border-line p-3";
+export const captainRosterList = "grid gap-[7px]";
+export const submitRoster =
+  "border-t border-line pt-3 [&>small]:text-center [&>small]:text-[10px] [&>small]:leading-[1.4] [&>small]:text-muted";
+export const reviewActions = "grid grid-cols-2 gap-2";
+export const reviewActionsCompact =
+  "[&_.btn]:min-h-[36px] [&_.btn]:p-[7px_9px]! [&_.btn]:text-[10px]!";
+
+/** The notification sheet's own trim. */
+export const notificationSheet = "pb-6 [&>header]:mb-[10px]";
+export const markAllButton =
+  "border-0 bg-transparent p-[8px_2px_12px] text-sm font-[750] text-blue!";
+export const notificationList = "grid gap-2";
+
+/** Payments: the method panel and the scrolling history. */
+export const methodPanel = "m-[16px_0_14px] [&>h2]:m-[0_0_12px] [&>h2]:text-sm [&>h2]:text-gold";
+export const historyScroll =
+  "max-h-[540px] overflow-y-auto overscroll-contain border-t border-line p-[3px_16px_8px]";
+
+/** A player's name and detail line inside a roster row. */
+export const playerName =
+  "grid gap-[3px] text-navy! [&_small]:text-[12px] [&_small]:font-medium [&_small]:text-muted";
+
+/** The uniform gallery: a photo with its caption, and the empty stand-in. */
+export const uniformGallery = "grid gap-3";
+export const uniformPhoto =
+  "relative overflow-hidden rounded-[15px] border border-line bg-[#f4f2ef] [&_img]:block [&_img]:h-auto [&_img]:max-h-[390px] [&_img]:w-full [&_img]:object-contain [&>span]:absolute [&>span]:bottom-[9px] [&>span]:left-[9px] [&>span]:rounded-[10px] [&>span]:bg-[rgba(7,31,61,0.9)] [&>span]:p-[7px_9px] [&>span]:text-xs [&>span]:font-[750] [&>span]:text-white";
+export const uniformPlaceholder =
+  "grid place-items-center gap-[9px] rounded-[14px] bg-[#f7f5f2] p-3 [&_p]:m-0 [&_p]:text-[13px] [&_p]:text-muted";
+
+/** Profile's account column. */
+export const profileSectionTitle = "m-[22px_3px_10px] text-sm text-gold";
+export const accountList = "grid gap-[9px] [&>form]:m-0";
+/* On a <button>, so it has to shout past button { color: inherit }. */
+export const logoutAccount = "text-[#a51118]! [&>span]:text-[#a51118]";
+
+/** The dot on a bottom-nav tab. Moves to the icon's left at 900px. */
+export const navDot =
+  "absolute top-[7px] right-[25%] h-[9px] w-[9px] rounded-full border-2 border-white desk:top-[9px] desk:right-auto desk:left-[27px]";

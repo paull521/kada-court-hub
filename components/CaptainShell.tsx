@@ -5,6 +5,7 @@ import { captainNavLinks } from "@/lib/nav-links";
 import { BadgeSlot, NAV_ALERT, NotificationSlot, type ShellChrome } from "@/components/NavBadges";
 import { SkeletonText } from "@/components/Skeleton";
 import type { CaptainPortalData } from "@/lib/captain-data";
+import { topbarActions } from "@/components/ui/shared-classes";
 
 export type CaptainNavKey = (typeof captainNavLinks)[number]["key"] | "dashboard" | "more";
 
@@ -64,7 +65,7 @@ export default function CaptainShell({
     <div className="shell captain-shell">
       <header className="topbar">
         <KchLogo className="logo" href="/captain" />
-        <div className="topbar-actions">
+        <div className={topbarActions}>
           <NotificationSlot chrome={chrome} />
         </div>
       </header>

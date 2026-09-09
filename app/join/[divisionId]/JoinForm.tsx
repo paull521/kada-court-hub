@@ -1,10 +1,11 @@
 "use client";
 import { useActionState } from "react";
 import { joinDivisionAction, type JoinState } from "./actions";
+import { joinCard } from "@/components/ui/shared-classes";
 export default function JoinForm({ divisionId }: { divisionId: string }) {
   const [state, action, pending] = useActionState(joinDivisionAction, {} as JoinState);
   return (
-    <form action={action} className="card join-card">
+    <form action={action} className={`card ${joinCard}`}>
       <input type="hidden" name="divisionId" value={divisionId} />
       <span>🏀</span>
       <h1>Join this KCH division</h1>

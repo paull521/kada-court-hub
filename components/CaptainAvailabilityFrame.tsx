@@ -1,6 +1,8 @@
 import { Check } from "lucide-react";
 import { LoadingNote, SkeletonText } from "@/components/Skeleton";
 import type { CaptainPortalData } from "@/lib/captain-data";
+import { scheduleEmpty } from "@/components/ui/schedule-classes";
+import { panel, sectionHeading } from "@/components/ui/shared-classes";
 
 /**
  * The team's answers for the next game, written once and drawn twice. TEAM
@@ -12,7 +14,7 @@ export default function CaptainAvailabilityFrame({ data }: { data?: CaptainPorta
   const no = data ? data.availability.filter((player) => !player.available).length : 0;
   if (data && !game)
     return (
-      <section className="card schedule-empty">
+      <section className={`card ${scheduleEmpty}`}>
         <span>
           <Check className="ui-icon" />
         </span>
@@ -21,9 +23,9 @@ export default function CaptainAvailabilityFrame({ data }: { data?: CaptainPorta
       </section>
     );
   return (
-    <section className="card panel">
+    <section className={`card ${panel}`}>
       {!data && <LoadingNote />}
-      <div className="section-heading">
+      <div className={sectionHeading}>
         <h2>TEAM RESPONSE</h2>
         <span>
           {data ? `${data.availability.length - no} Yes · ${no} No` : <SkeletonText width="6em" />}
@@ -31,8 +33,13 @@ export default function CaptainAvailabilityFrame({ data }: { data?: CaptainPorta
       </div>
       {data
         ? data.availability.map((player) => (
-            <div className="availability-player" key={player.registrationId}>
-              <i className={`availability-dot ${player.available ? "yes" : "no"}`} />
+            <div
+              className="grid grid-cols-[auto_1fr_auto] items-center gap-3 border-b border-[#e1e5e8] py-[13px] [&>span]:grid [&_small]:mt-[2px] [&_small]:text-[#697687] [&_strong]:text-[#0d7130]"
+              key={player.registrationId}
+            >
+              <i
+                className={`inline-block h-[11px] w-[11px] flex-none rounded-full bg-[#2a9b4c] ${player.available ? "yes" : "no"}`}
+              />
               <span>
                 <b>{player.name}</b>
                 <small>
@@ -43,8 +50,11 @@ export default function CaptainAvailabilityFrame({ data }: { data?: CaptainPorta
             </div>
           ))
         : [0, 1, 2, 3, 4, 5].map((index) => (
-            <div className="availability-player" key={index}>
-              <i className="availability-dot" />
+            <div
+              className="grid grid-cols-[auto_1fr_auto] items-center gap-3 border-b border-[#e1e5e8] py-[13px] [&>span]:grid [&_small]:mt-[2px] [&_small]:text-[#697687] [&_strong]:text-[#0d7130]"
+              key={index}
+            >
+              <i className="inline-block h-[11px] w-[11px] flex-none rounded-full bg-[#2a9b4c]" />
               <span>
                 <b>
                   <SkeletonText width="9em" />

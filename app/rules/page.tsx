@@ -2,9 +2,11 @@ import { BookOpen } from "lucide-react";
 import Link from "next/link";
 import AppShell from "@/components/AppShell";
 import RulesAcknowledgmentForm from "./RulesAcknowledgmentForm";
+import { RulesDocument } from "@/components/ui/RulesDocument";
 import { createClient } from "@/lib/supabase/server";
 import { getPlayerPortalData } from "@/lib/kch-data";
 import { getAvailableRoles } from "@/lib/roles";
+import { rulesEmpty } from "@/components/ui/shared-classes";
 
 type RuleRecord = {
   invitation_id?: string;
@@ -92,7 +94,7 @@ export default async function RulesPage({
         role={role}
       >
         <h1 className="title">Rules &amp; Discipline</h1>
-        <section className="card rules-empty">
+        <section className={`card ${rulesEmpty}`}>
           <h2>Rules record unavailable</h2>
           <Link href="/profile" className="btn primary">
             Back to Profile
@@ -120,46 +122,43 @@ export default async function RulesPage({
         {record.conference_name} · {record.season_name}
         {record.division_name ? ` · ${record.division_name}` : ""}
       </p>
-      <section className="card rules-document">
-        <header>
-          <span>
-            <BookOpen className="ui-icon" />
-          </span>
-          <div>
-            <h2>{record.title}</h2>
-            <p>
-              Version {record.version} · Effective {date(record.effective_date)}
-            </p>
-          </div>
-        </header>
-        <article>
-          {record.content.split("\n\n").map((section, index) => {
-            const [heading, ...body] = section.split("\n");
-            return (
-              <section key={index}>
-                {/^\d+\.|^KCH Default/.test(heading) ? <h3>{heading}</h3> : <p>{heading}</p>}
-                {body.map((line, lineIndex) => (
-                  <p key={lineIndex}>{line}</p>
-                ))}
-              </section>
-            );
-          })}
-        </article>
-        {acknowledging ? (
-          <RulesAcknowledgmentForm
-            invitationId={record.invitation_id}
-            registrationId={
-              params.registration || (params.required ? data.activeRegistrationId : undefined)
-            }
-            rulesDocumentId={record.rules_document_id}
-          />
-        ) : record.acknowledged_at ? (
-          <footer>
-            <b>Rules Acknowledged</b>
-            <span>{timestamp(record.acknowledged_at)}</span>
-          </footer>
-        ) : null}
-      </section>
+      <RulesDocument
+        icon={<BookOpen className="ui-icon" />}
+        title={record.title}
+        meta={
+          <>
+            Version {record.version} · Effective {date(record.effective_date)}
+          </>
+        }
+        footer={
+          acknowledging ? (
+            <RulesAcknowledgmentForm
+              invitationId={record.invitation_id}
+              registrationId={
+                params.registration || (params.required ? data.activeRegistrationId : undefined)
+              }
+              rulesDocumentId={record.rules_document_id}
+            />
+          ) : record.acknowledged_at ? (
+            <footer>
+              <b>Rules Acknowledged</b>
+              <span>{timestamp(record.acknowledged_at)}</span>
+            </footer>
+          ) : null
+        }
+      >
+        {record.content.split("\n\n").map((section, index) => {
+          const [heading, ...body] = section.split("\n");
+          return (
+            <section key={index}>
+              {/^\d+\.|^KCH Default/.test(heading) ? <h3>{heading}</h3> : <p>{heading}</p>}
+              {body.map((line, lineIndex) => (
+                <p key={lineIndex}>{line}</p>
+              ))}
+            </section>
+          );
+        })}
+      </RulesDocument>
     </AppShell>
   );
 }

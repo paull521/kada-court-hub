@@ -22,7 +22,9 @@ setup("authenticate", async ({ page }) => {
   await page.goto("/login");
   await page.fill('input[name="email"]', email);
   await page.fill('input[name="password"]', password);
-  await page.click("form.loginbox button.btn.primary");
+  // The form's own submit, found by role rather than by class: .loginbox was
+  // a styling name and the migration deleted it.
+  await page.getByRole("button", { name: /sign in|log in/i }).click();
 
   // proxy.ts sends a signed-in visitor away from /login, so landing anywhere
   // else is the signal the session took.

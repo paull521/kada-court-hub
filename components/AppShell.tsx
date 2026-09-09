@@ -12,6 +12,8 @@ import {
   type ShellChrome,
 } from "@/components/NavBadges";
 import type { PlayerNotification } from "@/lib/kch-data";
+import { topbarActions } from "@/components/ui/shared-classes";
+import { navDot } from "@/components/ui/shared-classes";
 
 const nav = {
   player: { links: playerNavLinks, className: "bottom", label: "Player navigation" },
@@ -82,7 +84,7 @@ export default function AppShell({
         </BadgeSlot>
       ) : undefined
     ) : key === "team" ? (
-      <i className={`nav-team-dot ${teamHasUnavailable ? "no" : "yes"}`} />
+      <i className={`${navDot} ${teamHasUnavailable ? "bg-[#d72b2b]" : "bg-[#2a9b4c]"}`} />
     ) : (key === "profile" && profileNeedsAttention) ||
       (key === "payments" && paymentNeedsAttention) ? (
       NAV_ALERT
@@ -92,7 +94,7 @@ export default function AppShell({
     <div className="shell">
       <header className="topbar">
         <KchLogo className="logo" href={home} />
-        <div className="topbar-actions">
+        <div className={topbarActions}>
           {headerAction}
           {headerNotification ??
             (chrome ? (

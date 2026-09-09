@@ -71,21 +71,26 @@ export default async function PlatformSection({
       <SupportRequests requests={operations.support} feedback={operations.feedback} />
     ) : section === "settings" ? (
       <form action={platformLogoutAction}>
-        <button className="card platform-logout-card" type="submit">
-          <b>Log Out</b>
-          <strong aria-hidden="true">
+        <button
+          className="card flex min-h-[64px] w-full cursor-pointer items-center justify-between p-[13px_16px] text-left font-[inherit] text-[#a51118]!"
+          type="submit"
+        >
+          <b className="text-[15px]">Log Out</b>
+          <strong aria-hidden="true" className="text-[24px] font-[700]">
             <ChevronRight className="go-caret" />
           </strong>
         </button>
       </form>
     ) : (
-      <section className="card platform-section-note">
-        <span>
+      <section className="card grid grid-cols-[38px_1fr] items-center gap-[12px] p-[18px]">
+        <span className="grid h-[38px] w-[38px] place-items-center rounded-[12px] bg-[#fff4da] text-[20px] text-gold">
           <ClipboardList className="ui-icon" />
         </span>
         <div>
-          <b>Workspace ready</b>
-          <p>This section is ready for its focused workflow.</p>
+          <b className="text-[15px]">Workspace ready</b>
+          <p className="m-[4px_0_0] text-[12px] text-muted">
+            This section is ready for its focused workflow.
+          </p>
         </div>
       </section>
     );
@@ -93,11 +98,15 @@ export default async function PlatformSection({
     <div className="shell owner-shell guided-owner-shell platform-shell">
       <header className="topbar">
         <KchLogo className="logo" />
-        <Link href="/platform" className="muted platform-signout">
+        <Link href="/platform" className="muted text-xs">
           <ChevronLeft className="go-caret" /> Dashboard
         </Link>
       </header>
-      <main className="content owner-content platform-content">
+      <main // Below the breakpoint only, and shouting: .content sets 112px
+        // unlayered here and desktop.css sets 72px above 900px, and
+        // .platform-content only ever beat the first of those on source order.
+        className="content owner-content max-desk:pb-12! [&>form]:m-0"
+      >
         <p className="eyebrow">{item.eyebrow}</p>
         <h1 className="title">{item.title}</h1>
         <p className="subtitle">{item.subtitle}</p>

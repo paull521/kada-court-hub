@@ -1,6 +1,7 @@
 import { ChevronRight, Wallet } from "lucide-react";
 import { LoadingNote, SkeletonBlock } from "@/components/Skeleton";
 import type { CaptainPortalData } from "@/lib/captain-data";
+import { scheduleEmpty } from "@/components/ui/schedule-classes";
 
 const money = (value: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
@@ -13,7 +14,7 @@ const money = (value: number) =>
 export default function CaptainPaymentsFrame({ data }: { data?: CaptainPortalData }) {
   if (data && !data.payments.length)
     return (
-      <section className="card schedule-empty">
+      <section className={`card ${scheduleEmpty}`}>
         <span>
           <Wallet className="ui-icon" />
         </span>
@@ -22,7 +23,7 @@ export default function CaptainPaymentsFrame({ data }: { data?: CaptainPortalDat
       </section>
     );
   return (
-    <div className="captain-payment-list">
+    <div className="grid gap-[10px]">
       {!data && <LoadingNote />}
       {data
         ? data.payments.map((player) => {
@@ -33,19 +34,31 @@ export default function CaptainPaymentsFrame({ data }: { data?: CaptainPortalDat
                   ? "partial"
                   : "due";
             return (
-              <details className="card captain-payment-player" key={player.registrationId}>
-                <summary>
-                  <span>
+              <details className="card overflow-hidden" key={player.registrationId}>
+                <summary className="grid cursor-pointer grid-cols-[1fr_auto_auto] items-center gap-[10px] p-[16px]">
+                  <span className="grid">
                     <b>{player.playerName}</b>
-                    <small>Remaining {money(player.balance)}</small>
+                    <small className="text-[#657285]">Remaining {money(player.balance)}</small>
                   </span>
-                  <em className={`payment-flag ${status}`}>{status}</em>
+                  {/* paid renders in no conference the screenshots reach; its
+                      two declarations are carried across with the other two. */}
+                  <em
+                    className={`rounded-full p-[5px_8px] text-[12px] font-[800] uppercase not-italic ${
+                      status === "paid"
+                        ? "bg-[#eaf6ec] text-[#18753a]"
+                        : status === "partial"
+                          ? "bg-[#fff4da] text-[#8a5900]"
+                          : "bg-[#fff1f1] text-[#a51118]"
+                    }`}
+                  >
+                    {status}
+                  </em>
                   <strong aria-hidden="true">
                     <ChevronRight className="go-caret" />
                   </strong>
                 </summary>
-                <div>
-                  <div className="captain-balance-grid">
+                <div className="p-[0_16px_16px]">
+                  <div className="grid grid-cols-4 gap-[7px] max-[620px]:grid-cols-2 [&>span]:grid [&>span]:rounded-[10px] [&>span]:bg-[#f3f5f6] [&>span]:p-[10px_6px] [&_small]:text-[11px]">
                     <span>
                       <small>Total Due</small>
                       <b>{money(player.totalCharges)}</b>
@@ -63,7 +76,7 @@ export default function CaptainPaymentsFrame({ data }: { data?: CaptainPortalDat
                       <b>{money(player.balance)}</b>
                     </span>
                   </div>
-                  <div className="captain-fee-breakdown">
+                  <div className="mt-[10px] grid [&>span]:flex [&>span]:justify-between [&>span]:border-b [&>span]:border-[#e5e7e9] [&>span]:py-[8px]">
                     <span>
                       League fee <b>{money(player.leagueFee + player.platformFee)}</b>
                     </span>

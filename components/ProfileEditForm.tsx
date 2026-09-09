@@ -21,7 +21,7 @@ export default function ProfileEditForm({
 }) {
   const [state, action, pending] = useActionState(updateProfileAction, initialState);
   return (
-    <details className="card edit-profile">
+    <details className="card mb-[14px] overflow-hidden [&_form]:grid [&_form]:gap-[9px] [&_form]:p-[17px] [&_input]:w-full [&_input]:rounded-[11px] [&_input]:border [&_input]:border-[#d6dbe2] [&_input]:bg-white [&_input]:p-[11px] [&_label]:text-[12px] [&_label]:font-[800] [&_select]:w-full [&_select]:rounded-[11px] [&_select]:border [&_select]:border-[#d6dbe2] [&_select]:bg-white [&_select]:p-[11px] [&_summary]:flex [&_summary]:cursor-pointer [&_summary]:list-none [&_summary]:justify-between [&_summary]:p-[15px_18px] [&_summary]:font-[800] [&_summary::-webkit-details-marker]:hidden open:[&_summary]:border-b open:[&_summary]:border-line">
       <summary>
         Edit My Profile{" "}
         <span aria-hidden="true">

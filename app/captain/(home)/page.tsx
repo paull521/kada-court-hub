@@ -36,7 +36,7 @@ async function DashboardTiles({ data: portal }: { data: Promise<CaptainPortalDat
     <>
       <CaptainDashboardFrame data={data} />
       {typeof conferenceInvitationToken === "string" && (
-        <ConferencePlayerInvitation token={conferenceInvitationToken} />
+        <ConferencePlayerInvitation token={conferenceInvitationToken} variant="captain" />
       )}
     </>
   );

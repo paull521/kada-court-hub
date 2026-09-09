@@ -6,6 +6,22 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { switchPlayerContextAction } from "@/app/context/actions";
 import type { PlayerContextOption } from "@/lib/kch-data";
+import { teamBanner, teamBannerCopy } from "@/components/ui/schedule-classes";
+import {
+  contextOption,
+  contextOptionMark,
+  contextOptionSelected,
+} from "@/components/ui/context-classes";
+import {
+  contextOptions,
+  contextStatus,
+  teamBannerCaret,
+  teamDropdown,
+  teamDropdownScrim,
+  teamMark,
+  teamMarkSmall,
+  teamSwitcher,
+} from "@/components/ui/shared-classes";
 
 export default function PlayerContextSwitcher({
   contexts,
@@ -60,46 +76,42 @@ export default function PlayerContextSwitcher({
   }
 
   return (
-    <div className={`team-switcher ${open ? "open" : ""}`.trim()} ref={wrapper}>
+    <div className={`group ${teamSwitcher} ${open ? "open" : ""}`.trim()} ref={wrapper}>
       <button
-        className="card team-banner"
+        className={`card ${teamBanner}`}
         type="button"
         onClick={() => hasContextChoices && setOpen(!open)}
         aria-haspopup={hasContextChoices ? "menu" : undefined}
         aria-expanded={hasContextChoices ? open : undefined}
         disabled={!hasContextChoices}
       >
-        <span className="team-mark small" aria-hidden="true">
+        <span className={`${teamMark} ${teamMarkSmall}`} aria-hidden="true">
           K
         </span>
-        <span className="team-banner-copy">
+        <span className={teamBannerCopy}>
           <b>{active.team}</b>
           <small>
             {active.division} &nbsp;•&nbsp; {active.season}
           </small>
         </span>
-        {hasContextChoices && <ChevronDown className="team-banner-caret" aria-hidden="true" />}
+        {hasContextChoices && <ChevronDown className={teamBannerCaret} aria-hidden="true" />}
       </button>
       {open && (
-        <div
-          className="team-dropdown-scrim"
-          aria-hidden="true"
-          onMouseDown={() => setOpen(false)}
-        />
+        <div className={teamDropdownScrim} aria-hidden="true" onMouseDown={() => setOpen(false)} />
       )}
       {open && (
-        <div className="team-dropdown" role="menu" aria-label="Choose your team">
-          <div className="context-options">
+        <div className={teamDropdown} role="menu" aria-label="Choose your team">
+          <div className={contextOptions}>
             {contexts.map((context) => (
               <button
-                className={`context-option ${context.registrationId === active.registrationId ? "selected" : ""}`}
+                className={`${contextOption} ${context.registrationId === active.registrationId ? contextOptionSelected : ""}`}
                 type="button"
                 role="menuitem"
                 disabled={pending}
                 onClick={() => choose(context.registrationId)}
                 key={context.registrationId}
               >
-                <span className="context-option-mark" aria-hidden="true">
+                <span className={contextOptionMark} aria-hidden="true">
                   {context.registrationId === active.registrationId ? (
                     <Check className="ui-icon" />
                   ) : (
@@ -123,7 +135,7 @@ export default function PlayerContextSwitcher({
               </button>
             ))}
           </div>
-          {pending && <p className="context-status">Updating your player view…</p>}
+          {pending && <p className={contextStatus}>Updating your player view…</p>}
           {error && <p className="form-error">{error}</p>}
         </div>
       )}

@@ -5,6 +5,27 @@ import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { switchCaptainContextAction } from "@/app/captain/context-actions";
 import type { CaptainContextOption } from "@/lib/captain-data";
+import { teamBanner, teamBannerCopy } from "@/components/ui/schedule-classes";
+import {
+  contextOption,
+  contextOptionMark,
+  contextOptionSelected,
+  contextSheet,
+  contextTrigger,
+} from "@/components/ui/context-classes";
+import {
+  contextHelp,
+  contextOptions,
+  contextOverlay,
+  contextStatus,
+  sheetHandle,
+  teamBannerCaret,
+  teamDropdown,
+  teamDropdownScrim,
+  teamMark,
+  teamMarkSmall,
+  teamSwitcher,
+} from "@/components/ui/shared-classes";
 
 export default function CaptainContextSwitcher({
   contexts,
@@ -51,46 +72,46 @@ export default function CaptainContextSwitcher({
 
   if (variant === "banner") {
     return (
-      <div className={`team-switcher ${open ? "open" : ""}`.trim()}>
+      <div className={`group ${teamSwitcher} ${open ? "open" : ""}`.trim()}>
         <button
-          className="card team-banner"
+          className={`card ${teamBanner}`}
           type="button"
           onClick={() => contexts.length > 1 && setOpen(!open)}
           aria-haspopup={contexts.length > 1 ? "menu" : undefined}
           aria-expanded={contexts.length > 1 ? open : undefined}
           disabled={contexts.length < 2}
         >
-          <span className="team-mark small" aria-hidden="true">
+          <span className={`${teamMark} ${teamMarkSmall}`} aria-hidden="true">
             K
           </span>
-          <span className="team-banner-copy">
+          <span className={teamBannerCopy}>
             <b>{active.teamName}</b>
             <small>
               {active.divisionName} &nbsp;•&nbsp; {active.seasonName}
             </small>
           </span>
-          {contexts.length > 1 && <ChevronDown className="team-banner-caret" aria-hidden="true" />}
+          {contexts.length > 1 && <ChevronDown className={teamBannerCaret} aria-hidden="true" />}
         </button>
         {open && (
           <div
-            className="team-dropdown-scrim"
+            className={teamDropdownScrim}
             aria-hidden="true"
             onMouseDown={() => setOpen(false)}
           />
         )}
         {open && (
-          <div className="team-dropdown" role="menu" aria-label="Choose your team">
-            <div className="context-options">
+          <div className={teamDropdown} role="menu" aria-label="Choose your team">
+            <div className={contextOptions}>
               {contexts.map((context) => (
                 <button
-                  className={`context-option ${context.registrationId === active.registrationId ? "selected" : ""}`}
+                  className={`${contextOption} ${context.registrationId === active.registrationId ? contextOptionSelected : ""}`}
                   type="button"
                   role="menuitem"
                   disabled={pending}
                   onClick={() => choose(context.registrationId)}
                   key={context.registrationId}
                 >
-                  <span className="context-option-mark" aria-hidden="true">
+                  <span className={contextOptionMark} aria-hidden="true">
                     {context.registrationId === active.registrationId ? (
                       <Check className="ui-icon" />
                     ) : (
@@ -112,7 +133,7 @@ export default function CaptainContextSwitcher({
                 </button>
               ))}
             </div>
-            {pending && <p className="context-status">Updating your captain view…</p>}
+            {pending && <p className={contextStatus}>Updating your captain view…</p>}
             {error && <p className="form-error">{error}</p>}
           </div>
         )}
@@ -123,7 +144,7 @@ export default function CaptainContextSwitcher({
   return (
     <>
       <button
-        className="context-switcher-trigger captain-context-trigger"
+        className={`captain-context-trigger ${contextTrigger}`}
         type="button"
         onClick={() => contexts.length > 1 && setOpen(true)}
         aria-haspopup={contexts.length > 1 ? "dialog" : undefined}
@@ -139,17 +160,17 @@ export default function CaptainContextSwitcher({
       </button>
       {open && (
         <div
-          className="context-overlay context-overlay-open"
+          className={`context-overlay-open ${contextOverlay}`}
           role="presentation"
           onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}
         >
           <section
-            className="context-sheet"
+            className={contextSheet}
             role="dialog"
             aria-modal="true"
             aria-labelledby="captain-context-title"
           >
-            <div className="context-sheet-handle" />
+            <div className={sheetHandle} />
             <header>
               <span>
                 <small>CAPTAIN VIEW</small>
@@ -159,19 +180,19 @@ export default function CaptainContextSwitcher({
                 ×
               </button>
             </header>
-            <p className="context-help">
+            <p className={contextHelp}>
               Your Captain Home, Team Roster, Schedule, and Payments will update together.
             </p>
-            <div className="context-options">
+            <div className={contextOptions}>
               {contexts.map((context) => (
                 <button
-                  className={`context-option ${context.registrationId === active.registrationId ? "selected" : ""}`}
+                  className={`${contextOption} ${context.registrationId === active.registrationId ? contextOptionSelected : ""}`}
                   type="button"
                   disabled={pending}
                   onClick={() => choose(context.registrationId)}
                   key={context.registrationId}
                 >
-                  <span className="context-option-mark" aria-hidden="true">
+                  <span className={contextOptionMark} aria-hidden="true">
                     {context.registrationId === active.registrationId ? (
                       <Check className="ui-icon" />
                     ) : (
@@ -192,7 +213,7 @@ export default function CaptainContextSwitcher({
                 </button>
               ))}
             </div>
-            {pending && <p className="context-status">Updating your captain view…</p>}
+            {pending && <p className={contextStatus}>Updating your captain view…</p>}
             {error && <p className="form-error">{error}</p>}
           </section>
         </div>

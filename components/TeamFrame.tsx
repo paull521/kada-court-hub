@@ -1,6 +1,21 @@
 import { LoadingNote, SkeletonText } from "@/components/Skeleton";
 import PlayerContextSwitcher from "@/components/PlayerContextSwitcher";
 import type { PlayerPortalData } from "@/lib/kch-data";
+import { teamBanner, teamBannerCopy } from "@/components/ui/schedule-classes";
+import {
+  emptyNote,
+  familyBanner,
+  familyQuote,
+  familyQuoteAuthor,
+  jersey,
+  panel,
+  playerName,
+  rosterRow,
+  sectionHeading,
+  teamMark,
+  teamMarkSmall,
+  teamSwitcher,
+} from "@/components/ui/shared-classes";
 
 /**
  * My Team, written once and drawn twice: with the portal data, and without it.
@@ -28,12 +43,12 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
           activeRegistrationId={data.activeRegistrationId}
         />
       ) : (
-        <div className="team-switcher">
-          <div className="card team-banner">
-            <span className="team-mark small" aria-hidden="true">
+        <div className={teamSwitcher}>
+          <div className={`card ${teamBanner}`}>
+            <span className={`${teamMark} ${teamMarkSmall}`} aria-hidden="true">
               K
             </span>
-            <span className="team-banner-copy">
+            <span className={teamBannerCopy}>
               <b>
                 <SkeletonText width="7.5em" />
               </b>
@@ -44,8 +59,8 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
           </div>
         </div>
       )}
-      <section className="card panel roster-panel">
-        <div className="section-heading">
+      <section className={`card roster-panel ${panel}`}>
+        <div className={sectionHeading}>
           <h2>ROSTER</h2>
           <span>
             {data ? (
@@ -60,13 +75,13 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
             roster.map((player) => {
               const answer = data.availability.find((item) => item.name === player.name);
               return (
-                <div className="roster-row roster-with-availability" key={player.id}>
+                <div className={`${rosterRow} grid-cols-[auto_auto_1fr_auto]`} key={player.id}>
                   <i
-                    className={`availability-dot ${answer?.available === false ? "no" : "yes"}`}
+                    className={`inline-block h-[11px] w-[11px] flex-none rounded-full bg-[#2a9b4c] ${answer?.available === false ? "bg-[#d72b2b]" : ""}`}
                     title={answer?.available === false ? "Unavailable" : "Available"}
                   />
-                  <b className="jersey">{player.number || "—"}</b>
-                  <span className="roster-player-name">
+                  <b className={jersey}>{player.number || "—"}</b>
+                  <span className={playerName}>
                     <strong>{player.name}</strong>
                     <small>
                       {player.jerseyName ? `${player.jerseyName} · ` : ""}
@@ -80,16 +95,16 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
               );
             })
           ) : (
-            <p className="empty-note">The roster has not been published yet.</p>
+            <p className={emptyNote}>The roster has not been published yet.</p>
           )
         ) : (
           [0, 1, 2, 3, 4, 5].map((index) => (
-            <div className="roster-row roster-with-availability" key={index}>
-              <i className="availability-dot" />
-              <b className="jersey">
+            <div className={`${rosterRow} grid-cols-[auto_auto_1fr_auto]`} key={index}>
+              <i className="inline-block h-[11px] w-[11px] flex-none rounded-full bg-[#2a9b4c]" />
+              <b className={jersey}>
                 <SkeletonText width="1.2em" />
               </b>
-              <span className="roster-player-name">
+              <span className={playerName}>
                 <strong>
                   <SkeletonText width="9em" />
                 </strong>
@@ -104,11 +119,11 @@ export default function TeamFrame({ data }: { data?: PlayerPortalData }) {
           ))
         )}
       </section>
-      <section className="family-banner">
-        <p className="family-quote">
+      <section className={familyBanner}>
+        <p className={familyQuote}>
           “Talent wins games, but teamwork and intelligence win championships.”
         </p>
-        <p className="family-quote-author">— MJ</p>
+        <p className={familyQuoteAuthor}>— MJ</p>
       </section>
     </>
   );

@@ -4,6 +4,7 @@ import { Clock, FileCheck, Landmark, Wallet } from "lucide-react";
 import { useActionState, useState } from "react";
 import { submitPaymentNoticeAction, type PaymentActionState } from "@/app/payments/actions";
 import type { PaymentSubmission } from "@/lib/kch-data";
+import { methodPanel, panel, paymentStatusCard } from "@/components/ui/shared-classes";
 
 const initialState: PaymentActionState = {};
 
@@ -22,10 +23,10 @@ export default function PlayerPaymentForm({
   const disabled = balance <= 0 || awaiting.length > 0;
 
   return (
-    <section className={`card panel payment-method-panel ${disabled ? "disabled" : ""}`}>
+    <section className={`card ${panel} ${methodPanel} ${disabled ? "disabled" : ""}`}>
       <h2>PAYMENT METHODS</h2>
       {awaiting.map((submission) => (
-        <div className="payment-status-card" key={submission.id}>
+        <div className={paymentStatusCard} key={submission.id}>
           <span>
             <Clock className="ui-icon" />
           </span>
@@ -40,11 +41,14 @@ export default function PlayerPaymentForm({
           </div>
         </div>
       ))}
-      <form action={action} className="payment-submit-form always-visible">
+      <form
+        action={action}
+        className="grid gap-[14px] [&>label]:grid [&>label]:gap-[7px]! [&>label]:text-[14px] [&>label]:font-[800] [&>label_input]:min-h-[48px] [&>label_input]:rounded-[11px] [&>label_input]:border [&>label_input]:border-[#d6dbe2] [&>label_input]:p-[11px] [&>label_input]:text-[16px] [&>label_small]:font-[500] [&>label_small]:text-muted"
+      >
         <input type="hidden" name="registrationId" value={registrationId} />
-        <label className="payment-amount-label">
+        <label className="grid gap-[6px] font-[800] [&>small]:font-medium [&>small]:text-[#657285]">
           How much will you pay?
-          <div className="payment-amount-input">
+          <div className="flex items-center rounded-[12px] border border-[#ccd2d8] bg-white px-[12px] [&>span]:text-[20px] [&>span]:font-[900] [&_input]:w-full [&_input]:border-0! [&_input]:p-[13px_8px]! [&_input]:text-[22px]! [&_input]:font-[900] [&_input]:shadow-none!">
             <span>$</span>
             <input
               name="amount"
@@ -60,7 +64,7 @@ export default function PlayerPaymentForm({
           </div>
           <small>Remaining balance: ${balance.toFixed(2)}</small>
         </label>
-        <fieldset className="method-choice">
+        <fieldset className="m-0 grid grid-cols-3 gap-[9px] border-0 p-0 [&_input:checked+span]:border-2 [&_input:checked+span]:border-navy [&_input:checked+span]:bg-[#eef3f8] [&_input:disabled+span]:cursor-not-allowed [&_input:disabled+span]:border-[#e0e0e0] [&_input:disabled+span]:bg-[#f1f1f1] [&_input:disabled+span]:text-[#9aa0a8] [&_input:disabled+span_b]:text-[#9aa0a8] [&_input[value=waiver]+span_b]:text-gold [&_input]:absolute [&_input]:opacity-0 [&_label]:relative [&_legend]:mb-[9px] [&_legend]:text-[14px] [&_legend]:font-[800] [&_span_b]:text-[22px] [&_span_b]:text-blue [&_span]:flex [&_span]:min-h-[54px] [&_span]:items-center [&_span]:justify-center [&_span]:gap-[10px] [&_span]:rounded-[13px] [&_span]:border [&_span]:border-[#d6dbe2] [&_span]:p-[6px] [&_span]:text-center [&_span]:text-[13px] [&_span]:font-[750] max-tiny:[&_span_b]:text-[18px] max-tiny:[&_span]:min-h-[58px] max-tiny:[&_span]:flex-col max-tiny:[&_span]:gap-[2px]">
           <legend>Choose Zelle, Cash, or Waiver</legend>
           <label>
             <input
@@ -127,7 +131,7 @@ export default function PlayerPaymentForm({
                 }
               />
             </label>
-            <p className="payment-safety-note">
+            <p className="m-0 rounded-[11px] bg-[#f5f7f9] p-[11px] text-[13px] leading-[1.5] text-muted">
               {method === "waiver"
                 ? "Your fee remains due until the conference owner approves the waiver."
                 : "Your balance changes only after the conference owner confirms receipt."}

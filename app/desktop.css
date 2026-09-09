@@ -108,17 +108,6 @@
   /* The context sheet slides up from the bottom edge, which is where a thumb
      is. A pointer is wherever the click was, so it becomes a centred dialog
      and drops the drag handle that implies a swipe. */
-  .context-overlay {
-    align-items: center;
-  }
-  .context-sheet {
-    border-radius: 18px;
-    box-shadow: 0 24px 60px rgba(4, 18, 35, 0.28);
-    animation: none;
-  }
-  .context-sheet-handle {
-    display: none;
-  }
 
   /* --- Header and tab strip ------------------------------------------------
      The bottom bar becomes a tab strip under the header. Bottom nav is a
@@ -175,12 +164,6 @@
   }
   /* The dots were positioned for a stacked, centred nav item. In a horizontal
      one they belong on the icon, not at a percentage of a much wider box. */
-  .nav .nav-team-dot,
-  .nav .nav-alert-dot {
-    top: 9px;
-    right: auto;
-    left: 27px;
-  }
 
   /* --- Content -------------------------------------------------------------
      No fixed bar left to clear, so the 112px of bottom padding goes. */
@@ -200,8 +183,7 @@
   /* Headings and anything that introduces the whole page run the full width. */
   .content.two-col > .eyebrow,
   .content.two-col > .title,
-  .content.two-col > .subtitle,
-  .content.two-col > .family-banner {
+  .content.two-col > .subtitle {
     grid-column: 1 / -1;
   }
   /* Each pane is its own flex stack. Placing cards directly in the grid with
@@ -233,9 +215,6 @@
   }
   /* Except a list label, which belongs to the list under it rather than equally
      to both of its neighbours. */
-  .col-pane > .list-label {
-    margin-top: 10px;
-  }
 
   /* The weekly view follows the player's own fixtures now instead of sitting in
      a column beside them, so it needs the space that separates two sections
@@ -248,36 +227,15 @@
      "All Teams". Same numbers as the rule it should have matched. Left scoped
      to a direct child of .content: the captain's weekly view sits in a column
      of its own and is not what was being looked at. */
-  .content > .player-weekly-schedule {
-    margin-top: 30px;
-  }
-  .content > .player-weekly-schedule > header h2 {
-    font-size: 21px;
-    margin: 3px 0;
-  }
-
   /* The sign-off line closes the page instead of floating in the gap under the
      last card. */
-  .content > .family-banner {
-    margin-top: 34px;
-    padding-top: 22px;
-    border-top: 1px solid var(--line);
-  }
 
-  /* --- Pointer feedback ----------------------------------------------------
-     Every card on these pages is a link, and a pointer gets no answer from the
-     phone layout because a finger never hovers. */
-  a.card,
-  .owner-action-card,
-  .captain-task-tile,
-  .owner-list-row {
+  a.card {
     transition:
       border-color 0.12s ease,
       box-shadow 0.12s ease;
   }
-  a.card:hover,
-  .owner-action-card:hover,
-  .captain-task-tile:hover {
+  a.card:hover {
     border-color: rgba(7, 31, 61, 0.2);
     box-shadow: 0 12px 26px rgba(13, 38, 69, 0.13);
   }
@@ -285,246 +243,32 @@
   /* --- Captain -------------------------------------------------------------
      The dashboard is a 2x3 stack of square tiles on a phone. With the width
      available it reads as one row rather than a column of pairs. */
-  .captain-dashboard-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px;
-  }
-  .captain-task-tile {
-    min-height: 132px;
-  }
-  /* Sized to finish the phone's two-up grid. In a four-up row a full-width
-     last tile is just a stretched one. */
-  .captain-task-tile:last-child:nth-child(odd) {
-    grid-column: auto;
-    min-height: 132px;
-  }
-
-  /* --- Owner ---------------------------------------------------------------
-     The task tiles are squares because a phone shows two per row and a square
-     is the shape that leaves. Four across at this width, a square is 320px tall
-     with its text pinned to the bottom edge and nothing in the middle. Laid on
-     their side they are a row of cards again. The selector matches
-     owner-refinement.css, which loads after globals.css and would otherwise
-     win. */
-  .owner-action-grid {
-    /* Three across, not four: six tiles divide evenly into two rows, and the
-       longest label - Create Season Tournament - stays on one line. */
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
-  }
-  .owner-dashboard .owner-action-card,
-  .owner-action-card {
-    aspect-ratio: auto;
-    min-height: 124px;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 14px;
-    padding: 18px;
-  }
-  .owner-dashboard .owner-action-card > div {
-    flex: 1;
-    min-width: 0;
-  }
-  .owner-more-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  /* Squares again, and squares four-up are 300px tall to hold a label and a
-     dollar amount. The figure is the content; the box should be the size of it. */
-  .financial-income-grid span {
-    aspect-ratio: auto;
-    min-height: 88px;
-    padding: 14px 12px;
-  }
-  .financial-income-grid small {
-    font-size: 11px;
-    line-height: 1.3;
-  }
-  .financial-income-grid b {
-    font-size: 21px;
-  }
-  /* A season is 37 scoresheets, and a scoresheet is two inputs and two buttons.
-     One per row made the page a 12,000px column of half-empty navy blocks. */
-  .scoreboard-list {
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 14px;
-  }
-  /* It introduces the whole division, not the scoresheet it happens to sit
-     next to. */
-  .score-reminder {
-    grid-column: 1 / -1;
-  }
 
   /* A closed disclosure was drawing the rule that separates its heading from a
      body that is not on screen, and parking its caret in the middle of the row
      because the heading no longer fills the width. */
-  .owner-section-title > strong {
-    margin-left: auto;
-  }
-  details.owner-section:not([open]) > summary > .owner-section-title {
-    border-bottom: 0;
-    padding-bottom: 0;
-    margin-bottom: 0;
-  }
-
-  /* Profile's two long account rows are laid out for a phone's single column;
-     given the measure they were sitting at their intrinsic width against the
-     left edge. Carried over from main. */
-  .content.player-profile-content .rules-account-link,
-  .content.role-profile-content .rules-account-link,
-  .content.player-profile-content .account-link[href="/legal"],
-  .content.role-profile-content .account-link[href="/legal"] {
-    width: 100%;
-    justify-self: center;
-  }
 
   /* --- Shared ---------------------------------------------------------------
      The invitation card is a utility, not a headline. Stretched to the measure
      it became a 1,100px button beside a QR code; it wants to be the size of the
      thing it holds. */
-  .conference-player-invitation {
-    max-width: 470px;
-    grid-template-columns: minmax(0, 1fr) 132px;
-    padding: 18px;
-  }
-  .conference-player-invitation img {
-    width: 132px;
-    height: 132px;
-  }
-  .captain-content > .conference-player-invitation {
-    max-width: 430px;
-  }
+
   /* --- Owner's Guide --------------------------------------------------------
      A reading page in a workspace that takes the full app width. Left as one
      column it would be a 1,180px line of body text, so the section index steps
      out of the flow, becomes a rail, and sticks - which is also the only way a
      six-section handbook stays navigable once it is longer than the window.
      The body keeps a reading measure of its own inside the leftover space. */
-  .owner-guide {
-    grid-template-columns: 210px minmax(0, 1fr);
-    gap: 44px;
-    align-items: start;
-  }
-  .owner-guide-index {
-    position: sticky;
-    top: 20px;
-    display: grid;
-    gap: 1px;
-    border-left: 2px solid var(--line);
-  }
-  .owner-guide-index a {
-    padding: 8px 0 8px 14px;
-    margin-left: -2px;
-    border: 0;
-    border-left: 2px solid transparent;
-    border-radius: 0;
-    background: none;
-    font-size: 13px;
-    line-height: 1.3;
-  }
-  .owner-guide-index a:hover {
-    border-left-color: var(--gold);
-    color: var(--navy);
-  }
-  .owner-guide-body {
-    max-width: 760px;
-    gap: 44px;
-  }
-  .owner-guide-section {
-    scroll-margin-top: 24px;
-  }
-  .owner-guide-section > h2 {
-    font-size: 29px;
-  }
-  .guide-opening {
-    padding: 30px 32px;
-  }
-  .guide-opening p {
-    font-size: 22px;
-    max-width: 40ch;
-  }
 
   /* Three columns, so the tab name is a column of its own and the five
      descriptions start on one edge instead of five. */
-  .guide-map > a {
-    grid-template-columns: 38px 132px minmax(0, 1fr);
-    gap: 16px;
-    padding: 16px 2px;
-    align-items: center;
-  }
-  .guide-map-icon {
-    grid-row: auto;
-    width: 38px;
-    height: 38px;
-  }
+
   /* Four now, so they are one row that mirrors the four tiles on Home rather
      than a row of three and an orphan. */
-  .guide-doors {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .season-guide-step {
-    padding-left: 56px;
-    padding-bottom: 28px;
-  }
-  .season-guide-step > b {
-    width: 38px;
-    height: 38px;
-    border-radius: 13px;
-    font-size: 15px;
-  }
-  .season-guide-step:before {
-    left: 18px;
-    top: 44px;
-  }
-  .season-guide-step h3 {
-    margin-top: 8px;
-    font-size: 19px;
-  }
-  .season-guide-step p {
-    font-size: 15px;
-  }
-
-  .guide-page {
-    grid-template-columns: 42px minmax(0, 1fr);
-    gap: 16px;
-    padding: 22px 2px;
-  }
-  .guide-page-icon {
-    width: 42px;
-    height: 42px;
-  }
-  .guide-ability-list li {
-    font-size: 14px;
-  }
 
   /* Eleven short definitions read as a glossary two-up and as a long ladder in
      one column. */
-  .guide-terms {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px 32px;
-  }
-  .guide-faq summary {
-    font-size: 15px;
-  }
-  .guide-faq p {
-    font-size: 14px;
-  }
 
   /* The dashboard strip has a whole row of a three-column grid, so it can hold
      its title and its line on one line each rather than wrapping. */
-  .owner-action-grid .owner-guide-link {
-    grid-template-columns: 48px minmax(0, 1fr) 18px;
-    padding: 16px 18px;
-  }
-  .owner-guide-link > span {
-    width: 48px;
-    height: 48px;
-  }
-  .owner-guide-link b {
-    font-size: 16px;
-  }
-  .owner-guide-link p {
-    font-size: 13px;
-  }
 }

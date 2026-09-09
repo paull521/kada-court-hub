@@ -4,6 +4,7 @@ import HomeFrame from "@/components/HomeFrame";
 import SeasonInvitationCard from "@/components/SeasonInvitationCard";
 import { getPlayerPortalData } from "@/lib/kch-data";
 import { createClient } from "@/lib/supabase/server";
+import { emptyFeature } from "@/components/ui/shared-classes";
 
 export default async function Home() {
   const data = await getPlayerPortalData("home");
@@ -30,7 +31,7 @@ export default async function Home() {
         {data.invitation ? (
           <SeasonInvitationCard invitation={data.invitation} />
         ) : (
-          <section className="card empty-feature">
+          <section className={`card ${emptyFeature}`}>
             <span>🏀</span>
             <div>
               <p className="eyebrow">KCH</p>

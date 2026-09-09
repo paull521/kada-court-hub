@@ -1,4 +1,10 @@
 import { LoadingNote, SkeletonBlock } from "@/components/Skeleton";
+import {
+  frameList,
+  operationsIntro,
+  ownerOperations,
+  pageSection,
+} from "@/components/ui/shared-classes";
 
 /**
  * What an owner page draws while its read is in flight.
@@ -31,12 +37,12 @@ export default function OwnerSectionFrame({
   rowHeight?: string;
 }) {
   return (
-    <section className="owner-operations owner-page-section">
+    <section className={`${ownerOperations} ${pageSection}`}>
       <LoadingNote />
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
       {heading && <h2>{heading}</h2>}
-      {intro && <p className="operations-intro">{intro}</p>}
-      <div className="owner-frame-list">
+      {intro && <p className={operationsIntro}>{intro}</p>}
+      <div className={frameList}>
         {Array.from({ length: rows }, (_, index) => (
           <SkeletonBlock key={index} height={rowHeight} radius="18px" />
         ))}

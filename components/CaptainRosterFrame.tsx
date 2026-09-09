@@ -1,4 +1,11 @@
 import { LoadingNote, SkeletonBlock, SkeletonText } from "@/components/Skeleton";
+import {
+  addedPlayers,
+  captainRosterList,
+  ownerIcon,
+  ownerSection,
+  sectionTitle,
+} from "@/components/ui/shared-classes";
 
 /**
  * What /captain/roster draws while its read is in flight.
@@ -12,10 +19,10 @@ import { LoadingNote, SkeletonBlock, SkeletonText } from "@/components/Skeleton"
  */
 export default function CaptainRosterFrame() {
   return (
-    <section className="card owner-section captain-draft-entry">
+    <section className={`card captain-draft-entry grid gap-[13px] ${ownerSection}`}>
       <LoadingNote />
-      <div className="owner-section-title">
-        <span className="owner-icon">🏀</span>
+      <div className={sectionTitle}>
+        <span className={ownerIcon}>🏀</span>
         <span>
           <h2>Enter Drafted Players</h2>
           <p>
@@ -23,14 +30,14 @@ export default function CaptainRosterFrame() {
           </p>
         </span>
       </div>
-      <section className="captain-added-players">
+      <section className={addedPlayers}>
         <div>
           <h3>Team roster</h3>
           <span>
             <SkeletonText width="5em" />
           </span>
         </div>
-        <div className="captain-roster-list">
+        <div className={captainRosterList}>
           {[0, 1, 2, 3, 4, 5].map((index) => (
             <SkeletonBlock key={index} height="54px" radius="14px" />
           ))}

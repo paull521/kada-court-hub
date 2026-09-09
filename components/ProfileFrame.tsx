@@ -11,13 +11,22 @@ import {
   User,
 } from "lucide-react";
 import { LoadingNote, SkeletonBlock, SkeletonText } from "@/components/Skeleton";
+import { accountLink, accountRow } from "@/components/ui/account-classes";
+import {
+  accountList,
+  avatar,
+  infoRow,
+  panel,
+  profileCard,
+  profileSectionTitle,
+} from "@/components/ui/shared-classes";
 
 function InfoPanelFrame({ title, rows }: { title: string; rows: [ReactNode, string][] }) {
   return (
-    <section className="card panel info-panel">
+    <section className={`card ${panel} [&>h2]:mb-[5px] [&_form]:m-0`}>
       <h2>{title}</h2>
       {rows.map(([icon, label]) => (
-        <div className="info-row" key={label}>
+        <div className={infoRow} key={label}>
           <span>{icon}</span>
           <b>{label}</b>
           <em>
@@ -41,8 +50,8 @@ export default function ProfileFrame() {
       <LoadingNote />
       <h1 className="title">Profile</h1>
       <p className="subtitle">Manage your account and player details</p>
-      <section className="card profile-card">
-        <span className="avatar" />
+      <section className={`card ${profileCard}`}>
+        <span className={avatar} />
         <div>
           <h2>
             <SkeletonText width="8em" />
@@ -84,12 +93,12 @@ export default function ProfileFrame() {
           [<Shirt className="ui-icon" key="size" />, "Preferred Uniform Size"],
         ]}
       />
-      <h2 className="profile-section-title">ACCOUNT</h2>
-      <div className="profile-account-list">
+      <h2 className={profileSectionTitle}>ACCOUNT</h2>
+      <div className={accountList}>
         <SkeletonBlock height="58px" radius="18px" />
         <SkeletonBlock height="58px" radius="18px" />
         {/* These two are the same on every profile there has ever been. */}
-        <span className="card account-link">
+        <span className={`card ${accountRow} ${accountLink}`}>
           <span>
             <BookOpen className="ui-icon" />
           </span>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import ConferenceInviteForm from "./ConferenceInviteForm";
+import { joinCard } from "@/components/ui/shared-classes";
 
 const validToken = (token: string) => /^[0-9a-f-]{36}$/i.test(token);
 export default async function ConferenceInvitePage({
@@ -13,7 +14,7 @@ export default async function ConferenceInvitePage({
     return (
       <main className="shell invite-shell">
         <section className="content">
-          <section className="card join-card">
+          <section className={`card ${joinCard}`}>
             <h1>Invitation unavailable</h1>
           </section>
         </section>
@@ -29,7 +30,7 @@ export default async function ConferenceInvitePage({
     return (
       <main className="shell invite-shell">
         <section className="content">
-          <section className="card join-card">
+          <section className={`card ${joinCard}`}>
             <h1>Invitation unavailable</h1>
           </section>
         </section>
@@ -42,7 +43,7 @@ export default async function ConferenceInvitePage({
         {claims?.claims?.sub ? (
           <ConferenceInviteForm token={token} conferenceName={conferenceName} />
         ) : (
-          <section className="card join-card">
+          <section className={`card ${joinCard}`}>
             <span>🏀</span>
             <h1>{conferenceName}</h1>
             <Link className="btn primary" href={`/login?next=${encodeURIComponent(nextPath)}`}>

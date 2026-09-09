@@ -1,10 +1,10 @@
 import "./globals.css";
 import "./workspaces.css";
 import "./patriotism.css";
-import "./captain-refinement.css";
-import "./owner-refinement.css";
 import "./kch-logo.css";
 import "./desktop.css";
+// Last, so a utility class outranks the seven stylesheets above it.
+import "./tailwind.css";
 import { ReactNode } from "react";
 export const metadata = {
   title: "KadaCourtHub",

@@ -1,0 +1,47 @@
+/* Tailwind, deliberately without Preflight.
+ *
+ * Preflight is Tailwind's reset. Loading it here would strip the margins,
+ * list styles and heading sizes that 8,800 lines of globals.css are written
+ * against, and every page in the app would move at once. Importing theme and
+ * utilities alone adds vocabulary without touching a single existing element:
+ * a utility only applies where something asks for it by name.
+ *
+ * This file is imported last in app/layout.tsx, so a utility outranks the
+ * seven stylesheets before it. That is what lets a migrated component stop
+ * fighting the cascade.
+ *
+ * Preflight can be adopted at the end, once nothing depends on the old
+ * defaults - it is not a prerequisite for any of the work in between.
+ */
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* The palette globals.css already uses, given Tailwind names so that
+ * bg-navy and text-muted mean exactly what --navy and --muted mean today.
+ * One definition, not two: these read the same custom properties the old
+ * stylesheets do, so nothing can drift between a migrated component and one
+ * still waiting its turn. */
+@theme inline {
+  --color-navy: var(--navy);
+  --color-navy2: var(--navy2);
+  --color-blue: var(--blue);
+  --color-red: var(--red);
+  --color-gold: var(--gold);
+  --color-cream: var(--cream);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-green: var(--green);
+}
+
+/* The app's two real breakpoints, named so a component can say what it means.
+ * 900px is the line app/desktop.css is built around; 410px is the small-phone
+ * adjustment globals.css makes in a handful of places. Tailwind's own sm/md/lg
+ * remain available but this app has never used them. */
+@theme {
+  --breakpoint-tiny: 411px;
+  /* The platform tables reflow here, well before the 900px laptop layer. */
+  --breakpoint-mid: 651px;
+  --breakpoint-desk: 900px;
+}

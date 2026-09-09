@@ -14,7 +14,7 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState, type ReactNode } from "react";
 import styles from "./OwnerTeams.module.css";
 import directoryStyles from "./OwnerDirectory.module.css";
 import {
@@ -58,6 +58,33 @@ import type {
   OwnerSeason,
   OwnerTeam,
 } from "@/lib/owner-data";
+import {
+  gamePhase,
+  gamePhaseTone,
+  scheduleStatus,
+  scheduleStatusTone,
+  scheduleTableScroll,
+  scheduleWeek,
+  weeklySchedule,
+  weeklyScheduleList,
+} from "@/components/ui/schedule-classes";
+import {
+  batchSaveButton,
+  cardLabel,
+  compactFields,
+  emptyNote,
+  emptyOperation,
+  fieldHelp,
+  operationsIntro,
+  ownerForm,
+  ownerIcon,
+  ownerOperations,
+  ownerSection,
+  pageSection,
+  reviewActions,
+  reviewActionsCompact,
+  sectionTitle,
+} from "@/components/ui/shared-classes";
 
 const initialState: OwnerActionState = {};
 function Feedback({ state }: { state: OwnerActionState }) {
@@ -76,6 +103,18 @@ function Feedback({ state }: { state: OwnerActionState }) {
     </>
   );
 }
+/* The wizard's small parts: an instruction line, the step-advance footer, and
+   the division invitation card with its two states. */
+const stepNote = "m-0 text-xs leading-[1.5] text-muted";
+const advanceStep =
+  "grid gap-[7px] border-t border-line pt-[13px] [&>small]:text-center [&>small]:text-[9px] [&>small]:text-muted";
+const batchForm = "owner-form rounded-[13px] border border-line bg-[#fbfaf8] p-3";
+const divisionInvitation =
+  "overflow-hidden rounded-[14px] border border-line bg-white [&>summary]:grid [&>summary]:cursor-pointer [&>summary]:grid-cols-[1fr_auto_auto] [&>summary]:items-center [&>summary]:gap-[9px] [&>summary]:p-[13px] [&>summary_span]:grid [&>summary_span]:gap-[3px] [&>summary_small]:text-[10px] [&>summary_small]:text-muted [&>summary_em]:rounded-lg [&>summary_em]:p-[5px_7px] [&>summary_em]:text-[9px] [&>summary_em]:font-[800] [&>summary_em]:not-italic";
+const invitationSent = "[&>summary_em]:bg-[#e8f4e8] [&>summary_em]:text-green";
+const invitationPending =
+  "border-[#e6b35c] [&>summary_em]:bg-[#fff4da] [&>summary_em]:text-[#795009]";
+
 function DivisionJoinLink({ divisionId }: { divisionId: string }) {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
@@ -84,7 +123,7 @@ function DivisionJoinLink({ divisionId }: { divisionId: string }) {
     window.setTimeout(() => setCopied(false), 1800);
   };
   return (
-    <div className="division-join-link">
+    <div className="my-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-[10px] rounded-[13px] border border-[#c9d8ed] bg-[#f5f9ff] p-3 [&>span]:grid [&>span]:gap-1 [&_b]:text-[13px] [&_b]:text-blue [&_small]:text-[10px] [&_small]:leading-[1.35] [&_small]:text-muted [&_button]:rounded-[10px] [&_button]:border [&_button]:border-blue [&_button]:bg-white [&_button]:p-[9px] [&_button]:text-[11px] [&_button]:font-[850] [&_button]:whitespace-nowrap [&_button]:text-blue">
       <span>
         <b>Share this division link</b>
         <small>It identifies the exact conference and division.</small>
@@ -99,11 +138,11 @@ function DivisionJoinLink({ divisionId }: { divisionId: string }) {
 export function CreateSeasonForm({ conferenceId }: { conferenceId: string }) {
   const [state, action, pending] = useActionState(createSeasonAction, initialState);
   return (
-    <form action={action} className="owner-form season-create-form">
+    <form action={action} className={`${ownerForm} season-create-form`}>
       <input type="hidden" name="conferenceId" value={conferenceId} />
       <input type="hidden" name="divisionName" value="" />
-      <div className="season-create-grid">
-        <label className="season-name-field">
+      <div className="grid grid-cols-[1.2fr_1fr_1fr] gap-[8px] max-[500px]:grid-cols-2 [&_label]:text-[10px] [&_input]:min-h-[44px] [&_input]:p-[9px]! [&_input]:text-[13px]!">
+        <label className="max-[500px]:col-span-full">
           Season name
           <input name="name" defaultValue="Fall 2026" maxLength={80} required />
         </label>
@@ -138,7 +177,7 @@ function AdvanceStepForm({
 }) {
   const [state, action, pending] = useActionState(advanceSeasonSetupAction, initialState);
   return (
-    <form action={action} className="advance-step-form">
+    <form action={action} className={advanceStep}>
       <input type="hidden" name="seasonId" value={seasonId} />
       <input type="hidden" name="stage" value={stage} />
       <Feedback state={state} />
@@ -150,18 +189,30 @@ function AdvanceStepForm({
   );
 }
 
+/* Season setup: the wizard's disclosure groups, its sub-forms, and the small
+   grids the create and batch forms are built from. */
+const guidedGroup =
+  "overflow-hidden rounded-[13px] border border-line bg-white [&>summary]:grid [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:grid-cols-[1fr_auto] [&>summary]:items-center [&>summary]:gap-[8px] [&>summary]:p-[12px] [&>summary::-webkit-details-marker]:hidden [&>summary>span:first-child]:grid [&>summary>span:first-child]:gap-[3px] [&>summary_small]:text-[10px] [&>summary_small]:text-muted [&>div]:grid [&>div]:gap-[11px] [&>div]:border-t [&>div]:border-line [&>div]:p-[12px]";
+const guidedSubform =
+  "overflow-hidden rounded-[11px] border border-line [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:p-[10px_12px] [&>summary]:text-[11px] [&>summary]:font-[800] [&>summary]:text-blue [&>summary::-webkit-details-marker]:hidden [&>form]:border-t [&>form]:border-line [&>form]:p-[12px]";
+/* padding and font-size shout: .owner-form input sets both unlayered. */
+const batchCountField =
+  "grid! grid-cols-[minmax(0,1fr)_68px]! items-center gap-[10px]! [&_input]:min-h-[44px] [&_input]:text-center [&_input]:text-[18px]! [&_input]:font-[850]";
+const batchNameGrid =
+  "grid grid-cols-1 gap-[8px] [&_label]:text-[10px] [&_input]:min-h-[44px] [&_input]:p-[9px]! [&_input]:text-[14px]!";
+
 function DivisionSetupStep({ season }: { season: OwnerSeason }) {
   const [state, action, pending] = useActionState(createDivisionsAction, initialState);
   const [divisionCount, setDivisionCount] = useState(1);
   const remaining = Math.max(0, 10 - season.divisions.length);
   return (
-    <div className="guided-step-body">
-      <p className="guided-instruction">
+    <div className="grid gap-[13px] border-t border-line p-[15px]">
+      <p className={stepNote}>
         Create every division for <b>{season.name}</b> together. A season can have up to 10
         divisions, and another division can be added later.
       </p>
       {season.divisions.length > 0 && (
-        <div className="setup-chips">
+        <div className="flex flex-wrap gap-[6px] [&>span]:rounded-xl [&>span]:bg-[#e8f4e8] [&>span]:p-[6px_9px] [&>span]:text-[10px] [&>span]:font-[700] [&>span]:text-green">
           {season.divisions.map((division) => (
             <span key={division.id}>
               <Check className="ui-icon" /> {division.name}
@@ -170,9 +221,9 @@ function DivisionSetupStep({ season }: { season: OwnerSeason }) {
         </div>
       )}
       {remaining > 0 && (
-        <form action={action} className="owner-form batch-setup-form">
+        <form action={action} className={batchForm}>
           <input type="hidden" name="seasonId" value={season.id} />
-          <label className="batch-count-field">
+          <label className={batchCountField}>
             How many divisions are you creating now?
             <input
               type="number"
@@ -185,7 +236,7 @@ function DivisionSetupStep({ season }: { season: OwnerSeason }) {
               }
             />
           </label>
-          <div className="batch-name-grid">
+          <div className={batchNameGrid}>
             {Array.from({ length: Math.min(divisionCount, remaining) }, (_, index) => (
               <label key={index}>
                 Division {index + 1}
@@ -199,7 +250,7 @@ function DivisionSetupStep({ season }: { season: OwnerSeason }) {
             ))}
           </div>
           <Feedback state={state} />
-          <button className="btn secondary batch-save-button" disabled={pending}>
+          <button className={`btn secondary ${batchSaveButton}`} disabled={pending}>
             {pending
               ? "Saving divisions…"
               : `Save ${Math.min(divisionCount, remaining)} Division${Math.min(divisionCount, remaining) === 1 ? "" : "s"}`}
@@ -215,7 +266,7 @@ function DivisionTeamBuilder({ division }: { division: OwnerSeason["divisions"][
   const [state, action, pending] = useActionState(createTeamsAction, initialState);
   const [teamCount, setTeamCount] = useState(division.teams.length ? 1 : 8);
   return (
-    <details className="guided-group" open>
+    <details className={guidedGroup} open>
       <summary>
         <span>
           <b>{division.name}</b>
@@ -229,7 +280,7 @@ function DivisionTeamBuilder({ division }: { division: OwnerSeason["divisions"][
       </summary>
       <div>
         {division.teams.length > 0 && (
-          <div className="setup-chips">
+          <div className="flex flex-wrap gap-[6px] [&>span]:rounded-xl [&>span]:bg-[#e8f4e8] [&>span]:p-[6px_9px] [&>span]:text-[10px] [&>span]:font-[700] [&>span]:text-green">
             {division.teams.map((team) => (
               <span key={team.id}>
                 <Check className="ui-icon" /> {team.name}
@@ -237,9 +288,9 @@ function DivisionTeamBuilder({ division }: { division: OwnerSeason["divisions"][
             ))}
           </div>
         )}
-        <form action={action} className="owner-form batch-setup-form">
+        <form action={action} className={batchForm}>
           <input type="hidden" name="divisionId" value={division.id} />
-          <label className="batch-count-field">
+          <label className={batchCountField}>
             How many teams are you creating for {division.name}?
             <input
               type="number"
@@ -252,7 +303,7 @@ function DivisionTeamBuilder({ division }: { division: OwnerSeason["divisions"][
               }
             />
           </label>
-          <div className="batch-name-grid">
+          <div className={batchNameGrid}>
             {Array.from({ length: teamCount }, (_, index) => (
               <label key={index}>
                 Team {index + 1}
@@ -266,7 +317,7 @@ function DivisionTeamBuilder({ division }: { division: OwnerSeason["divisions"][
             ))}
           </div>
           <Feedback state={state} />
-          <button className="btn secondary batch-save-button" disabled={pending}>
+          <button className={`btn secondary ${batchSaveButton}`} disabled={pending}>
             {pending ? "Saving teams…" : `Save ${teamCount} Team${teamCount === 1 ? "" : "s"}`}
           </button>
         </form>
@@ -277,8 +328,8 @@ function DivisionTeamBuilder({ division }: { division: OwnerSeason["divisions"][
 
 function TeamsSetupStep({ season }: { season: OwnerSeason }) {
   return (
-    <div className="guided-step-body">
-      <p className="guided-instruction">
+    <div className="grid gap-[13px] border-t border-line p-[15px]">
+      <p className={stepNote}>
         Choose the team count for each division, enter every team name, then save the group
         together.
       </p>
@@ -317,11 +368,11 @@ function DirectoryLeaderPicker({
           )
           .slice(0, 6);
   return (
-    <details className="guided-subform leader-search" open={currentName === "Unassigned"}>
+    <details className={`leader-search ${guidedSubform}`} open={currentName === "Unassigned"}>
       <summary>
         {role}: {currentName}
       </summary>
-      <form action={action} className="owner-form">
+      <form action={action} className={ownerForm}>
         <input type="hidden" name="teamId" value={teamId} />
         <input type="hidden" name="role" value={role} />
         <input type="hidden" name="playerId" value={selected?.id ?? ""} />
@@ -338,7 +389,7 @@ function DirectoryLeaderPicker({
           />
         </label>
         {normalized.length >= 2 && (
-          <div className="leader-search-results">
+          <div className="grid gap-[6px] rounded-xl border border-line bg-white p-[6px] [&>button]:grid [&>button]:w-full [&>button]:cursor-pointer [&>button]:gap-[2px] [&>button]:rounded-[9px] [&>button]:border-0 [&>button]:bg-[#f7f8fa] [&>button]:p-[10px_12px] [&>button]:text-left [&>button]:text-navy! [&>button:hover]:bg-[#edf3fa] [&_small]:text-[11px] [&_small]:text-muted [&>p]:m-[6px] [&>p]:text-[13px] [&>p]:text-muted">
             {matches.length ? (
               matches.map((player) => (
                 <button
@@ -364,11 +415,11 @@ function DirectoryLeaderPicker({
           </div>
         )}
         {selected && (
-          <p className="leader-selected">
+          <p className="m-0 rounded-[10px] bg-[#eef8ef] p-[10px_12px] text-[#176a31]">
             <Check className="ui-icon" /> Selected: <b>{selected.name}</b>
           </p>
         )}
-        <p className="field-help">
+        <p className={fieldHelp}>
           The full player directory stays hidden until you search. Assigning this role also creates
           the player&apos;s normal season registration.
         </p>
@@ -398,12 +449,12 @@ function CaptainsSetupStep({
     "Nathan Santos",
   ];
   return (
-    <div className="guided-step-body">
-      <p className="guided-instruction">
+    <div className="grid gap-[13px] border-t border-line p-[15px]">
+      <p className={stepNote}>
         Search the conference player directory to assign each captain and co-captain. Leaders
         register like every other player and cannot lead two teams in the same season.
       </p>
-      <aside className="leader-suggestions">
+      <aside className="rounded-[13px] border border-[#edd7ae] bg-[#fffaf0] p-3 [&>small]:font-[800] [&>small]:text-[#a96500] [&>div]:flex [&>div]:gap-[6px] [&>div]:overflow-x-auto [&>div]:pt-2 [&_span]:flex-none [&_span]:rounded-full [&_span]:border [&_span]:border-[#edd7ae] [&_span]:bg-white [&_span]:p-[7px_9px] [&_span]:text-xs">
         <small>FAKE PLAYERS TO TRY</small>
         <div>
           {suggestions.map((name) => (
@@ -412,7 +463,7 @@ function CaptainsSetupStep({
         </div>
       </aside>
       {teams.map((team) => (
-        <details className="guided-group" key={team.id}>
+        <details className={guidedGroup} key={team.id}>
           <summary>
             <span>
               <b>{team.name}</b>
@@ -465,7 +516,7 @@ function PreseasonDivisionForm({
     initialState,
   );
   return (
-    <details className="guided-group preseason-division" open={!division.preseasonConfigured}>
+    <details className={`preseason-division ${guidedGroup}`} open={!division.preseasonConfigured}>
       <summary>
         <span>
           <b>{division.name}</b>
@@ -481,7 +532,7 @@ function PreseasonDivisionForm({
       </summary>
       <div>
         {previousDivisions.length > 0 && (
-          <form action={copyAction} className="owner-form reuse-uniform-form">
+          <form action={copyAction} className={`${ownerForm} reuse-uniform-form`}>
             <input type="hidden" name="divisionId" value={division.id} />
             <label>
               Reuse prior season uniforms
@@ -503,9 +554,12 @@ function PreseasonDivisionForm({
             <small>Copies the dark/light photos only. Fees stay specific to this season.</small>
           </form>
         )}
-        <form action={action} className="owner-form preseason-form">
+        <form
+          action={action}
+          className={`${ownerForm} [&_fieldset]:m-0 [&_fieldset]:border-0 [&_fieldset]:p-0`}
+        >
           <input type="hidden" name="divisionId" value={division.id} />
-          <fieldset className="fee-toggle-card">
+          <fieldset className="grid gap-[10px] rounded-[13px]! border! border-line! bg-[#fbfaf8] p-3! [&>.check-row]:text-sm [&_input:disabled]:bg-[#eee] [&_input:disabled]:text-[#999]">
             <label className="check-row">
               <input
                 name="leagueFeeEnabled"
@@ -530,7 +584,7 @@ function PreseasonDivisionForm({
               />
             </label>
           </fieldset>
-          <fieldset className="fee-toggle-card">
+          <fieldset className="grid gap-[10px] rounded-[13px]! border! border-line! bg-[#fbfaf8] p-3! [&>.check-row]:text-sm [&_input:disabled]:bg-[#eee] [&_input:disabled]:text-[#999]">
             <label className="check-row">
               <input
                 name="uniformFeeEnabled"
@@ -555,7 +609,7 @@ function PreseasonDivisionForm({
               />
             </label>
           </fieldset>
-          <div className="uniform-upload-grid">
+          <div className={`${uniformUploadGrid} mt-[2px]`}>
             <label>
               <span>
                 Dark uniform <small>(optional)</small>
@@ -583,7 +637,7 @@ function PreseasonDivisionForm({
               <input name="lightImage" type="file" accept="image/jpeg,image/png,image/webp" />
             </label>
           </div>
-          <p className="field-help">
+          <p className={fieldHelp}>
             Fees are required before invitations. Uniform photos are optional and can be added later
             for {division.name}.
           </p>
@@ -607,8 +661,8 @@ function PreseasonSetupStep({
   const [state, action, pending] = useActionState(completePreseasonDetailsAction, initialState);
   const ready = season.divisions.every((division) => division.preseasonConfigured);
   return (
-    <div className="guided-step-body">
-      <p className="guided-instruction">
+    <div className="grid gap-[13px] border-t border-line p-[15px]">
+      <p className={stepNote}>
         Before inviting players, save each division&apos;s league and optional uniform cost. You may
         reuse prior uniform photos or add new ones later.
       </p>
@@ -619,7 +673,7 @@ function PreseasonSetupStep({
           key={division.id}
         />
       ))}
-      <form action={action} className="advance-step-form">
+      <form action={action} className={advanceStep}>
         <input type="hidden" name="seasonId" value={season.id} />
         <Feedback state={state} />
         <button className="btn primary" disabled={pending || !ready}>
@@ -685,7 +739,7 @@ function DivisionInvitationForm({
   const message = customized ? customMessage : suggested;
   if (division.rosterFinalPublished)
     return (
-      <details className="division-invitation sent" open={open}>
+      <details className={`${divisionInvitation} ${invitationSent}`} open={open}>
         <summary>
           <span>
             <b>{division.name}</b>
@@ -696,7 +750,7 @@ function DivisionInvitationForm({
             <ChevronRight className="go-caret" />
           </strong>
         </summary>
-        <div className="division-invitation-locked">
+        <div className="grid gap-1 border-t border-line bg-[#f7f7f6] p-[13px] [&_small]:text-[10px] [&_small]:leading-[1.4] [&_small]:text-muted">
           <b>Invitation list locked</b>
           <small>
             This division&apos;s final roster is published, so no further players can be invited or
@@ -707,7 +761,7 @@ function DivisionInvitationForm({
     );
   return (
     <details
-      className={`division-invitation ${division.invitationSent ? "sent" : "needs-invitation"}`}
+      className={`${divisionInvitation} ${division.invitationSent ? invitationSent : invitationPending}`}
       open={open}
     >
       <summary>
@@ -724,9 +778,9 @@ function DivisionInvitationForm({
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <form action={action} className="owner-form division-invitation-form">
+      <form action={action} className={`${ownerForm} border-t border-line p-[13px]`}>
         <input type="hidden" name="divisionId" value={division.id} />
-        <section className="invitation-plan">
+        <section className="grid grid-cols-3 gap-[7px] [&>span]:grid [&>span]:gap-[3px] [&>span]:rounded-[10px] [&>span]:bg-[#f7f7f6] [&>span]:p-[9px_5px] [&>span]:text-center [&_small]:text-[8px] [&_small]:font-[800] [&_small]:text-muted [&_b]:text-[17px]">
           <span>
             <small>TEAMS</small>
             <b>{teamCount}</b>
@@ -740,7 +794,7 @@ function DivisionInvitationForm({
             <b>{selected.size + captainCount}</b>
           </span>
         </section>
-        <p className="field-help">
+        <p className={fieldHelp}>
           {captainCount
             ? `${captainCount} captain${captainCount === 1 ? " is" : "s are"} already counted. Select the additional players who should receive this invitation.`
             : "Choose the players who should receive this division invitation."}
@@ -748,7 +802,7 @@ function DivisionInvitationForm({
         <label>
           Choose players to invite <small>(nobody is selected by default)</small>
         </label>
-        <div className="invitation-player-list">
+        <div className="grid max-h-[315px] gap-[6px] overflow-auto rounded-[13px] border border-line bg-[#fbfaf8] p-[3px] [&_label]:grid [&_label]:cursor-pointer [&_label]:grid-cols-[22px_minmax(0,1fr)] [&_label]:items-center [&_label]:gap-2 [&_label]:rounded-[10px] [&_label]:p-[9px] [&_label.selected]:bg-[#fff4da] [&_input]:h-[17px] [&_input]:w-[17px] [&_label_span]:grid [&_label_span]:gap-[2px] [&_label_b]:text-[13px] [&_label_small]:truncate [&_label_small]:text-[10px] [&_label_small]:text-muted">
           {directory.map((player) => {
             const checked = selected.has(player.id);
             return (
@@ -777,7 +831,7 @@ function DivisionInvitationForm({
             );
           })}
           {!directory.length && (
-            <p className="empty-note">Add KCH players to this conference directory first.</p>
+            <p className={emptyNote}>Add KCH players to this conference directory first.</p>
           )}
         </div>
         <label>
@@ -809,7 +863,7 @@ function DivisionInvitationForm({
           Invitation flyer <small>(optional)</small>
           <input name="flyer" type="file" accept="image/jpeg,image/png,image/webp" />
         </label>
-        <p className="field-help">
+        <p className={fieldHelp}>
           Only the checked players receive this division invitation. Earlier invite responses are
           preserved.
         </p>
@@ -827,7 +881,11 @@ function DivisionInvitationForm({
           />
         </label>
         {customized && (
-          <button type="button" className="restore-message" onClick={() => setCustomized(false)}>
+          <button
+            type="button"
+            className="cursor-pointer justify-self-start border-0 bg-none p-0 font-[750] text-blue!"
+            onClick={() => setCustomized(false)}
+          >
             Restore suggested message
           </button>
         )}
@@ -856,12 +914,12 @@ function InvitePlayersSetupStep({
   const firstUnsent = season.divisions.findIndex((division) => !division.invitationSent);
   const sent = season.divisions.filter((division) => division.invitationSent).length;
   return (
-    <div className="guided-step-body">
-      <p className="guided-instruction">
+    <div className="grid gap-[13px] border-t border-line p-[15px]">
+      <p className={stepNote}>
         Choose exactly who receives each division invitation. This workspace stays open during
         drafting, so you can add a new KCH player later without disturbing earlier responses.
       </p>
-      <div className="invitation-progress">
+      <div className="grid gap-[3px] rounded-[13px] bg-[#f6f1e8] p-[12px_14px] [&>b]:text-sm [&>span]:text-[11px] [&>span]:text-muted">
         <b>
           {sent} of {season.divisions.length} divisions sent
         </b>
@@ -921,6 +979,20 @@ function downloadDivisionDraftSheet(season: OwnerSeason, division: OwnerDivision
   URL.revokeObjectURL(url);
 }
 
+/* Draft review and the responded-player list. Both render only part-way
+   through season setup, in data no conference in the suite has, so these are
+   transcribed rather than photographed - see "Carried by hand" in
+   MIGRATION.md. */
+const draftReview =
+  "block overflow-hidden rounded-xl border border-line bg-[#fafafa] [&>summary]:grid [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:grid-cols-[minmax(0,1fr)_auto_12px] [&>summary]:items-center [&>summary]:gap-[7px] [&>summary]:p-[11px] [&>summary::-webkit-details-marker]:hidden [&>summary>span]:grid [&>summary>span]:gap-[3px] [&_small]:text-[10px] [&_small]:text-muted [&>summary>em]:self-center [&>summary>em]:rounded-[9px] [&>summary>em]:p-[5px_7px] [&>summary>em]:text-[8px] [&>summary>em]:font-[850] [&>summary>em]:uppercase [&>summary>em]:not-italic [&>summary>strong]:transition-transform group-open:[&>summary>strong]:rotate-90";
+const draftReviewTone: Record<string, string> = {
+  approved: "[&>summary>em]:bg-[#dff3df] [&>summary>em]:text-green",
+  changes_requested: "[&>summary>em]:bg-[#f7e6e6] [&>summary>em]:text-[#a62424]",
+  editing: "[&>summary>em]:bg-[#edf0f3] [&>summary>em]:text-muted",
+};
+const draftReviewPending = "[&>summary>em]:bg-[#fff4da] [&>summary>em]:text-[#795009]";
+const handoffNote = "m-0 rounded-[9px] bg-[#fff4da] p-[9px] text-[10px] leading-[1.45]";
+
 function TeamDraftReview({
   team,
   allowChanges = false,
@@ -940,7 +1012,9 @@ function TeamDraftReview({
           : "Captain update pending";
   const roster = team.players.filter((player) => player.status !== "inactive");
   return (
-    <details className={`team-draft-review ${team.draftStatus}`}>
+    <details
+      className={`group ${draftReview} ${draftReviewTone[team.draftStatus] ?? draftReviewPending}`}
+    >
       <summary>
         <span>
           <b>{team.name}</b>
@@ -953,8 +1027,8 @@ function TeamDraftReview({
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <div className="team-review-body">
-        <div className="team-review-roster">
+      <div className="grid gap-[9px] border-t border-line p-[0_11px_11px] pt-[10px]">
+        <div className="col-span-full grid rounded-[10px] border border-line bg-white px-[9px] [&>span]:grid [&>span]:grid-cols-[25px_minmax(0,1fr)] [&>span]:items-center [&>span]:gap-2 [&>span]:border-t [&>span]:border-line [&>span]:py-2 [&>span:first-child]:border-t-0 [&>span>b]:text-center [&>span>b]:text-[10px] [&>span>b]:text-gold [&>span>span]:grid [&>span>span]:gap-[2px] [&_strong]:text-xs [&_strong]:leading-[1.35] [&_small]:text-[9px] [&_small]:[overflow-wrap:anywhere] [&_small]:text-muted">
           {roster.map((player, index) => {
             const designation =
               player.role !== "Player" ? `${player.role} / ${player.position}` : player.position;
@@ -974,14 +1048,14 @@ function TeamDraftReview({
               </span>
             );
           })}
-          {!roster.length && <p className="empty-note">No players assigned to this team.</p>}
+          {!roster.length && <p className={emptyNote}>No players assigned to this team.</p>}
         </div>
         {(team.draftStatus === "submitted" ||
           (allowChanges && team.draftStatus === "approved")) && (
-          <form action={action} className="team-review-form">
+          <form action={action} className="col-span-full">
             <input type="hidden" name="teamId" value={team.id} />
             <Feedback state={state} />
-            <div className="draft-review-actions compact">
+            <div className={`${reviewActions} ${reviewActionsCompact}`}>
               <button
                 className="btn secondary"
                 name="decision"
@@ -1006,7 +1080,7 @@ function TeamDraftReview({
 function RosterRequestReview({ request }: { request: OwnerRosterRequest }) {
   const [state, action, pending] = useActionState(reviewRosterChangeRequestAction, initialState);
   return (
-    <article className="roster-change-review">
+    <article className="rounded-xl border border-line p-[11px] [&>header]:grid [&>header]:grid-cols-[1fr_auto] [&>header]:gap-2 [&>header_span]:grid [&>header_span]:gap-[3px] [&_small]:text-[10px] [&_small]:text-muted [&_em]:text-[9px] [&_em]:uppercase [&_em]:not-italic [&_em]:text-gold [&>p]:text-[11px] [&>p]:leading-[1.45]">
       <header>
         <span>
           <b>{request.teamName}</b>
@@ -1017,9 +1091,11 @@ function RosterRequestReview({ request }: { request: OwnerRosterRequest }) {
         <em>{request.status}</em>
       </header>
       <p>{request.details}</p>
-      {request.ownerNote && <p className="owner-review-note">Owner: {request.ownerNote}</p>}
+      {request.ownerNote && (
+        <p className="rounded-lg bg-[#fff4da] p-2">Owner: {request.ownerNote}</p>
+      )}
       {request.status === "pending" && (
-        <form action={action} className="owner-form">
+        <form action={action} className={ownerForm}>
           <input type="hidden" name="requestId" value={request.id} />
           <label>
             Owner note
@@ -1030,7 +1106,7 @@ function RosterRequestReview({ request }: { request: OwnerRosterRequest }) {
             />
           </label>
           <Feedback state={state} />
-          <div className="draft-review-actions">
+          <div className={reviewActions}>
             <button className="btn secondary" name="decision" value="declined" disabled={pending}>
               Decline
             </button>
@@ -1048,7 +1124,10 @@ export function OwnerRosterChangeReviews({ requests }: { requests: OwnerRosterRe
   if (!requests.length) return null;
   const pending = requests.filter((request) => request.status === "pending");
   return (
-    <details className="card owner-section roster-change-panel" open={pending.length > 0}>
+    <details
+      className={`card ${ownerSection} group overflow-hidden p-0! [&>summary]:grid [&>summary]:min-h-[64px] [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:grid-cols-[minmax(0,1fr)_auto_24px] [&>summary]:items-center [&>summary]:gap-3 [&>summary]:p-[18px] [&>summary::-webkit-details-marker]:hidden [&>summary_span]:grid [&>summary_span]:gap-[5px] [&>summary_b]:text-lg [&>summary_small]:text-[13px] [&>summary_small]:text-muted [&>summary>strong]:grid [&>summary>strong]:place-items-center [&>summary>strong]:transition-transform group-open:[&>summary>strong]:rotate-90 [&>div]:grid [&>div]:gap-2 [&>div]:p-[0_14px_14px]`}
+      open={pending.length > 0}
+    >
       <summary>
         <span>
           <b>Captain Change Requests</b>
@@ -1090,10 +1169,12 @@ function UnassignedPlayerForm({ seasons }: { seasons: OwnerSeason[] }) {
   );
   if (!assignmentDivisions.some((division) => division.teams.length)) return null;
   return (
-    <details className="card owner-section conference-player-directory">
+    <details
+      className={`card ${ownerSection} [&>summary]:cursor-pointer [&>summary]:list-none [&>summary::-webkit-details-marker]:hidden`}
+    >
       <summary>
-        <span className="owner-section-title">
-          <span className="owner-icon">
+        <span className={sectionTitle}>
+          <span className={ownerIcon}>
             <Plus className="ui-icon" />
           </span>
           <span>
@@ -1107,7 +1188,7 @@ function UnassignedPlayerForm({ seasons }: { seasons: OwnerSeason[] }) {
           </strong>
         </span>
       </summary>
-      <form action={assignAction} className="owner-form">
+      <form action={assignAction} className={ownerForm}>
         <label>
           Division
           <select
@@ -1188,6 +1269,29 @@ function UnassignedPlayerForm({ seasons }: { seasons: OwnerSeason[] }) {
   );
 }
 
+/* The season disclosure - four call sites across the teams, schedule and
+   uniform workspaces - and the card nested inside it, which has five. Both
+   were laid out from globals.css by child position; the values live here once
+   rather than being restated at each site.
+
+   The season kept no class of its own: owner-refinement re-scoped it from two
+   ancestors to change one margin, and the margin is now stated where it
+   differs. actionCard leaves its grid columns to the call site, which is the
+   only thing the five disagree about.
+
+   seasonSummary's third column is empty on purpose. globals.css declared three
+   and every one of the four call sites has two children, so a season summary
+   carries 24px and a gap of dead space after its caret. Reproduced rather than
+   tidied: dropping it moves the caret, which is a visual change and not this
+   one's to make. */
+const seasonSummary =
+  "grid min-h-[64px] cursor-pointer list-none grid-cols-[minmax(0,1fr)_auto_24px] items-center gap-[12px] p-[18px] [&::-webkit-details-marker]:hidden";
+const seasonPanel = "border-t border-line p-[14px] max-tiny:p-[11px]";
+const actionCard = "group mb-[10px] overflow-hidden rounded-[15px] border border-line bg-white";
+const actionSummary =
+  "grid min-h-[70px] cursor-pointer list-none items-center gap-[12px] p-[13px] [&::-webkit-details-marker]:hidden";
+const caret = "text-[25px] transition-transform group-open:rotate-90";
+
 function OwnerTeamsWorkspace({
   seasons,
   requests,
@@ -1199,50 +1303,54 @@ function OwnerTeamsWorkspace({
     .filter((season) => !season.canceledAt)
     .sort((left, right) => right.startsOn.localeCompare(left.startsOn));
   return (
-    <section className="owner-operations owner-page-section">
-      <p className="operations-intro">
+    <section className={`${ownerOperations} ${pageSection}`}>
+      <p className={operationsIntro}>
         Open a season, then a division, to see each team&apos;s simple roster.
       </p>
       {available.length ? (
-        <div className="uniform-season-list">
+        <div className="grid gap-[11px]">
           {available.map((season, index) => (
-            <details className="operations-season card" key={season.id} open={index === 0}>
-              <summary>
-                <span>
-                  <b>{season.name}</b>
-                  <small>
+            <details
+              className="card group mb-[12px] overflow-hidden"
+              key={season.id}
+              open={index === 0}
+            >
+              <summary className={seasonSummary}>
+                <span className="grid gap-[5px]">
+                  <b className="text-[18px]">{season.name}</b>
+                  <small className="text-[13px] text-muted">
                     {season.divisions.reduce((total, division) => total + division.teams.length, 0)}{" "}
                     teams · {season.divisions.length} division
                     {season.divisions.length === 1 ? "" : "s"}
                   </small>
                 </span>
-                <strong aria-hidden="true">
+                <strong aria-hidden="true" className={caret}>
                   <ChevronRight className="go-caret" />
                 </strong>
               </summary>
-              <div>
+              <div className={seasonPanel}>
                 {season.divisions.map((division) => (
-                  <details className="game-action-card" key={division.id}>
-                    <summary>
-                      <span className="owner-icon">
+                  <details className={actionCard} key={division.id}>
+                    <summary className={`${actionSummary} grid-cols-[44px_1fr_auto]`}>
+                      <span className={ownerIcon}>
                         <Users className="ui-icon" />
                       </span>
-                      <span>
-                        <b>{division.name}</b>
-                        <small>
+                      <span className="grid gap-[4px]">
+                        <b className="text-[15px]">{division.name}</b>
+                        <small className="text-[13px] leading-[1.35] text-muted">
                           {division.teams.length} team{division.teams.length === 1 ? "" : "s"}
                         </small>
                       </span>
-                      <strong aria-hidden="true">
+                      <strong aria-hidden="true" className={caret}>
                         <ChevronRight className="go-caret" />
                       </strong>
                     </summary>
-                    <div className="game-form">
-                      <div className="owner-team-list">
+                    <div className={gameForm}>
+                      <div className="grid gap-[8px]">
                         {division.teams.length ? (
                           division.teams.map((team) => <TeamEditor key={team.id} team={team} />)
                         ) : (
-                          <p className="empty-note">No teams in this division yet.</p>
+                          <p className={emptyNote}>No teams in this division yet.</p>
                         )}
                       </div>
                     </div>
@@ -1253,7 +1361,7 @@ function OwnerTeamsWorkspace({
           ))}
         </div>
       ) : (
-        <p className="empty-note">No active seasons yet. Create a season from Home first.</p>
+        <p className={emptyNote}>No active seasons yet. Create a season from Home first.</p>
       )}
       <OwnerRosterChangeReviews requests={requests} />
     </section>
@@ -1367,7 +1475,7 @@ export function OwnerPlayerDirectoryManagement({
           </span>
         </div>
         <UnassignedPlayerForm seasons={seasons} />
-        <section className="card owner-section player-directory-list">
+        <section className={`card player-directory-list ${ownerSection}`}>
           {directory.length ? (
             <div className={directoryStyles.list}>
               {directory.map((player) => (
@@ -1375,7 +1483,7 @@ export function OwnerPlayerDirectoryManagement({
               ))}
             </div>
           ) : (
-            <p className="empty-note">No KCH players have been added to this conference yet.</p>
+            <p className={emptyNote}>No KCH players have been added to this conference yet.</p>
           )}
         </section>
       </>
@@ -1395,7 +1503,7 @@ function DivisionRespondedPlayers({ players }: { players: OwnerSeason["invitees"
         ? players.filter((player) => player.selectionStatus === "waitlisted")
         : players;
   return (
-    <details className="mobile-draft-list">
+    <details className="group overflow-hidden rounded-[13px] border border-line bg-white [&>summary]:grid [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:grid-cols-[1fr_auto] [&>summary]:items-center [&>summary]:bg-[#f7f7f6] [&>summary]:p-3 [&>summary::-webkit-details-marker]:hidden [&>summary>span]:grid [&>summary>span]:gap-[3px] [&>summary_small]:text-[10px] [&>summary_small]:text-muted [&>summary>strong]:transition-transform group-open:[&>summary>strong]:rotate-90 [&_article]:grid [&_article]:grid-cols-[28px_minmax(0,1fr)_auto] [&_article]:items-center [&_article]:gap-2 [&_article]:border-t [&_article]:border-line [&_article]:p-[10px_11px] [&_article>b]:grid [&_article>b]:h-[25px] [&_article>b]:w-[25px] [&_article>b]:place-items-center [&_article>b]:rounded-lg [&_article>b]:bg-[#fff4da] [&_article>b]:text-[10px] [&_article>b]:text-[#9a6100] [&_article>span]:grid [&_article>span]:min-w-0 [&_article>span]:gap-[2px] [&_article_strong]:truncate [&_article_strong]:text-[13px] [&_article_small]:text-[9px] [&_article_small]:text-muted [&_article_em]:rounded-lg [&_article_em]:bg-[#dff3df] [&_article_em]:p-[5px_6px] [&_article_em]:text-[8px] [&_article_em]:font-[800] [&_article_em]:uppercase [&_article_em]:not-italic [&_article_em]:text-green [&_article_em.waitlisted]:bg-[#fff4da] [&_article_em.waitlisted]:text-[#795009] [&_article_em.declined]:bg-[#f7e6e6] [&_article_em.declined]:text-[#a62424]">
       <summary>
         <span>
           <b>Responded Players</b>
@@ -1405,7 +1513,7 @@ function DivisionRespondedPlayers({ players }: { players: OwnerSeason["invitees"
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <div className="draft-list-filters">
+      <div className="grid grid-cols-3 gap-[6px] p-[10px_11px] [&>button]:min-h-[34px] [&>button]:rounded-[10px] [&>button]:border [&>button]:border-[#d6dbe2] [&>button]:bg-white [&>button]:text-[10px]! [&>button]:font-[750]! [&>button]:text-muted! [&>button.active]:border-navy [&>button.active]:bg-navy [&>button.active]:text-white! [&>button_b]:ml-[3px] [&>button_b]:text-[inherit]">
         <button
           type="button"
           className={filter === "all" ? "active" : ""}
@@ -1453,7 +1561,7 @@ function DivisionRespondedPlayers({ players }: { players: OwnerSeason["invitees"
           </em>
         </article>
       ))}
-      {!visible.length && <p className="empty-note">No players in this view.</p>}
+      {!visible.length && <p className={emptyNote}>No players in this view.</p>}
     </details>
   );
 }
@@ -1472,7 +1580,7 @@ function OwnerDraftOverride({
   );
   if (division.rosterFinalPublished) return null;
   return (
-    <details className="owner-draft-override">
+    <details className="my-3 overflow-hidden rounded-[14px] border border-[#e4bd78] bg-[#fffaf2] [&>summary]:grid [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:grid-cols-[minmax(0,1fr)_auto] [&>summary]:items-center [&>summary]:gap-[10px] [&>summary]:p-3 [&>summary::-webkit-details-marker]:hidden [&>summary_span]:grid [&>summary_span]:gap-1 [&>summary_b]:text-sm [&>summary_b]:text-[#8a5900] [&>summary_small]:text-[10px] [&>summary_small]:leading-[1.35] [&>summary_small]:text-muted [&>summary_strong]:text-[22px] [&>form]:border-t [&>form]:border-[#edd5a9] [&>form]:p-3">
       <summary>
         <span>
           <b>Owner override: assign a player</b>
@@ -1485,7 +1593,7 @@ function OwnerDraftOverride({
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <form action={action} className="owner-form">
+      <form action={action} className={ownerForm}>
         <label>
           Draft-pool player
           <select name="invitationId" defaultValue="" required>
@@ -1512,7 +1620,7 @@ function OwnerDraftOverride({
             ))}
           </select>
         </label>
-        <div className="compact-fields">
+        <div className={compactFields}>
           <label>
             Jersey number
             <input name="jerseyNumber" type="number" min="0" max="99" />
@@ -1534,6 +1642,19 @@ function OwnerDraftOverride({
     </details>
   );
 }
+
+/* Roster review and publishing. The banner has three tones and the publish
+   form is shared by three steps of the wizard. */
+const rosterShared =
+  "grid gap-1 rounded-xl border p-3 [&_small]:text-[9px] [&_small]:leading-[1.4]";
+const rosterSharedTone = {
+  shared: "border-[#cce6d0] bg-[#f3faf4] text-green [&_small]:text-[#47734c]",
+  review: "border-[#efd18e] bg-[#fff9e9] text-[#a76700] [&_small]:text-[#47734c]",
+  final: "border-[#cce6d0] bg-[#edf8ef] text-green [&_small]:text-[#47734c]",
+};
+const publishForm =
+  "rounded-xl border border-[#f0cf91] bg-[#fffaf0] p-3 [&>small]:text-center [&>small]:text-[9px] [&>small]:leading-[1.4] [&>small]:text-muted";
+const reviewForm = "[&_h4]:m-0 [&_p]:m-0 [&_p]:text-[11px] [&_p]:leading-[1.45] [&_p]:text-muted";
 
 function DivisionRosterPublish({
   season,
@@ -1559,7 +1680,7 @@ function DivisionRosterPublish({
     );
   if (division.rosterFinalPublished)
     return (
-      <section className="division-roster-shared final">
+      <section className={`${rosterShared} ${rosterSharedTone.final}`}>
         <b>
           <Check className="ui-icon" /> Final roster published for {division.name}
         </b>
@@ -1568,10 +1689,7 @@ function DivisionRosterPublish({
     );
   if (division.rosterPublished && !division.rosterReviewDeadline)
     return (
-      <form
-        action={deadlineAction}
-        className="owner-form division-publish-form roster-review-form compact"
-      >
+      <form action={deadlineAction} className={`compact ${ownerForm} ${publishForm} ${reviewForm}`}>
         <input type="hidden" name="divisionId" value={division.id} />
         <label>
           Review deadline
@@ -1585,8 +1703,8 @@ function DivisionRosterPublish({
     );
   if (division.rosterPublished)
     return (
-      <section className="division-final-publish">
-        <div className="division-roster-shared review">
+      <section className="grid gap-[10px]">
+        <div className={`${rosterShared} ${rosterSharedTone.review}`}>
           <b>Roster review is open</b>
           <small>
             Players can review all {division.name} team assignments through{" "}
@@ -1597,12 +1715,12 @@ function DivisionRosterPublish({
           </small>
         </div>
         {!ready && (
-          <p className="roster-final-note">
+          <p className="text-[11px] leading-[1.45] text-muted">
             {division.teams.length - approved} updated team roster
             {division.teams.length - approved === 1 ? " is" : "s are"} waiting for approval.
           </p>
         )}
-        <form action={finalAction} className="owner-form division-publish-form">
+        <form action={finalAction} className={`${ownerForm} ${publishForm}`}>
           <input type="hidden" name="divisionId" value={division.id} />
           <label>
             Final roster message
@@ -1632,7 +1750,7 @@ function DivisionRosterPublish({
       </section>
     );
   return (
-    <form action={action} className="owner-form division-publish-form">
+    <form action={action} className={`${ownerForm} ${publishForm}`}>
       <input type="hidden" name="divisionId" value={division.id} />
       <label>
         Message to {division.name} players
@@ -1662,8 +1780,8 @@ function DivisionRosterPublish({
 
 function DraftSetupStep({ season }: { season: OwnerSeason }) {
   return (
-    <div className="guided-step-body">
-      <p className="guided-instruction">
+    <div className="grid gap-[13px] border-t border-line p-[15px]">
+      <p className={stepNote}>
         Each division completes roster review and final publication independently. A pending team in
         one division will not block another division.
       </p>
@@ -1684,7 +1802,7 @@ function DraftSetupStep({ season }: { season: OwnerSeason }) {
                 : `${divisionInvitees.length} invited · ${responded.length} responded · ${joining.length} joining · ${waitlisted.length} waitlisted`;
         return (
           <details
-            className="division-draft-pool"
+            className="overflow-hidden rounded-[14px] border border-line bg-white [&>summary]:grid [&>summary]:cursor-pointer [&>summary]:grid-cols-[1fr_auto] [&>summary]:items-center [&>summary]:gap-[10px] [&>summary]:p-[13px] [&>summary_span]:grid [&>summary_span]:gap-1 [&>summary_small]:text-[10px] [&>summary_small]:leading-[1.35] [&>summary_small]:text-muted [&>div]:grid [&>div]:gap-[9px] [&>div]:border-t [&>div]:border-line [&>div]:p-[13px] [&_h3]:m-[4px_0_0] [&_h3]:text-[13px] [&_h3]:text-gold"
             key={division.id}
             open={index === 0 || !division.rosterFinalPublished}
           >
@@ -1700,24 +1818,24 @@ function DraftSetupStep({ season }: { season: OwnerSeason }) {
             <div>
               <button
                 type="button"
-                className="btn primary draft-sheet-download"
+                className="btn primary min-h-[46px] w-full"
                 onClick={() => downloadDivisionDraftSheet(season, division)}
               >
                 <Download className="ui-icon" /> Download {division.name} Draft Sheet
               </button>
-              <p className="draft-file-note">
+              <p className="m-0 text-center text-[10px] leading-[1.45] text-muted">
                 The download remains available for owners who want a printed or computer-based
                 draft.
               </p>
               <DivisionRespondedPlayers players={responded} />
               {notJoining.length > 0 && (
-                <p className="division-response-note">
+                <p className="m-0 text-[10px] leading-[1.45] text-muted">
                   Players marked “Not joining” remain visible under All so the owner has a complete
                   response record.
                 </p>
               )}
               <OwnerDraftOverride division={division} players={divisionInvitees} />
-              <div className="team-draft-review-list">
+              <div className="grid gap-2">
                 {division.teams.map((team) => (
                   <TeamDraftReview
                     key={team.id}
@@ -1731,7 +1849,7 @@ function DraftSetupStep({ season }: { season: OwnerSeason }) {
           </details>
         );
       })}
-      <p className="captain-handoff-note">
+      <p className={handoffNote}>
         Players review every team assignment during the deadline window. Final rosters are then
         published separately for each division.
       </p>
@@ -1741,16 +1859,25 @@ function DraftSetupStep({ season }: { season: OwnerSeason }) {
 
 function ScheduleSetupStep({ season }: { season: OwnerSeason }) {
   return (
-    <div className="guided-step-body">
-      <p className="guided-instruction">
+    <div className="grid gap-[13px] border-t border-line p-[15px]">
+      <p className={stepNote}>
         Open one division at a time. Choose manual scheduling or let KCH create a draft on the
         Schedule page.
       </p>
-      <div className="step-eight-division-list">
+      <div className="grid gap-[9px]">
         {season.divisions.map((division) => {
           const games = season.games.filter((game) => game.divisionId === division.id).length;
           return (
-            <article className={`step-eight-division ${division.scheduleStatus}`} key={division.id}>
+            <article
+              className={`grid grid-cols-[minmax(0,1fr)_auto] items-center gap-[8px] rounded-[14px] border border-line bg-white p-[12px] [&>span]:grid [&>span]:gap-[3px] [&>span_small]:text-[11px] [&>span_small]:text-muted [&>em]:rounded-full [&>em]:p-[5px_8px] [&>em]:text-[9px] [&>em]:font-[900] [&>em]:not-italic [&_.btn]:col-span-full [&_.btn]:flex [&_.btn]:min-h-[40px] [&_.btn]:items-center [&_.btn]:justify-center ${
+                division.scheduleStatus === "final"
+                  ? "[&>em]:bg-[#eaf6ec] [&>em]:text-green"
+                  : division.scheduleStatus === "draft"
+                    ? "[&>em]:bg-[#fff4da] [&>em]:text-[#8a5900]"
+                    : "[&>em]:bg-[#eef1f4] [&>em]:text-[#5b6875]"
+              }`}
+              key={division.id}
+            >
               <span>
                 <b>{division.name}</b>
                 <small>
@@ -1781,7 +1908,7 @@ function ScheduleSetupStep({ season }: { season: OwnerSeason }) {
           );
         })}
       </div>
-      <p className="captain-handoff-note">
+      <p className={handoffNote}>
         Every division creates and finalizes its own schedule. One division never waits for another.
       </p>
     </div>
@@ -1791,11 +1918,11 @@ function ScheduleSetupStep({ season }: { season: OwnerSeason }) {
 function CancelSeasonForm({ season }: { season: OwnerSeason }) {
   const [state, action, pending] = useActionState(cancelSeasonAction, initialState);
   return (
-    <details className="cancel-season">
+    <details className="mt-2 border-t border-t-[rgba(255,255,255,0.2)] pt-2 [&>summary]:cursor-pointer [&>summary]:text-[10px] [&>summary]:text-[#ffd5d5] [&>form]:mt-[10px] [&>form]:rounded-xl [&>form]:bg-white [&>form]:p-3 [&>form]:text-navy">
       <summary>Cancel this season</summary>
-      <form action={action} className="owner-form">
+      <form action={action} className={ownerForm}>
         <input type="hidden" name="seasonId" value={season.id} />
-        <p className="field-help">
+        <p className={fieldHelp}>
           The season will not be deleted. Its teams, rosters, responses, payments, and history
           remain preserved.
         </p>
@@ -1808,7 +1935,10 @@ function CancelSeasonForm({ season }: { season: OwnerSeason }) {
           teams.
         </label>
         <Feedback state={state} />
-        <button className="btn cancel-button" disabled={pending}>
+        <button
+          className="btn border! border-[#e9b7b7]! bg-[#fff0f0]! text-[#a51118]!"
+          disabled={pending}
+        >
           {pending ? "Canceling…" : "Cancel Season"}
         </button>
       </form>
@@ -1822,7 +1952,7 @@ function ExpandExistingSeason({ season }: { season: OwnerSeason }) {
   const remaining = Math.max(0, 10 - season.divisions.length);
   const divisionsNeedingTeams = season.divisions.filter((division) => division.teams.length === 0);
   return (
-    <details className="season-expansion-card">
+    <details className="overflow-hidden rounded-[12px] border border-line [&>summary]:flex [&>summary]:cursor-pointer [&>summary]:items-center [&>summary]:justify-between [&>summary]:gap-[10px] [&>summary]:p-[12px] [&>summary_span]:grid [&>summary_small]:text-muted [&>div]:grid [&>div]:gap-[12px] [&>div]:p-[0_12px_12px]">
       <summary>
         <span>
           <b>{season.name}</b>
@@ -1834,9 +1964,9 @@ function ExpandExistingSeason({ season }: { season: OwnerSeason }) {
       </summary>
       <div>
         {remaining > 0 ? (
-          <form action={action} className="owner-form batch-setup-form">
+          <form action={action} className={batchForm}>
             <input type="hidden" name="seasonId" value={season.id} />
-            <label className="batch-count-field">
+            <label className={batchCountField}>
               How many new divisions?
               <input
                 type="number"
@@ -1850,7 +1980,7 @@ function ExpandExistingSeason({ season }: { season: OwnerSeason }) {
                 }
               />
             </label>
-            <div className="batch-name-grid">
+            <div className={batchNameGrid}>
               {Array.from({ length: Math.min(divisionCount, remaining) }, (_, index) => (
                 <label key={index}>
                   New division {index + 1}
@@ -1859,16 +1989,16 @@ function ExpandExistingSeason({ season }: { season: OwnerSeason }) {
               ))}
             </div>
             <Feedback state={state} />
-            <button className="btn secondary batch-save-button" disabled={pending}>
+            <button className={`btn secondary ${batchSaveButton}`} disabled={pending}>
               {pending ? "Adding…" : "Add to This Season"}
             </button>
           </form>
         ) : (
-          <p className="empty-note">This season already has the maximum of 10 divisions.</p>
+          <p className={emptyNote}>This season already has the maximum of 10 divisions.</p>
         )}
         {divisionsNeedingTeams.length > 0 && (
-          <section className="expansion-next-step">
-            <p className="guided-instruction">New divisions ready for teams:</p>
+          <section className="grid gap-2">
+            <p className={stepNote}>New divisions ready for teams:</p>
             {divisionsNeedingTeams.map((division) => (
               <DivisionTeamBuilder key={division.id} division={division} />
             ))}
@@ -1889,6 +2019,111 @@ const setupLabels = [
   "Draft Rosters",
   "Build Schedule",
 ];
+/**
+ * One step in the season setup wizard.
+ *
+ * It was four render sites: a details for the current step, a section for each
+ * locked one, and the same pair again further down. All four wrote the same
+ * grid, the same number bubble and the same status pill, and differed only in
+ * whether the body could be opened.
+ *
+ * The two shapes are not interchangeable - a locked step has nothing to open,
+ * so it stays a <section> with a <header> rather than a <details> nothing can
+ * use. That distinction was already in the old markup; this keeps it.
+ *
+ * NOTE: `completed` and `available` are faithful translations of the old rules
+ * but are NOT covered by a screenshot - no conference in the data reaches
+ * either state, so nothing can diff them. Worth an eye if a season ever gets
+ * partway through setup.
+ */
+const stepTone = {
+  completed: {
+    card: "border-line bg-[#fafafa]",
+    number: "bg-[#dff3df] text-green",
+    pill: "bg-[#e8f4e8] text-green",
+  },
+  current: {
+    card: "border-[#e6b35c] bg-white/[0.94] shadow-[0_8px_22px_rgba(209,132,8,0.12)]",
+    number: "bg-navy text-white",
+    pill: "bg-[#fff4da] text-[#795009]",
+  },
+  available: {
+    card: "border-line bg-white/[0.94]",
+    number: "bg-[#e9eef4] text-navy",
+    pill: "bg-[#eef3f8] text-[#486177]",
+  },
+  locked: {
+    card: "border-line bg-white/[0.94] opacity-[0.58]",
+    number: "bg-[#f0efed] text-muted",
+    pill: "bg-[#eee] text-[#666]",
+  },
+} as const;
+
+type StepTone = keyof typeof stepTone;
+
+const stepRow = "grid grid-cols-[38px_1fr_auto] items-center gap-[11px] p-[13px_15px]";
+const stepNumber = "grid h-[35px] w-[35px] place-items-center rounded-full";
+const stepPill = "rounded-[9px] px-[7px] py-[5px] text-[9px] uppercase not-italic";
+
+function GuidedStep({
+  tone,
+  step,
+  label,
+  status,
+  badge,
+  open,
+  children,
+}: {
+  tone: StepTone;
+  step: number;
+  label: ReactNode;
+  status: string;
+  /** The number, or a tick once the step is done. */
+  badge?: ReactNode;
+  open?: boolean;
+  children?: ReactNode;
+}) {
+  const t = stepTone[tone];
+  const heading = (
+    <>
+      <b className={`${stepNumber} ${t.number}`}>{badge ?? step}</b>
+      <span className="grid gap-[2px]">
+        <small className="text-[9px] font-[800] text-muted">STEP {step} OF 8</small>
+        <h2 className="m-0 text-[16px]">{label}</h2>
+      </span>
+      <span className="flex items-center gap-[7px]">
+        <em className={`${stepPill} ${t.pill}`}>{status}</em>
+        {tone !== "locked" && (
+          <strong
+            aria-hidden="true"
+            className="text-[22px] transition-transform group-open:rotate-90"
+          >
+            <ChevronRight className="go-caret" />
+          </strong>
+        )}
+      </span>
+    </>
+  );
+  const shell = `overflow-hidden rounded-[17px] border ${t.card}`;
+
+  // A locked step has no body, so it stays a section rather than a disclosure
+  // nothing can open.
+  if (tone === "locked")
+    return (
+      <section className={shell}>
+        <header className={stepRow}>{heading}</header>
+      </section>
+    );
+  return (
+    <details className={`group ${shell}`} open={open}>
+      <summary className={`${stepRow} cursor-pointer list-none [&::-webkit-details-marker]:hidden`}>
+        {heading}
+      </summary>
+      {children}
+    </details>
+  );
+}
+
 export function OwnerSetupWizard({
   conferenceId,
   conferenceName,
@@ -1905,31 +2140,18 @@ export function OwnerSetupWizard({
     const completed = seasons.filter((season) => season.setupStage === 7 && !season.canceledAt),
       published = seasons.filter((season) => season.setupStage === 7 || season.canceledAt);
     return (
-      <div className="setup-wizard">
-        <details className="guided-step current" open>
-          <summary>
-            <b className="step-number">1</b>
-            <span>
-              <small>STEP 1 OF 8</small>
-              <h2>Season</h2>
-            </span>
-            <span className="step-state">
-              <em>Choose a path</em>
-              <strong aria-hidden="true">
-                <ChevronRight className="go-caret" />
-              </strong>
-            </span>
-          </summary>
-          <div className="guided-step-body">
-            <section className="season-path">
+      <div className="grid gap-[10px]">
+        <GuidedStep tone="current" step={1} label="Season" status="Choose a path" open>
+          <div className="grid gap-[13px] border-t border-line p-[15px]">
+            <section className="grid gap-[10px] rounded-[14px] border border-line bg-white p-[13px] [&>h3]:m-0 [&>h3]:text-navy">
               <h3>Create a New Season</h3>
-              <p className="guided-instruction">Start a separate season inside {conferenceName}.</p>
+              <p className={stepNote}>Start a separate season inside {conferenceName}.</p>
               <CreateSeasonForm conferenceId={conferenceId} />
             </section>
             {completed.length > 0 && (
-              <section className="season-path">
+              <section className="grid gap-[10px] rounded-[14px] border border-line bg-white p-[13px] [&>h3]:m-0 [&>h3]:text-navy">
                 <h3>Use the Same Season</h3>
-                <p className="guided-instruction">
+                <p className={stepNote}>
                   Add another division after setup is complete. Existing divisions, teams, rosters,
                   payments, and schedules stay unchanged.
                 </p>
@@ -1939,24 +2161,16 @@ export function OwnerSetupWizard({
               </section>
             )}
           </div>
-        </details>
+        </GuidedStep>
         {setupLabels.slice(1).map((label, index) => (
-          <section className="guided-step locked" key={label}>
-            <header>
-              <b className="step-number">{index + 2}</b>
-              <span>
-                <small>STEP {index + 2} OF 8</small>
-                <h2>{label}</h2>
-              </span>
-              <span className="step-state">
-                <em>Locked</em>
-              </span>
-            </header>
-          </section>
+          <GuidedStep tone="locked" step={index + 2} label={label} status="Locked" key={label} />
         ))}
-        <div className="completed-seasons">
+        <div className="mb-[4px] grid gap-[6px] [&>span]:rounded-[12px] [&>span]:bg-[#e8f4e8] [&>span]:p-[10px_13px] [&>span]:text-[11px] [&>span]:font-[700] [&>span]:text-green">
           {published.map((season) => (
-            <span className={season.canceledAt ? "canceled" : ""} key={season.id}>
+            <span
+              className={season.canceledAt ? "bg-[#f6e8e8]! text-[#9b2525]!" : ""}
+              key={season.id}
+            >
               {season.canceledAt ? "×" : <Check className="ui-icon" />} {season.name}{" "}
               {season.canceledAt ? "canceled" : "published"}
             </span>
@@ -1981,30 +2195,36 @@ export function OwnerSetupWizard({
           : 8;
   const reviewFor = (step: number) =>
     step === 1 ? (
-      <p className="step-summary">
+      <p className="m-0 border-t border-line p-[13px_15px_13px_64px] text-[11px] text-muted">
         {activeSeason.name} · {activeSeason.startsOn} to {activeSeason.endsOn}
       </p>
     ) : step === 2 ? (
-      <p className="step-summary">
+      <p className="m-0 border-t border-line p-[13px_15px_13px_64px] text-[11px] text-muted">
         {activeSeason.divisions.length} division{activeSeason.divisions.length === 1 ? "" : "s"}{" "}
         added
       </p>
     ) : step === 3 ? (
-      <p className="step-summary">
+      <p className="m-0 border-t border-line p-[13px_15px_13px_64px] text-[11px] text-muted">
         {activeSeason.divisions.reduce((sum, division) => sum + division.teams.length, 0)} teams
         added
       </p>
     ) : step === 4 ? (
-      <p className="step-summary">Captains and co-captains established</p>
+      <p className="m-0 border-t border-line p-[13px_15px_13px_64px] text-[11px] text-muted">
+        Captains and co-captains established
+      </p>
     ) : step === 5 ? (
-      <p className="step-summary">Division fees and dark/light uniforms prepared</p>
+      <p className="m-0 border-t border-line p-[13px_15px_13px_64px] text-[11px] text-muted">
+        Division fees and dark/light uniforms prepared
+      </p>
     ) : step === 6 ? (
-      <p className="step-summary">
+      <p className="m-0 border-t border-line p-[13px_15px_13px_64px] text-[11px] text-muted">
         {activeSeason.invitees.length} players invited ·{" "}
         {activeSeason.invitees.filter((invitee) => invitee.response === "joining").length} joining
       </p>
     ) : step === 7 ? (
-      <p className="step-summary">Roster draft published to players and captains</p>
+      <p className="m-0 border-t border-line p-[13px_15px_13px_64px] text-[11px] text-muted">
+        Roster draft published to players and captains
+      </p>
     ) : null;
   const previousDivisions = seasons
     .filter((season) => season.id !== activeSeason.id)
@@ -2031,8 +2251,8 @@ export function OwnerSetupWizard({
       <ScheduleSetupStep season={activeSeason} />
     ) : null;
   return (
-    <div className="setup-wizard">
-      <section className="setup-context">
+    <div className="grid gap-[10px]">
+      <section className="mb-[4px] grid gap-[4px] rounded-[16px] bg-[linear-gradient(120deg,#08243e,#0a3767)] p-[16px_18px] text-white [&>small]:text-[10px] [&>small]:font-[800] [&>small]:text-[#f5a313] [&>b]:text-[22px] [&>span]:text-[11px] [&>span]:text-[#d7e0e9]">
         <small>{conferenceName} / SETTING UP</small>
         <b>{activeSeason.name}</b>
         <span>
@@ -2054,36 +2274,23 @@ export function OwnerSetupWizard({
               : current
                 ? "In progress"
                 : "Locked";
-        const heading = (
-          <>
-            <b className="step-number">
-              {completed && !invitationWorkspace ? <Check className="ui-icon" /> : visualStep}
-            </b>
-            <span>
-              <small>STEP {visualStep} OF 8</small>
-              <h2>{label}</h2>
-            </span>
-            <span className="step-state">
-              <em>{status}</em>
-              {!locked && (
-                <strong aria-hidden="true">
-                  <ChevronRight className="go-caret" />
-                </strong>
-              )}
-            </span>
-          </>
-        );
-        return locked ? (
-          <section key={label} className="guided-step locked">
-            <header>{heading}</header>
-          </section>
-        ) : (
-          <details
+        const tone = locked
+          ? "locked"
+          : completed
+            ? "completed"
+            : current
+              ? "current"
+              : "available";
+        return (
+          <GuidedStep
             key={label}
-            className={`guided-step ${completed ? "completed" : current ? "current" : "available"}`}
+            tone={tone}
+            step={visualStep}
+            label={label}
+            status={status}
+            badge={completed && !invitationWorkspace ? <Check className="ui-icon" /> : undefined}
             open={current || invitationWorkspace}
           >
-            <summary>{heading}</summary>
             {completed ? (
               <>
                 {reviewFor(visualStep)}
@@ -2092,7 +2299,7 @@ export function OwnerSetupWizard({
             ) : (
               bodyFor(visualStep)
             )}
-          </details>
+          </GuidedStep>
         );
       })}
     </div>
@@ -2106,6 +2313,14 @@ type ManualGameRow = {
   time: string;
   court: string;
 };
+/* The schedule builder: the two method cards, the manual day form and the
+   finalize panel. Most of these render only while a division's schedule is
+   still a draft. */
+const scheduleChoiceCard =
+  "flex min-h-[150px] flex-col gap-2 rounded-[17px] border border-line bg-white p-[16px_13px] text-navy shadow-[0_5px_14px_rgba(13,38,69,0.06)] [&>span]:grid [&>span]:h-[38px] [&>span]:w-[38px] [&>span]:place-items-center [&>span]:rounded-xl [&>span]:bg-[#f2efeb] [&>span]:text-[21px] [&>span]:text-gold [&>b]:text-[15px] [&>b]:leading-[1.25] [&>small]:text-[11px] [&>small]:leading-[1.45] [&>small]:text-muted";
+const scheduleMethodCard =
+  "group mb-[9px] overflow-hidden rounded-[14px] border border-line bg-white [&>summary]:grid [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:grid-cols-[36px_1fr_18px] [&>summary]:items-center [&>summary]:gap-[9px] [&>summary]:p-[13px] [&>summary::-webkit-details-marker]:hidden [&>summary>span:first-child]:grid [&>summary>span:first-child]:h-9 [&>summary>span:first-child]:w-9 [&>summary>span:first-child]:place-items-center [&>summary>span:first-child]:rounded-[11px] [&>summary>span:first-child]:bg-[#f2efeb] [&>summary>span:first-child]:text-[19px] [&>summary>span:first-child]:text-gold [&>summary>span:nth-child(2)]:grid [&>summary>span:nth-child(2)]:gap-[3px] [&>summary_b]:text-[14px] [&>summary_small]:text-[11px] [&>summary_small]:leading-[1.4] [&>summary_small]:text-muted [&>summary>strong]:text-[20px] [&>summary>strong]:transition-transform group-open:[&>summary>strong]:rotate-90 [&>form]:border-t [&>form]:border-line [&>form]:p-[13px]";
+
 function ManualGameDayBuilder({
   season,
   division,
@@ -2138,7 +2353,7 @@ function ManualGameDayBuilder({
     setNextId((value) => value + 1);
   };
   return (
-    <form action={action} className="owner-form manual-game-day">
+    <form action={action} className={`${ownerForm} border-t border-line p-[13px]`}>
       <input type="hidden" name="divisionId" value={division.id} />
       <input
         type="hidden"
@@ -2152,7 +2367,7 @@ function ManualGameDayBuilder({
           })),
         )}
       />
-      <div className="compact-fields">
+      <div className={compactFields}>
         <label>
           Game date
           <input name="gameDate" type="date" min={season.startsOn} max={season.endsOn} required />
@@ -2166,8 +2381,8 @@ function ManualGameDayBuilder({
         Venue
         <input name="venue" defaultValue="Kada Court Center" maxLength={120} required />
       </label>
-      <p className="field-help">Each team can play only once on this game day.</p>
-      <div className="manual-game-rows">
+      <p className={fieldHelp}>Each team can play only once on this game day.</p>
+      <div className="grid gap-[9px] [&_fieldset]:relative [&_fieldset]:grid [&_fieldset]:grid-cols-2 [&_fieldset]:gap-[9px] [&_fieldset]:rounded-xl [&_fieldset]:border [&_fieldset]:border-line [&_fieldset]:p-3 [&_legend]:px-[5px] [&_legend]:text-xs [&_legend]:font-[900] [&_legend]:text-gold [&_label:nth-of-type(n+3)]:col-span-full">
         {rows.map((row, index) => (
           <fieldset key={row.id}>
             <legend>Game {index + 1}</legend>
@@ -2222,7 +2437,7 @@ function ManualGameDayBuilder({
             {rows.length > 1 && (
               <button
                 type="button"
-                className="remove-game-row"
+                className="col-span-full min-h-[34px] border-0 bg-transparent font-[800] text-[#a51118]"
                 onClick={() => setRows((current) => current.filter((item) => item.id !== row.id))}
               >
                 Remove
@@ -2231,7 +2446,7 @@ function ManualGameDayBuilder({
           </fieldset>
         ))}
       </div>
-      <button type="button" className="btn secondary add-game-row" onClick={add}>
+      <button type="button" className="btn secondary w-full" onClick={add}>
         + Add Another Game
       </button>
       <Feedback state={state} />
@@ -2256,9 +2471,9 @@ function KchDivisionScheduleBuilder({
     Math.floor(division.teams.filter((team) => team.active).length / 2),
   );
   return (
-    <form action={action} className="owner-form schedule-builder-form">
+    <form action={action} className={`${ownerForm} [&_textarea]:min-h-[80px]`}>
       <input type="hidden" name="divisionId" value={division.id} />
-      <div className="compact-fields">
+      <div className={compactFields}>
         <label>
           First game date
           <input
@@ -2279,7 +2494,7 @@ function KchDivisionScheduleBuilder({
         Venue
         <input name="venue" defaultValue="Kada Court Center" maxLength={120} required />
       </label>
-      <fieldset className="playing-days">
+      <fieldset className="grid grid-cols-4 gap-[6px] border-0 p-0 [&>legend]:mb-[7px] [&>legend]:text-[13px] [&>legend]:font-[800] [&_label]:relative [&_input]:absolute [&_input]:opacity-0 [&_span]:grid [&_span]:min-h-[40px] [&_span]:place-items-center [&_span]:rounded-[10px] [&_span]:border [&_span]:border-line [&_span]:bg-white [&_span]:text-[11px] [&_input:checked+span]:border-navy [&_input:checked+span]:bg-navy [&_input:checked+span]:text-white">
         <legend>Days played</legend>
         {[
           [0, "Sun"],
@@ -2296,7 +2511,7 @@ function KchDivisionScheduleBuilder({
           </label>
         ))}
       </fieldset>
-      <div className="compact-fields">
+      <div className={compactFields}>
         <label>
           Number of courts
           <input name="courtCount" type="number" min="1" max="10" defaultValue="2" required />
@@ -2317,13 +2532,13 @@ function KchDivisionScheduleBuilder({
           required
         />
       </label>
-      <p className="field-help">
+      <p className={fieldHelp}>
         KCH schedules each team only once per day, even when more court time is available.
       </p>
       <label className="check-row">
         <input name="doubleRoundRobin" type="checkbox" /> Home and away double round-robin
       </label>
-      <div className="schedule-build-summary">
+      <div className="grid grid-cols-3 gap-[7px] [&>span]:grid [&>span]:min-h-[64px] [&>span]:place-items-center [&>span]:rounded-xl [&>span]:border [&>span]:border-line [&>span]:bg-white [&>span]:p-[9px_6px] [&>span]:text-center [&>span]:text-[10px] [&>span]:text-muted [&_b]:text-sm [&_b]:text-navy">
         <span>
           <b>{matchupCount}</b> Matchups
         </span>
@@ -2363,8 +2578,14 @@ function DivisionMatchupProgress({
   const total = (teams.length * (teams.length - 1)) / 2,
     complete = total - missing.length;
   return (
-    <details className={`matchup-progress ${missing.length ? "incomplete" : "complete"}`}>
-      <summary>
+    <details
+      className={`mb-[10px] overflow-hidden rounded-[13px] ${
+        missing.length
+          ? "border border-[#e4bd78] bg-[#fffaf2]"
+          : "border border-[#bcdcbf] bg-[#edf8ef]"
+      }`}
+    >
+      <summary className="flex cursor-pointer list-none items-center justify-between p-[12px] [&::-webkit-details-marker]:hidden [&>span]:grid [&>span]:gap-[3px] [&_small]:text-[11px] [&_small]:text-muted">
         <span>
           <b>
             {missing.length ? `${missing.length} Matchups Still Needed` : "Round Robin Complete"}
@@ -2378,7 +2599,7 @@ function DivisionMatchupProgress({
         </strong>
       </summary>
       {missing.length ? (
-        <div>
+        <div className="grid gap-[6px] border-t border-line p-[10px] [&>span]:text-[11px]">
           {missing.map(([home, away]) => (
             <span key={`${home.id}-${away.id}`}>
               {home.name} <b>vs</b> {away.name}
@@ -2386,7 +2607,9 @@ function DivisionMatchupProgress({
           ))}
         </div>
       ) : (
-        <p>Every team has been matched once. This draft can be finalized.</p>
+        <p className="m-0 p-[0_12px_12px] text-[11px] text-green">
+          Every team has been matched once. This draft can be finalized.
+        </p>
       )}
     </details>
   );
@@ -2402,7 +2625,7 @@ function FinalizeDivisionSchedule({
   const [state, action, pending] = useActionState(finalizeDivisionScheduleAction, initialState);
   if (division.scheduleStatus === "final")
     return (
-      <section className="division-schedule-final">
+      <section className="mb-[10px] grid gap-[3px] rounded-[13px] border border-[#bcdcbf] bg-[#edf8ef] p-[12px] text-green [&_small]:text-[#47734c]">
         <b>
           <Check className="ui-icon" /> Final Schedule
         </b>
@@ -2410,7 +2633,10 @@ function FinalizeDivisionSchedule({
       </section>
     );
   return (
-    <form action={action} className="schedule-finalize-panel">
+    <form
+      action={action}
+      className="mb-[15px] grid gap-3 rounded-[15px] border border-[#e4bd78] bg-[#fffbf3] p-[14px] [&>span]:grid [&>span]:gap-[5px] [&>span>b]:text-base [&>span>b]:text-[#8a5900] [&>span>small]:text-xs [&>span>small]:leading-[1.45] [&>span>small]:text-muted [&_form]:grid [&_form]:gap-2 [&_.btn]:w-full"
+    >
       <input type="hidden" name="divisionId" value={division.id} />
       <span>
         <b>Draft Schedule</b>
@@ -2444,24 +2670,26 @@ function CreateGameForm({
   const [state, action, pending] = useActionState(createGameAction, initialState);
   const teams = division.teams.filter((team) => team.active);
   return (
-    <details className="game-action-card">
-      <summary>
-        <span className="owner-icon">
+    <details className={actionCard} data-game-card="new">
+      <summary className={`${actionSummary} grid-cols-[44px_1fr_auto]`}>
+        <span className={ownerIcon}>
           <Plus className="ui-icon" />
         </span>
-        <span>
-          <b>{playoffAvailable ? "Add Regular or Playoff Game" : "Add a Regular-Season Game"}</b>
-          <small>
+        <span className="grid gap-[4px]">
+          <b className="text-[15px]">
+            {playoffAvailable ? "Add Regular or Playoff Game" : "Add a Regular-Season Game"}
+          </b>
+          <small className="text-[13px] leading-[1.35] text-muted">
             {playoffAvailable
               ? "Round robin complete · Playoffs unlocked"
               : `${regularGamesRemaining} round-robin result${regularGamesRemaining === 1 ? "" : "s"} remaining before playoffs`}
           </small>
         </span>
-        <strong aria-hidden="true">
+        <strong aria-hidden="true" className={caret}>
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <form action={action} className="owner-form game-form">
+      <form action={action} className={`${ownerForm} ${gameForm}`}>
         <input type="hidden" name="divisionId" value={division.id} />
         {playoffAvailable ? (
           <label>
@@ -2512,7 +2740,7 @@ function CreateGameForm({
           Court
           <input name="court" placeholder="Example: Court 2" maxLength={60} />
         </label>
-        <p className="auto-assignment-note">
+        <p className="m-0 rounded-[11px] bg-[#e8f4e8] p-[11px] text-[13px] leading-[1.45] text-[#176c2c]">
           Uniforms are automatic: home wears light and away wears dark.
         </p>
         <Feedback state={state} />
@@ -2533,12 +2761,12 @@ function CreateGameForm({
 function GameCancellationCard({ game }: { game: OwnerSeason["games"][number] }) {
   const [state, action, pending] = useActionState(changeGameStatusAction, initialState);
   return (
-    <section className="game-change-panel cancel-game-panel">
+    <section className={`${changePanel} ${cancelPanel}`}>
       <header>
         <b>Cancel Game</b>
         <small>Use only if this game will not be played.</small>
       </header>
-      <form action={action} className="owner-form">
+      <form action={action} className={ownerForm}>
         <input type="hidden" name="gameId" value={game.id} />
         <input type="hidden" name="status" value="canceled" />
         <label>
@@ -2577,27 +2805,44 @@ function GameEditor({ game }: { game: OwnerSeason["games"][number] }) {
   );
   if (game.finalized)
     return (
-      <article id={`game-${game.id}`} className="game-action-card existing-game">
-        <div className="game-editor-summary">{summary}</div>
+      <article
+        id={`game-${game.id}`}
+        className={`${actionCard} scroll-mt-[16px]`}
+        data-game-card="final"
+      >
+        <div className="grid gap-[4px] p-[14px_16px] [&_b]:text-[15px] [&_small]:text-[12px] [&_small]:text-muted">
+          {summary}
+        </div>
       </article>
     );
   return (
     <details
       id={`game-${game.id}`}
-      className={`game-action-card existing-game game-${game.status}`}
+      // game-postponed and game-canceled recolour the card and its summary and
+      // render in no conference the screenshots can reach, so they are left in
+      // globals.css unconverted. Both are unlayered and still outrank the
+      // border and background utilities beside them.
+      className={`${actionCard} scroll-mt-[16px] game-${game.status}`}
+      data-game-card="edit"
     >
-      <summary>
-        <span>{summary}</span>
-        <strong aria-hidden="true">
+      <summary className={`${actionSummary} grid-cols-[minmax(0,1fr)_auto]`}>
+        {/* The same fragment renders in the finalized card below, where
+            game-editor-summary sizes it differently. These reach b and small
+            from here rather than from the fragment, which cannot carry two
+            sets at once. */}
+        <span className="grid gap-[4px] [&>b]:text-[15px] [&>small]:text-[12px] [&>small]:leading-[1.35] [&>small]:text-muted">
+          {summary}
+        </span>
+        <strong aria-hidden="true" className={caret}>
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <section className="game-change-panel update-schedule-panel">
+      <section className={`update-schedule-panel ${changePanel}`}>
         <header>
           <b>Update Schedule</b>
           <small>Change the game details and notify both teams.</small>
         </header>
-        <form action={action} className="owner-form game-form">
+        <form action={action} className={`${ownerForm} ${gameForm}`}>
           <input type="hidden" name="gameId" value={game.id} />
           <label>
             Date and time
@@ -2674,7 +2919,7 @@ function WeeklyScheduleTable({ season }: { season: OwnerSeason }) {
     weeks.find(([key]) => key === weekStart(game.localStartsAt))?.[1].push(game);
   if (!sorted.length) return null;
   return (
-    <section className="weekly-schedule">
+    <section className={weeklySchedule}>
       <header>
         <div>
           <small>WEEKLY VIEW</small>
@@ -2682,12 +2927,12 @@ function WeeklyScheduleTable({ season }: { season: OwnerSeason }) {
           <p>{sorted.length} total scheduled games</p>
         </div>
       </header>
-      <div className="weekly-schedule-list">
+      <div className={weeklyScheduleList}>
         {weeks.map(([key, games], weekIndex) => {
           const end = new Date(`${key}T12:00:00Z`);
           end.setUTCDate(end.getUTCDate() + 6);
           return (
-            <details className="schedule-week" key={key} open={weekIndex === 0}>
+            <details className={scheduleWeek} key={key} open={weekIndex === 0}>
               <summary>
                 <span>
                   {displayDate(key)} – {displayDate(end.toISOString().slice(0, 10))}
@@ -2699,7 +2944,7 @@ function WeeklyScheduleTable({ season }: { season: OwnerSeason }) {
                   <ChevronRight className="go-caret" />
                 </strong>
               </summary>
-              <div className="schedule-table-scroll">
+              <div className={scheduleTableScroll}>
                 <table>
                   <thead>
                     <tr>
@@ -2724,7 +2969,7 @@ function WeeklyScheduleTable({ season }: { season: OwnerSeason }) {
                           <td>{game.court || "—"}</td>
                           <td>{divisionNames.get(game.divisionId) ?? "—"}</td>
                           <td>
-                            <em className={`game-phase ${game.phase}`}>
+                            <em className={`${gamePhase} ${gamePhaseTone(game.phase)}`}>
                               {game.phase === "playoff" ? "Playoff" : "Regular"}
                             </em>
                           </td>
@@ -2742,10 +2987,15 @@ function WeeklyScheduleTable({ season }: { season: OwnerSeason }) {
                             )}
                           </td>
                           <td>
-                            <em className={`schedule-status ${game.status}`}>{game.status}</em>
+                            <em className={`${scheduleStatus} ${scheduleStatusTone(game.status)}`}>
+                              {game.status}
+                            </em>
                           </td>
                           <td>
-                            <a className="schedule-update" href={`/owner/scores#score-${game.id}`}>
+                            <a
+                              className="min-h-[34px] cursor-pointer rounded-[9px] border border-[#d5a54f] bg-[#fffaf2] p-[6px_9px] text-[11px] font-[850] whitespace-nowrap text-[#7b5207]"
+                              href={`/owner/scores#score-${game.id}`}
+                            >
                               {played ? "Edit result" : "Add score"}
                             </a>
                           </td>
@@ -2774,8 +3024,8 @@ function ScheduleMethodPicker({
   const choose = (next: "manual" | "automate") =>
     setMethod((current) => (current === next ? null : next));
   return (
-    <section className="schedule-method-picker">
-      <div className="schedule-choice-grid">
+    <section className="grid gap-[9px] [&>p]:m-[0_2px_5px] [&>p]:text-[13px] [&>p]:text-muted">
+      <div className="my-[15px] grid grid-cols-2 gap-[9px]">
         <button
           type="button"
           style={{
@@ -2785,7 +3035,7 @@ function ScheduleMethodPicker({
             borderColor: method === "manual" ? "#d18408" : undefined,
             background: method === "manual" ? "#fffbf3" : undefined,
           }}
-          className="schedule-choice-card"
+          className={scheduleChoiceCard}
           onClick={() => choose("manual")}
           aria-expanded={method === "manual"}
         >
@@ -2804,7 +3054,7 @@ function ScheduleMethodPicker({
             borderColor: method === "automate" ? "#d18408" : undefined,
             background: method === "automate" ? "#fffbf3" : undefined,
           }}
-          className="schedule-choice-card kch-choice"
+          className={`${scheduleChoiceCard} border-[#e4bd78]! bg-[#fffbf3]!`}
           onClick={() => choose("automate")}
           aria-expanded={method === "automate"}
         >
@@ -2862,28 +3112,38 @@ function DivisionScheduleOperation({
   return (
     <details
       id={`division-${division.id}`}
-      className={`division-operation division-schedule-${division.scheduleStatus}`}
+      // division-operation keeps its class with no rule of its own: a
+      // .schedule-finality override still reaches through it, and
+      // division-schedule-final is a sibling class with rules of its own.
+      className={`division-operation group overflow-hidden rounded-[15px] border border-line bg-[#fbfaf8] division-schedule-${division.scheduleStatus}`}
       open={division.rosterFinalPublished && division.scheduleStatus !== "final"}
     >
-      <summary>
-        <span>
-          <b>{division.name}</b>
-          <small>
+      <summary className="grid min-h-[76px] cursor-pointer list-none grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-[10px] p-[13px_15px] [&::-webkit-details-marker]:hidden">
+        <span className="grid gap-[3px]">
+          <b className="text-[16px]">{division.name}</b>
+          <small className="text-[12px] text-muted">
             {division.teams.length} teams · {divisionGames.length} games
           </small>
         </span>
         <em
-          className={`schedule-finality ${division.scheduleStatus === "final" ? "final" : "draft"}`}
+          className={`inline-flex w-max self-center rounded-full p-[5px_8px] text-[9px] font-[900] tracking-[0.04em] not-italic ${
+            division.scheduleStatus === "final"
+              ? "bg-[#eaf6ec] text-green"
+              : "bg-[#fff4da] text-[#8a5900]"
+          }`}
         >
           {status}
         </em>
-        <strong aria-hidden="true">
+        <strong
+          aria-hidden="true"
+          className="text-[22px] transition-transform group-open:rotate-90"
+        >
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <div>
+      <div className="border-t border-line p-[11px]">
         {!division.rosterFinalPublished ? (
-          <p className="empty-note">
+          <p className={emptyNote}>
             Publish the final {division.name} roster before creating its schedule.
           </p>
         ) : (
@@ -2894,7 +3154,7 @@ function DivisionScheduleOperation({
                 <DivisionMatchupProgress division={division} games={divisionGames} />
                 <FinalizeDivisionSchedule division={division} missingCount={missingCount} />
                 {division.scheduleStatus !== "final" && division.scheduleMode !== "kch" && (
-                  <details className="schedule-method-card continue-manual">
+                  <details className={`my-[10px] ${scheduleMethodCard}`}>
                     <summary>
                       <span>
                         <Plus className="ui-icon" />
@@ -2917,7 +3177,7 @@ function DivisionScheduleOperation({
                     regularGamesRemaining={regularGamesRemaining}
                   />
                 )}
-                <section className="scheduled-games">
+                <section className="[&>h3]:m-[18px_3px_10px] [&>h3]:text-[15px] [&>h3]:text-gold">
                   <h3>Update Individual Games</h3>
                   {divisionGames.map((game) => (
                     <GameEditor game={game} key={game.id} />
@@ -2937,21 +3197,21 @@ function ScheduleSeasonOperations({ season, index }: { season: OwnerSeason; inde
     (division) => division.scheduleStatus === "final",
   ).length;
   return (
-    <details className="operations-season card" open={index === 0}>
-      <summary>
-        <span>
-          <b>{season.name}</b>
-          <small>
+    <details className="card group overflow-hidden" open={index === 0}>
+      <summary className={seasonSummary}>
+        <span className="grid gap-[5px]">
+          <b className="text-[18px]">{season.name}</b>
+          <small className="text-[13px] text-muted">
             {season.games.length} total games · {finalized} of {season.divisions.length} division
             schedules final
           </small>
         </span>
-        <strong aria-hidden="true">
+        <strong aria-hidden="true" className={caret}>
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <div>
-        <div className="division-operation-list">
+      <div className={seasonPanel}>
+        <div className="grid gap-[9px]">
           {season.divisions.map((division) => (
             <DivisionScheduleOperation season={season} division={division} key={division.id} />
           ))}
@@ -2970,7 +3230,7 @@ export function OwnerGameManagement({ seasons }: { seasons: OwnerSeason[] }) {
   const completed = scheduleSeasons.filter((season) => season.endsOn < today);
   if (!scheduleSeasons.length)
     return (
-      <section className="card owner-empty-operation">
+      <section className={`card ${emptyOperation}`}>
         <span>
           <CalendarDays className="ui-icon" />
         </span>
@@ -2981,21 +3241,21 @@ export function OwnerGameManagement({ seasons }: { seasons: OwnerSeason[] }) {
       </section>
     );
   return (
-    <section className="owner-operations owner-page-section">
-      <p className="operations-intro">
+    <section className={`${ownerOperations} ${pageSection}`}>
+      <p className={operationsIntro}>
         Choose a season, then a division. Each division keeps its own schedule, teams, and results.
       </p>
       {current.length ? (
-        <div className="owner-schedule-current">
+        <div className="grid gap-[10px]">
           {current.map((season, index) => (
             <ScheduleSeasonOperations season={season} index={index} key={season.id} />
           ))}
         </div>
       ) : (
-        <p className="empty-note">No current schedules. Completed seasons are available below.</p>
+        <p className={emptyNote}>No current schedules. Completed seasons are available below.</p>
       )}
       {completed.length ? (
-        <details className="owner-schedule-archive">
+        <details className="group mt-[18px] [&>summary]:flex [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:items-center [&>summary]:justify-between [&>summary]:gap-3 [&>summary]:border-t [&>summary]:border-line [&>summary]:py-4 [&>summary::-webkit-details-marker]:hidden [&>summary_span]:grid [&>summary_span]:gap-[3px] [&>summary_small]:text-xs [&>summary_small]:text-muted [&>summary_strong]:text-[22px] group-open:[&>summary_strong]:rotate-90">
           <summary>
             <span>
               <b>Season Archive</b>
@@ -3008,21 +3268,24 @@ export function OwnerGameManagement({ seasons }: { seasons: OwnerSeason[] }) {
             </strong>
           </summary>
           {completed.map((season) => (
-            <details className="operations-season card" key={season.id}>
-              <summary>
-                <span>
-                  <b>{season.name}</b>
-                  <small>
+            // mb-[10px] is carried across by hand from an owner-refinement
+            // rule: the archive renders only for a season that has ended, and
+            // there is none in any conference a screenshot can reach.
+            <details className="card group mb-[10px] overflow-hidden" key={season.id}>
+              <summary className={seasonSummary}>
+                <span className="grid gap-[5px]">
+                  <b className="text-[18px]">{season.name}</b>
+                  <small className="text-[13px] text-muted">
                     {season.games.length} game{season.games.length === 1 ? "" : "s"} · completed
                   </small>
                 </span>
-                <strong aria-hidden="true">
+                <strong aria-hidden="true" className={caret}>
                   <ChevronRight className="go-caret" />
                 </strong>
               </summary>
-              <div>
+              <div className={seasonPanel}>
                 <WeeklyScheduleTable season={season} />
-                <p className="empty-note">Completed schedules are kept here as a record.</p>
+                <p className={emptyNote}>Completed schedules are kept here as a record.</p>
               </div>
             </details>
           ))}
@@ -3032,13 +3295,22 @@ export function OwnerGameManagement({ seasons }: { seasons: OwnerSeason[] }) {
   );
 }
 
+/* A payment or waiver awaiting the owner's decision. Renders only while one is
+   pending, which no conference in the suite has. */
+const reviewCard =
+  "overflow-hidden rounded-2xl border border-line bg-white [&>summary]:grid [&>summary]:min-h-[72px] [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:grid-cols-[44px_1fr_auto] [&>summary]:items-center [&>summary]:gap-[11px] [&>summary]:p-[13px] [&>summary::-webkit-details-marker]:hidden [&>summary>span:nth-child(2)]:grid [&>summary>span:nth-child(2)]:gap-1 [&>summary_b]:text-[15px] [&>summary_small]:text-[13px] [&>summary_small]:text-muted [&>summary>strong]:text-2xl [&>form]:border-t [&>form]:border-line [&>form]:p-[15px]";
+const reviewIcon =
+  "grid h-[42px] w-[42px] place-items-center rounded-xl bg-[#eef3f8] text-[21px] font-[900] text-blue";
+const reviewFact =
+  "grid gap-[5px] rounded-[11px] bg-[#f7f5f2] p-[10px] [&_small]:text-[11px] [&_small]:text-gold [&_b]:text-[13px] [&_b]:leading-[1.4]";
+
 function PaymentReviewCard({ submission }: { submission: OwnerPaymentSubmission }) {
   const [state, action, pending] = useActionState(reviewPaymentNoticeAction, initialState);
   const isWaiver = submission.method === "waiver";
   return (
-    <details className={`payment-review-card ${isWaiver ? "waiver-review-card" : ""}`}>
+    <details className={`${reviewCard} ${isWaiver ? "border-[#e8c98f]" : ""}`}>
       <summary>
-        <span className="payment-review-icon">
+        <span className={`${reviewIcon} ${isWaiver ? "bg-[#fff4da]! text-[#8a5900]!" : ""}`}>
           {isWaiver ? (
             <FileCheck className="ui-icon" />
           ) : submission.method === "zelle" ? (
@@ -3058,9 +3330,9 @@ function PaymentReviewCard({ submission }: { submission: OwnerPaymentSubmission 
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <form action={action} className="owner-form">
+      <form action={action} className={ownerForm}>
         <input type="hidden" name="submissionId" value={submission.id} />
-        <div className="payment-review-facts">
+        <div className="grid grid-cols-[2fr_1fr_1fr] gap-[7px] max-tiny:grid-cols-2 [&>span:first-child]:max-tiny:col-span-full [&>span]:grid [&>span]:gap-[5px] [&>span]:rounded-[11px] [&>span]:bg-[#f7f5f2] [&>span]:p-[10px] [&>span]:[&_small]:text-[11px] [&>span]:[&_small]:text-gold [&>span]:[&_b]:text-[13px] [&>span]:[&_b]:leading-[1.4]">
           <span>
             <small>SEASON / TEAM</small>
             <b>
@@ -3078,7 +3350,7 @@ function PaymentReviewCard({ submission }: { submission: OwnerPaymentSubmission 
             <b>{submission.createdLabel}</b>
           </span>
         </div>
-        <p className="payment-reference">
+        <p className={`m-0 ${reviewFact}`}>
           <small>{isWaiver ? "PLAYER COMMENT" : "PLAYER REFERENCE"}</small>
           <b>{submission.reference || "No reference provided"}</b>
         </p>
@@ -3095,9 +3367,9 @@ function PaymentReviewCard({ submission }: { submission: OwnerPaymentSubmission 
           />
         </label>
         <Feedback state={state} />
-        <div className="payment-review-actions">
+        <div className="grid grid-cols-2 gap-[9px] max-tiny:grid-cols-1">
           <button
-            className="btn confirm-payment"
+            className="btn bg-green! text-white!"
             name="decision"
             value="confirmed"
             disabled={pending}
@@ -3105,7 +3377,7 @@ function PaymentReviewCard({ submission }: { submission: OwnerPaymentSubmission 
             {isWaiver ? "Approve Waiver" : "Confirm Received"}
           </button>
           <button
-            className="btn decline-payment"
+            className="btn border! border-[#e5b3b5]! bg-white! text-[#a51118]!"
             name="decision"
             value="declined"
             disabled={pending}
@@ -3118,6 +3390,62 @@ function PaymentReviewCard({ submission }: { submission: OwnerPaymentSubmission 
   );
 }
 
+/* The owner's payment tracking, drawn twice: once for the live season and once
+   in the past-payments archive. The two were identical markup pointing at one
+   block of globals.css, so they point at one block of strings instead. */
+/* Every descendant here shouts. .owner-form sits on the same elements and sets
+   the label size and the control metrics unlayered; .game-form only ever beat
+   it on source order, which a layered utility cannot do. */
+const gameForm =
+  "border-t border-line p-[16px] [&_label]:text-[14px]! [&_input]:min-h-[48px]! [&_input]:text-[16px]! [&_select]:min-h-[48px]! [&_select]:text-[16px]!";
+/* The update panel and the cancel panel: same box, different alarm. The form
+   gap shouts because .owner-form is on the same element with 12px unlayered,
+   and .game-change-panel form only ever won it on specificity. */
+const changePanel =
+  "m-[12px] overflow-hidden rounded-[14px] border border-line bg-white [&>header]:grid [&>header]:gap-[3px] [&>header]:border-b [&>header]:border-line [&>header]:bg-[#fcfbf9] [&>header]:p-[12px_13px] [&>header_b]:text-[15px] [&>header_b]:text-navy [&>header_small]:text-[12px] [&>header_small]:text-muted [&_form]:grid [&_form]:gap-[11px]! [&_form]:p-[13px] [&_.btn]:w-full";
+const cancelPanel =
+  "border-[#edc5c7]! bg-[#fffafa]! [&>header]:border-b-[#edc5c7] [&>header]:bg-[#fff4f4] [&>header_b]:text-[#a51d25] [&_.btn]:bg-[#a51d25]! [&_.btn]:text-white!";
+const paymentSeason = "card group overflow-hidden";
+/* The two photo pickers - one in preseason setup, one on the uniforms page.
+   The preseason one adds a 2px top margin and nothing else. */
+const uniformUploadGrid =
+  "grid grid-cols-2 gap-[9px] [&_label]:overflow-hidden [&_label]:rounded-[13px] [&_label]:border [&_label]:border-line [&_label]:bg-white [&_label]:p-[9px] [&_label>span]:mb-[7px] [&_label>span]:block [&_label>span]:text-gold [&_i]:not-italic [&_img,&_i]:grid [&_img,&_i]:h-[130px] [&_img,&_i]:w-full [&_img,&_i]:place-items-center [&_img,&_i]:rounded-[10px] [&_img,&_i]:bg-[#f1efec] [&_img,&_i]:object-cover [&_img,&_i]:text-[35px] [&_input]:mt-[8px] [&_input]:w-full [&_input]:min-h-auto! [&_input]:text-[12px]!";
+const paymentSummary =
+  "grid min-h-[76px] cursor-pointer list-none grid-cols-[minmax(0,1fr)_auto_24px] items-center gap-[10px] p-[14px_15px] [&::-webkit-details-marker]:hidden [&>span:first-child]:grid [&>span:first-child]:min-w-0 [&>span:first-child]:gap-[5px] [&>span:first-child_b]:leading-[1.3] [&_b]:text-[17px] [&_small]:text-[11px] [&_small]:leading-[1.35] [&_small]:text-muted";
+const paymentCaret = "text-[24px] transition-transform group-open:rotate-90";
+const paymentBody = "border-t border-line p-[12px]";
+/* The four stat tiles, and the three colours the division card gives them. */
+const paymentStats =
+  "mb-0 grid grid-cols-[repeat(2,minmax(0,1fr))] gap-[7px] [&>span]:grid [&>span]:min-h-[61px] [&>span]:content-center [&>span]:gap-[4px] [&>span]:rounded-[11px] [&>span]:bg-[#f6f4f1] [&>span]:p-[9px] [&>span:nth-child(2)]:bg-[#eaf6ec] [&>span:nth-child(3)]:bg-[#fff7e8] [&>span:nth-child(4)]:bg-[#f1f3f5] [&_b]:text-[14px] [&_small]:text-[9px] [&_small]:font-[850] [&_small]:tracking-[0.04em] [&_small]:text-muted min-[700px]:grid-cols-[repeat(4,minmax(0,1fr))]";
+/* Three tiles: paid, not paid, waived. The first two recolour themselves, and
+   have to shout to do it - the tile's own border and background are utilities
+   on the same element, at the same specificity, so source order in the
+   generated sheet would otherwise decide. */
+const paymentCounts =
+  "mb-[11px] grid grid-cols-[repeat(3,minmax(0,1fr))] gap-[7px] [&>span]:grid [&>span]:min-h-[68px] [&>span]:content-center [&>span]:gap-[5px] [&>span]:rounded-[12px] [&>span]:border [&>span]:border-line [&>span]:bg-white [&>span]:p-[9px_6px] [&>span]:text-center [&_b]:text-[20px] [&_small]:text-[9px] [&_small]:leading-[1.25] [&_small]:font-[850] [&_small]:tracking-[0.05em] [&_small]:text-muted";
+const paymentPlayerList =
+  "grid gap-[8px] border-t border-line p-[9px] min-[700px]:grid-cols-[repeat(2,minmax(0,1fr))]";
+const paymentDetails =
+  "group/details mt-[14px] overflow-hidden rounded-[13px] border border-line bg-[#fbfaf8]";
+const paymentDetailsSummary =
+  "grid min-h-[62px] cursor-pointer list-none grid-cols-[1fr_auto] items-center gap-[10px] p-[11px_13px] [&::-webkit-details-marker]:hidden [&>span]:grid [&>span]:gap-[4px] [&_b]:text-[14px] [&_small]:text-[10px] [&_small]:text-muted";
+/* Named, because this disclosure sits inside the season one and a bare
+   group-open: would turn its caret when the season opened. */
+const paymentDetailsCaret = "text-[22px] transition-transform group-open/details:rotate-90";
+const paymentRow =
+  "rounded-[13px] border border-line bg-white p-[12px] [&>header]:flex [&>header]:items-start [&>header]:justify-between [&>header]:gap-[9px] [&>header>span]:grid [&>header>span]:min-w-0 [&>header>span]:gap-[4px] [&>header_b]:text-[15px] [&>header_small]:text-[11px] [&>header_small]:text-muted [&>p]:m-[9px_0_0] [&>p]:flex [&>p]:items-center [&>p]:justify-between [&>p]:gap-[8px] [&>p]:border-t [&>p]:border-line [&>p]:pt-[9px] [&>p_b]:text-[12px] [&>p_small]:text-[9px] [&>p_small]:font-[850] [&>p_small]:tracking-[0.04em] [&>p_small]:text-muted";
+const paymentAmounts =
+  "mt-[11px] grid grid-cols-3 gap-[6px] [&>span]:grid [&>span]:gap-[4px] [&>span]:rounded-[9px] [&>span]:bg-[#f7f5f2] [&>span]:p-[8px_6px] [&_b]:text-[12px] [&_small]:text-[9px] [&_small]:font-[850] [&_small]:tracking-[0.04em] [&_small]:text-muted";
+/* status-waived and status-review render in no conference the suite can see;
+   their colours are carried across with the two that do. */
+const paymentStatus = "flex-none rounded-full p-[5px_8px] text-[10px] font-[850] not-italic";
+const paymentStatusTone = (status: string, pendingReview: boolean) =>
+  pendingReview || status === "Mixed" || status === "Waived"
+    ? "bg-[#fff4da] text-[#8a5900]"
+    : status === "Due"
+      ? "bg-[#fff1f1] text-[#a51118]"
+      : "bg-[#eaf6ec] text-green";
+
 export function OwnerPaymentManagement({
   submissions,
   groups,
@@ -3127,31 +3455,31 @@ export function OwnerPaymentManagement({
 }) {
   const pending = submissions.filter((submission) => submission.status === "pending");
   return (
-    <section className="owner-operations payment-operations owner-page-section">
+    <section className={`payment-operations ${ownerOperations} ${pageSection}`}>
       {pending.length > 0 && (
-        <section className="payment-review-section">
+        <section className="mt-[27px]">
           <p className="eyebrow">NEEDS ATTENTION</p>
           <h2>Payment Confirmations</h2>
-          <p className="operations-intro">
+          <p className={operationsIntro}>
             Only confirmed Zelle or cash notices change the player&apos;s balance.
           </p>
-          <div className="payment-review-list">
+          <div className="grid gap-[9px]">
             {pending.map((submission) => (
               <PaymentReviewCard submission={submission} key={submission.id} />
             ))}
           </div>
         </section>
       )}
-      <section className="payment-season-tracking">
+      <section className="mt-[27px]">
         <h2>Season Tracking</h2>
-        <p className="operations-intro">
+        <p className={operationsIntro}>
           Each card contains one season and division. Open it for player-level details.
         </p>
         {groups.length ? (
-          <div className="payment-season-list">
+          <div className="grid gap-[11px]">
             {groups.map((group) => (
-              <details className="payment-season payment-division-card card" key={group.divisionId}>
-                <summary>
+              <details className={paymentSeason} key={group.divisionId}>
+                <summary className={paymentSummary}>
                   <span>
                     <b>
                       {group.seasonName} · {group.divisionName}
@@ -3161,22 +3489,22 @@ export function OwnerPaymentManagement({
                       player
                     </small>
                   </span>
-                  <span className="payment-season-due">
+                  <span className="grid gap-[3px] text-right [&>b]:text-[15px]! [&>b]:text-[#a51118]">
                     <small>NOT PAID</small>
                     <b>{group.unpaidPlayers}</b>
                   </span>
-                  <strong aria-hidden="true">
+                  <strong aria-hidden="true" className={paymentCaret}>
                     <ChevronRight className="go-caret" />
                   </strong>
                 </summary>
-                <div className="payment-season-body">
-                  <p className="payment-card-label">PLAYER PAYMENT STATUS</p>
-                  <div className="payment-count-grid">
-                    <span className="paid">
+                <div className={paymentBody}>
+                  <p className={cardLabel}>PLAYER PAYMENT STATUS</p>
+                  <div className={paymentCounts}>
+                    <span className="border-[#cce6d0]! bg-[#eaf6ec]! [&>b]:text-green">
                       <small>PAID</small>
                       <b>{group.paidPlayers}</b>
                     </span>
-                    <span className="unpaid">
+                    <span className="border-[#efc9cb]! bg-[#fff1f1]! [&>b]:text-[#a51118]">
                       <small>NOT PAID</small>
                       <b>{group.unpaidPlayers}</b>
                     </span>
@@ -3185,8 +3513,8 @@ export function OwnerPaymentManagement({
                       <b>{group.waivedPlayers}</b>
                     </span>
                   </div>
-                  <p className="payment-card-label">PAID PLAYERS BY METHOD</p>
-                  <div className="payment-method-counts">
+                  <p className={cardLabel}>PAID PLAYERS BY METHOD</p>
+                  <div className="grid grid-cols-2 gap-[7px] [&>span]:grid [&>span]:min-h-[78px] [&>span]:content-center [&>span]:gap-[4px] [&>span]:rounded-[12px] [&>span]:border [&>span]:border-line [&>span]:bg-white [&>span]:p-[10px] [&_b]:text-[15px] [&_small]:text-[9px] [&_small]:font-[850] [&_small]:tracking-[0.05em] [&_small]:text-muted [&_strong]:text-[12px] [&_strong]:text-green">
                     <span>
                       <small>ZELLE</small>
                       <b>{group.zellePlayers} players</b>
@@ -3198,8 +3526,8 @@ export function OwnerPaymentManagement({
                       <strong>{money(group.cashReceived)}</strong>
                     </span>
                   </div>
-                  <p className="payment-card-label">SEASON / DIVISION INCOME</p>
-                  <div className="payment-division-stats">
+                  <p className={cardLabel}>SEASON / DIVISION INCOME</p>
+                  <div className={paymentStats}>
                     <span>
                       <small>EXPECTED INCOME</small>
                       <b>{money(group.assessed)}</b>
@@ -3217,31 +3545,31 @@ export function OwnerPaymentManagement({
                       <b>{money(group.waived)}</b>
                     </span>
                   </div>
-                  <details className="payment-player-details">
-                    <summary>
+                  <details className={paymentDetails}>
+                    <summary className={paymentDetailsSummary}>
                       <span>
                         <b>Player Payment Details</b>
                         <small>Paid, not paid, waived, and payment method</small>
                       </span>
-                      <strong aria-hidden="true">
+                      <strong aria-hidden="true" className={paymentDetailsCaret}>
                         <ChevronRight className="go-caret" />
                       </strong>
                     </summary>
-                    <div className="payment-player-list">
+                    <div className={paymentPlayerList}>
                       {group.players.map((player) => (
-                        <article className="payment-player-row" key={player.registrationId}>
+                        <article className={paymentRow} key={player.registrationId}>
                           <header>
                             <span>
                               <b>{player.playerName}</b>
                               <small>{player.teamName}</small>
                             </span>
                             <em
-                              className={`payment-player-status status-${player.pendingReview ? "review" : player.status.toLowerCase()}`}
+                              className={`${paymentStatus} ${paymentStatusTone(player.status, player.pendingReview)}`}
                             >
                               {player.pendingReview ? "Pending review" : player.status}
                             </em>
                           </header>
-                          <div className="payment-player-amounts">
+                          <div className={paymentAmounts}>
                             <span>
                               <small>RECEIVED</small>
                               <b>{money(player.received)}</b>
@@ -3276,7 +3604,7 @@ export function OwnerPaymentManagement({
             ))}
           </div>
         ) : (
-          <section className="card owner-empty-operation">
+          <section className={`card ${emptyOperation}`}>
             <span>₱</span>
             <div>
               <h3>No player charges yet</h3>
@@ -3293,14 +3621,14 @@ export function OwnerPaymentManagement({
 
 export function OwnerPastPaymentsArchive({ groups }: { groups: OwnerPaymentGroup[] }) {
   return (
-    <section className="owner-operations payment-operations owner-page-section">
+    <section className={`payment-operations ${ownerOperations} ${pageSection}`}>
       <h2>Completed Seasons</h2>
-      <p className="operations-intro">Previous-season payment records stay here for reference.</p>
+      <p className={operationsIntro}>Previous-season payment records stay here for reference.</p>
       {groups.length ? (
-        <div className="payment-season-list">
+        <div className="grid gap-[11px]">
           {groups.map((group) => (
-            <details className="payment-season payment-division-card card" key={group.divisionId}>
-              <summary>
+            <details className={paymentSeason} key={group.divisionId}>
+              <summary className={paymentSummary}>
                 <span>
                   <b>
                     {group.seasonName} · {group.divisionName}
@@ -3309,12 +3637,12 @@ export function OwnerPastPaymentsArchive({ groups }: { groups: OwnerPaymentGroup
                     {group.totalPlayers} rostered players · {money(group.received)} received
                   </small>
                 </span>
-                <strong aria-hidden="true">
+                <strong aria-hidden="true" className={paymentCaret}>
                   <ChevronRight className="go-caret" />
                 </strong>
               </summary>
-              <div className="payment-season-body">
-                <div className="payment-division-stats">
+              <div className={paymentBody}>
+                <div className={paymentStats}>
                   <span>
                     <small>EXPECTED</small>
                     <b>{money(group.assessed)}</b>
@@ -3328,31 +3656,31 @@ export function OwnerPastPaymentsArchive({ groups }: { groups: OwnerPaymentGroup
                     <b>{money(group.due)}</b>
                   </span>
                 </div>
-                <details className="payment-player-details">
-                  <summary>
+                <details className={paymentDetails}>
+                  <summary className={paymentDetailsSummary}>
                     <span>
                       <b>Player Payment Details</b>
                       <small>Read-only payment history</small>
                     </span>
-                    <strong aria-hidden="true">
+                    <strong aria-hidden="true" className={paymentDetailsCaret}>
                       <ChevronRight className="go-caret" />
                     </strong>
                   </summary>
-                  <div className="payment-player-list">
+                  <div className={paymentPlayerList}>
                     {group.players.map((player) => (
-                      <article className="payment-player-row" key={player.registrationId}>
+                      <article className={paymentRow} key={player.registrationId}>
                         <header>
                           <span>
                             <b>{player.playerName}</b>
                             <small>{player.teamName}</small>
                           </span>
                           <em
-                            className={`payment-player-status status-${player.pendingReview ? "review" : player.status.toLowerCase()}`}
+                            className={`${paymentStatus} ${paymentStatusTone(player.status, player.pendingReview)}`}
                           >
                             {player.pendingReview ? "Pending review" : player.status}
                           </em>
                         </header>
-                        <div className="payment-player-amounts">
+                        <div className={paymentAmounts}>
                           <span>
                             <small>RECEIVED</small>
                             <b>{money(player.received)}</b>
@@ -3385,7 +3713,7 @@ export function OwnerPastPaymentsArchive({ groups }: { groups: OwnerPaymentGroup
           ))}
         </div>
       ) : (
-        <p className="empty-note">No completed-season payments yet.</p>
+        <p className={emptyNote}>No completed-season payments yet.</p>
       )}
     </section>
   );
@@ -3403,23 +3731,25 @@ function DivisionUniformForm({
     initialState,
   );
   return (
-    <details className="uniform-settings-card">
-      <summary>
-        <span className="owner-team-mark">{division.name.slice(0, 2).toUpperCase()}</span>
-        <span>
-          <b>{division.name}</b>
-          <small>
+    <details className="overflow-hidden rounded-[15px] border border-line bg-white">
+      <summary className="grid min-h-[70px] cursor-pointer list-none grid-cols-[42px_1fr_auto] items-center gap-[11px] p-[13px] [&::-webkit-details-marker]:hidden">
+        <span className="grid h-[36px] w-[36px] place-items-center rounded-[11px] bg-navy font-[900] text-[#f5a313]">
+          {division.name.slice(0, 2).toUpperCase()}
+        </span>
+        <span className="grid gap-[4px]">
+          <b className="text-[15px]">{division.name}</b>
+          <small className="text-[13px] text-muted">
             {seasonName} · {division.teams.length} teams · Dark &amp; Light photos
           </small>
         </span>
-        <strong aria-hidden="true">
+        <strong aria-hidden="true" className="text-[24px]">
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <div className="division-uniform-editor">
-        <form action={photoAction} className="owner-form uniform-photo-upload">
+      <div className="[&>form]:border-t [&>form]:border-line [&>form]:p-[15px] [&>form_input]:min-h-[48px] [&>form_input]:text-[16px]">
+        <form action={photoAction} className={`${ownerForm} bg-[#fbfaf8]`}>
           <input type="hidden" name="divisionId" value={division.id} />
-          <div className="uniform-upload-grid">
+          <div className={uniformUploadGrid}>
             <label>
               <span>Dark</span>
               {division.darkImage ? (
@@ -3443,7 +3773,7 @@ function DivisionUniformForm({
               <input name="lightImage" type="file" accept="image/jpeg,image/png,image/webp" />
             </label>
           </div>
-          <p className="field-help">
+          <p className={fieldHelp}>
             These two photos apply to every team in the division. On a phone, choose the camera or
             photo library.
           </p>
@@ -3461,28 +3791,32 @@ export function OwnerUniformManagement({ seasons }: { seasons: OwnerSeason[] }) 
   const available = seasons.filter((season) => !season.canceledAt && season.divisions.length);
   if (!available.length) return null;
   return (
-    <section className="owner-operations owner-page-section uniform-operations">
+    <section className={`uniform-operations ${ownerOperations} ${pageSection}`}>
       <p className="eyebrow">DIVISION DETAILS</p>
       <h2>Uniform Photos</h2>
-      <p className="operations-intro">
+      <p className={operationsIntro}>
         Open one season, then one division. Upload one dark and one light reference photo for every
         team in that division.
       </p>
-      <div className="uniform-season-list">
+      <div className="grid gap-[11px]">
         {available.map((season, index) => (
-          <details className="operations-season card" key={season.id} open={index === 0}>
-            <summary>
-              <span>
-                <b>{season.name}</b>
-                <small>
+          <details
+            className="card group mb-[12px] overflow-hidden"
+            key={season.id}
+            open={index === 0}
+          >
+            <summary className={seasonSummary}>
+              <span className="grid gap-[5px]">
+                <b className="text-[18px]">{season.name}</b>
+                <small className="text-[13px] text-muted">
                   {season.divisions.length} division{season.divisions.length === 1 ? "" : "s"}
                 </small>
               </span>
-              <strong aria-hidden="true">
+              <strong aria-hidden="true" className={caret}>
                 <ChevronRight className="go-caret" />
               </strong>
             </summary>
-            <div className="uniform-settings-list">
+            <div className={`grid gap-[10px] ${seasonPanel}`}>
               {season.divisions.map((division) => (
                 <DivisionUniformForm
                   key={division.id}
@@ -3497,6 +3831,11 @@ export function OwnerUniformManagement({ seasons }: { seasons: OwnerSeason[] }) 
     </section>
   );
 }
+
+/* Captain and co-captain, and the picker that swaps them. */
+const leadershipRole =
+  "flex items-center justify-between gap-[10px] [&>div:first-child]:grid [&>div:first-child]:min-w-0 [&>div:first-child]:gap-[2px] [&_small]:text-[10px] [&_small]:font-[800] [&_small]:text-gold [&_b]:text-[13px]";
+const leadershipButtons = "[&_.btn]:p-[7px_10px]! [&_.btn]:text-xs!";
 
 function TeamLeadershipControl({
   team,
@@ -3531,8 +3870,11 @@ function TeamLeadershipControl({
   const eligible = activePlayers.filter((player) => player.registrationId !== otherId);
   if (editing)
     return (
-      <article className="team-leadership-role editing">
-        <form action={action} className="team-leadership-picker">
+      <article className="block">
+        <form
+          action={action}
+          className={`grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-[7px] max-[430px]:grid-cols-[auto_1fr] [&>div]:flex [&>div]:gap-[6px] [&>div]:max-[430px]:col-start-2 [&_small]:whitespace-nowrap [&_select]:min-w-0 [&_select]:rounded-[9px] [&_select]:border [&_select]:border-line [&_select]:bg-white [&_select]:p-2 [&_select]:font-[inherit] [&_select]:text-xs [&_.form-error]:col-span-full [&_.form-error]:p-[7px] [&_.form-error]:text-[11px] [&_.form-success]:col-span-full [&_.form-success]:p-[7px] [&_.form-success]:text-[11px] ${leadershipButtons}`}
+        >
           <small>{role.toUpperCase()}</small>
           <input type="hidden" name="teamId" value={team.id} />
           <input type="hidden" name={otherField} value={otherId} />
@@ -3562,12 +3904,12 @@ function TeamLeadershipControl({
       </article>
     );
   return (
-    <article className="team-leadership-role">
+    <article className={leadershipRole}>
       <div>
         <small>{role.toUpperCase()}</small>
         <b>{currentName}</b>
       </div>
-      <div className="team-leadership-actions">
+      <div className={`flex gap-[6px] [&_form]:flex [&_form]:gap-[6px] ${leadershipButtons}`}>
         <button className="btn secondary" type="button" onClick={() => setEditing(true)}>
           Change
         </button>
@@ -3591,9 +3933,9 @@ function TeamLeadershipEditor({ team }: { team: OwnerTeam }) {
   const captain = activePlayers.find((player) => player.role === "Captain");
   const coCaptain = activePlayers.find((player) => player.role === "Co-captain");
   return (
-    <section className="team-leadership-editor">
+    <section className="mb-1 grid gap-[9px] border-b border-line p-[2px_0_12px] [&>h4]:m-0 [&>h4]:text-[13px]">
       <h4>Team Leadership</h4>
-      <div className="team-leadership-list">
+      <div className="grid gap-2">
         <TeamLeadershipControl
           team={team}
           role="Captain"
@@ -3618,25 +3960,27 @@ function TeamLeadershipEditor({ team }: { team: OwnerTeam }) {
 function TeamEditor({ team }: { team: OwnerTeam }) {
   const players = team.players.filter((player) => player.status !== "inactive");
   return (
-    <details className="game-action-card">
-      <summary>
-        <span className="owner-team-mark">{team.name.slice(0, 2).toUpperCase()}</span>
-        <span>
-          <b>{team.name}</b>
-          <small>
+    <details className={actionCard}>
+      <summary className={`${actionSummary} grid-cols-[44px_1fr_auto]`}>
+        <span className="grid h-[36px] w-[36px] place-items-center rounded-[11px] bg-navy font-[900] text-[#f5a313]">
+          {team.name.slice(0, 2).toUpperCase()}
+        </span>
+        <span className="grid gap-[4px]">
+          <b className="text-[15px]">{team.name}</b>
+          <small className="text-[13px] leading-[1.35] text-muted">
             {players.length} player{players.length === 1 ? "" : "s"}
           </small>
         </span>
-        <strong aria-hidden="true">
+        <strong aria-hidden="true" className={caret}>
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <div className="game-form">
+      <div className={gameForm}>
         <TeamLeadershipEditor team={team} />
         {players.length ? (
           players.map((player) => <TeamPlayerRow key={player.registrationId} player={player} />)
         ) : (
-          <p className="empty-note">No active players yet.</p>
+          <p className={emptyNote}>No active players yet.</p>
         )}
       </div>
     </details>
@@ -3646,19 +3990,19 @@ function TeamEditor({ team }: { team: OwnerTeam }) {
 function TeamPlayerRow({ player }: { player: OwnerRosterPlayer }) {
   const [state, action, pending] = useActionState(returnPlayerToDraftPoolAction, initialState);
   return (
-    <details className="roster-player-editor">
-      <summary>
-        <span>
-          <b>{player.name}</b>
-          <small>
+    <details className="overflow-hidden rounded-[10px] border border-line">
+      <summary className="grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_auto] items-center gap-[10px] p-[11px_12px] [&::-webkit-details-marker]:hidden">
+        <span className="grid min-w-0 gap-[3px]">
+          <b className="text-[14px] leading-[1.2]">{player.name}</b>
+          <small className="text-[11px] leading-[1.25] whitespace-normal text-muted">
             #{player.jerseyNumber ?? "—"} · {player.position || "Position not set"} · {player.role}
           </small>
         </span>
-        <strong aria-hidden="true">
+        <strong aria-hidden="true" className="text-[18px]">
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <form action={action} className="owner-form">
+      <form action={action} className={`${ownerForm} border-t border-line p-[12px]`}>
         <input type="hidden" name="registrationId" value={player.registrationId} />
         <label>
           Reason for returning to the draft pool

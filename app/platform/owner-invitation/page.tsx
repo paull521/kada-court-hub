@@ -2,6 +2,7 @@ import KchLogo from "@/components/KchLogo";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { OwnerApplication } from "@/components/PlatformCreatorTools";
+import { loginBox, loginColumn, loginLogo } from "@/components/ui/auth-classes";
 
 export default async function OwnerInvitationPage() {
   const supabase = await createClient();
@@ -26,10 +27,10 @@ export default async function OwnerInvitationPage() {
   const path = "/platform/owner-invitation";
   return (
     <div className="shell login-shell">
-      <header className="login-logo">
+      <header className={loginLogo}>
         <KchLogo />
       </header>
-      <main className="login">
+      <main className={loginColumn}>
         <p className="eyebrow">KCH OWNER INVITATION</p>
         <h1>
           Become a<br />
@@ -48,7 +49,7 @@ export default async function OwnerInvitationPage() {
             }
           />
         ) : (
-          <div className="card loginbox">
+          <div className={`card ${loginBox}`}>
             <Link href={`/login?next=${encodeURIComponent(path)}`} className="btn primary">
               Log in to KCH
             </Link>

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import OwnerPageShell from "@/components/OwnerPageShell";
 import { getOwnerConferenceContext } from "@/lib/owner-data";
+import { guideBody, guideFrame, guideIndex } from "@/components/ui/guide-classes";
 
 /**
  * The commissioner's handbook. Every word on it is fixed, so the page blocks
@@ -298,92 +299,133 @@ export default async function OwnerGuidePage() {
       conferenceId={context.conferenceId}
       conferences={context.conferences}
     >
-      <div className="owner-guide">
-        <nav className="owner-guide-index" aria-label="Guide sections">
+      <div className={guideFrame}>
+        <nav className={guideIndex} aria-label="Guide sections">
           {sections.map(([id, label]) => (
             <a href={`#${id}`} key={id}>
               {label}
             </a>
           ))}
         </nav>
-        <div className="owner-guide-body">
-          <section className="guide-opening">
-            <p>
-              You are the commissioner of <b>{context.conferenceName}</b>. Every player, season,
-              team, game and payment on the pages below belongs to it, and nothing you do here
-              reaches another conference.
+        <div className={guideBody}>
+          <section className="grid gap-[12px] rounded-[22px] bg-[linear-gradient(145deg,#082b50,#0e477c)] p-[22px] text-white desk:p-[30px_32px]">
+            <p className="m-0 text-[19px] leading-[1.42] tracking-[-0.2px] max-tiny:text-[17px] desk:max-w-[40ch] desk:text-[22px]">
+              You are the commissioner of <b className="text-[#f6b33d]">{context.conferenceName}</b>
+              . Every player, season, team, game and payment on the pages below belongs to it, and
+              nothing you do here reaches another conference.
             </p>
-            <small>
+            <small className="text-[13px] leading-[1.55] text-[#cfdcea]">
               The whole job runs in one direction: a season holds divisions, a division holds teams,
               and a team holds players. Almost every screen asks you to pick a season and a division
               first for that reason.
             </small>
           </section>
 
-          <section className="owner-guide-section" id="map">
-            <h2>Where everything lives</h2>
-            <p className="guide-lead">Five tabs, in the strip at the top of every owner page.</p>
-            <div className="guide-map">
+          <section className="scroll-mt-[14px] desk:scroll-mt-[24px]" id="map">
+            <h2 className="m-[0_0_6px] text-[25px] leading-[1.1] tracking-[-0.7px] desk:text-[29px]">
+              Where everything lives
+            </h2>
+            <p className="m-[0_0_16px] max-w-[62ch] text-[14px] leading-[1.55] text-muted">
+              Five tabs, in the strip at the top of every owner page.
+            </p>
+            <div className="grid border-t border-line">
               {tabs.map((tab) => (
-                <Link href={tab.href} key={tab.name}>
-                  <span className="guide-map-icon">{tab.icon}</span>
-                  <b>{tab.name}</b>
-                  <span>{tab.body}</span>
+                <Link
+                  href={tab.href}
+                  key={tab.name}
+                  className="grid grid-cols-[34px_minmax(0,1fr)] items-start gap-[4px_12px] border-b border-line p-[14px_2px] desk:grid-cols-[38px_132px_minmax(0,1fr)] desk:items-center desk:gap-[16px] desk:p-[16px_2px]"
+                >
+                  <span className="row-span-2 grid h-[34px] w-[34px] place-items-center rounded-[11px] bg-[#f7f0e4] text-gold desk:row-auto desk:h-[38px] desk:w-[38px]">
+                    {tab.icon}
+                  </span>
+                  <b className="text-[15px] tracking-[-0.2px]">{tab.name}</b>
+                  <span className="text-[13px] leading-[1.5] text-[#4d5a6b]">{tab.body}</span>
                 </Link>
               ))}
             </div>
-            <p className="guide-lead guide-lead-spaced">
+            <p className="m-[0_0_16px] max-w-[62ch] text-[14px] leading-[1.55] text-muted mt-[26px]">
               Four more pages have no tab of their own. Each one is a tile on Home.
             </p>
-            <div className="guide-doors">
+            <div className="grid grid-cols-2 gap-[8px] max-tiny:grid-cols-1 desk:grid-cols-4">
               {sideDoors.map((door) => (
-                <Link href={door.href} key={door.href}>
-                  <b>{door.name}</b>
-                  <small>{door.from}</small>
+                <Link
+                  href={door.href}
+                  key={door.href}
+                  className="grid gap-[2px] rounded-[13px] border border-[#ecd9b4] bg-[linear-gradient(135deg,#fffaf1,#fffefb)] p-[11px_12px]"
+                >
+                  <b className="text-[13.5px]">{door.name}</b>
+                  <small className="text-[11px] text-[#8a7550]">{door.from}</small>
                 </Link>
               ))}
             </div>
           </section>
 
-          <section className="owner-guide-section" id="season">
-            <h2>A season, start to finish</h2>
-            <p className="guide-lead">
+          <section className="scroll-mt-[14px] desk:scroll-mt-[24px]" id="season">
+            <h2 className="m-[0_0_6px] text-[25px] leading-[1.1] tracking-[-0.7px] desk:text-[29px]">
+              A season, start to finish
+            </h2>
+            <p className="m-[0_0_16px] max-w-[62ch] text-[14px] leading-[1.55] text-muted">
               Season setup walks these eight steps in order and remembers where you stopped. Four of
               them wait on something before they will let you through.
             </p>
-            <ol className="guide-rail">
+            <ol className="m-0 list-none p-0">
               {steps.map((step, index) => (
-                <li className="season-guide-step" key={step.name}>
-                  <b>{index + 1}</b>
-                  <h3>{step.name}</h3>
-                  <p>{step.body}</p>
-                  {step.gate && <em>{step.gate}</em>}
+                <li
+                  className="relative pb-[24px] pl-[46px] before:absolute before:top-[36px] before:bottom-[2px] before:left-[15px] before:w-[2px] before:rounded-[2px] before:bg-[linear-gradient(180deg,rgba(209,132,8,0.5),rgba(209,132,8,0.14))] before:content-[''] last:pb-0 last:before:hidden desk:pb-[28px] desk:pl-[56px] desk:before:top-[44px] desk:before:left-[18px]"
+                  key={step.name}
+                >
+                  <b className="absolute top-0 left-0 grid h-[32px] w-[32px] place-items-center rounded-[11px] bg-[linear-gradient(145deg,#082b50,#0e477c)] text-[13px] font-[900] text-white shadow-[0_4px_12px_rgba(13,38,69,0.24)] desk:h-[38px] desk:w-[38px] desk:rounded-[13px] desk:text-[15px]">
+                    {index + 1}
+                  </b>
+                  <h3 className="m-[5px_0] text-[17px] tracking-[-0.3px] desk:mt-[8px] desk:text-[19px]">
+                    {step.name}
+                  </h3>
+                  <p className="m-0 max-w-[60ch] text-[14px] leading-[1.55] text-[#3f4e61] desk:text-[15px]">
+                    {step.body}
+                  </p>
+                  {step.gate && (
+                    <em className="mt-[9px] inline-block rounded-[9px] bg-[#fdf3e0] px-[11px] py-[6px] text-[12px] leading-[1.4] font-[700] text-[#8a5c05] not-italic">
+                      {step.gate}
+                    </em>
+                  )}
                 </li>
               ))}
             </ol>
-            <Link href="/owner/setup" className="btn primary guide-jump">
+            <Link href="/owner/setup" className="btn primary mt-[20px] inline-block">
               Open Season Setup
             </Link>
           </section>
 
-          <section className="owner-guide-section" id="pages">
-            <h2>What each page does</h2>
-            <p className="guide-lead">
+          <section className="scroll-mt-[14px] desk:scroll-mt-[24px]" id="pages">
+            <h2 className="m-[0_0_6px] text-[25px] leading-[1.1] tracking-[-0.7px] desk:text-[29px]">
+              What each page does
+            </h2>
+            <p className="m-[0_0_16px] max-w-[62ch] text-[14px] leading-[1.55] text-muted">
               Every ability in the owner workspace, page by page. Each heading opens the page it
               describes.
             </p>
-            <div className="guide-pages">
+            <div className="grid border-t border-line">
               {pages.map((page) => (
-                <article className="guide-page" key={page.name}>
-                  <span className="guide-page-icon">{page.icon}</span>
+                <article
+                  className="grid grid-cols-[36px_minmax(0,1fr)] gap-[12px] border-b border-line p-[18px_2px] desk:grid-cols-[42px_minmax(0,1fr)] desk:gap-[16px] desk:p-[22px_2px]"
+                  key={page.name}
+                >
+                  <span className="grid h-[36px] w-[36px] place-items-center rounded-[12px] bg-[#f2f5f9] text-[#4d6d95] desk:h-[42px] desk:w-[42px]">
+                    {page.icon}
+                  </span>
                   <div>
-                    <h3>
+                    <h3 className="m-0 text-[17px] tracking-[-0.3px] [&_a]:border-b-2 [&_a]:border-[rgba(209,132,8,0.35)]">
                       <Link href={page.href}>{page.name}</Link>
                     </h3>
-                    <small>{page.where}</small>
-                    <ul className="guide-ability-list">
+                    <small className="mt-[3px] block text-[12px] text-muted">{page.where}</small>
+                    <ul className="m-[11px_0_0] grid list-none gap-[8px] p-0">
                       {page.can.map((ability) => (
-                        <li key={ability}>{ability}</li>
+                        <li
+                          key={ability}
+                          className="relative max-w-[68ch] pl-[17px] text-[13.5px] leading-[1.55] text-[#3f4e61] before:absolute before:top-[8px] before:left-[1px] before:h-[6px] before:w-[6px] before:rounded-[2px] before:bg-gold before:opacity-[0.55] before:content-[''] desk:text-[14px]"
+                        >
+                          {ability}
+                        </li>
                       ))}
                     </ul>
                   </div>
@@ -392,51 +434,71 @@ export default async function OwnerGuidePage() {
             </div>
           </section>
 
-          <section className="owner-guide-section" id="first">
-            <h2>What has to happen first</h2>
-            <p className="guide-lead">
+          <section className="scroll-mt-[14px] desk:scroll-mt-[24px]" id="first">
+            <h2 className="m-[0_0_6px] text-[25px] leading-[1.1] tracking-[-0.7px] desk:text-[29px]">
+              What has to happen first
+            </h2>
+            <p className="m-[0_0_16px] max-w-[62ch] text-[14px] leading-[1.55] text-muted">
               When a button is greyed out, it is almost always one of these. The button says which
               one, and turns itself on the moment the condition is met.
             </p>
-            <div className="guide-gates">
+            <div className="grid gap-[13px]">
               {gates.map(([want, need]) => (
-                <p className="guide-gate" key={want}>
-                  <b>{want}</b>
-                  <span>once {need}.</span>
+                <p
+                  className="m-0 max-w-[62ch] border-l-[3px] border-l-[rgba(209,132,8,0.5)] p-[1px_0_1px_14px]"
+                  key={want}
+                >
+                  <b className="block text-[14px]">{want}</b>
+                  <span className="text-[13.5px] leading-[1.5] text-muted">once {need}.</span>
                 </p>
               ))}
             </div>
           </section>
 
-          <section className="owner-guide-section" id="words">
-            <h2>Words used here</h2>
-            <p className="guide-lead">
+          <section className="scroll-mt-[14px] desk:scroll-mt-[24px]" id="words">
+            <h2 className="m-[0_0_6px] text-[25px] leading-[1.1] tracking-[-0.7px] desk:text-[29px]">
+              Words used here
+            </h2>
+            <p className="m-[0_0_16px] max-w-[62ch] text-[14px] leading-[1.55] text-muted">
               The same eleven words appear on every owner screen. This is what each of them means.
             </p>
-            <dl className="guide-terms">
+            <dl className="m-0 grid gap-[14px] desk:grid-cols-2 desk:gap-[18px_32px]">
               {words.map(([term, meaning]) => (
                 <div key={term}>
-                  <dt>{term}</dt>
-                  <dd>{meaning}</dd>
+                  <dt className="text-[14px] font-[800] tracking-[-0.1px]">{term}</dt>
+                  <dd className="m-[3px_0_0] max-w-[62ch] text-[13.5px] leading-[1.5] text-[#4c5a6c]">
+                    {meaning}
+                  </dd>
                 </div>
               ))}
             </dl>
           </section>
 
-          <section className="owner-guide-section" id="questions">
-            <h2>Questions</h2>
-            <p className="guide-lead">The seven that come up most often.</p>
-            <div className="guide-faq">
+          <section className="scroll-mt-[14px] desk:scroll-mt-[24px]" id="questions">
+            <h2 className="m-[0_0_6px] text-[25px] leading-[1.1] tracking-[-0.7px] desk:text-[29px]">
+              Questions
+            </h2>
+            <p className="m-[0_0_16px] max-w-[62ch] text-[14px] leading-[1.55] text-muted">
+              The seven that come up most often.
+            </p>
+            <div className="grid gap-[8px]">
               {questions.map(([question, answer]) => (
-                <details key={question}>
-                  <summary>{question}</summary>
-                  <p>{answer}</p>
+                <details
+                  key={question}
+                  className="group rounded-[14px] border border-line bg-white/[0.86]"
+                >
+                  <summary className="cursor-pointer list-none p-[13px_15px] text-[14px] font-[700] after:float-right after:ml-[12px] after:font-[800] after:text-gold after:content-['+'] group-open:pb-[4px] group-open:after:content-['–'] desk:text-[15px] [&::-webkit-details-marker]:hidden">
+                    {question}
+                  </summary>
+                  <p className="m-0 max-w-[66ch] px-[15px] pb-[14px] text-[13.5px] leading-[1.55] text-[#435162] desk:text-[14px]">
+                    {answer}
+                  </p>
                 </details>
               ))}
             </div>
           </section>
 
-          <p className="guide-closing">
+          <p className="m-0 pt-[4px] text-[13px] text-muted">
             Anything this guide does not answer can go to KCH from your Profile, under support.
           </p>
         </div>

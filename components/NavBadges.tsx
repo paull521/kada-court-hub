@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import NotificationCenter from "@/components/NotificationCenter";
 import type { PlayerNotification } from "@/lib/kch-data";
+import { navDot } from "@/components/ui/shared-classes";
 
 /**
  * The parts of a shell that need portal data: the notification bell and the
@@ -19,7 +20,7 @@ export type ShellChrome = {
   teamHasUnavailable: boolean;
 };
 
-export const NAV_ALERT = <i className="nav-alert-dot" aria-label="Action needed" />;
+export const NAV_ALERT = <i className={`${navDot} bg-[#d71920]`} aria-label="Action needed" />;
 
 /** Wraps a badge so a slow portal read never blocks the tab bar it sits in. */
 export function BadgeSlot({ children }: { children: React.ReactNode }) {
@@ -28,7 +29,7 @@ export function BadgeSlot({ children }: { children: React.ReactNode }) {
 
 export async function TeamDot({ chrome }: { chrome: Promise<ShellChrome> }) {
   const { teamHasUnavailable } = await chrome;
-  return <i className={`nav-team-dot ${teamHasUnavailable ? "no" : "yes"}`} />;
+  return <i className={`${navDot} ${teamHasUnavailable ? "bg-[#d72b2b]" : "bg-[#2a9b4c]"}`} />;
 }
 
 export async function AlertDot({

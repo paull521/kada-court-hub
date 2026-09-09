@@ -3,16 +3,36 @@ import { LoadingNote, SkeletonText } from "@/components/Skeleton";
 import NextGameCard from "@/components/NextGameCard";
 import type { DivisionScheduleGame, PlayerPortalData } from "@/lib/kch-data";
 import type { Game } from "@/lib/data";
+import {
+  compactGame,
+  compactGameMain,
+  compactGameSide,
+  scheduleEmpty,
+  scheduleTableScroll,
+  scheduleWeek,
+  scheduleWeekFrame,
+  weeklySchedule,
+  weeklyScheduleLead,
+  weeklyScheduleList,
+} from "@/components/ui/schedule-classes";
+import {
+  familyBanner,
+  familyQuote,
+  familyQuoteAuthor,
+  listLabel,
+  uniformDot,
+  uniformDotDark,
+} from "@/components/ui/shared-classes";
 
 function GameRow({ game, teamName }: { game: Game; teamName: string }) {
   return (
-    <section className="card compact-upcoming-game">
+    <section className={`card ${compactGame}`}>
       <time>
         <b>{game.day}</b>
         <span>{game.month}</span>
         <strong>{game.date}</strong>
       </time>
-      <div className="compact-game-main">
+      <div className={compactGameMain}>
         <strong>
           {teamName} <span>vs</span> {game.opponent}
         </strong>
@@ -21,12 +41,12 @@ function GameRow({ game, teamName }: { game: Game; teamName: string }) {
           {game.court ? ` · ${game.court}` : ""}
         </small>
       </div>
-      <div className="compact-game-side">
+      <div className={compactGameSide}>
         <strong>{game.time}</strong>
         <span>
           <small>UNIFORM</small>
           <i
-            className={`uniform-dot ${game.uniform.toLowerCase().includes("dark") ? "dark" : "white"}`}
+            className={`${uniformDot} ${game.uniform.toLowerCase().includes("dark") ? uniformDotDark : ""}`}
           />
           {game.uniform.toUpperCase()}
         </span>
@@ -38,7 +58,7 @@ function GameRow({ game, teamName }: { game: Game; teamName: string }) {
 /** The same row with its four values missing. UNIFORM stays - it is a label. */
 function GameRowFrame() {
   return (
-    <section className="card compact-upcoming-game">
+    <section className={`card ${compactGame}`}>
       <time>
         <b>
           <SkeletonText width="1.8em" />
@@ -52,7 +72,7 @@ function GameRowFrame() {
       </time>
       {/* Sized against the column rather than in em: this one is the flexible
           part of the row, and a fixed width would hang out of it on a phone. */}
-      <div className="compact-game-main">
+      <div className={compactGameMain}>
         <strong>
           <SkeletonText width="85%" />
         </strong>
@@ -60,7 +80,7 @@ function GameRowFrame() {
           <MapPin className="ui-icon" /> <SkeletonText width="60%" />
         </small>
       </div>
-      <div className="compact-game-side">
+      <div className={compactGameSide}>
         <strong>
           <SkeletonText width="4em" />
         </strong>
@@ -100,20 +120,20 @@ function DivisionWeeklyView({ games }: { games?: DivisionScheduleGame[] }) {
     for (const game of games)
       weeks.find(([key]) => key === weekStart(game.dateKey))?.[1].push(game);
   return (
-    <section className="weekly-schedule player-weekly-schedule">
+    <section className={`${weeklySchedule} ${weeklyScheduleLead}`}>
       <header>
         <div>
           <small>WEEKLY VIEW</small>
           <h2>All Teams</h2>
         </div>
       </header>
-      <div className="weekly-schedule-list">
+      <div className={weeklyScheduleList}>
         {games
           ? weeks.map(([key, weekGames], index) => {
               const end = new Date(`${key}T12:00:00Z`);
               end.setUTCDate(end.getUTCDate() + 6);
               return (
-                <details className="schedule-week" key={key} open={index === 0}>
+                <details className={scheduleWeek} key={key} open={index === 0}>
                   <summary>
                     <span>
                       {shortDate(key)} – {shortDate(end.toISOString().slice(0, 10))}
@@ -125,7 +145,7 @@ function DivisionWeeklyView({ games }: { games?: DivisionScheduleGame[] }) {
                       <ChevronRight className="go-caret" />
                     </strong>
                   </summary>
-                  <div className="schedule-table-scroll">
+                  <div className={scheduleTableScroll}>
                     <table>
                       <thead>
                         <tr>
@@ -164,8 +184,8 @@ function DivisionWeeklyView({ games }: { games?: DivisionScheduleGame[] }) {
               );
             })
           : [0, 1, 2, 3].map((index) => (
-              <div className="schedule-week" key={index}>
-                <div className="schedule-week-frame">
+              <div className={scheduleWeek} key={index}>
+                <div className={scheduleWeekFrame}>
                   <SkeletonText width="9em" />
                   <SkeletonText width="4em" />
                 </div>
@@ -192,7 +212,7 @@ export default function ScheduleFrame({ data }: { data?: PlayerPortalData }) {
     <>
       {!data && <LoadingNote />}
       {data && !next ? (
-        <section className="card schedule-empty">
+        <section className={`card ${scheduleEmpty}`}>
           <span>
             <CalendarDays className="ui-icon" />
           </span>
@@ -204,8 +224,8 @@ export default function ScheduleFrame({ data }: { data?: PlayerPortalData }) {
       )}
       {(!data || upcoming.length > 0) && (
         <>
-          <h2 className="list-label">UPCOMING GAMES</h2>
-          <div className="schedule-list">
+          <h2 className={listLabel}>UPCOMING GAMES</h2>
+          <div className="grid gap-2">
             {data
               ? upcoming.map((game) => (
                   <GameRow game={game} teamName={data.context.team} key={game.id} />
@@ -215,11 +235,11 @@ export default function ScheduleFrame({ data }: { data?: PlayerPortalData }) {
         </>
       )}
       <DivisionWeeklyView games={data?.divisionSchedule} />
-      <section className="family-banner">
-        <p className="family-quote">
+      <section className={familyBanner}>
+        <p className={familyQuote}>
           “Every game is a direct reflection of what you have prepared for.”
         </p>
-        <p className="family-quote-author">— PL</p>
+        <p className={familyQuoteAuthor}>— PL</p>
       </section>
     </>
   );

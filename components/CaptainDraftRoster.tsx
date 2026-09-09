@@ -9,6 +9,20 @@ import {
   type CaptainActionState,
 } from "@/app/captain/actions";
 import type { CaptainPortalData } from "@/lib/captain-data";
+import {
+  addedPlayers,
+  captainRosterList,
+  compactFields,
+  emptyNote,
+  fieldHelp,
+  ownerForm,
+  ownerIcon,
+  ownerSection,
+  playerSearch,
+  reviewActions,
+  sectionTitle,
+  submitRoster,
+} from "@/components/ui/shared-classes";
 
 const initial: CaptainActionState = {};
 function Notice({ state }: { state: CaptainActionState }) {
@@ -33,11 +47,13 @@ function DraftedPlayer({
 }) {
   const [state, action, pending] = useActionState(updateDraftPlayerAction, initial);
   return (
-    <details className="captain-roster-player">
-      <summary>
-        <span>
+    // bg-white is the .captain-added-players re-scope, folded in: the two
+    // lists this renders in agreed on white, and only one said so.
+    <details className="overflow-hidden rounded-[12px] border border-line bg-white">
+      <summary className="grid cursor-pointer grid-cols-[1fr_auto] items-center p-[11px]">
+        <span className="grid gap-[3px]">
           <b>{player.name}</b>
-          <small>
+          <small className="text-[10px] text-muted">
             #{player.jerseyNumber ?? "—"} · {player.position || "Position needed"}
             {player.jerseyName ? ` · ${player.jerseyName}` : ""}
           </small>
@@ -46,11 +62,11 @@ function DraftedPlayer({
           <ChevronRight className="go-caret" />
         </strong>
       </summary>
-      <form action={action} className="owner-form">
+      <form action={action} className={`${ownerForm} border-t border-line p-[11px]`}>
         <input type="hidden" name="teamId" value={teamId} />
         <input type="hidden" name="registrationId" value={player.registrationId} />
         {detailsOnly && <input type="hidden" name="detailsOnly" value="yes" />}
-        <div className="compact-fields">
+        <div className={compactFields}>
           <label>
             Jersey Number
             <input
@@ -100,7 +116,7 @@ function DraftedPlayer({
           </label>
         )}
         <Notice state={state} />
-        <div className="draft-review-actions">
+        <div className={reviewActions}>
           {!detailsOnly && (
             <button
               className="btn secondary"
@@ -119,6 +135,12 @@ function DraftedPlayer({
     </details>
   );
 }
+
+/** Two statuses recolour the panel; anything else keeps the amber default. */
+const draftTone: Record<string, string> = {
+  approved: "bg-[#dff3df]",
+  submitted: "bg-[#e7efff]",
+};
 
 export default function CaptainDraftRoster({
   data,
@@ -154,10 +176,10 @@ export default function CaptainDraftRoster({
     (candidate) => candidate.invitationId === selected,
   );
   return (
-    <section className="card owner-section captain-draft-entry">
+    <section className={`card captain-draft-entry grid gap-[13px] ${ownerSection}`}>
       {!detailsOnly && (
-        <div className="owner-section-title">
-          <span className="owner-icon">🏀</span>
+        <div className={sectionTitle}>
+          <span className={ownerIcon}>🏀</span>
           <span>
             <h2>Enter Drafted Players</h2>
             <p>
@@ -167,7 +189,9 @@ export default function CaptainDraftRoster({
         </div>
       )}
       {!detailsOnly && (
-        <div className={`captain-draft-status ${data.draftStatus}`}>
+        <div
+          className={`grid gap-[3px] rounded-xl p-[11px] [&_b]:capitalize [&_span]:text-[10px] [&_span]:leading-[1.45] [&_span]:text-muted ${draftTone[data.draftStatus] ?? "bg-[#fff4da]"}`}
+        >
           <b>{data.draftStatus.replace("_", " ")}</b>
           <span>
             {data.draftStatus === "submitted"
@@ -181,7 +205,7 @@ export default function CaptainDraftRoster({
           </span>
         </div>
       )}
-      <section className="captain-added-players">
+      <section className={addedPlayers}>
         <div>
           <h3>Team roster</h3>
           <span>
@@ -189,7 +213,7 @@ export default function CaptainDraftRoster({
             {data.rosterLimit !== null ? ` / ${data.rosterLimit}` : ""} players
           </span>
         </div>
-        <div className="captain-roster-list">
+        <div className={captainRosterList}>
           {players.map((player) => (
             <DraftedPlayer
               key={player.registrationId}
@@ -199,11 +223,11 @@ export default function CaptainDraftRoster({
               detailsOnly={detailsOnly}
             />
           ))}
-          {!players.length && <p className="empty-note">No drafted players entered yet.</p>}
+          {!players.length && <p className={emptyNote}>No drafted players entered yet.</p>}
         </div>
       </section>
       {!locked && !detailsOnly && (
-        <form action={addAction} className="owner-form captain-player-search">
+        <form action={addAction} className={`${ownerForm} ${playerSearch}`}>
           <input type="hidden" name="teamId" value={data.teamId} />
           <input type="hidden" name="invitationId" value={selected} />
           <label>
@@ -219,7 +243,7 @@ export default function CaptainDraftRoster({
             />
           </label>
           {matches.length > 0 && !atLimit && (
-            <div className="leader-search-results">
+            <div className="grid gap-[6px] rounded-xl border border-line bg-white p-[6px] [&>button]:grid [&>button]:w-full [&>button]:cursor-pointer [&>button]:gap-[2px] [&>button]:rounded-[9px] [&>button]:border-0 [&>button]:bg-[#f7f8fa] [&>button]:p-[10px_12px] [&>button]:text-left [&>button]:text-navy! [&>button:hover]:bg-[#edf3fa] [&_small]:text-[11px] [&_small]:text-muted [&>p]:m-[6px] [&>p]:text-[13px] [&>p]:text-muted">
               {matches.map((candidate) => (
                 <button
                   key={candidate.invitationId}
@@ -239,7 +263,7 @@ export default function CaptainDraftRoster({
               ))}
             </div>
           )}
-          <div className="compact-fields">
+          <div className={compactFields}>
             <label>
               Jersey number
               <input
@@ -284,7 +308,7 @@ export default function CaptainDraftRoster({
             <input name="jerseyName" maxLength={24} disabled={atLimit} />
           </label>
           {atLimit && (
-            <p className="field-help">
+            <p className={fieldHelp}>
               Your team is at its assigned roster limit. Send an Add request if you need
               commissioner approval for an extra player.
             </p>
@@ -296,7 +320,7 @@ export default function CaptainDraftRoster({
         </form>
       )}
       {!locked && !detailsOnly && (
-        <form action={submitAction} className="owner-form captain-submit-roster">
+        <form action={submitAction} className={`${ownerForm} ${submitRoster}`}>
           <input type="hidden" name="teamId" value={data.teamId} />
           <Notice state={submitState} />
           <button className="btn primary" disabled={submitPending || !players.length}>

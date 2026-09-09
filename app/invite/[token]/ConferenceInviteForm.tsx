@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { claimConferenceInviteAction, type ConferenceInviteState } from "./actions";
+import { joinCard } from "@/components/ui/shared-classes";
 
 export default function ConferenceInviteForm({
   token,
@@ -15,7 +16,7 @@ export default function ConferenceInviteForm({
     {} as ConferenceInviteState,
   );
   return (
-    <form action={action} className="card join-card">
+    <form action={action} className={`card ${joinCard}`}>
       <input type="hidden" name="token" value={token} />
       <span>🏀</span>
       <h1>{conferenceName}</h1>
