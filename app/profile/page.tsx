@@ -122,6 +122,7 @@ export default async function Profile({
   const playerDocumentsLink = currentRole !== "owner" ? (
     <Link
       href={`/player-documents${data.activeRegistrationId ? `?registration=${data.activeRegistrationId}&view=${currentRole}` : `?view=${currentRole}`}`}
+      prefetch
       // desk: replaces two ancestor-scoped rules in desktop.css. This row
       // renders only on /profile, which is the one place either could reach.
       className="card grid grid-cols-[38px_minmax(0,1fr)_20px] items-center gap-[12px] p-[14px_15px] desk:w-full desk:justify-self-center"

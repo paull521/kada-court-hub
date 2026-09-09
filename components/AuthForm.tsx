@@ -88,7 +88,7 @@ export function LoginForm({
         Forgot Password?
       </Link>
       <button className="btn primary" disabled={pending}>
-        {pending ? "Logging In…" : "Log In"}
+        {pending ? "Opening KCH…" : "Log In"}
       </button>
       {allowSignUp && (
         <Link

@@ -35,6 +35,11 @@ export default function FastBottomNav({
         <Link
           key={item.key}
           href={item.href}
+          // Player and captain navigation is safe to warm in the browser after
+          // the current screen settles. Next keeps that route data in this
+          // signed-in browser session, so returning to a normal page does not
+          // have to start its server read from zero.
+          prefetch
           onPointerEnter={() => router.prefetch(item.href)}
           onClick={() => setChosen(item.key)}
           className={`nav ${selected === item.key ? "active" : ""}`}
