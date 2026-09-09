@@ -20,6 +20,28 @@ negative. The file could only grow.
 Scoped styles fix both: the styling of a component is in the component, and
 deleting the component deletes the styling.
 
+## The visual suite is local-only
+
+It is not in the repo and never runs in CI. Screenshot baselines are tied to
+one machine's font rendering and the suite signs in against a live Supabase
+conference, so a baseline captured here could not match a baseline captured
+anywhere else - there is nothing for a second machine to compare against.
+`.gitignore` holds `tests/visual/` and `playwright.config.ts` so they cannot
+drift back in, and `tsconfig.json` excludes both so `npx tsc --noEmit` stays
+green whether or not you have them.
+
+The files stay on disk. `npm ci` prunes the runner, because `@playwright/test`
+is no longer a dependency of this repo:
+
+```bash
+npm i -D @playwright/test --no-save   # runner back, package.json untouched
+npx playwright install chromium       # once per machine
+npx playwright test --update-snapshots   # capture baselines
+npx playwright test                      # what moved?
+```
+
+`tests/visual/README.md`, also local, covers the rest.
+
 ## The loop
 
 Per component, in this order. Do not skip step 2.
@@ -39,7 +61,7 @@ Per component, in this order. Do not skip step 2.
 4. **Verify before deleting.** `npx playwright test -g "<route>"`. If the
    screenshots match, or differ only within the tolerance below, the utilities
    carry the component and the rules can go.
-5. **Delete the CSS.** Then run the whole suite - `npm run test:visual` - not
+5. **Delete the CSS.** Then run the whole suite - `npx playwright test` - not
    just that route. Deleting a shared rule can reach a page you did not open.
    Judge any new diff against "What counts as a match" below, and re-baseline
    the small ones in the same commit as the change that caused them.
@@ -159,8 +181,8 @@ every class on all 45 routes existed to go with the source grep.
 
 ## Coverage
 
-126 checks. Beyond one shot per route, the suite now carries the states the
-routes never reach on their own:
+130 checks: 126 screenshots and four contrast passes. Beyond one shot per
+route, the suite now carries the states the routes never reach on their own:
 
 - a season **with results**, which is what unblocked the scoresheets and,
   separately, the finalized game card on the schedule
@@ -295,13 +317,31 @@ In rough order of value:
    standing between `globals.css` and about 60 more lines.
 2. **Adopt Preflight**, which `app/tailwind.css` has always described as the
    last step. Far less of the app depends on the old defaults than did.
-3. **Decide about the visual suite.** `tests/visual/README.md` calls it
-   scaffolding to be deleted when the migration is done. It is now 126 checks
-   that catch real layout breaks; if it is worth keeping, keep it somewhere
-   that stores baselines off-repo.
+3. **Find the visual suite a home, or retire it.** It is now 130 checks that
+   catch real layout breaks, but it lives on one disk, so it protects nobody
+   else and nothing stops it rotting. Hosting it means somewhere to store
+   baselines and a seeded conference to sign into - neither is free.
+   The cheaper half is portable: see below.
 4. **`statusTone` and `payTone` in `PlatformOperations.tsx`** never reached the
    screen - an unlayered rule beat both maps at every call site. The pills are
    green whatever the status says. That is a product decision, not a CSS one.
+
+### The contrast guard goes with it
+
+`tests/visual/contrast.ts` is the check that catches the one bug this migration
+kept shipping: a colour utility on an `<a>` or a `<button>` is layered, the
+`color: inherit` in `globals.css` is not, so the utility is discarded and the
+text renders in the colour of its parent. It found nine of these after seven
+had already reached the user. It needs a browser, because the whole point is
+reading the colour that actually won, so it left with the rest of the suite.
+
+A repo-resident version would not read colours. It would read the source: find
+`text-*` on an element or shared class string that lands on an `<a>` or
+`<button>` and has no trailing `!`, the way `tests/contracts/` already reads
+files rather than running the app. That is narrower - it cannot see a colour
+lost to a rule it did not predict - but it is the part of the guard that
+survives without a browser, and it covers how every one of these actually
+happened. Not written; nobody has asked for it.
 
 ## Carried by hand, not by screenshot
 
