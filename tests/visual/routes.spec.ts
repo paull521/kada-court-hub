@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { settle } from "./settle";
+import { expectNoLostTextColours } from "./contrast";
 
 /**
  * One screenshot per route per viewport, compared against a committed
@@ -336,4 +337,18 @@ test.describe("states", () => {
       await expect(page).toHaveScreenshot(`${name}.png`, { fullPage: true });
     });
   }
+});
+
+/**
+ * Not a screenshot. See tests/visual/contrast.ts for why a pixel diff cannot
+ * be trusted to catch this one.
+ */
+test("no text colour is lost to the unlayered base rules", async ({ page }) => {
+  test.setTimeout(300_000);
+  await expectNoLostTextColours(page, [
+    ...publicRoutes.map((r) => r.path),
+    ...playerRoutes.map((r) => r.path),
+    ...captainRoutes.map((r) => r.path),
+    ...ownerRoutes.map((r) => r.path),
+  ]);
 });

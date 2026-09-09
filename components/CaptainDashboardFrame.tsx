@@ -34,9 +34,9 @@ import type { CaptainPortalData } from "@/lib/captain-data";
  */
 const taskTile =
   "flex min-h-[150px] flex-col gap-[5px] p-[16px] last:odd:col-span-full last:odd:min-h-[125px] max-[620px]:min-h-[135px] max-[620px]:p-[13px] desk:min-h-[132px] desk:last:odd:col-auto desk:last:odd:min-h-[132px] [&>span]:text-[28px] [&_b]:text-[18px] max-[620px]:[&_b]:text-[16px] [&_em]:mt-auto [&_em]:text-[13px] [&_em]:not-italic [&_small]:font-[800]";
-const tilePlain = "text-[#071b37] [&_em]:text-[#637083] [&_small]:text-[#b76b00]";
+const tilePlain = "text-[#071b37]! [&_em]:text-[#637083] [&_small]:text-[#b76b00]";
 const tileFeatured =
-  "border-[#0c3c70]! bg-[linear-gradient(135deg,#08243e,#0c3c70)]! text-white [&_em]:text-[#d7e1ec] [&_small]:text-[#f6b33d]";
+  "border-[#0c3c70]! bg-[linear-gradient(135deg,#08243e,#0c3c70)]! text-white! [&_em]:text-[#d7e1ec] [&_small]:text-[#f6b33d]";
 const tileAttention = "border! border-[#e3a323]!";
 
 function TaskTile({

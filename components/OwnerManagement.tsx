@@ -883,7 +883,7 @@ function DivisionInvitationForm({
         {customized && (
           <button
             type="button"
-            className="cursor-pointer justify-self-start border-0 bg-none p-0 font-[750] text-blue"
+            className="cursor-pointer justify-self-start border-0 bg-none p-0 font-[750] text-blue!"
             onClick={() => setCustomized(false)}
           >
             Restore suggested message

@@ -15,7 +15,7 @@ const initialState: AuthActionState = {};
 const inputWrap =
   "grid grid-cols-[38px_1fr_auto] items-center rounded-[14px] border border-[#d6dbe2] px-[14px] [&_input]:min-w-0 [&_input]:border-0 [&_input]:bg-transparent [&_input]:py-[15px] [&_input]:outline-0 [&_input]:[&:-webkit-autofill]:[-webkit-text-fill-color:var(--navy)] [&_input]:[&:-webkit-autofill]:shadow-[0_0_0_1000px_#fff_inset]";
 const passwordToggle =
-  "grid h-[34px] w-[28px] cursor-pointer place-items-center border-0 bg-transparent p-0 text-blue focus-visible:rounded-[4px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-gold [&_svg]:h-[19px] [&_svg]:w-[19px] [&_svg]:fill-none [&_svg]:stroke-current [&_svg]:[stroke-linecap:round] [&_svg]:[stroke-linejoin:round] [&_svg]:[stroke-width:1.8]";
+  "grid h-[34px] w-[28px] cursor-pointer place-items-center border-0 bg-transparent p-0 text-blue! focus-visible:rounded-[4px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-gold [&_svg]:h-[19px] [&_svg]:w-[19px] [&_svg]:fill-none [&_svg]:stroke-current [&_svg]:[stroke-linecap:round] [&_svg]:[stroke-linejoin:round] [&_svg]:[stroke-width:1.8]";
 
 export function LoginForm({
   demoMode,

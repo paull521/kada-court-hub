@@ -27,7 +27,7 @@ export default async function PlatformCreatorPage() {
         >
           <Link
             href="/platform/owners"
-            className="card relative grid min-h-[198px] content-start gap-[8px] overflow-hidden p-[18px] [&>h2]:m-0 [&>h2]:text-[19px] [&>h2]:leading-[1.1] [&>p:not(.eyebrow)]:m-0 [&>p:not(.eyebrow)]:text-[12px] [&>p:not(.eyebrow)]:leading-[1.45] [&>p:not(.eyebrow)]:text-muted [&_.eyebrow]:mt-[2px]! [&_.eyebrow]:mb-0! [&_.eyebrow]:text-[10px]! border-[#08243e]! bg-[linear-gradient(135deg,#08243e,#0a3767)]! text-white [&>p:not(.eyebrow)]:text-[#d6e2ed] [&_.eyebrow]:text-[#f6bf55] [&_.platform-icon]:bg-[rgba(245,163,19,0.18)] [&_.platform-icon]:text-[#f6bf55]"
+            className="card relative grid min-h-[198px] content-start gap-[8px] overflow-hidden p-[18px] [&>h2]:m-0 [&>h2]:text-[19px] [&>h2]:leading-[1.1] [&>p:not(.eyebrow)]:m-0 [&>p:not(.eyebrow)]:text-[12px] [&>p:not(.eyebrow)]:leading-[1.45] [&>p:not(.eyebrow)]:text-muted [&_.eyebrow]:mt-[2px]! [&_.eyebrow]:mb-0! [&_.eyebrow]:text-[10px]! border-[#08243e]! bg-[linear-gradient(135deg,#08243e,#0a3767)]! text-white! [&>p:not(.eyebrow)]:text-[#d6e2ed] [&_.eyebrow]:text-[#f6bf55] [&_.platform-icon]:bg-[rgba(245,163,19,0.18)] [&_.platform-icon]:text-[#f6bf55]"
           >
             <span className="platform-icon grid h-[39px] w-[39px] place-items-center rounded-[12px] bg-[#fff4da] text-[22px] text-gold">
               <User className="ui-icon" />
@@ -65,7 +65,7 @@ export default async function PlatformCreatorPage() {
           </Link>
           <Link
             href="/platform/announcements"
-            className="card relative grid min-h-[198px] content-start gap-[8px] overflow-hidden p-[18px] [&>h2]:m-0 [&>h2]:text-[19px] [&>h2]:leading-[1.1] [&>p:not(.eyebrow)]:m-0 [&>p:not(.eyebrow)]:text-[12px] [&>p:not(.eyebrow)]:leading-[1.45] [&>p:not(.eyebrow)]:text-muted [&_.eyebrow]:mt-[2px]! [&_.eyebrow]:mb-0! [&_.eyebrow]:text-[10px]! border-[#08243e]! bg-[linear-gradient(135deg,#08243e,#0a3767)]! text-white [&>p:not(.eyebrow)]:text-[#d6e2ed] [&_.eyebrow]:text-[#f6bf55] [&_.platform-icon]:bg-[rgba(245,163,19,0.18)] [&_.platform-icon]:text-[#f6bf55]"
+            className="card relative grid min-h-[198px] content-start gap-[8px] overflow-hidden p-[18px] [&>h2]:m-0 [&>h2]:text-[19px] [&>h2]:leading-[1.1] [&>p:not(.eyebrow)]:m-0 [&>p:not(.eyebrow)]:text-[12px] [&>p:not(.eyebrow)]:leading-[1.45] [&>p:not(.eyebrow)]:text-muted [&_.eyebrow]:mt-[2px]! [&_.eyebrow]:mb-0! [&_.eyebrow]:text-[10px]! border-[#08243e]! bg-[linear-gradient(135deg,#08243e,#0a3767)]! text-white! [&>p:not(.eyebrow)]:text-[#d6e2ed] [&_.eyebrow]:text-[#f6bf55] [&_.platform-icon]:bg-[rgba(245,163,19,0.18)] [&_.platform-icon]:text-[#f6bf55]"
           >
             <span className="platform-icon grid h-[39px] w-[39px] place-items-center rounded-[12px] bg-[#fff4da] text-[22px] text-gold">
               <ClipboardList className="ui-icon" />
@@ -76,7 +76,7 @@ export default async function PlatformCreatorPage() {
           </Link>
           <Link
             href="/platform/support"
-            className="card relative grid min-h-[198px] content-start gap-[8px] overflow-hidden p-[18px] [&>h2]:m-0 [&>h2]:text-[19px] [&>h2]:leading-[1.1] [&>p:not(.eyebrow)]:m-0 [&>p:not(.eyebrow)]:text-[12px] [&>p:not(.eyebrow)]:leading-[1.45] [&>p:not(.eyebrow)]:text-muted [&_.eyebrow]:mt-[2px]! [&_.eyebrow]:mb-0! [&_.eyebrow]:text-[10px]! border-[#08243e]! bg-[linear-gradient(135deg,#08243e,#0a3767)]! text-white [&>p:not(.eyebrow)]:text-[#d6e2ed] [&_.eyebrow]:text-[#f6bf55] [&_.platform-icon]:bg-[rgba(245,163,19,0.18)] [&_.platform-icon]:text-[#f6bf55]"
+            className="card relative grid min-h-[198px] content-start gap-[8px] overflow-hidden p-[18px] [&>h2]:m-0 [&>h2]:text-[19px] [&>h2]:leading-[1.1] [&>p:not(.eyebrow)]:m-0 [&>p:not(.eyebrow)]:text-[12px] [&>p:not(.eyebrow)]:leading-[1.45] [&>p:not(.eyebrow)]:text-muted [&_.eyebrow]:mt-[2px]! [&_.eyebrow]:mb-0! [&_.eyebrow]:text-[10px]! border-[#08243e]! bg-[linear-gradient(135deg,#08243e,#0a3767)]! text-white! [&>p:not(.eyebrow)]:text-[#d6e2ed] [&_.eyebrow]:text-[#f6bf55] [&_.platform-icon]:bg-[rgba(245,163,19,0.18)] [&_.platform-icon]:text-[#f6bf55]"
           >
             <span className="platform-icon grid h-[39px] w-[39px] place-items-center rounded-[12px] bg-[#fff4da] text-[22px] text-gold">
               ?

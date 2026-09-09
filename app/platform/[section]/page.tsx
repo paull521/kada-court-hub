@@ -72,7 +72,7 @@ export default async function PlatformSection({
     ) : section === "settings" ? (
       <form action={platformLogoutAction}>
         <button
-          className="card flex min-h-[64px] w-full cursor-pointer items-center justify-between p-[13px_16px] text-left font-[inherit] text-[#a51118]"
+          className="card flex min-h-[64px] w-full cursor-pointer items-center justify-between p-[13px_16px] text-left font-[inherit] text-[#a51118]!"
           type="submit"
         >
           <b className="text-[15px]">Log Out</b>

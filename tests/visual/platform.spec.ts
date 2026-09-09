@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { settle } from "./settle";
+import { expectNoLostTextColours } from "./contrast";
 
 /**
  * The operator's desk. It signs in separately at /platform/login, which is why
@@ -74,4 +75,12 @@ test("platform-payments-open", async ({ page }) => {
   expect(count, "expected open disclosures on /platform/payments").toBeGreaterThan(0);
   await settle(page);
   await expect(page).toHaveScreenshot("platform-payments-open.png", { fullPage: true });
+});
+
+test("no text colour is lost to the unlayered base rules", async ({ page }) => {
+  test.setTimeout(300_000);
+  await expectNoLostTextColours(
+    page,
+    routes.map((r) => r.path),
+  );
 });

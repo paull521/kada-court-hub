@@ -12,7 +12,8 @@ export const loginColumnTight = "pt-[10px]";
 /** The bordered form itself. */
 export const loginBox =
   "mt-[28px] grid gap-3 p-[22px_20px] [&_label]:text-[15px] [&_label]:font-[800]";
-export const forgotLink = "text-right text-sm text-blue";
+/* On a <Link>, so the colour shouts past a { color: inherit }. */
+export const forgotLink = "text-right text-sm text-blue!";
 export const loginTagline =
   "text-center leading-[1.7] text-gold [&_b]:text-navy [&_span]:text-gold";
 

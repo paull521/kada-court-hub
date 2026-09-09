@@ -171,7 +171,7 @@ export const reviewActionsCompact =
 /** The notification sheet's own trim. */
 export const notificationSheet = "pb-6 [&>header]:mb-[10px]";
 export const markAllButton =
-  "border-0 bg-transparent p-[8px_2px_12px] text-sm font-[750] text-blue";
+  "border-0 bg-transparent p-[8px_2px_12px] text-sm font-[750] text-blue!";
 export const notificationList = "grid gap-2";
 
 /** Payments: the method panel and the scrolling history. */
@@ -193,7 +193,8 @@ export const uniformPlaceholder =
 /** Profile's account column. */
 export const profileSectionTitle = "m-[22px_3px_10px] text-sm text-gold";
 export const accountList = "grid gap-[9px] [&>form]:m-0";
-export const logoutAccount = "text-[#a51118] [&>span]:text-[#a51118]";
+/* On a <button>, so it has to shout past button { color: inherit }. */
+export const logoutAccount = "text-[#a51118]! [&>span]:text-[#a51118]";
 
 /** The dot on a bottom-nav tab. Moves to the icon's left at 900px. */
 export const navDot =
