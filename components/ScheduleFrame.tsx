@@ -55,6 +55,32 @@ function GameRow({ game, teamName }: { game: Game; teamName: string }) {
   );
 }
 
+function ByeRow({ dateLabel }: { dateLabel: string }) {
+  return (
+    <section className={`card ${compactGame}`}>
+      <div className={compactGameMain}>
+        <strong>BYE</strong>
+        <small>{dateLabel} · No game scheduled for your team</small>
+      </div>
+      <div className={compactGameSide}>
+        <strong>NO GAME</strong>
+      </div>
+    </section>
+  );
+}
+
+function todayKey() {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Los_Angeles",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const part = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((item) => item.type === type)?.value ?? "";
+  return `${part("year")}-${part("month")}-${part("day")}`;
+}
+
 /** The same row with its four values missing. UNIFORM stays - it is a label. */
 function GameRowFrame() {
   return (
@@ -208,6 +234,15 @@ function DivisionWeeklyView({ games }: { games?: DivisionScheduleGame[] }) {
  */
 export default function ScheduleFrame({ data }: { data?: PlayerPortalData }) {
   const [next, ...upcoming] = data?.games ?? [];
+  const byes = data
+    ? [...new Set(data.divisionSchedule.map((game) => game.dateKey))].flatMap((dateKey) => {
+        const gamesOnDate = data.divisionSchedule.filter((game) => game.dateKey === dateKey);
+        const teamPlays = gamesOnDate.some(
+          (game) => game.homeTeam === data.context.team || game.awayTeam === data.context.team,
+        );
+        return dateKey >= todayKey() && !teamPlays ? [gamesOnDate[0]] : [];
+      })
+    : [];
   return (
     <>
       {!data && <LoadingNote />}
@@ -231,6 +266,16 @@ export default function ScheduleFrame({ data }: { data?: PlayerPortalData }) {
                   <GameRow game={game} teamName={data.context.team} key={game.id} />
                 ))
               : [0, 1, 2].map((index) => <GameRowFrame key={index} />)}
+          </div>
+        </>
+      )}
+      {data && byes.length > 0 && (
+        <>
+          <h2 className={listLabel}>BYE DATES</h2>
+          <div className="grid gap-2">
+            {byes.map((bye) => (
+              <ByeRow dateLabel={bye.dateLabel} key={bye.dateKey} />
+            ))}
           </div>
         </>
       )}

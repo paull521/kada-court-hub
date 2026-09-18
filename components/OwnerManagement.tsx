@@ -2910,6 +2910,26 @@ function WeeklyScheduleTable({ season }: { season: OwnerSeason }) {
   const sorted = season.games
     .slice()
     .sort((a, b) => a.localStartsAt.localeCompare(b.localStartsAt));
+  const byesByDivisionDate = new Map<string, string[]>();
+  for (const division of season.divisions) {
+    const scheduledGames = sorted.filter(
+      (game) => game.divisionId === division.id && game.status === "scheduled",
+    );
+    for (const game of scheduledGames) {
+      const dateKey = game.localStartsAt.slice(0, 10);
+      const key = `${division.id}:${dateKey}`;
+      if (byesByDivisionDate.has(key)) continue;
+      const playingTeamIds = new Set(
+        scheduledGames
+          .filter((scheduledGame) => scheduledGame.localStartsAt.slice(0, 10) === dateKey)
+          .flatMap((scheduledGame) => [scheduledGame.homeTeamId, scheduledGame.awayTeamId]),
+      );
+      const byeTeams = division.teams
+        .filter((team) => team.active && !playingTeamIds.has(team.id))
+        .map((team) => team.name);
+      if (byeTeams.length) byesByDivisionDate.set(key, byeTeams);
+    }
+  }
   const weeks = [
     ...new Map(
       sorted.map((game) => [weekStart(game.localStartsAt), [] as typeof sorted]),
@@ -2960,9 +2980,18 @@ function WeeklyScheduleTable({ season }: { season: OwnerSeason }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {games.map((game) => {
+                    {games.flatMap((game, gameIndex) => {
                       const played = game.homeScore !== null && game.awayScore !== null;
-                      return (
+                      const dateKey = game.localStartsAt.slice(0, 10);
+                      const byeTeams = byesByDivisionDate.get(`${game.divisionId}:${dateKey}`);
+                      const isLastGameForDivisionDate = !games
+                        .slice(gameIndex + 1)
+                        .some(
+                          (nextGame) =>
+                            nextGame.divisionId === game.divisionId &&
+                            nextGame.localStartsAt.slice(0, 10) === dateKey,
+                        );
+                      return [
                         <tr key={game.id}>
                           <td>{displayDate(game.localStartsAt)}</td>
                           <td>{displayTime(game.localStartsAt)}</td>
@@ -2999,8 +3028,25 @@ function WeeklyScheduleTable({ season }: { season: OwnerSeason }) {
                               {played ? "Edit result" : "Add score"}
                             </a>
                           </td>
-                        </tr>
-                      );
+                        </tr>,
+                        ...(isLastGameForDivisionDate && byeTeams
+                          ? [
+                              <tr key={`bye-${game.divisionId}-${dateKey}`}>
+                                <td>{displayDate(game.localStartsAt)}</td>
+                                <td>—</td>
+                                <td>—</td>
+                                <td>{divisionNames.get(game.divisionId) ?? "—"}</td>
+                                <td>
+                                  <b>BYE</b>
+                                </td>
+                                <td colSpan={4}>
+                                  <b>Bye teams</b>
+                                  <span>{byeTeams.join(", ")}</span>
+                                </td>
+                              </tr>,
+                            ]
+                          : []),
+                      ];
                     })}
                   </tbody>
                 </table>

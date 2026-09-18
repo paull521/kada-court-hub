@@ -63,6 +63,20 @@ function CompactGameRow({ game, teamName }: { game: CaptainGame; teamName: strin
     </article>
   );
 }
+
+function ByeRow({ dateLabel }: { dateLabel: string }) {
+  return (
+    <article className={`card ${compactGame}`}>
+      <div className={compactGameMain}>
+        <strong>BYE</strong>
+        <small>{dateLabel} · No game scheduled for your team</small>
+      </div>
+      <div className={compactGameSide}>
+        <strong>NO GAME</strong>
+      </div>
+    </article>
+  );
+}
 /** The division's weeks. WEEKLY VIEW and All Teams are fixed and never wait. */
 function WeeklyView({ games }: { games?: CaptainGame[] }) {
   if (games && !games.length) return null;
@@ -182,6 +196,15 @@ function CompactGameRowFrame() {
  */
 export default function CaptainScheduleFrame({ data }: { data?: CaptainPortalData }) {
   const [next, ...upcoming] = data?.games ?? [];
+  const byes = data
+    ? [...new Set(data.divisionGames.map((game) => game.dateKey))].flatMap((dateKey) => {
+        const gamesOnDate = data.divisionGames.filter((game) => game.dateKey === dateKey);
+        const teamPlays = gamesOnDate.some(
+          (game) => game.homeTeam === data.teamName || game.awayTeam === data.teamName,
+        );
+        return !teamPlays ? [gamesOnDate[0]] : [];
+      })
+    : [];
   return (
     <>
       {!data && <LoadingNote />}
@@ -206,6 +229,16 @@ export default function CaptainScheduleFrame({ data }: { data?: CaptainPortalDat
                         <CompactGameRow game={game} teamName={data.teamName} key={game.id} />
                       ))
                     : [0, 1, 2].map((index) => <CompactGameRowFrame key={index} />)}
+                </div>
+              </>
+            )}
+            {data && byes.length > 0 && (
+              <>
+                <h2 className={listLabel}>BYE DATES</h2>
+                <div className="grid gap-[10px]">
+                  {byes.map((bye) => (
+                    <ByeRow dateLabel={bye.dateLabel} key={bye.dateKey} />
+                  ))}
                 </div>
               </>
             )}
